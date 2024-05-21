@@ -50,7 +50,7 @@ void Enemy::ChangeHP(float amount)
 		}
 		break;
 		default:
-			ItemSpawner::Get()->GenerateItem(pos, Item::ITEM_ID::EXP, drop_exp);
+			ItemSpawner::Get()->GenerateItem(pos, drop_exp);
 			break;
 		}
 

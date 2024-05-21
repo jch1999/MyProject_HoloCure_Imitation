@@ -13,7 +13,6 @@ Player::Player(float MaxHP, float atk, float speed, float crt, float pickupRange
 	,projCnt(0)
 	,colIdx_Melee(0),colIdx_Range(0),colIdx_Shot(0)
 	,damage_Melee(0.0f),damage_Range(0.0f),damage_Shot(0.0f)
-	,isPause(false)
 {
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");

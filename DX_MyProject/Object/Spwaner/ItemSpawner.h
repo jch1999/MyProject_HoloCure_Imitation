@@ -27,6 +27,10 @@ public:
 	int coinValue;
 	int nowCoinValue;
 
+	// Food »ý¼º È®·ü
+	float foodDefault;
+	float foodRate;
+
 private:
 	ItemSpawner();
 	~ItemSpawner();

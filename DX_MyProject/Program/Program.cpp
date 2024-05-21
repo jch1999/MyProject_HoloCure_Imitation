@@ -30,6 +30,10 @@ void Program::Update()
 	if (KEY_CON->Down(VK_F9))
 		Collider::SetDebugMode();
 
+	if (KEY_CON->Down('R'))
+	{
+		isPause = !isPause;
+	}
 	scenes[scene_idx]->Update();
 	CAM->Update();
 }

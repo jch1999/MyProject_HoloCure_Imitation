@@ -4,7 +4,6 @@ class HPBar;
 class Player :public Transform
 {
 public:
-	bool isPause;
 	enum class PLAYER_ID // 캐릭터 종류 판별
 	{
 		WATSON,

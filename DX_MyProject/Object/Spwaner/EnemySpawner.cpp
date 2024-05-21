@@ -318,7 +318,7 @@ void EnemySpawner::SetPos(Enemy *e)
 
 void EnemySpawner::Update()
 {
-	if (player->isPause||!player->is_active)return;
+	if (isPause||!player->is_active)return;
 
 	nowTime += DELTA;
 	nowDelay += DELTA;

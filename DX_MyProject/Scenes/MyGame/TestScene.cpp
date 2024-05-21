@@ -17,10 +17,10 @@ TestScene::TestScene()
 		proj->move_dir = player->GetMoveDir();
 	}*/
 	{
-		item = new Exp();
+		item = new Anvil();
 		item->pos = player->pos + Vector2(50.0f, 100.0f);
 		item->SetPlayer(player);
-		item->SetStatus(Item::ITEM_ID::EXP_MAGNET, 0);
+		item->SetStatus(Item::ITEM_ID::GOLDEN_ANVIL, 0);
 		item->SetState(Item::ITEM_STATE::IDLE);
 		item->Respawn();
 		ItemSpawner::Get()->AddItem(item);
@@ -83,7 +83,6 @@ void TestScene::Update()
 			break;
 		}
 	}
-
 
 	EnemySpawner::Get()->Update();
 	ItemSpawner::Get()->Update();

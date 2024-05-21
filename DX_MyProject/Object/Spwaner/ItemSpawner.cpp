@@ -4,6 +4,7 @@ ItemSpawner::ItemSpawner()
 	:anvilDefualt(1.0f / 1301.0f),anvilDropRate(anvilDefualt),anvilUseCnt(1)
 	,magnetDropRate(1.0f / 3000.0f)
 	,coinDefault(1.0f / 90.0f),coinRate(coinDefault),coinValue(10),nowCoinValue(10)
+	,foodDefault(1.0f/200.0f),foodRate(foodDefault)
 	,nowTime(FIXED_INTERVAL)
 {
 	for (int i = 0; i < 100; i++)
@@ -14,6 +15,7 @@ ItemSpawner::ItemSpawner()
 	for (int i = 0; i < 10; i++)
 	{
 		item_list.push_back(new Anvil());
+		item_list.push_back(new Hambureger());
 	}
 }
 
@@ -29,7 +31,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, int value)
 
 	if (rand <= anvilDropRate)
 	{
-		//GenerateItem(pos, Item::ITEM_ID::ANVIL, anvilUseCnt);
+		GenerateItem(pos, Item::ITEM_ID::ANVIL, anvilUseCnt);
 	}
 	else if (rand <= anvilDropRate + magnetDropRate)
 	{
@@ -39,9 +41,14 @@ void ItemSpawner::GenerateItem(Vector2 pos, int value)
 	{
 		GenerateItem(pos, Item::ITEM_ID::COIN, coinValue);
 	}
+	else if (rand <= anvilDropRate + magnetDropRate + coinRate + foodRate)
+	{
+		GenerateItem(pos, Item::ITEM_ID::HAMBURGER, player->GetMaxHP() * 0.2f);
+	}
 	else
 	{
 		GenerateItem(pos, Item::ITEM_ID::EXP, value);
+		//GenerateItem(pos, Item::ITEM_ID::ANVIL, anvilUseCnt);
 	}
 }
 
@@ -106,7 +113,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		Item* target = nullptr;
 		for (auto i : item_list)
 		{
-			if (!i->is_active)continue;
+			if (i->is_active)continue;
 			if (i->type == Item::ITEM_TYPE::ANVIL)
 			{
 				target = i;
@@ -134,7 +141,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		for (auto i : item_list)
 		{
 			if (i->is_active)continue;
-			if (i->type == Item::ITEM_TYPE::COIN)
+			if (i->type == Item::ITEM_TYPE::ANVIL)
 			{
 				target = i;
 				break;
@@ -143,18 +150,47 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 
 		if (target == nullptr)
 		{
-			Item* coin = new Coin();
+			Item* coin = new Anvil();
 			target = coin;
 			item_list.push_back(coin);
 		}
 		target->SetPlayer(player);
-		target->SetStatus(Item::ITEM_ID::COIN, value);
+		target->SetStatus(Item::ITEM_ID::GOLDEN_ANVIL, value);
 		target->SetPos(pos);
 		target->SetState(Item::ITEM_STATE::IDLE);
 		target->Respawn();
 	}
 		break;
 	case Item::ITEM_ID::REWORD_BOX:
+	{
+
+	}
+		break;
+	case Item::ITEM_ID::HAMBURGER:
+	{
+		Item* target = nullptr;
+		for (auto i : item_list)
+		{
+			if (i->is_active)continue;
+			if (i->type == Item::ITEM_TYPE::FOOD)
+			{
+				target = i;
+				break;
+			}
+		}
+
+		if (target == nullptr)
+		{
+			Item* food = new Hambureger();
+			target = food;
+			item_list.push_back(food);
+		}
+		target->SetPlayer(player);
+		target->SetStatus(Item::ITEM_ID::HAMBURGER, value);
+		target->SetPos(pos);
+		target->SetState(Item::ITEM_STATE::IDLE);
+		target->Respawn();
+	}
 		break;
 	default:
 		break;
@@ -164,7 +200,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 void ItemSpawner::Update()
 {
 	nowTime -= DELTA;
-	if (player->isPause)return;
+	if (isPause)return;
 	
 	for (auto i : item_list)
 	{
@@ -220,16 +256,34 @@ void ItemSpawner::Update()
 	list<Item*> itemList = GetPartition(pPos);
 	for (auto i : itemList)
 	{
-		// 아이템 획득
-		if (i->GetCollider()->isCollision(player->GetDamageCollider()))
+		switch (i->type)
 		{
-			i->SetState(Item::ITEM_STATE::USED);
-		}
-		// 추적형 아이템 활성화
-		else if (i->GetCollider()->isCollision(player->GetPickUpcollider()))
+		case Item::ITEM_TYPE::EXP:
+		case Item::ITEM_TYPE::COIN:
+		case Item::ITEM_TYPE::FOOD:
 		{
-			i->SetState(Item::ITEM_STATE::ACTIVE);
+			// 아이템 획득
+			if (i->GetCollider()->isCollision(player->GetDamageCollider()))
+			{
+				i->SetState(Item::ITEM_STATE::USED);
+			}
+			// 추적형 아이템 활성화
+			else if (i->GetCollider()->isCollision(player->GetPickUpcollider()))
+			{
+				i->SetState(Item::ITEM_STATE::ACTIVE);
+			}
 		}
+		case Item::ITEM_TYPE::ANVIL:
+		{
+			if (i->GetCollider()->isCollision(player->GetDamageCollider()))
+			{
+				i->SetState(Item::ITEM_STATE::ACTIVE);
+			}
+		}
+		default:
+			break;
+		}
+		
 	}
 
 	if (nowTime < 0.0f)

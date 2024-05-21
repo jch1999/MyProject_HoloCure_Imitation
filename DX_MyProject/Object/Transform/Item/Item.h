@@ -19,7 +19,7 @@ public:
 		GOLDEN_ANVIL,
 		COIN,
 		REWORD_BOX,
-		FOOD
+		HAMBURGER
 	}id;
 	enum class ITEM_STATE
 	{
@@ -53,7 +53,7 @@ public:
 	RectCollider* GetCollider() { return collider; }
 
 	virtual void SetStatus(Item::ITEM_ID id=ITEM_ID::EXP,int value=0) = 0;
-	void SetState(ITEM_STATE state) { this->state = state; }
+	virtual void SetState(ITEM_STATE state) { this->state = state; }
 	virtual void SetPos(Vector2 pos) = 0;
 	virtual void SetPlayer(Player *p){}
 

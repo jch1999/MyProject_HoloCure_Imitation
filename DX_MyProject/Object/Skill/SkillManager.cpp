@@ -34,7 +34,7 @@ SkillManager::~SkillManager()
 
 void SkillManager::Update()
 {
-	if (player->isPause||!player->is_active)return;
+	if (isPause||!player->is_active)return;
 
 	for (auto s : nowWeapon_list)
 		s->Update();

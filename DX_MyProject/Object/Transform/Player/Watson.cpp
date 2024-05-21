@@ -77,7 +77,7 @@ Watson::~Watson()
 
 void Watson::Update()
 {
-	if (!is_active)return;
+	if (!is_active||isPause)return;
 
 	switch (action_status)
 	{

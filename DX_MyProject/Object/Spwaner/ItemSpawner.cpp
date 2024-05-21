@@ -273,6 +273,7 @@ void ItemSpawner::Update()
 				i->SetState(Item::ITEM_STATE::ACTIVE);
 			}
 		}
+			break;
 		case Item::ITEM_TYPE::ANVIL:
 		{
 			if (i->GetCollider()->isCollision(player->GetDamageCollider()))
@@ -280,6 +281,7 @@ void ItemSpawner::Update()
 				i->SetState(Item::ITEM_STATE::ACTIVE);
 			}
 		}
+			break;
 		default:
 			break;
 		}

@@ -145,7 +145,7 @@ void PhoenixSword::UpdateSlash()
 	removeList_s.clear();
 	//const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
 	// Slash의 pos의 CELL 위치를 중앙으로 3x3 영역을 검사
-	/*pair<int, int> sPos = make_pair(slash->pos.x / CELL_X, slash->pos.y / CELL_Y);
+	pair<int, int> sPos = make_pair(slash->pos.x / CELL_X, slash->pos.y / CELL_Y);
 	for (int i = -1; i <= 1; i++)
 	{
 		for (int j = -1; j <= 1; j++)
@@ -158,7 +158,7 @@ void PhoenixSword::UpdateSlash()
 					enemyNowFrame_s.push_back(e);
 			}
 		}
-	}*/
+	}
 	
 	
 	/*
@@ -213,7 +213,7 @@ void PhoenixSword::UpdateSlash()
 			if (enemyHitCount[m.first] < hiLimit_table[now_level])
 			{
 				m.second = hitCooldown_table[now_level];
-				m.first->GetDamage(slash->GetDamage());
+				m.first->ChangeHP(-(slash->GetDamage()));
 				enemyHitCount[m.first]++;
 			}
 			// 이미 죽은 Enemy를 제거 리스트에 추가
@@ -336,7 +336,7 @@ void PhoenixSword::UpdateBlaze()
 			if (m.second <= 0.0f)
 			{
 				m.second = blaze_hitCool;
-				m.first->GetDamage(b->GetDamage());
+				m.first->ChangeHP(-(b->GetDamage()));
 				
 				if (!m.first->is_active)
 				{

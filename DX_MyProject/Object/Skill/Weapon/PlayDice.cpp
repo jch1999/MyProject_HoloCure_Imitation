@@ -121,7 +121,7 @@ void PlayDice::Update()
 				// 더 이상 부딪힐 횟수가 없다면 이 탄환의 충돌처리 종료
 				if (!p->is_active)break;
 
-				e->GetDamage(p->GetDamage());
+				e->ChangeHP(-(p->GetDamage()));
 				p->Hit();
 				hitEnemies[i].push_back(e);
 

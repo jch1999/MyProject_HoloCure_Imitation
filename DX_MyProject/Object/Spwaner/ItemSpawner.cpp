@@ -4,6 +4,7 @@ ItemSpawner::ItemSpawner()
 	:anvilDefualt(1.0f / 1301.0f),anvilDropRate(anvilDefualt),anvilUseCnt(1)
 	,magnetDropRate(1.0f / 3000.0f)
 	,coinDefault(1.0f / 90.0f),coinRate(coinDefault),coinValue(10),nowCoinValue(10)
+	,nowTime(FIXED_INTERVAL)
 {
 	for (int i = 0; i < 100; i++)
 	{
@@ -162,44 +163,63 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 
 void ItemSpawner::Update()
 {
+	nowTime -= DELTA;
 	if (player->isPause)return;
+	
 	for (auto i : item_list)
 	{
 		if (!i->is_active)continue;
-		
-		/*
-		for (auto i2 : item_list) // O(n^2) 개선 필요..
+		if (!(i->state == Item::ITEM_STATE::IDLE))continue;
+		switch (i->id)
 		{
-			if (!i2->is_active)continue;
-
-			if (i != i2)
+		case Item::ITEM_ID::EXP:
+		case Item::ITEM_ID::COIN:
+		{
+			pair<int, int> iPos = make_pair(i->pos.x / CELL_X, i->pos.y / CELL_Y);
+			list<Item*> itemList = GetPartition(iPos);
+			i->SetAddtionalDir(Vector2(0, 0));
+			for (auto i2 : itemList)
 			{
-				if (i->id == Item::ITEM_ID::EXP && i2->id == Item::ITEM_ID::EXP)
+				if (!i2->is_active)continue;
+				if (!(i2->state == Item::ITEM_STATE::IDLE))continue;
+				if (i == i2)continue;
+
+				if (i->GetCollider()->isCollision(i2->GetCollider()))
 				{
-					if (i->GetCollider()->isCollision(i2->GetCollider()))
+					if (i->id == i2->id) // 같은 종류면 서로 당기기
 					{
-						i->pos = (i->pos + i2->pos) / 2.0f;
-						i->SetStatus(Item::ITEM_ID::EXP, ((Exp*)i)->GetAmount() + ((Exp*)i2)->GetAmount());
-						i->GetCollider()->pos = i->pos;
-						i2->is_active = false;
-						i->Respawn();
+						if ((i->pos - i2->pos).GetLength() < 0.1f)
+						{
+							i->SetAmount(i->GetAmount() + i2->GetAmount());
+							i2->SetActive(false);
+						}
+						else
+						{
+							i->SetAddtionalDir(i->GetAddtionalDir() + (i2->pos - i->pos).Normalized());
+						}
 					}
-				}
-				else if (i->id == Item::ITEM_ID::COIN && i2->id == Item::ITEM_ID::COIN)
-				{
-					if (i->GetCollider()->isCollision(i2->GetCollider()))
-					{
-						i->pos = (i->pos + i2->pos) / 2.0f;
-						i->SetStatus(Item::ITEM_ID::COIN, ((Coin*)i)->GetAmount() + ((Coin*)i2)->GetAmount());
-						i2->is_active = false;
-						i->Respawn();
-					}
+					//else // 다른 종류면 서로 밀어내기
+					//{
+					//	i->SetAddtionalDir(i->GetAddtionalDir() + (i->pos - i2->pos).Normalized());
+					//}
 				}
 			}
 		}
-		*/
+		default:
+			break;
+		}
+	}
+
+	for (auto i : item_list)
+	{
+		if (!i->is_active)continue;
 		i->Update();
-		
+	}
+
+	pair<int, int> pPos = make_pair(player->pos.x / CELL_X, player->pos.y / CELL_Y);
+	list<Item*> itemList = GetPartition(pPos);
+	for (auto i : itemList)
+	{
 		// 아이템 획득
 		if (i->GetCollider()->isCollision(player->GetDamageCollider()))
 		{
@@ -209,6 +229,35 @@ void ItemSpawner::Update()
 		else if (i->GetCollider()->isCollision(player->GetPickUpcollider()))
 		{
 			i->SetState(Item::ITEM_STATE::ACTIVE);
+		}
+	}
+
+	if (nowTime < 0.0f)
+	{
+		nowTime += FIXED_INTERVAL;
+		FixedUpdate();
+	}
+}
+
+void ItemSpawner::FixedUpdate()
+{
+	// 기존 정보 제거
+	partition.clear();
+
+	// 모든 Item를 각 칸에 맞게 
+	for (auto e : item_list)
+	{
+		if (!e->is_active)continue;
+		int cell_x = (int)(e->pos.x) / CELL_X;
+		int cell_y = (int)(e->pos.y) / CELL_Y;
+		pair<int, int> iPos = make_pair(cell_x, cell_y);
+		for (int i = -1; i <= 1; i++)
+		{
+			for (int j = -1; j <= 1; j++)
+			{
+				pair<int, int> pos = make_pair(iPos.first + i, iPos.second + j);
+				partition[pos].push_back(e);
+			}
 		}
 	}
 }

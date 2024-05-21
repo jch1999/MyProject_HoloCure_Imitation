@@ -13,7 +13,5 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void PostRender() override;
-	virtual void GetDamage(float damage) override;
-	virtual void Attack() override;
 	virtual void SetEnemyName(ENEMY_NAME name) override;
 };

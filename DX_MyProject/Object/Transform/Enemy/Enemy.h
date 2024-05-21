@@ -117,10 +117,10 @@ public:
 	RectCollider* GetAttackCollider() { return attackCollider; }
 	RectCollider* GetDamageCollider() { return damageCollider; }
 
-	// 데미지 값을 받아온 후 추가 처리 진행
-	virtual void GetDamage(float damage)=0;
+	// 체력 변경
+	virtual void ChangeHP(float amount);
 	// 데미지 계산 과정을 거친 후 상대방의 GetDamage 호출
-	virtual void Attack()=0;
+	virtual void Attack();
 
 	void SetColor(Float4 color) { CB->data.colour = color; }
 	

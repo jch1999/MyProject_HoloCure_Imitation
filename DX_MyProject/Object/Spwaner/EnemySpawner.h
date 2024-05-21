@@ -57,7 +57,7 @@ private:
 	void SpawnMiniBoss();
 	void SpawnBoss();
 
-	Vector2 SetPos();
+	void SetPos(Enemy *e);
 
 public:
 	friend class Singleton;

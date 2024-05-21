@@ -57,15 +57,19 @@ void Coin::Update()
 	{
 		nowTime += DELTA;
 		if (isUp)
-			pos -= Vector2(0, 1.f) * idleSPD * DELTA;
+			move_dir = Vector2(0, -1.0f);
 		else
-			pos += Vector2(0, 1.0f) * idleSPD * DELTA;
+			move_dir = Vector2(0, 1.0f);
 
 		if (nowTime >= changeTime)
 		{
 			isUp = !isUp;
 			nowTime -= changeTime;
 		}
+
+		if (addtional_dir.GetLength() > 0.1f)
+			move_dir = (move_dir+addtional_dir).Normalized();
+		pos += move_dir * idleSPD * DELTA;
 	}
 	break;
 	case Item::ITEM_STATE::ACTIVE:

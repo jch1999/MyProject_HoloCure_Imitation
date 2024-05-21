@@ -177,32 +177,6 @@ void MiniBoss::PostRender()
 	ImGui::Text("pos : %f , %f", pos.x, pos.y);
 }
 
-void MiniBoss::GetDamage(float damage)
-{
-	HP -= damage;
-
-	if (HP <= 0.0f)
-	{
-		is_active = false;
-		EnemySpawner::Get()->EnemyDead();
-		for (int i = 0; i < 10; i++)
-		{
-			float rot = i * 36.0f;
-			ItemSpawner::Get()->GenerateItem(pos + Vector2(cosf(rot), sinf(rot)) * 44.0f, Item::ITEM_ID::EXP, drop_exp / 10.0f);
-		}
-
-		// Box 생성 기능 추후 추가
-	}
-}
-
-void MiniBoss::Attack()
-{
-	if (!is_active)return;
-
-	atk_nowTime = 0.0f;
-	player->GetDamge(attack);
-}
-
 void MiniBoss::SetEnemyName(ENEMY_NAME name)
 {
 	if (this->name == name)return;

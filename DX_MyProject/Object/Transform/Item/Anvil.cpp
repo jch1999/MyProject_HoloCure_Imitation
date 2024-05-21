@@ -54,3 +54,14 @@ void Anvil::SetPos(Vector2 pos)
 	this->pos = pos; 
 	collider->pos = pos;
 }
+
+void Anvil::SetAmount(int value)
+{
+	useCnt = value;
+}
+
+int Anvil::GetAmount()
+{
+	return useCnt;
+}
+

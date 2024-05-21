@@ -90,7 +90,7 @@ public:
 	Vector2 GetAttackDir() { return attack_dir; }
 	
 	// 받은 데미지 처리
-	virtual void GetDamge(float damage);
+	virtual void ChangeHP(float amount);
 	// 공격은 투사체에서 처리하도록 할 예정- 플레이어는 공격력을 전달할 뿐
 	virtual float GetAttack() { return attack; }
 

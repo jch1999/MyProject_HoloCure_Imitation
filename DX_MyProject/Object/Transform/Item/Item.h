@@ -8,7 +8,8 @@ public:
 		EXP,
 		ANVIL,
 		COIN,
-		REWARD_BOX
+		REWARD_BOX,
+		FOOD
 	}type;
 	enum class ITEM_ID
 	{
@@ -17,7 +18,8 @@ public:
 		ANVIL,
 		GOLDEN_ANVIL,
 		COIN,
-		REWORD_BOX
+		REWORD_BOX,
+		FOOD
 	}id;
 	enum class ITEM_STATE
 	{
@@ -36,6 +38,8 @@ protected:
 	vector<Clip*> clips; // 애니메이션 클립들
 	int clip_idx;
 	RectCollider* collider;
+	Vector2 move_dir;
+	Vector2 addtional_dir;
 
 public:
 	Item();
@@ -52,4 +56,9 @@ public:
 	void SetState(ITEM_STATE state) { this->state = state; }
 	virtual void SetPos(Vector2 pos) = 0;
 	virtual void SetPlayer(Player *p){}
+
+	void SetAddtionalDir(Vector2 dir) { addtional_dir = dir; }
+	Vector2 GetAddtionalDir() { return addtional_dir; }
+	virtual void SetAmount(int value) = 0;
+	virtual int GetAmount() = 0;
 };

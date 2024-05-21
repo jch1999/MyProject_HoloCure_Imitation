@@ -97,11 +97,13 @@ void Player::CheckMoveDir()
 	}
 }
 
-void Player::GetDamge(float damage)
+void Player::ChangeHP(float amount)
 {
-	HP -= damage;
+	HP += amount;
 	if (HP <= 0.0f)
 		is_active = false;
+	else if (HP > MaxHP)
+		HP = MaxHP;
 }
 
 void Player::GetExp(int expValue)

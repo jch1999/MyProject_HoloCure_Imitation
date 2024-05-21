@@ -20,9 +20,10 @@ public:
 	virtual void Render() override;
 	virtual void PostRender() override;
 	virtual void Respawn() override;
-
 	virtual void SetStatus(Item::ITEM_ID id = ITEM_ID::ANVIL, int value = 0)override;
 
-	// Item을(를) 통해 상속됨
 	virtual void SetPos(Vector2 pos) override;
+
+	virtual void SetAmount(int value) override;
+	virtual int GetAmount() override;
 };

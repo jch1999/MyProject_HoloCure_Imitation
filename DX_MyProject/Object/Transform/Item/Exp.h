@@ -18,8 +18,6 @@ public:
 	Exp();
 	~Exp();
 
-	int GetAmount() { return exp; }
-
 	void SetExp(int expAmount);
 
 	// Item을(를) 통해 상속됨
@@ -33,4 +31,7 @@ public:
 
 	// Item을(를) 통해 상속됨
 	virtual void SetPos(Vector2 pos) override;
+
+	virtual void SetAmount(int value) override { SetExp(value); }
+	virtual int GetAmount() override { return exp; }
 };

@@ -233,7 +233,7 @@ void EnemySpawner::SpawnNormalEnemy()
 			
 			// 활성화
 			spawnTarget->SetEnemyName(name);
-			spawnTarget->pos = SetPos();
+			SetPos(spawnTarget);
 			spawnTarget->Respawn();
 
 			nowSpawnCnt++;
@@ -269,7 +269,7 @@ void EnemySpawner::SpawnMiniBoss()
 			enemy_list.push_back(miniBoss);
 		}
 		miniBoss->SetEnemyName(miniBossName_list[miniBossSpawn_idx]);
-		miniBoss->pos = SetPos();
+		SetPos(miniBoss);
 		miniBoss->Respawn();
 		miniBossSpawn_idx++;
 	}
@@ -279,9 +279,8 @@ void EnemySpawner::SpawnBoss()
 {
 }
 
-Vector2 EnemySpawner::SetPos()
+void EnemySpawner::SetPos(Enemy *e)
 {
-	Vector2 newPos;
 	int dir = Random::Get()->GetRandomInt(0, 4);
 	float xDist = WIN_CENTER_X + 200.0f;
 	float yDist = WIN_CENTER_Y + 200.0f;
@@ -290,30 +289,31 @@ Vector2 EnemySpawner::SetPos()
 	case 0:	// 위
 	{
 		int x = Random::Get()->GetRandomInt(-xDist, xDist + 1);
-		newPos = Vector2(player->pos.x + x, player->pos.y - yDist);
+		e->pos = Vector2(player->pos.x + x, player->pos.y - yDist);
 	}
 		break;
 	case 1: // 아래
 	{
+		Vector2 newPos;
 		int x = Random::Get()->GetRandomInt(-xDist, xDist + 1);
-		newPos = Vector2(player->pos.x + x, player->pos.y + yDist);
+		e->pos = Vector2(player->pos.x + x, player->pos.y + yDist);
 	}
 		break;
 	case 2: // 왼쪽
 	{
+		Vector2 newPos;
 		int y = Random::Get()->GetRandomInt(-yDist, yDist + 1);
-		newPos = Vector2(player->pos.x - xDist, player->pos.y + y);
+		e->pos = Vector2(player->pos.x - xDist, player->pos.y + y);
 	}
 		break;
 	case 3: // 오른쪽
 	{
+		Vector2 newPos;
 		int y = Random::Get()->GetRandomInt(-yDist, yDist + 1);
-		newPos = Vector2(player->pos.x + xDist, player->pos.y + y);
+		e->pos = Vector2(player->pos.x + xDist, player->pos.y + y);
 	}
 		break;
 	}
-
-	return newPos;
 }
 
 void EnemySpawner::Update()
@@ -358,24 +358,20 @@ void EnemySpawner::Update()
 		e->SetAdditionalDirection(Vector2(0, 0));
 		
 		pair<int, int> ePos = make_pair(e->pos.x / CELL_X, e->pos.y / CELL_Y);
-		for (int i = -1; i <= 1; i++)
+		list<Enemy*> enemyList = GetPartition(ePos);
+		for (auto e2 : enemyList)
 		{
-			for (int j = -1; j <= 1; j++)
-			{
-				list<Enemy*> enemyList = GetPartition(make_pair(ePos.first + i, ePos.second + j));
-				for (auto e2 : enemyList)
-				{
-					if (!e2->is_active)continue;
-					if (e == e2)continue;
+			if (!e2->is_active)continue;
+			if (e == e2)continue;
 
-					if (e->GetDamageCollider()->isCollision(e2->GetDamageCollider()))
-					{
-						Vector2 dir = e->GetAddtionalDirection() + e2->pos - e->pos;
-						e->SetAdditionalDirection(dir);
-					}
-				}
+			if (e->GetDamageCollider()->isCollision(e2->GetDamageCollider()))
+			{
+				Vector2 dir = e->GetAddtionalDirection() + (e->pos - e2->pos).Normalized();
+				e->SetAdditionalDirection(dir);
 			}
 		}
+		Vector2 dir = e->GetAddtionalDirection();
+		Vector2 dir2;
 	}
 
 	// Enemy Update
@@ -421,7 +417,6 @@ void EnemySpawner::PostRneder()
 {
 	for (auto e : enemy_list)
 		e->PostRender();
-	//enemy_list[0]->PostRender();
 }
 
 void EnemySpawner::SetPlayer(Player* p)
@@ -443,6 +438,13 @@ void EnemySpawner::FixedUpdate()
 		int cell_x = (int)(e->pos.x) / CELL_X;
 		int cell_y = (int)(e->pos.y) / CELL_Y;
 		pair<int, int> ePos = make_pair(cell_x, cell_y);
-		partition[ePos].push_back(e);
+		for (int i = -1; i <= 1; i++)
+		{
+			for (int j = -1; j <= 1; j++)
+			{
+				pair<int, int> pos = make_pair(ePos.first + i, ePos.second + j);
+				partition[pos].push_back(e);
+			}
+		}
 	}
 }

@@ -17,8 +17,6 @@ public:
 	Coin();
 	~Coin();
 
-	int GetAmount() { return coinAmount; }
-
 	// Item을(를) 통해 상속됨
 	virtual void Update() override;
 	virtual void Render() override;
@@ -30,4 +28,7 @@ public:
 
 	// Item을(를) 통해 상속됨
 	virtual void SetPos(Vector2 pos) override;
+
+	virtual void SetAmount(int value) override { coinAmount = value; }
+	virtual int GetAmount() override { return coinAmount; }
 };

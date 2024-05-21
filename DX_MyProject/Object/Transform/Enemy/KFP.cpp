@@ -122,26 +122,6 @@ void KFP::PostRender()
 	ImGui::Text("pos : %f , %f", pos.x, pos.y);
 }
 
-void KFP::GetDamage(float damage)
-{
-	HP -= damage;
-
-	if (HP <= 0.0f)
-	{
-		is_active = false;
-		EnemySpawner::Get()->EnemyDead();
-		ItemSpawner::Get()->GenerateItem(pos, Item::ITEM_ID::EXP, drop_exp);
-	}
-}
-
-void KFP::Attack()
-{
-	if (!is_active)return;
-
-	atk_nowTime = 0.0f;
-	player->GetDamge(attack);
-}
-
 void KFP::SetEnemyName(ENEMY_NAME name) // type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
 {
 	this->name = name;

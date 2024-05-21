@@ -8,6 +8,11 @@ public:
 	// 전체 Item의 리스트
 	vector<Item*> item_list;
 
+	// Spacial Partitioning? 
+	map<pair<int, int>, list<Item*>> partition;
+
+	float nowTime;
+
 	// 모루 생성 확률 및 사용가능 횟수
 	float anvilDefualt;
 	float anvilDropRate;
@@ -26,12 +31,11 @@ private:
 	ItemSpawner();
 	~ItemSpawner();
 
-	
-
 public:
 	friend class Singleton;
 
 	void Update();
+	void FixedUpdate();
 	void Render();
 	void PostRneder();
 
@@ -41,4 +45,6 @@ public:
 	void GenerateItem(Vector2 pos, int value);
 	void GenerateItem(Vector2 pos, Item::ITEM_ID id, int value);
 	void AddItem(Item* item) { item_list.push_back(item); }
+
+	const list<Item*>& GetPartition(pair<int, int> pos) { return partition[pos]; }
 };

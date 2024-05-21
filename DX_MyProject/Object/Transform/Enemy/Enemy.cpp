@@ -28,6 +28,45 @@ Enemy::~Enemy()
 		delete c;
 }
 
+void Enemy::ChangeHP(float amount)
+{
+	HP +=amount;
+
+	if (HP <= 0.0f)
+	{
+		is_active = false;
+		EnemySpawner::Get()->EnemyDead();
+		switch (id)
+		{
+		case ENEMY_ID::MINI_BOSS:
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				float rot = i * 36.0f;
+				ItemSpawner::Get()->GenerateItem(pos + Vector2(cosf(rot), sinf(rot)) * 30.0f, Item::ITEM_ID::EXP, drop_exp / 10.0f);
+			}
+
+			// Box 생성 기능 추후 추가
+		}
+		break;
+		default:
+			ItemSpawner::Get()->GenerateItem(pos, Item::ITEM_ID::EXP, drop_exp);
+			break;
+		}
+
+	}
+	else if (HP > MaxHP)
+		HP = MaxHP;
+}
+
+void Enemy::Attack()
+{
+	if (!is_active)return;
+
+	atk_nowTime = 0.0f;
+	player->ChangeHP(-attack);
+}
+
 void Enemy::SetBadStatus(Enemy::BAD_STATUS bad, float time)
 {
 	if (badStatus_table[(UINT)bad] < time)
@@ -67,6 +106,8 @@ void Enemy::Move()
 			dir_set_delay += DELTA;
 		}
 
+		if (addtional_dir.GetLength() > 0.1f)
+			move_dir = (move_dir + addtional_dir).Normalized();
 		pos += move_dir * moveSPD * DELTA;
 	}
 		break;
@@ -79,16 +120,16 @@ void Enemy::Move()
 	{
 		Vector2 dir = dest - pos;
 		move_dir = dir.Normalized();
+
+		if (addtional_dir.GetLength() > 0.1f)
+			move_dir = (move_dir + addtional_dir).Normalized();
 		pos += move_dir * moveSPD * DELTA;
 	}
 		break;
 	default:
 		break;
 	}
-	
-	pos += addtional_dir.Normalized() * moveSPD * DELTA;
-
-	is_looking_right = move_dir.x > 0.0f;
+	is_looking_right = (player->pos - pos).x > 0.0f;
 }
 
 void Enemy::SetStatus(float MaxHP, float atk, float spdRate, float atk_delay,int drop_exp)

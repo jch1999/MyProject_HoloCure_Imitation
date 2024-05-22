@@ -45,6 +45,7 @@ void Enemy::ChangeHP(float amount)
 				float rot = i * 36.0f;
 				ItemSpawner::Get()->GenerateItem(pos + Vector2(cosf(rot), sinf(rot)) * 30.0f, Item::ITEM_ID::EXP, drop_exp / 10.0f);
 			}
+			ItemSpawner::Get()->GenerateItem(pos, Item::ITEM_ID::REWORD_BOX, ItemSpawner::Get()->coinValue);
 
 			// Box 생성 기능 추후 추가
 		}

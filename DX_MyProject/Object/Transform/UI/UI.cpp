@@ -2,6 +2,10 @@
 
 UI::UI()
 {
+	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
+	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
+	CB = new ColourBuffer();
+
 	parent = target->GetWorld();
 }
 

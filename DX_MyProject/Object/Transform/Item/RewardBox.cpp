@@ -1,57 +1,43 @@
 #include "framework.h"
 
-Anvil::Anvil(Vector2 pos, Vector2 size)
+RewardBox::RewardBox(Vector2 pos, Vector2 size)
 	:Item()
-	,coolTime(0.0f)
+	,reward_coin(0)
 {
 	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
 	vector<Frame*> frames;
-	// anvil clip
-	frames.push_back(new Frame(file, 81.0f, 179.0f, 41.0f, 24.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
-	// golden anvil clip
-	frames.push_back(new Frame(file, 147.0f, 179.0f, 41.0f, 24.0f));
+	// RewardBox clip
+	frames.push_back(new Frame(file, 20.0f, 184.0f, 33.0f, 19.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 	frames.clear();
 
-	collider = new RectCollider(Vector2(41.0f, 24.0f) * 1.5f);
-	id = ITEM_ID::ANVIL;
-	type = ITEM_TYPE::ANVIL;
+	collider = new RectCollider(Vector2(33.0f, 19.0f) * 1.5f);
+	id = ITEM_ID::REWORD_BOX;
+	type = ITEM_TYPE::REWARD_BOX;
 
 	light = new ItemLight(pos);
-	light->SetOffset(Vector2(0.0f, -45.0f));
-	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.95f);
+	light->SetOffset(Vector2(-5.0f, -44.0f));
 
 	light->SetActive(false);
 	is_active = false;
 	collider->SetActive(false);
 }
 
-Anvil::~Anvil()
+RewardBox::~RewardBox()
 {
 	delete collider;
 	delete light;
 }
 
-void Anvil::Update()
+void RewardBox::Update()
 {
 	if (!is_active)return;
 
 	switch (state)
 	{
 	case Item::ITEM_STATE::IDLE:
-		if (coolTime > 0.0f)
-		{
-			collider->SetActive(false);
-			coolTime -= DELTA;
-		}
-		else
-		{
-			collider->SetActive(true);
-		}
 		break;
 	case Item::ITEM_STATE::ACTIVE:
 		SetState(ITEM_STATE::USED);
@@ -63,7 +49,6 @@ void Anvil::Update()
 	default:
 		break;
 	}
-
 	light->Update();
 	clips[clip_idx]->Update();
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() / clips[clip_idx]->GetFrameOriginSize();
@@ -72,10 +57,10 @@ void Anvil::Update()
 	collider->WorldUpdate();
 }
 
-void Anvil::Render()
+void RewardBox::Render()
 {
 	if (!is_active)return;
-	
+
 	VS->Set();
 	PS->Set();
 
@@ -87,12 +72,12 @@ void Anvil::Render()
 	collider->Render();
 }
 
-void Anvil::PostRender()
+void RewardBox::PostRender()
 {
 	if (!is_active)return;
 }
 
-void Anvil::Respawn()
+void RewardBox::Respawn()
 {
 	state = ITEM_STATE::IDLE;
 
@@ -100,82 +85,59 @@ void Anvil::Respawn()
 	collider->pos = pos;
 	collider->WorldUpdate();
 	light->SetPos(pos);
-	light->WorldUpdate();
 
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
 		clips[clip_idx]->GetFrameOriginSize();
-	coolTime = 0.0f;
 
 	is_active = true;
 	collider->SetActive(true);
 	light->SetActive(true);
 }
 
-void Anvil::SetStatus(Item::ITEM_ID id, int value)
+void RewardBox::SetStatus(Item::ITEM_ID id, int value)
 {
-	switch (id)
-	{
-	case Item::ITEM_ID::ANVIL:
-	{
-		SetUseCnt(value);
-		clip_idx = 0;
-	}
-		break;
-	case Item::ITEM_ID::GOLDEN_ANVIL:
-	{
-		useCnt = 1;
-		clip_idx = 1;
-	}
-		break;
-	default:
-		break;
-	}
+	this->id = id;
+	reward_coin = value;
 }
 
-void Anvil::SetState(ITEM_STATE state)
+void RewardBox::SetState(ITEM_STATE state)
 {
 	this->state = state;
 	switch (state)
 	{
 	case Item::ITEM_STATE::IDLE:
 	{
-		coolTime = 2.0f;
 	}
-		break;
+	break;
 	case Item::ITEM_STATE::ACTIVE:
 	{
 		isPause = true;
 		collider->SetActive(false);
 	}
-		break;
+	break;
 	case Item::ITEM_STATE::USED:
 	{
-		useCnt--;
-		if (useCnt > 0)
-		{
-			SetState(ITEM_STATE::IDLE);
-		}
 	}
-		break;
+	break;
 	default:
 		break;
 	}
 }
 
-void Anvil::SetPos(Vector2 pos)
+void RewardBox::SetPos(Vector2 pos)
 {
-	this->pos = pos; 
+	this->pos = pos;
 	collider->pos = pos;
 	light->SetPos(pos);
 }
 
-void Anvil::SetAmount(int value)
+void RewardBox::SetAmount(int value)
 {
-	useCnt = value;
+	reward_coin = value;
 }
 
-int Anvil::GetAmount()
+int RewardBox::GetAmount()
 {
-	return useCnt;
+	return reward_coin;
 }
 

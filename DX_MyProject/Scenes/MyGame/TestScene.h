@@ -7,7 +7,7 @@ private:
 	Projectile* proj;
 	Enemy* enemy;
 	Item* item;
-
+	HPBar* hpBar;
 public:
 	TestScene();
 	~TestScene();

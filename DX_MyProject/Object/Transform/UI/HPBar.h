@@ -4,6 +4,8 @@ class HPBar :public UI
 protected:
 	Vector2 size;
 	Frame* frame;
+	Player* player;
+	float hpRate;
 public:
 	HPBar();
 	~HPBar();

@@ -28,6 +28,10 @@ void UIManager::PostRneder()
 		ui->PostRender();
 }
 
+void UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 offset)
+{
+}
+
 UI* UIManager::GetUI(UI::UI_ID id)
 {
 	for (auto ui : ui_list)

@@ -17,10 +17,10 @@ TestScene::TestScene()
 		proj->move_dir = player->GetMoveDir();
 	}*/
 	{
-		item = new Anvil();
+		item = new RewardBox();
 		item->pos = player->pos + Vector2(50.0f, 100.0f);
 		item->SetPlayer(player);
-		item->SetStatus(Item::ITEM_ID::GOLDEN_ANVIL, 0);
+		item->SetStatus(Item::ITEM_ID::REWORD_BOX, 0);
 		item->SetState(Item::ITEM_STATE::IDLE);
 		item->Respawn();
 		ItemSpawner::Get()->AddItem(item);
@@ -28,7 +28,7 @@ TestScene::TestScene()
 	ItemSpawner::Get()->SetPlayer(player);
 	EnemySpawner::Get()->SetPlayer(player);
 	SkillManager::Get()->SetPlayer(player);
-	UIManager::Get();
+	UIManager::Get()->SetPlayer(player);
 	{
 		enemy = new MiniBoss();
 		enemy->SetEnemyName(Enemy::ENEMY_NAME::MEGA_SHRIMP);
@@ -37,6 +37,9 @@ TestScene::TestScene()
 		enemy->Respawn();
 		EnemySpawner::Get()->AddEnemy(enemy);
 	}
+
+	hpBar = new HPBar();
+	hpBar->SetTarget(player, Vector2(0.0f, -50.0f));
 }
 
 TestScene::~TestScene()
@@ -49,6 +52,7 @@ TestScene::~TestScene()
 	EnemySpawner::Delete();
 	SkillManager::Delete();
 	UIManager::Delete();
+	delete hpBar;
 }
 
 void TestScene::Update()
@@ -96,7 +100,7 @@ void TestScene::Update()
 	//proj->Update();
 
 	//enemy->Update();
-
+	hpBar->Update();
 	
 }
 
@@ -113,6 +117,7 @@ void TestScene::Render()
 	//enemy->Render();
 	SkillManager::Get()->Render();
 	UIManager::Get()->Render();
+	hpBar->Render();
 }
 
 void TestScene::PostRender()

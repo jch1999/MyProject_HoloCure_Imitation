@@ -3,7 +3,7 @@
 ItemSpawner::ItemSpawner()
 	:anvilDefualt(1.0f / 1301.0f),anvilDropRate(anvilDefualt),anvilUseCnt(1)
 	,magnetDropRate(1.0f / 3000.0f)
-	,coinDefault(1.0f / 90.0f),coinRate(coinDefault),coinValue(10),nowCoinValue(10)
+	,coinDefault(1.0f / 90.0f),coinRate(coinDefault),coinValue(10),nowCoinValue(0)
 	,foodDefault(1.0f/200.0f),foodRate(foodDefault)
 	,nowTime(FIXED_INTERVAL)
 {
@@ -17,6 +17,8 @@ ItemSpawner::ItemSpawner()
 		item_list.push_back(new Anvil());
 		item_list.push_back(new Hambureger());
 	}
+	item_list.push_back(new RewardBox());
+	item_list.push_back(new RewardBox());
 }
 
 ItemSpawner::~ItemSpawner()
@@ -48,7 +50,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, int value)
 	else
 	{
 		GenerateItem(pos, Item::ITEM_ID::EXP, value);
-		//GenerateItem(pos, Item::ITEM_ID::ANVIL, anvilUseCnt);
+		//GenerateItem(pos, Item::ITEM_ID::REWORD_BOX, anvilUseCnt);
 	}
 }
 
@@ -78,7 +80,6 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		}
 		target->SetStatus(Item::ITEM_ID::EXP, value);
 		target->SetPos(pos);
-		target->SetState(Item::ITEM_STATE::IDLE);
 		target->Respawn();
 	}
 		break;
@@ -104,7 +105,6 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		}
 		target->SetStatus(Item::ITEM_ID::EXP_MAGNET);
 		target->SetPos(pos);
-		target->SetState(Item::ITEM_STATE::IDLE);
 		target->Respawn();
 	}
 		break;
@@ -127,13 +127,34 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 			target = anvil;
 			item_list.push_back(anvil);
 		}
-		target->SetStatus(Item::ITEM_ID::ANVIL);
+		target->SetStatus(Item::ITEM_ID::ANVIL,value);
 		target->SetPos(pos);
-		target->SetState(Item::ITEM_STATE::IDLE);
 		target->Respawn();
 	}
 		break;
 	case Item::ITEM_ID::GOLDEN_ANVIL:
+	{
+		Item* target = nullptr;
+		for (auto i : item_list)
+		{
+			if (i->is_active)continue;
+			if (i->type == Item::ITEM_TYPE::ANVIL)
+			{
+				target = i;
+				break;
+			}
+		}
+
+		if (target == nullptr)
+		{
+			Item* anvil = new Anvil();
+			target = anvil;
+			item_list.push_back(anvil);
+		}
+		target->SetStatus(Item::ITEM_ID::GOLDEN_ANVIL);
+		target->SetPos(pos);
+		target->Respawn();
+	}
 		break;
 	case Item::ITEM_ID::COIN:
 	{
@@ -157,13 +178,32 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		target->SetPlayer(player);
 		target->SetStatus(Item::ITEM_ID::GOLDEN_ANVIL, value);
 		target->SetPos(pos);
-		target->SetState(Item::ITEM_STATE::IDLE);
 		target->Respawn();
 	}
 		break;
 	case Item::ITEM_ID::REWORD_BOX:
 	{
+		Item* target = nullptr;
+		for (auto i : item_list)
+		{
+			if (i->is_active)continue;
+			if (i->type == Item::ITEM_TYPE::REWARD_BOX)
+			{
+				target = i;
+				break;
+			}
+		}
 
+		if (target == nullptr)
+		{
+			Item* box = new RewardBox();
+			target = box;
+			item_list.push_back(box);
+		}
+		target->SetStatus(Item::ITEM_ID::REWORD_BOX);
+		target->SetPos(pos);
+		target->SetState(Item::ITEM_STATE::IDLE);
+		target->Respawn();
 	}
 		break;
 	case Item::ITEM_ID::HAMBURGER:
@@ -275,6 +315,7 @@ void ItemSpawner::Update()
 		}
 			break;
 		case Item::ITEM_TYPE::ANVIL:
+		case Item::ITEM_TYPE::REWARD_BOX:
 		{
 			if (i->GetCollider()->isCollision(player->GetDamageCollider()))
 			{

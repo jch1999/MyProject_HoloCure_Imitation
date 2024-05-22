@@ -11,7 +11,8 @@ public:
 	{
 		TEXT,
 		IMAGE,
-		PANEL
+		PANEL,
+		BAR
 	}type;
 	enum class  UI_ID
 	{

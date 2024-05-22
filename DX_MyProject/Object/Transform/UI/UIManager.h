@@ -22,5 +22,6 @@ public:
 	void GenerateUI(UI::UI_ID id, Transform* t = nullptr, Vector2 offset = Vector2(0, 0));
 	UI* GetUI(UI::UI_ID id);
 	void SetPlayer(Player* p) { player = p; }
+	Player* GetPlayer() { return player; }
 	void AddUI(UI* ui) { ui_list.push_back(ui); }
 };

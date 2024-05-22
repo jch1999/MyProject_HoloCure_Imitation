@@ -228,7 +228,7 @@
     <ClInclude Include="Object\Transform\Enemy\TransformList.h" />
     <ClInclude Include="Object\Transform\ImageRect.h" />
     <ClInclude Include="Object\Transform\Item\Anvil.h" />
-    <ClInclude Include="Object\Transform\Item\AnvilLight.h" />
+    <ClInclude Include="Object\Transform\Item\ItemLight.h" />
     <ClInclude Include="Object\Transform\Item\Coin.h" />
     <ClInclude Include="Object\Transform\Item\Exp.h" />
     <ClInclude Include="Object\Transform\Item\Hamburger.h" />
@@ -327,11 +327,12 @@
     <ClCompile Include="Object\Transform\Enemy\Takodachi.cpp" />
     <ClCompile Include="Object\Transform\ImageRect.cpp" />
     <ClCompile Include="Object\Transform\Item\Anvil.cpp" />
-    <ClCompile Include="Object\Transform\Item\AnvilLight.cpp" />
+    <ClCompile Include="Object\Transform\Item\ItemLight.cpp" />
     <ClCompile Include="Object\Transform\Item\Coin.cpp" />
     <ClCompile Include="Object\Transform\Item\Exp.cpp" />
     <ClCompile Include="Object\Transform\Item\Hamburger.cpp" />
     <ClCompile Include="Object\Transform\Item\Item.cpp" />
+    <ClCompile Include="Object\Transform\Item\RewardBox.cpp" />
     <ClCompile Include="Object\Transform\NewCircle_ver_Instructor.cpp" />
     <ClCompile Include="Object\Transform\NewTriangle.cpp" />
     <ClCompile Include="Object\Transform\Player\Baelz.cpp" />

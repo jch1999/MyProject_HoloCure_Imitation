@@ -1,5 +1,5 @@
 #pragma once
-class AnvilLight :public Transform
+class ItemLight :public Transform
 {
 public:
 protected:
@@ -14,8 +14,8 @@ protected:
 	int clip_idx;
 
 public:
-	AnvilLight(Vector2 pos);
-	 ~AnvilLight();
+	ItemLight(Vector2 pos);
+	 ~ItemLight();
 
 	void Update();
 	void Render();
@@ -23,4 +23,5 @@ public:
 	void Respawn();
 
 	void SetPos(Vector2 pos);
+	void SetOffset(Vector2 offset) { this->offset = offset; }
 };

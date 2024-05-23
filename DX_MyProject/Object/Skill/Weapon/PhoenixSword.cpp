@@ -160,33 +160,6 @@ void PhoenixSword::UpdateSlash()
 		}
 	}
 	
-	
-	/*
-	// 기존 충돌 Enemey와 이번 프레임 충돌 Enemy 비교
-	// 이번 프레임에 존재하지 않으면 제거 리스트에 넣기
-	for (auto m : enemyCooltimes_s)
-	{
-		bool isExist = false;
-		for (auto e : enemyNowFrame_s)
-		{
-			if (m.first == e)
-			{
-				isExist = true;
-				break;
-			}
-		}
-		if (!isExist)
-		{
-			removeList_s.push_back(m.first);
-		}
-	}
-
-	// 제거
-	for (auto e : removeList_s)
-	{
-		enemyCooltimes_s.erase(enemyCooltimes_s.find(e));
-	}
-	*/
 	// 리스트 갱신
 	for (auto e : enemyNowFrame_s)
 	{
@@ -212,9 +185,40 @@ void PhoenixSword::UpdateSlash()
 		{
 			if (enemyHitCount[m.first] < hiLimit_table[now_level])
 			{
-				m.second = hitCooldown_table[now_level];
+				enemyCooltimes_s[m.first] = hitCooldown_table[now_level];
 				m.first->ChangeHP(-(slash->GetDamage()));
 				enemyHitCount[m.first]++;
+
+				// 각성 상태 + 25% 확률이면
+				// enemy를 따라다니며 지속데미지를 주는 불 생성
+				if (now_level == max_level)
+				{
+					int rand = Random::Get()->GetRandomInt(0, 4);
+					if (rand == 0)
+					{
+						// enemy 위치에 blaze 생성
+						Projectile* blaze = nullptr;
+						for (auto b : blazes)
+						{
+							if (!b->is_active)
+							{
+								blaze = b;
+								break;
+							}
+						}
+						if (blaze == nullptr)
+						{
+							blaze = new Blaze();
+							blazes.push_back(blaze);
+						}
+						blaze->pos = m.first->pos;
+						float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
+							+ player->GetATK((UINT)Weapon::WEAPON_TYPE::MELEE)
+							+ enhanceDamage;
+						blaze->SetStatus(damage * 0.2f, 0.0f, -1, 5.0f);
+						blaze->respwan();
+					}
+				}
 			}
 			// 이미 죽은 Enemy를 제거 리스트에 추가
 			if (!m.first->is_active)
@@ -222,36 +226,7 @@ void PhoenixSword::UpdateSlash()
 				removeList_s.push_back(m.first);
 			}
 
-			// 각성 상태 + 25% 확률이면
-			// enemy를 따라다니며 지속데미지를 주는 불 생성
-			if (now_level == max_level)
-			{
-				int rand = Random::Get()->GetRandomInt(0, 4);
-				if (rand == 0)
-				{
-					// enemy 위치에 blaze 생성
-					Projectile* blaze = nullptr;
-					for (auto b : blazes)
-					{
-						if (!b->is_active)
-						{
-							blaze = b;
-							break;
-						}
-					}
-					if (blaze == nullptr)
-					{
-						blaze = new Blaze();
-						blazes.push_back(blaze);
-					}
-					blaze->pos = m.first->pos;
-					float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
-						+ player->GetATK((UINT)Weapon::WEAPON_TYPE::MELEE)
-						+ enhanceDamage;
-					blaze->SetStatus(damage * 0.2f, 0.0f, -1, 5.0f);
-					blaze->respwan();
-				}
-			}
+			
 		}
 	}
 
@@ -283,39 +258,11 @@ void PhoenixSword::UpdateBlaze()
 		{
 			if (!e->is_active)continue;
 			if (b->GetCollider()->isCollision(e->GetDamageCollider()))
-				enemyNowFrame_s.push_back(e);
+				enemyNowFrame_b.push_back(e);
 		}
-
-		/*
-		// 기존 충돌 Enemey와 이번 프레임 충돌 Enemy 비교
-		// 이번 프레임에 존재하지 않으면 제거 리스트에 넣기
-		for (auto m : enemyCooltimes_b)
-		{
-			bool isExist = false;
-			for (auto e : enemyNowFrame_b)
-			{
-				if (m.first == e)
-				{
-					if(e->is_active)
-						isExist = true;
-					break;
-				}
-			}
-			if (!isExist)
-			{
-				removeList_b.push_back(m.first);
-			}
-		}
-
-		// 제거
-		for (auto e : removeList_b)
-		{
-			enemyCooltimes_b.erase(enemyCooltimes_b.find(e));
-		}
-		*/
 
 		// 기존에 존재하지 않으면 추가, 존재하면 시간 경과
-		for (auto e : enemyNowFrame_s)
+		for (auto e : enemyNowFrame_b)
 		{
 			auto found = enemyCooltimes_b.find(e);
 			if (found == enemyCooltimes_b.end())
@@ -335,7 +282,7 @@ void PhoenixSword::UpdateBlaze()
 			//m.second -= DELTA;
 			if (m.second <= 0.0f)
 			{
-				m.second = blaze_hitCool;
+				enemyCooltimes_b[m.first] = blaze_hitCool;
 				m.first->ChangeHP(-(b->GetDamage()));
 				
 				if (!m.first->is_active)

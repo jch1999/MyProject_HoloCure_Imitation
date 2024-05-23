@@ -37,9 +37,6 @@ TestScene::TestScene()
 		enemy->Respawn();
 		EnemySpawner::Get()->AddEnemy(enemy);
 	}
-
-	hpBar = new HPBar();
-	hpBar->SetTarget(player, Vector2(0.0f, -50.0f));
 }
 
 TestScene::~TestScene()
@@ -52,7 +49,6 @@ TestScene::~TestScene()
 	EnemySpawner::Delete();
 	SkillManager::Delete();
 	UIManager::Delete();
-	delete hpBar;
 }
 
 void TestScene::Update()
@@ -100,7 +96,6 @@ void TestScene::Update()
 	//proj->Update();
 
 	//enemy->Update();
-	hpBar->Update();
 	
 }
 
@@ -117,7 +112,6 @@ void TestScene::Render()
 	//enemy->Render();
 	SkillManager::Get()->Render();
 	UIManager::Get()->Render();
-	hpBar->Render();
 }
 
 void TestScene::PostRender()

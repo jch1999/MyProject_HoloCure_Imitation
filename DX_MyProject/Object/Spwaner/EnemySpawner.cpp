@@ -364,7 +364,9 @@ void EnemySpawner::Update()
 			if (!e2->is_active)continue;
 			if (e == e2)continue;
 
-			if (e->GetDamageCollider()->isCollision(e2->GetDamageCollider()))
+			float minDist = (e->GetAttackCollider()->Size().GetLength() + e2->GetAttackCollider()->Size().GetLength()) / 2.0f;
+			float nowDist = (e->pos - e2->pos).GetLength();
+			if (minDist>nowDist)
 			{
 				Vector2 dir = e->GetAddtionalDirection() + (e->pos - e2->pos).Normalized();
 				e->SetAdditionalDirection(dir);

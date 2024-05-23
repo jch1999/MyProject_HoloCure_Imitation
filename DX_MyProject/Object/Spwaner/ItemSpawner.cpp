@@ -260,11 +260,13 @@ void ItemSpawner::Update()
 				if (!(i2->state == Item::ITEM_STATE::IDLE))continue;
 				if (i == i2)continue;
 
-				if (i->GetCollider()->isCollision(i2->GetCollider()))
+				float minDist = (i->GetCollider()->Size().GetLength() + i2->GetCollider()->Size().GetLength()) / 2.0f;
+				float nowDist = (i->pos - i2->pos).GetLength();
+				if (minDist>nowDist)
 				{
 					if (i->id == i2->id) // 같은 종류면 서로 당기기
 					{
-						if ((i->pos - i2->pos).GetLength() < 0.1f)
+						if ((i->pos - i2->pos).GetLength() < 0.1f)// 거리가 0.1f이하이면 합치기
 						{
 							i->SetAmount(i->GetAmount() + i2->GetAmount());
 							i2->SetActive(false);
@@ -274,10 +276,10 @@ void ItemSpawner::Update()
 							i->SetAddtionalDir(i->GetAddtionalDir() + (i2->pos - i->pos).Normalized());
 						}
 					}
-					//else // 다른 종류면 서로 밀어내기
-					//{
-					//	i->SetAddtionalDir(i->GetAddtionalDir() + (i->pos - i2->pos).Normalized());
-					//}
+					else // 다른 종류면 서로 밀어내기
+					{
+						i->SetAddtionalDir(i->GetAddtionalDir() + (i->pos - i2->pos).Normalized());
+					}
 				}
 			}
 		}

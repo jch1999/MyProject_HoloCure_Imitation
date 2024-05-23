@@ -1,0 +1,9 @@
+#pragma once
+#include "Weapon.h"
+#include "PistolShot.h"
+#include "PhoenixSword.h"
+#include "PlayDice.h"
+#include "HoloBomb.h"
+#include "PsychoAxe.h"
+#include "EliteLavaBucket.h"
+#include "SpiderCooking.h"

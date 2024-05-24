@@ -285,7 +285,7 @@ void EnemySpawner::SpawnBoss()
 
 void EnemySpawner::SetPos(Enemy *e)
 {
-	int dir = Random::Get()->GetRandomInt(0, 4);
+	int dir = Random::Get()->GetRandomInt(0, 3);
 	float xDist = WIN_CENTER_X + 200.0f;
 	float yDist = WIN_CENTER_Y + 200.0f;
 	switch (dir)

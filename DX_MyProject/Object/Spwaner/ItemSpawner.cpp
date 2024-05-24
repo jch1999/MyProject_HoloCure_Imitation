@@ -162,7 +162,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		for (auto i : item_list)
 		{
 			if (i->is_active)continue;
-			if (i->type == Item::ITEM_TYPE::ANVIL)
+			if (i->type == Item::ITEM_TYPE::COIN)
 			{
 				target = i;
 				break;
@@ -171,12 +171,12 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 
 		if (target == nullptr)
 		{
-			Item* coin = new Anvil();
+			Item* coin = new Coin();
 			target = coin;
 			item_list.push_back(coin);
 		}
 		target->SetPlayer(player);
-		target->SetStatus(Item::ITEM_ID::GOLDEN_ANVIL, value);
+		target->SetStatus(Item::ITEM_ID::COIN, value);
 		target->SetPos(pos);
 		target->Respawn();
 	}

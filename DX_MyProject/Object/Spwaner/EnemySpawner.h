@@ -5,9 +5,6 @@ private:
 	Player* player;
 
 public:
-	int maxSpawnCnt;
-	int nowSpawnCnt;
-	
 	float nowTime;
 	float endTime;
 	
@@ -20,12 +17,15 @@ public:
 	// 일반 몹
 	// 적 생성 시 생성할 수
 	vector<pair<float, int>> spawnCnt_table;
-	int spawnCnt_idx;
-	int spawnCnt;
+	int idx_spawnCnt; // 테이블에서 현재 인덱스 저장
+	int spawnCnt; // 시간당 생성할 수
 	
 	// 시간 경과에 따라 최대 생성 수 변경
 	vector<pair<float, int>> maxSpawn_table;
-	int spawn_idx;
+	int maxSpawnCnt; // 시간당 최대 생성 수 
+	int idx_maxSpawnCnt; // 테이블에서 현재 인덱스 저장
+
+	int nowSpawnCnt; // 현재 생성된 수
 
 	// 각 ENEMY_NAME에 대응하는 생성 시작 시간과 생성 종료 시간
 	vector<float> spawnStartTime;

@@ -176,11 +176,11 @@ void Shrimp::SetEnemyName(ENEMY_NAME name)// type과 move_dir은 Enemy_Spwaner에서
 		SetStatus(8.0f, 2.0f, 0.35f, 0.33f, 6);
 		damageCollider->SetActive(false);
 		damageCollider = damageColliders[0];
-		damageCollider->SetActive(true);
+		damageCollider->SetActive(false);
 
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[0];
-		attackCollider->SetActive(true);
+		attackCollider->SetActive(false);
 		type = MOVE_TYPE::CHASE;
 	}
 	break;
@@ -189,11 +189,11 @@ void Shrimp::SetEnemyName(ENEMY_NAME name)// type과 move_dir은 Enemy_Spwaner에서
 		SetStatus(125.0f, 5.0f, 0.6f, 0.33f, 12);
 		damageCollider->SetActive(false);
 		damageCollider = damageColliders[0];
-		damageCollider->SetActive(true);
+		damageCollider->SetActive(false);
 
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[0];
-		attackCollider->SetActive(true);
+		attackCollider->SetActive(false);
 		type = MOVE_TYPE::CHASE;
 	}
 	break;
@@ -203,11 +203,11 @@ void Shrimp::SetEnemyName(ENEMY_NAME name)// type과 move_dir은 Enemy_Spwaner에서
 		SetStatus(650.0f, 12.0f, 0.9f, 0.33f, 12);
 		damageCollider->SetActive(false);
 		damageCollider = damageColliders[1];
-		damageCollider->SetActive(true);
+		damageCollider->SetActive(false);
 
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[1];
-		attackCollider->SetActive(true);
+		attackCollider->SetActive(false);
 		type = MOVE_TYPE::CHASE;
 	}
 	break;
@@ -217,15 +217,18 @@ void Shrimp::SetEnemyName(ENEMY_NAME name)// type과 move_dir은 Enemy_Spwaner에서
 		SetMoveDir(Vector2(1.0f, 0.0f));
 		damageCollider->SetActive(false);
 		damageCollider = damageColliders[0];
-		damageCollider->SetActive(true);
+		damageCollider->SetActive(false);
 
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[0];
-		attackCollider->SetActive(true);
+		attackCollider->SetActive(false);
 		type = MOVE_TYPE::STRAIGHT;
 	}
 	break;
 	default:
 		break;
 	}
+
+	damageCollider->pos = pos;
+	attackCollider->pos = pos + colliderOffset_table[colliderOffset_idx];
 }

@@ -1,9 +1,10 @@
 #include "framework.h"
 
 EnemySpawner::EnemySpawner()
-	:maxSpawnCnt(200),nowSpawnCnt(0)
+	:maxSpawnCnt(0),idx_maxSpawnCnt(0),spawnCnt(0),idx_spawnCnt(0)
+	,nowSpawnCnt(0)
 	,nowTime(0.0f),endTime(600.0f)
-	,spawnDelay(1.5f),spawnCnt_idx(0)
+	,spawnDelay(1.5f)
 	,fixedInterval(FIXED_INTERVAL),nowInterval(FIXED_INTERVAL)
 {
 	// Normal Enemey
@@ -71,7 +72,8 @@ EnemySpawner::EnemySpawner()
 		{500.0f,50},
 		{540.0f,55}
 	};
-	spawnCnt = spawnCnt_table[spawnCnt_idx].second;
+	spawnCnt = spawnCnt_table[idx_spawnCnt].second;
+	maxSpawnCnt = maxSpawn_table[idx_maxSpawnCnt].second;
 
 	// 종별로 50씩 미리 생성하고 부족하면 추가 생성
 	for (int i = 0; i < 10; i++)
@@ -201,7 +203,9 @@ void EnemySpawner::SpawnNormalEnemy()
 	{
 		// 정해진 수만큼 생성
 		int cnt = spawnCnt > (maxSpawnCnt - nowSpawnCnt) ? (maxSpawnCnt - nowSpawnCnt) : spawnCnt;
-			
+		
+		if (cnt == 0)return;
+
 		for (int i = 0; i < cnt; i++)
 		{
 			// 생성할 적 선택
@@ -326,20 +330,23 @@ void EnemySpawner::Update()
 	nowInterval -= DELTA;
 
 	// 일반 Enemy 최대 생성 수 변경
-	if (spawn_idx < maxSpawn_table.size() - 1)
+	if (idx_maxSpawnCnt < maxSpawn_table.size() - 1)
 	{
-		if (nowTime >= maxSpawn_table[(spawn_idx + 1)].first)
+		if (nowTime >= maxSpawn_table[(idx_maxSpawnCnt + 1)].first)
 		{
-			spawn_idx++;
-			maxSpawnCnt = maxSpawn_table[spawn_idx].second;
+			idx_maxSpawnCnt++;
+			maxSpawnCnt = maxSpawn_table[idx_maxSpawnCnt].second;
 		}
 	}
 
 	// 일반 Enemy 생성 수 변경
-	if (spawnCnt_idx < spawnCnt_table.size() - 1)
+	if (idx_spawnCnt < spawnCnt_table.size() - 1)
 	{
-		if (nowTime >= spawnCnt_table[spawnCnt_idx + 1].first)
-			spawnCnt = spawnCnt_table[++spawnCnt_idx].second;
+		if (nowTime >= spawnCnt_table[idx_spawnCnt + 1].first)
+		{
+			idx_spawnCnt++;
+			nowSpawnCnt = spawnCnt_table[idx_spawnCnt].second;
+		}
 	}
 	
 	// 일반 몹

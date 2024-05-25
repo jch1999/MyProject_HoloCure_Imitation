@@ -4,7 +4,6 @@ class HPBar :public UI
 protected:
 	Vector2 size;
 	Frame* frame;
-	Player* player;
 	float hpRate;
 public:
 	HPBar();
@@ -17,8 +16,5 @@ public:
 	virtual void Render() override;
 
 	virtual void PostRender() override;
-
-	virtual void Respawn() override;
-
-	void SetSize(Vector2 s) { size = s; }
+	virtual void SetState(UI::UI_STATE state);
 };

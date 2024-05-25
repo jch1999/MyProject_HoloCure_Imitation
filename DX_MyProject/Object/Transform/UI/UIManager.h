@@ -19,7 +19,7 @@ public:
 	void PostRneder();
 
 	const vector<UI*>& GetUIList() { return ui_list; }
-	void GenerateUI(UI::UI_ID id, Transform* t = nullptr, Vector2 offset = Vector2(0, 0));
+	UI* GenerateUI(UI::UI_ID id, Transform* t = nullptr, Vector2 size = Vector2(1, 1), Vector2 offset = Vector2(0, 0));
 	UI* GetUI(UI::UI_ID id);
 	void SetPlayer(Player* p) { player = p; }
 	Player* GetPlayer() { return player; }

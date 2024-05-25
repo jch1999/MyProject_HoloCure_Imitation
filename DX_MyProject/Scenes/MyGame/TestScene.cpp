@@ -37,6 +37,11 @@ TestScene::TestScene()
 		enemy->Respawn();
 		EnemySpawner::Get()->AddEnemy(enemy);
 	}
+	hpBar = new HPBar();
+	hpBar->SetTarget(player);
+	hpBar->SetOffset(Vector2(0.0f, -35.0f));
+	UIManager::Get()->AddUI(hpBar);
+	//UIManager::Get()->AddUI(hpBar);
 }
 
 TestScene::~TestScene()
@@ -49,6 +54,7 @@ TestScene::~TestScene()
 	EnemySpawner::Delete();
 	SkillManager::Delete();
 	UIManager::Delete();
+	delete hpBar;
 }
 
 void TestScene::Update()
@@ -96,7 +102,8 @@ void TestScene::Update()
 	//proj->Update();
 
 	//enemy->Update();
-	
+	//hpBar->SetSize(Vector2(player->GetHP() / player->GetMaxHP(), 1.0f));
+	//hpBar->Update();
 }
 
 // Render ¼ø¼­ item ->player->enemy->skill->ui
@@ -112,6 +119,7 @@ void TestScene::Render()
 	//enemy->Render();
 	SkillManager::Get()->Render();
 	UIManager::Get()->Render();
+	//hpBar->Render();
 }
 
 void TestScene::PostRender()
@@ -125,6 +133,7 @@ void TestScene::PostRender()
 	
 	//EnemySpawner::Get()->PostRneder();
 	enemy->PostRender();
+	//hpBar->PostRender();
 
 	SkillManager::Get()->PostRneder();
 	ItemSpawner::Get()->PostRneder();

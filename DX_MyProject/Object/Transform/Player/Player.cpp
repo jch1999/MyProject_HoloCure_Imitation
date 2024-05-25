@@ -99,6 +99,10 @@ void Player::CheckMoveDir()
 void Player::ChangeHP(float amount)
 {
 	HP += amount;
+	if (HP < MaxHP)
+	{
+		UIManager::Get()->GetUI(UI::UI_ID::HP_BAR)->SetSize(Vector2(HP / MaxHP, 1.0f));
+	}
 	if (HP <= 0.0f)
 		is_active = false;
 	else if (HP > MaxHP)

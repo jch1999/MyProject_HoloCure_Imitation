@@ -29,18 +29,18 @@ TestScene::TestScene()
 	EnemySpawner::Get()->SetPlayer(player);
 	SkillManager::Get()->SetPlayer(player);
 	UIManager::Get()->SetPlayer(player);
-	{
+	/*{
 		enemy = new MiniBoss();
 		enemy->SetEnemyName(Enemy::ENEMY_NAME::MEGA_SHRIMP);
 		enemy->pos = player->pos + WIN_CENTER;
 		enemy->SetPlayer(player);
 		enemy->Respawn();
 		EnemySpawner::Get()->AddEnemy(enemy);
-	}
-	hpBar = new HPBar();
-	hpBar->SetTarget(player);
-	hpBar->SetOffset(Vector2(0.0f, -35.0f));
-	UIManager::Get()->AddUI(hpBar);
+	}*/
+	//hpBar = new HPBar();
+	//hpBar->SetTarget(player);
+	//hpBar->SetOffset(Vector2(0.0f, -35.0f));
+	//UIManager::Get()->AddUI(hpBar);
 	//UIManager::Get()->AddUI(hpBar);
 }
 
@@ -54,7 +54,6 @@ TestScene::~TestScene()
 	EnemySpawner::Delete();
 	SkillManager::Delete();
 	UIManager::Delete();
-	delete hpBar;
 }
 
 void TestScene::Update()
@@ -132,7 +131,7 @@ void TestScene::PostRender()
 	//skill->PostRender();
 	
 	//EnemySpawner::Get()->PostRneder();
-	enemy->PostRender();
+	// enemy->PostRender();
 	//hpBar->PostRender();
 
 	SkillManager::Get()->PostRneder();

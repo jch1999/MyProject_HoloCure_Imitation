@@ -13,6 +13,8 @@ Player::Player(float MaxHP, float atk, float speed, float crt, float pickupRange
 	,projCnt(0)
 	,colIdx_Melee(0),colIdx_Range(0),colIdx_Shot(0)
 	,damage_Melee(0.0f),damage_Range(0.0f),damage_Shot(0.0f)
+	,hp_bar(nullptr)
+	,hp_back(nullptr)
 {
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
@@ -101,7 +103,25 @@ void Player::ChangeHP(float amount)
 	HP += amount;
 	if (HP < MaxHP)
 	{
-		UIManager::Get()->GetUI(UI::UI_ID::HP_BAR)->SetSize(Vector2(HP / MaxHP, 1.0f));
+		if (hp_back == nullptr)
+		{
+			hp_back= (HPBar*)(UIManager::Get()->GetUI(UI::UI_ID::HP_BAR_BACK));
+			hp_back->SetTarget(this);
+			hp_back->SetSize(Vector2(1, 1));
+			hp_back->SetOffset(Vector2(0.0f, -35.0f));
+		}
+		hp_back->SetSize(Vector2(HP - amount / MaxHP, 1.0f));
+		if(hp_back->state==UI::UI_STATE::IDLE)
+			hp_back->SetLifeTime(2.5f);
+
+		if (hp_bar == nullptr)
+		{
+			hp_bar = (HPBar*)(UIManager::Get()->GetUI(UI::UI_ID::HP_BAR));
+			hp_bar->SetTarget(this);
+			hp_bar->SetSize(Vector2(1, 1));
+			hp_bar->SetOffset(Vector2(0.0f, -35.0f));
+		}
+		hp_bar->SetSize(Vector2(HP / MaxHP, 1.0f));
 	}
 	if (HP <= 0.0f)
 		is_active = false;

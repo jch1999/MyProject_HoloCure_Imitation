@@ -24,4 +24,5 @@ public:
 	void SetPlayer(Player* p) { player = p; }
 	Player* GetPlayer() { return player; }
 	void AddUI(UI* ui) { ui_list.push_back(ui); }
+	UI::UI_TYPE IDToType(UI::UI_ID id);
 };

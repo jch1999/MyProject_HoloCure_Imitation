@@ -73,6 +73,9 @@ protected:
 	//vector<Skill*> weapon_skills;
 	//vector<Skill*> buff_skills;
 
+	//UI
+	HPBar* hp_bar;
+	HPBar* hp_back;
 public:
 	Player(float MaxHP = 100.0f, float atk = 10.0f, float speed = 100.0f, float crt = 10.0f, float pickupRange = 40.0f, float damage_delay = 0.33f, int idx_pickUpRange = 0,Vector2 size=Vector2(48.0f,60.0f));
 	virtual ~Player();

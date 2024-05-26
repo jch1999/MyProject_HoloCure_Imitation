@@ -2,7 +2,7 @@
 
 UIManager::UIManager()
 {
-	
+	//ui_list.push_back(new HPBar());
 }
 
 UIManager::~UIManager()
@@ -14,7 +14,9 @@ UIManager::~UIManager()
 void UIManager::Update()
 {
 	for (auto ui : ui_list)
+	{
 		ui->Update();
+	}
 }
 
 void UIManager::Render()
@@ -33,14 +35,13 @@ UI* UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 size, Vector2 offs
 {
 	switch (id)
 	{
-	case UI::UI_ID::DAMAGE_TEXT:
+	case UI::UI_ID::DMG_TEXT:
 		break;
 	case UI::UI_ID::HP_BAR:
+	case UI::UI_ID::HP_BAR_BACK:
 	{
 		UI* hp = new HPBar();
-		hp->SetTarget(player);
-		hp->SetSize(size);
-		hp->SetOffset(offset);
+		hp->SetID(id);
 		ui_list.push_back(hp);
 		return hp;
 	}
@@ -57,19 +58,43 @@ UI* UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 size, Vector2 offs
 UI* UIManager::GetUI(UI::UI_ID id)
 {
 	UI* target = nullptr;
+	UI::UI_TYPE type = IDToType(id);
 
 	for (auto ui : ui_list)
 	{
 		if (ui->is_active)continue;
-		if (ui->id == id)
+		if (ui->type == type)
 		{
-			return ui;
+			target = ui;
+			target->SetID(id);
+			break;
 		}
 	}
 
 	if (target == nullptr)
 	{
-		GenerateUI(id);
+		target=GenerateUI(id);
 	}
-	return nullptr;
+
+	target->SetActive(true);
+	return target;
+}
+
+UI::UI_TYPE UIManager::IDToType(UI::UI_ID id)
+{
+	switch (id)
+	{
+	case UI::UI_ID::DMG_TEXT:
+	case UI::UI_ID::CRT_DMG_TEXT:
+		return UI::UI_TYPE::DMG_TEXT;
+	case UI::UI_ID::HP_BAR:
+	case UI::UI_ID::HP_BAR_BACK:
+		return UI::UI_TYPE::HP_BAR;
+	case UI::UI_ID::EXP_BAR:
+		return UI::UI_TYPE::EXP_BAR;
+	case UI::UI_ID::PlayerIcon:
+		break;
+	default:
+		break;
+	}
 }

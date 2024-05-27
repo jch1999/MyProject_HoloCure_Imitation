@@ -28,9 +28,42 @@ Enemy::~Enemy()
 		delete c;
 }
 
-void Enemy::ChangeHP(float amount)
+void Enemy::ChangeHP(float amount,bool isCrt)
 {
-	HP +=amount;
+	HP += amount;
+
+	// DmgTextÃâ·Â
+	if (amount < 0)
+	{
+		int idx = 0;
+		DmgText* ui = nullptr;
+		Vector2 initPos(pos.x + ((is_looking_right) ? (-damageCollider->Size().x / 4.0f) : (damageCollider->Size().x / 4.0f))
+			, pos.y - damageCollider->Size().y / 4.0f);
+		int damage = (int)abs(amount);
+
+		while (damage / 10 > 0)
+		{
+			if (isCrt)
+				ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::CRT_DMG_TEXT));
+			else
+				ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::DMG_TEXT));
+			ui->SetPos(initPos - Vector2(6, 0) * idx++);
+			ui->SetMoveDir(initPos.Normalized()*Vector2(1.0f,-1.0f));
+			ui->SetSize(Vector2(1.0f, 1.0f));
+			ui->SetClipIdx(damage % 10);
+			damage /= 10;
+			ui->SetActive(true);
+		}
+		if (isCrt)
+			ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::CRT_DMG_TEXT));
+		else
+			ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::DMG_TEXT));
+		ui->SetPos(initPos - Vector2(6, 0) * idx++);
+		ui->SetMoveDir(initPos.Normalized() * Vector2(1.0f, -1.0f));
+		ui->SetSize(Vector2(1.0f, 1.0f));
+		ui->SetClipIdx(damage % 10);
+		ui->SetActive(true);
+	}
 
 	if (HP <= 0.0f)
 	{

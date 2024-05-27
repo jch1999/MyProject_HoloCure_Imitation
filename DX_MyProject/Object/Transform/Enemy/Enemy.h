@@ -118,7 +118,7 @@ public:
 	RectCollider* GetDamageCollider() { return damageCollider; }
 
 	// 체력 변경
-	virtual void ChangeHP(float amount);
+	virtual void ChangeHP(float amount, bool isCrt);
 	// 데미지 계산 과정을 거친 후 상대방의 GetDamage 호출
 	virtual void Attack();
 

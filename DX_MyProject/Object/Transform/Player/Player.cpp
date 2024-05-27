@@ -108,12 +108,9 @@ void Player::ChangeHP(float amount)
 			hp_back= (HPBar*)(UIManager::Get()->GetUI(UI::UI_ID::HP_BAR_BACK));
 			hp_back->SetTarget(this);
 			hp_back->SetSize(Vector2(1, 1));
-			hp_back->SetOffset(Vector2(0.0f, -35.0f));
+			hp_back->SetOffset(Vector2(0.0f, -34.5f));
 		}
-		hp_back->SetSize(Vector2(HP - amount / MaxHP, 1.0f));
-		if(hp_back->state==UI::UI_STATE::IDLE)
-			hp_back->SetLifeTime(2.5f);
-
+		
 		if (hp_bar == nullptr)
 		{
 			hp_bar = (HPBar*)(UIManager::Get()->GetUI(UI::UI_ID::HP_BAR));
@@ -121,12 +118,20 @@ void Player::ChangeHP(float amount)
 			hp_bar->SetSize(Vector2(1, 1));
 			hp_bar->SetOffset(Vector2(0.0f, -35.0f));
 		}
-		hp_bar->SetSize(Vector2(HP / MaxHP, 1.0f));
+
+		hp_back->SetHpRate(HP / MaxHP);
+		hp_bar->SetHpRate(HP / MaxHP);
 	}
 	if (HP <= 0.0f)
 		is_active = false;
-	else if (HP > MaxHP)
+	else if (HP >= MaxHP)
+	{
 		HP = MaxHP;
+		if (hp_back != nullptr)
+			hp_back->SetHpRate(1.0f);
+		if (hp_bar != nullptr)
+			hp_bar->SetHpRate(1.0f);
+	}
 }
 
 void Player::GetExp(int expValue)
@@ -165,7 +170,7 @@ void Player::GetExp(int expValue)
 
 bool Player::isCritical()
 {
-	int value = Random::Get()->GetRandomInt(0, 100);
+	int value = Random::Get()->GetRandomFloat(0.0f, 100.0f);
 	if (value < crt)
 		return true;
 	else

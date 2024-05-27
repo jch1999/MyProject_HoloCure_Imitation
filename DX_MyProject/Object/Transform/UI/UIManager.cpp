@@ -2,7 +2,13 @@
 
 UIManager::UIManager()
 {
-	//ui_list.push_back(new HPBar());
+	ui_list.push_back(new HPBar());
+	ui_list.push_back(new HPBar());
+
+	for (int i = 0; i < 100; i++)
+	{
+		ui_list.push_back(new DmgText());
+	}
 }
 
 UIManager::~UIManager()
@@ -36,12 +42,19 @@ UI* UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 size, Vector2 offs
 	switch (id)
 	{
 	case UI::UI_ID::DMG_TEXT:
+	case UI::UI_ID::CRT_DMG_TEXT:
+	{
+		UI* dmgText = new DmgText();
+		dmgText->SetID(id);
+		ui_list.push_back(dmgText);
+	}
 		break;
 	case UI::UI_ID::HP_BAR:
 	case UI::UI_ID::HP_BAR_BACK:
 	{
 		UI* hp = new HPBar();
 		hp->SetID(id);
+		hp->SetState(UI::UI_STATE::IDLE);
 		ui_list.push_back(hp);
 		return hp;
 	}

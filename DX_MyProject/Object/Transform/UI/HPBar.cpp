@@ -1,7 +1,6 @@
 #include "framework.h"
 
 HPBar::HPBar()
-	:leftTime(0.0f)
 {
 	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
 	vector<Frame*> frames;
@@ -24,7 +23,7 @@ HPBar::HPBar()
 
 HPBar::~HPBar()
 {
-	delete frame;
+	
 }
 
 void HPBar::Update()
@@ -35,43 +34,19 @@ void HPBar::Update()
 	{
 	case UI::UI_STATE::IDLE:
 	{
-		switch (id)
+		if (hpRate <= 0.99f)
 		{
-		case UI_ID::HP_BAR:
-		{
-			if (ui_size.x <= 0.99f)
-			{
-				SetState(UI_STATE::ACTIVE);
-			}
+			SetState(UI_STATE::ACTIVE);
 		}
-		break;
-		case UI_ID::HP_BAR_BACK:
-			if (leftTime > 0.0f)
-			{
-				SetState(UI_STATE::ACTIVE);
-			}
-		}
-		
+		else
+			return;
 	}
 		break;
 	case UI::UI_STATE::ACTIVE:
 	{
-		switch (id)
+		if (hpRate > 0.99f)
 		{
-		case UI_ID::HP_BAR:
-		{
-			if (ui_size.x > 0.99f)
-			{
-				SetState(UI_STATE::IDLE);
-			}
-		}
-		break;
-		case UI_ID::HP_BAR_BACK:
-			leftTime -= DELTA;
-			if (leftTime < 0.0f)
-			{
-				SetState(UI_STATE::IDLE);
-			}
+			SetState(UI_STATE::IDLE);
 		}
 	}
 		break;
@@ -81,9 +56,8 @@ void HPBar::Update()
 
 	scale = clips[clip_idx]->GetFrameSize() * Vector2(40.0f, 5.0f) / clips[clip_idx]->GetFrameOriginSize() * ui_size;
 	clips[clip_idx]->Update();
-	pivot = Vector2(ui_size.x / 2.0f, 0);
 
-	pos = target->pos + offset;
+	pos = target->pos + offset - Vector2(1-ui_size.x, 0) * Vector2(40.0f, 5.0f);
 	WorldUpdate();
 }
 
@@ -112,13 +86,12 @@ void HPBar::Render()
 	default:
 		break;
 	}
-	//collider->Render();
 }
 
 void HPBar::PostRender()
 {
 	ImGui::DragFloat2("pos", (float*)&pos, 1.0f, -WIN_WIDTH, WIN_WIDTH);
-	ImGui::DragFloat2("size", (float*)&size, 1.0f, -WIN_WIDTH, WIN_WIDTH);
+	ImGui::DragFloat2("size", (float*)&ui_size, 1.0f, -WIN_WIDTH, WIN_WIDTH);
 	ImGui::DragFloat2("offset", (float*)&offset, 1.0f, -WIN_WIDTH, WIN_WIDTH);
 }
 
@@ -129,5 +102,24 @@ void HPBar::SetState(UI::UI_STATE state)
 
 void HPBar::SetID(UI::UI_ID id)
 {
+	this->id = id;
 	clip_idx = (UINT)id - (UINT)UI_ID::HP_BAR;
+}
+
+void HPBar::SetHpRate(float rate)
+{
+	hpRate = rate;
+	switch (id)
+	{
+		case UI_ID::HP_BAR:
+		{
+			SetSize(Vector2(hpRate, 1.0f));
+		}
+		break;
+		case UI_ID::HP_BAR_BACK:
+		{
+			SetSize(Vector2(1.0f, 1.0f));
+		}
+		break;
+	}
 }

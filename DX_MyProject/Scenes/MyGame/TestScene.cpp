@@ -16,7 +16,7 @@ TestScene::TestScene()
 		proj->respwan();
 		proj->move_dir = player->GetMoveDir();
 	}*/
-	{
+	/* {
 		item = new RewardBox();
 		item->pos = player->pos + Vector2(50.0f, 100.0f);
 		item->SetPlayer(player);
@@ -24,7 +24,7 @@ TestScene::TestScene()
 		item->SetState(Item::ITEM_STATE::IDLE);
 		item->Respawn();
 		ItemSpawner::Get()->AddItem(item);
-	}
+	}*/
 	ItemSpawner::Get()->SetPlayer(player);
 	EnemySpawner::Get()->SetPlayer(player);
 	SkillManager::Get()->SetPlayer(player);
@@ -88,6 +88,8 @@ void TestScene::Update()
 			break;
 		}
 	}
+	if (KEY_CON->Down('H'))
+		player->ChangeHP(20);
 
 	EnemySpawner::Get()->Update();
 	ItemSpawner::Get()->Update();

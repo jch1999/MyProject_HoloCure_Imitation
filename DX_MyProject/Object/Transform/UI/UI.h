@@ -53,4 +53,5 @@ public:
 	void SetOffset(Vector2 offset) { this->offset = offset; }
 	virtual void SetState(UI::UI_STATE state) = 0;
 	virtual void SetID(UI::UI_ID id) = 0;
+	virtual void SetActive(bool active) { is_active = active; }
 };

@@ -186,7 +186,14 @@ void PhoenixSword::UpdateSlash()
 			if (enemyHitCount[m.first] < hiLimit_table[now_level])
 			{
 				enemyCooltimes_s[m.first] = hitCooldown_table[now_level];
-				m.first->ChangeHP(-(slash->GetDamage()));
+				if (player->isCritical())
+				{
+					m.first->ChangeHP(-(slash->GetDamage()) * 1.5f, true);
+				}
+				else
+				{
+					m.first->ChangeHP(-(slash->GetDamage()), false);
+				}
 				enemyHitCount[m.first]++;
 
 				// 각성 상태 + 25% 확률이면
@@ -283,7 +290,8 @@ void PhoenixSword::UpdateBlaze()
 			if (m.second <= 0.0f)
 			{
 				enemyCooltimes_b[m.first] = blaze_hitCool;
-				m.first->ChangeHP(-(b->GetDamage()));
+				// blaze.. 크리티컬 적용 o x? 일단 x로
+				m.first->ChangeHP(-(b->GetDamage()), false);
 				
 				if (!m.first->is_active)
 				{

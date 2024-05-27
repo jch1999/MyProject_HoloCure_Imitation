@@ -252,6 +252,7 @@
     <ClInclude Include="Object\Transform\ScrollingBG.h" />
     <ClInclude Include="Object\Transform\SRTCircle.h" />
     <ClInclude Include="Object\Transform\TransformList.h" />
+    <ClInclude Include="Object\Transform\UI\DmgText.h" />
     <ClInclude Include="Object\Transform\UI\HPBar.h" />
     <ClInclude Include="Object\Transform\UI\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\UI.h" />
@@ -347,6 +348,7 @@
     <ClCompile Include="Object\Transform\ScrollImageRect.cpp" />
     <ClCompile Include="Object\Transform\ScrollingBG.cpp" />
     <ClCompile Include="Object\Transform\SRTCircle.cpp" />
+    <ClCompile Include="Object\Transform\UI\DmgText.cpp" />
     <ClCompile Include="Object\Transform\UI\HPBar.cpp" />
     <ClCompile Include="Object\Transform\UI\UI.cpp" />
     <ClCompile Include="Object\Transform\UI\UIManager.cpp" />

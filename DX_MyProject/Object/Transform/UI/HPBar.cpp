@@ -58,7 +58,7 @@ void HPBar::Update()
 	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
 	clips[clip_idx]->Update();
 
-	pos = target->pos + offset - Vector2(1-ui_scale.x, 0) * ui_size;
+	pos = target->pos + offset - Vector2(1-ui_scale.x/2.0f, 0) * ui_size;
 	WorldUpdate();
 }
 

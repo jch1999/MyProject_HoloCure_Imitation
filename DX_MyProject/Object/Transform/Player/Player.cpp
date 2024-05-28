@@ -48,8 +48,30 @@ Player::~Player()
 
 }
 
+void Player::UpdateDefault()
+{
+	// 공격 및 바라보는 방향은 Z키를 누르면 고정된다
+	if (!(KEY_CON->Press('Z')))
+	{
+		atk_arrow->SetID(UI::UI_ID::ATK_ARROW);
+	}
+	else
+	{
+		atk_arrow->SetID(UI::UI_ID::ATK_ARROW_FIXED);
+	}
+}
+
 void Player::CheckMoveDir()
 {
+	// atk dir arrow 초기화
+	if (atk_arrow == nullptr)
+	{
+		atk_arrow = (Arrow*)(UIManager::Get()->GetUI(UI::UI_ID::ATK_ARROW));
+		atk_arrow->SetTarget(this);
+		atk_arrow->SetScale(Vector2(2, 2));
+		atk_arrow->SetActive(true);
+	}
+
 	// 이동 방향 지정
 	// 대각이동
 	if (KEY_CON->Press(VK_LEFT) && KEY_CON->Press(VK_UP))
@@ -95,19 +117,49 @@ void Player::CheckMoveDir()
 	{
 		attack_dir = move_dir;
 		is_looking_right = attack_dir.x > 0.f ? true : attack_dir.x < 0.f ? false : is_looking_right;
+		atk_arrow->rot.z = atan(attack_dir.y / attack_dir.x);
 	}
 }
 
-void Player::ChangeHP(float amount)
+void Player::ChangeHP(float amount, Vector2 dir)
 {
 	HP += amount;
+
+	// DmgText출력
+	if (amount < 0)
+	{
+		int idx = 0;
+		DmgText* ui = nullptr;
+		Vector2 initPos(pos.x + ((is_looking_right) ? (-damageCollider->Size().x / 4.0f) : (damageCollider->Size().x / 4.0f))
+			, pos.y - damageCollider->Size().y / 2.0f);
+		int damage = (int)abs(amount);
+
+		while (damage / 10 > 0)
+		{
+			ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::PLAYER_DMG_TEXT));
+			ui->SetPos(initPos - Vector2(6, 0) * idx++);
+			ui->SetMoveDir(dir);
+			ui->SetScale(Vector2(1.0f, 1.0f));
+			ui->SetClipIdx(damage % 10);
+			damage /= 10;
+			ui->SetActive(true);
+		}
+		
+		ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::PLAYER_DMG_TEXT));
+		ui->SetPos(initPos - Vector2(6, 0) * idx++);
+		ui->SetMoveDir(dir);
+		ui->SetScale(Vector2(1.0f, 1.0f));
+		ui->SetClipIdx(damage % 10);
+		ui->SetActive(true);
+	}
+
 	if (HP < MaxHP)
 	{
 		if (hp_back == nullptr)
 		{
 			hp_back= (HPBar*)(UIManager::Get()->GetUI(UI::UI_ID::HP_BAR_BACK));
 			hp_back->SetTarget(this);
-			hp_back->SetSize(Vector2(1, 1));
+			hp_back->SetScale(Vector2(1, 1));
 			hp_back->SetOffset(Vector2(0.0f, -34.5f));
 		}
 		
@@ -115,7 +167,7 @@ void Player::ChangeHP(float amount)
 		{
 			hp_bar = (HPBar*)(UIManager::Get()->GetUI(UI::UI_ID::HP_BAR));
 			hp_bar->SetTarget(this);
-			hp_bar->SetSize(Vector2(1, 1));
+			hp_bar->SetScale(Vector2(1, 1));
 			hp_bar->SetOffset(Vector2(0.0f, -35.0f));
 		}
 
@@ -137,6 +189,12 @@ void Player::ChangeHP(float amount)
 void Player::GetExp(int expValue)
 {
 	nowExp += expValue;
+	if (exp_bar == nullptr)
+	{
+		exp_bar = (ExpBar*)(UIManager::Get()->GetUI(UI::UI_ID::EXP_BAR));
+		exp_bar->SetActive(true);
+	}
+
 	if (nowExp >= expLimits[level])
 	{
 		nowExp -= expLimits[level];
@@ -166,6 +224,7 @@ void Player::GetExp(int expValue)
 			break;
 		}
 	}
+	exp_bar->SetExpRate(nowExp / expLimits[level]);
 }
 
 bool Player::isCritical()

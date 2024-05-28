@@ -109,6 +109,8 @@ void Watson::Update()
 		break;
 	}
 
+	UpdateDefault();
+
 	clips[(UINT)action_status]->Update();
 	scale = clips[(UINT)action_status]->GetFrameSize() * size /
 		clips[(UINT)action_status]->GetFrameOriginSize() * Vector2(2.0f, 1.5f);

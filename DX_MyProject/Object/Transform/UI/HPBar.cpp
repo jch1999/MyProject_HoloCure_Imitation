@@ -16,7 +16,8 @@ HPBar::HPBar()
 	id = UI::UI_ID::HP_BAR;
 	type = UI::UI_TYPE::HP_BAR;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(1, 1);
+	ui_size = Vector2(40.0f, 5.0f);
+	ui_scale = Vector2(1, 1);
 	offset = Vector2(0, 0);
 	is_active = false;
 }
@@ -54,10 +55,10 @@ void HPBar::Update()
 		break;
 	}
 
-	scale = clips[clip_idx]->GetFrameSize() * Vector2(40.0f, 5.0f) / clips[clip_idx]->GetFrameOriginSize() * ui_size;
+	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
 	clips[clip_idx]->Update();
 
-	pos = target->pos + offset - Vector2(1-ui_size.x, 0) * Vector2(40.0f, 5.0f);
+	pos = target->pos + offset - Vector2(1-ui_scale.x, 0) * ui_size;
 	WorldUpdate();
 }
 
@@ -91,7 +92,7 @@ void HPBar::Render()
 void HPBar::PostRender()
 {
 	ImGui::DragFloat2("pos", (float*)&pos, 1.0f, -WIN_WIDTH, WIN_WIDTH);
-	ImGui::DragFloat2("size", (float*)&ui_size, 1.0f, -WIN_WIDTH, WIN_WIDTH);
+	ImGui::DragFloat2("size", (float*)&ui_scale, 1.0f, -WIN_WIDTH, WIN_WIDTH);
 	ImGui::DragFloat2("offset", (float*)&offset, 1.0f, -WIN_WIDTH, WIN_WIDTH);
 }
 
@@ -113,12 +114,12 @@ void HPBar::SetHpRate(float rate)
 	{
 		case UI_ID::HP_BAR:
 		{
-			SetSize(Vector2(hpRate, 1.0f));
+			SetScale(Vector2(hpRate, 1.0f));
 		}
 		break;
 		case UI_ID::HP_BAR_BACK:
 		{
-			SetSize(Vector2(1.0f, 1.0f));
+			SetScale(Vector2(1.0f, 1.0f));
 		}
 		break;
 	}

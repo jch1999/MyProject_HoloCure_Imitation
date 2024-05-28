@@ -1,7 +1,7 @@
 #include "framework.h"
 
 DmgText::DmgText()
-	:speed(15.0f)
+	:speed(20.0f)
 	,move_dir(Vector2(0,0))
 	,lifeTime(1.5f)
 {
@@ -21,7 +21,7 @@ DmgText::DmgText()
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 		frames.clear();
 	}
-	// ? dmg clip
+	// player dmg clip
 	for (int i = 0; i < 9; i++)
 	{
 		frames.push_back(new Frame(file, 139 + i * 7, 502, 5, 7));
@@ -31,7 +31,8 @@ DmgText::DmgText()
 
 	id = UI_ID::DMG_TEXT;
 	type = UI_TYPE::DMG_TEXT; 
-	ui_size = Vector2(1, 1);
+	ui_size = Vector2(10.0f, 14.0f);
+	ui_scale = Vector2(1, 1);
 	offset = Vector2(0, 0);
 	is_active = false;
 }
@@ -49,7 +50,7 @@ void DmgText::Update()
 		is_active = false;
 
 	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, leftTime / 1.5f);
-	scale = clips[clip_idx]->GetFrameSize() * Vector2(10.0f, 14.0f) / clips[clip_idx]->GetFrameOriginSize() * ui_size;
+	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
 	clips[clip_idx]->Update();
 	
 	pos = pos + move_dir * speed * DELTA;
@@ -87,6 +88,11 @@ void DmgText::SetClipIdx(int idx)
 	}
 		break;
 	default:
+	case UI::UI_ID::PLAYER_DMG_TEXT:
+	{
+		clip_idx = idx + 20;
+	}
+	break;
 		break;
 	}
 }

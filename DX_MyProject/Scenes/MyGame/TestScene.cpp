@@ -29,6 +29,8 @@ TestScene::TestScene()
 	EnemySpawner::Get()->SetPlayer(player);
 	SkillManager::Get()->SetPlayer(player);
 	UIManager::Get()->SetPlayer(player);
+	player->GetExp(0);
+	player->CheckMoveDir();
 	/*{
 		enemy = new MiniBoss();
 		enemy->SetEnemyName(Enemy::ENEMY_NAME::MEGA_SHRIMP);

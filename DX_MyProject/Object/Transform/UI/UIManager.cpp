@@ -2,39 +2,84 @@
 
 UIManager::UIManager()
 {
-	ui_list.push_back(new HPBar());
-	ui_list.push_back(new HPBar());
+	ui_list.resize(4);
 
+	// DmgText
 	for (int i = 0; i < 100; i++)
 	{
-		ui_list.push_back(new DmgText());
+		ui_list[0].push_back(new DmgText());
 	}
+
+	// HP Bar
+	for(int i=0;i<4;i++)
+		ui_list[1].push_back(new HPBar());
+
+	// Exp Bar
+	ExpBar* back = new ExpBar();
+	back->SetID(UI::UI_ID::EXP_BAR_BACK);
+	back->SetTarget(CAM);
+	back->SetActive(true);
+
+	ExpBar* bar = new ExpBar();
+	bar->SetID(UI::UI_ID::EXP_BAR);
+	bar->SetTarget(CAM);
+	bar->SetActive(false);
+	
+	ExpBar* front = new ExpBar();
+	front->SetID(UI::UI_ID::EXP_BAR_FRONT);
+	front->SetTarget(CAM);
+	front->SetActive(true);
+	ui_list[1].push_back(back);
+	ui_list[1].push_back(bar);
+	ui_list[1].push_back(front);
+
+	// ATK Arrow
+	ui_list[1].push_back(new Arrow());
 }
 
 UIManager::~UIManager()
 {
 	for (auto ui : ui_list)
-		delete ui;
+	{
+		for (auto u : ui)
+		{
+
+			delete u;
+		}
+	}
 }
 
 void UIManager::Update()
 {
 	for (auto ui : ui_list)
 	{
-		ui->Update();
+		for (auto u : ui)
+		{
+			u->Update();
+		}
 	}
 }
 
 void UIManager::Render()
 {
 	for (auto ui : ui_list)
-		ui->Render();
+	{
+		for (auto u : ui)
+		{
+			u->Render();
+		}
+	}
 }
 
 void UIManager::PostRneder()
 {
 	for (auto ui : ui_list)
-		ui->PostRender();
+	{
+		for (auto u : ui)
+		{
+			u->PostRender();
+		}
+	}
 }
 
 UI* UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 size, Vector2 offset)
@@ -43,10 +88,11 @@ UI* UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 size, Vector2 offs
 	{
 	case UI::UI_ID::DMG_TEXT:
 	case UI::UI_ID::CRT_DMG_TEXT:
+	case UI::UI_ID::PLAYER_DMG_TEXT:
 	{
 		UI* dmgText = new DmgText();
 		dmgText->SetID(id);
-		ui_list.push_back(dmgText);
+		ui_list[0].push_back(dmgText);
 	}
 		break;
 	case UI::UI_ID::HP_BAR:
@@ -55,13 +101,24 @@ UI* UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 size, Vector2 offs
 		UI* hp = new HPBar();
 		hp->SetID(id);
 		hp->SetState(UI::UI_STATE::IDLE);
-		ui_list.push_back(hp);
+		ui_list[1].push_back(hp);
 		return hp;
 	}
 	break;
+	case UI::UI_ID::EXP_BAR_BACK:
 	case UI::UI_ID::EXP_BAR:
+	case UI::UI_ID::EXP_BAR_FRONT:
+	{
+
+	}
 		break;
-	case UI::UI_ID::PlayerIcon:
+	case UI::UI_ID::PLAYER_ICON:
+		break;
+	case UI::UI_ID::ATK_ARROW:
+	case UI::UI_ID::ATK_ARROW_FIXED:
+	{
+
+	}
 		break;
 	default:
 		break;
@@ -73,15 +130,56 @@ UI* UIManager::GetUI(UI::UI_ID id)
 	UI* target = nullptr;
 	UI::UI_TYPE type = IDToType(id);
 
-	for (auto ui : ui_list)
+	switch (id)
 	{
-		if (ui->is_active)continue;
-		if (ui->type == type)
+		case UI::UI_ID::DMG_TEXT:
+		case UI::UI_ID::CRT_DMG_TEXT:
+		case UI::UI_ID::PLAYER_DMG_TEXT:
 		{
-			target = ui;
-			target->SetID(id);
-			break;
+			for (auto ui : ui_list[0])
+			{
+				if (ui->is_active)continue;
+				if (ui->type == type)
+				{
+					target = ui;
+					target->SetID(id);
+					break;
+				}
+			}
 		}
+		break;
+		case UI::UI_ID::HP_BAR:
+		case UI::UI_ID::HP_BAR_BACK:
+		case UI::UI_ID::EXP_BAR:
+		case UI::UI_ID::PLAYER_ICON:
+		{
+			for (auto ui : ui_list[1])
+			{
+				if (ui->is_active)continue;
+				if (ui->type == type)
+				{
+					target = ui;
+					target->SetID(id);
+					break;
+				}
+			}
+		}
+		break;
+		case UI::UI_ID::ATK_ARROW:
+		case UI::UI_ID::ATK_ARROW_FIXED:
+		{
+			for (auto ui : ui_list[1])
+			{
+				if (ui->is_active)continue;
+				if (ui->type == type)
+				{
+					target = ui;
+					target->SetID(id);
+					break;
+				}
+			}
+		}
+		break;
 	}
 
 	if (target == nullptr)
@@ -99,14 +197,20 @@ UI::UI_TYPE UIManager::IDToType(UI::UI_ID id)
 	{
 	case UI::UI_ID::DMG_TEXT:
 	case UI::UI_ID::CRT_DMG_TEXT:
+	case UI::UI_ID::PLAYER_DMG_TEXT:
 		return UI::UI_TYPE::DMG_TEXT;
 	case UI::UI_ID::HP_BAR:
 	case UI::UI_ID::HP_BAR_BACK:
 		return UI::UI_TYPE::HP_BAR;
+	case UI::UI_ID::EXP_BAR_BACK:
 	case UI::UI_ID::EXP_BAR:
+	case UI::UI_ID::EXP_BAR_FRONT:
 		return UI::UI_TYPE::EXP_BAR;
-	case UI::UI_ID::PlayerIcon:
-		break;
+	case UI::UI_ID::PLAYER_ICON:
+		return UI::UI_TYPE::IMAGE;
+	case UI::UI_ID::ATK_ARROW:
+	case UI::UI_ID::ATK_ARROW_FIXED:
+		return UI::UI_TYPE::ARROW;
 	default:
 		break;
 	}

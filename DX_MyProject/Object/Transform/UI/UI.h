@@ -9,16 +9,27 @@ public:
 		IMAGE,
 		PANEL,
 		HP_BAR,
-		EXP_BAR
+		EXP_BAR,
+		ARROW
 	}type;
 	enum class  UI_ID
 	{
+		// Dmg Text
 		DMG_TEXT,
 		CRT_DMG_TEXT,
+		PLAYER_DMG_TEXT,
+		// Hp Bar
 		HP_BAR,
 		HP_BAR_BACK,
+		// Exp Bar
+		EXP_BAR_BACK,
 		EXP_BAR,
-		PlayerIcon
+		EXP_BAR_FRONT,
+		// Icon
+		PLAYER_ICON,
+		// Arrow
+		ATK_ARROW,
+		ATK_ARROW_FIXED
 	}id;
 	enum class UI_STATE
 	{
@@ -37,6 +48,7 @@ protected:
 	vector<UI*> child_list;
 
 	Vector2 ui_size;
+	Vector2 ui_scale;
 
 	vector<Clip*> clips; // 애니메이션 클립들
 	int clip_idx;
@@ -49,7 +61,7 @@ public:
 	virtual void Render() = 0;
 	virtual void PostRender() = 0;
 	void SetTarget(Transform* target) { this->target = target; }
-	void SetSize(Vector2 size) { this->ui_size = size; }
+	void SetScale(Vector2 scale) { this->ui_scale = scale; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }
 	virtual void SetState(UI::UI_STATE state) = 0;
 	virtual void SetID(UI::UI_ID id) = 0;

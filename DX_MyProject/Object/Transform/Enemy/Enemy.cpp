@@ -49,7 +49,7 @@ void Enemy::ChangeHP(float amount,bool isCrt)
 				ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::DMG_TEXT));
 			ui->SetPos(initPos - Vector2(6, 0) * idx++);
 			ui->SetMoveDir(initPos.Normalized()*Vector2(1.0f,-1.0f));
-			ui->SetSize(Vector2(1.0f, 1.0f));
+			ui->SetScale(Vector2(1.0f, 1.0f));
 			ui->SetClipIdx(damage % 10);
 			damage /= 10;
 			ui->SetActive(true);
@@ -60,7 +60,7 @@ void Enemy::ChangeHP(float amount,bool isCrt)
 			ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::DMG_TEXT));
 		ui->SetPos(initPos - Vector2(6, 0) * idx++);
 		ui->SetMoveDir(initPos.Normalized() * Vector2(1.0f, -1.0f));
-		ui->SetSize(Vector2(1.0f, 1.0f));
+		ui->SetScale(Vector2(1.0f, 1.0f));
 		ui->SetClipIdx(damage % 10);
 		ui->SetActive(true);
 	}
@@ -98,7 +98,8 @@ void Enemy::Attack()
 	if (!is_active)return;
 
 	atk_nowTime = 0.0f;
-	player->ChangeHP(-attack);
+	Vector2 dir = Vector2(-move_dir.x, abs(move_dir.y));
+	player->ChangeHP(-attack, dir);
 }
 
 void Enemy::SetBadStatus(Enemy::BAD_STATUS bad, float time)

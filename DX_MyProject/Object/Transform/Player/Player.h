@@ -1,6 +1,8 @@
 #pragma once
 class Skill;
 class HPBar;
+class ExpBar;
+class Arrow;
 class Player :public Transform
 {
 public:
@@ -76,6 +78,8 @@ protected:
 	//UI
 	HPBar* hp_bar;
 	HPBar* hp_back;
+	ExpBar* exp_bar;
+	Arrow* atk_arrow;
 public:
 	Player(float MaxHP = 100.0f, float atk = 10.0f, float speed = 100.0f, float crt = 10.0f, float pickupRange = 40.0f, float damage_delay = 0.33f, int idx_pickUpRange = 0,Vector2 size=Vector2(48.0f,60.0f));
 	virtual ~Player();
@@ -84,6 +88,7 @@ public:
 	CircleCollider* GetPickUpcollider() { return pickUpColliders[idx_pickUpRange]; }
 
 	virtual void Update() = 0;
+	void UpdateDefault();
 	virtual void Render() = 0;
 	virtual void PostRender() = 0;
 
@@ -92,7 +97,7 @@ public:
 	Vector2 GetAttackDir() { return attack_dir; }
 	
 	// 받은 데미지 처리
-	virtual void ChangeHP(float amount);
+	virtual void ChangeHP(float amount, Vector2 dir = Vector2(0, 0));
 	// 공격은 투사체에서 처리하도록 할 예정- 플레이어는 공격력을 전달할 뿐
 	virtual float GetAttack() { return attack; }
 

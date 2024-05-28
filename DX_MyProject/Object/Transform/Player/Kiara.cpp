@@ -112,6 +112,8 @@ void Kiara::Update()
 	default:
 		break;
 	}
+	
+	UpdateDefault();
 
 	clips[(UINT)action_status]->Update();
 	scale = clips[(UINT)action_status]->GetFrameSize() * size /

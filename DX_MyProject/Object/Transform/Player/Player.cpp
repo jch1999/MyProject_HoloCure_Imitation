@@ -117,7 +117,7 @@ void Player::CheckMoveDir()
 	{
 		attack_dir = move_dir;
 		is_looking_right = attack_dir.x > 0.f ? true : attack_dir.x < 0.f ? false : is_looking_right;
-		atk_arrow->rot.z = atan(attack_dir.y / attack_dir.x);
+		atk_arrow->rot.z = attack_dir.Angle();
 	}
 }
 

@@ -1,12 +1,11 @@
 #pragma once
-class HPBar :public UI
+class Icon :public UI
 {
 protected:
-	float hpRate;
-	bool isConstant;
+
 public:
-	HPBar();
-	~HPBar();
+	Icon();
+	~Icon();
 
 
 	// UI을(를) 통해 상속됨
@@ -17,6 +16,4 @@ public:
 	virtual void PostRender() override;
 	virtual void SetState(UI::UI_STATE state);
 	virtual void SetID(UI::UI_ID id) override;
-	void SetHpRate(float rate);
-	void SetConstant(bool isConstant) { this->isConstant = isConstant; }
 };

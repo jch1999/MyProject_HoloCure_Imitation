@@ -11,7 +11,7 @@ UIManager::UIManager()
 	}
 
 	// HP Bar
-	for(int i=0;i<4;i++)
+	for(int i=0;i<2;i++)
 		ui_list[1].push_back(new HPBar());
 
 	// Exp Bar
@@ -35,6 +35,20 @@ UIManager::UIManager()
 
 	// ATK Arrow
 	ui_list[1].push_back(new Arrow());
+
+	// 각 Frame과 Panel에 포함되는 UI는 해당 Frame/Panel에서 child_list로 관리
+	// Frame
+	PlayerIconFrame* pFrame = new PlayerIconFrame();
+	pFrame->SetID(UI::UI_ID::PLAYER_ICON_FRAME);
+	pFrame->SetTarget(CAM);
+	pFrame->SetActive(true);
+	ui_list[1].push_back(pFrame);
+
+	// Panel
+	PausePanel* pause = new PausePanel();
+	pause->SetTarget(CAM);
+	pause->SetOffset(WIN_CENTER);
+	ui_list[2].push_back(pause);
 }
 
 UIManager::~UIManager()
@@ -105,14 +119,7 @@ UI* UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 size, Vector2 offs
 		return hp;
 	}
 	break;
-	case UI::UI_ID::EXP_BAR_BACK:
-	case UI::UI_ID::EXP_BAR:
-	case UI::UI_ID::EXP_BAR_FRONT:
-	{
-
-	}
-		break;
-	case UI::UI_ID::PLAYER_ICON:
+	case UI::UI_ID::SKILL_ICON:
 		break;
 	case UI::UI_ID::ATK_ARROW:
 	case UI::UI_ID::ATK_ARROW_FIXED:

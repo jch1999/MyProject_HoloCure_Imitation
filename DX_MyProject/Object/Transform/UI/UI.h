@@ -5,8 +5,10 @@ class UI :public Transform
 public:
 	enum class UI_TYPE
 	{
+		TEXT,
 		DMG_TEXT,
 		IMAGE,
+		FRAME,
 		PANEL,
 		HP_BAR,
 		EXP_BAR,
@@ -14,6 +16,8 @@ public:
 	}type;
 	enum class  UI_ID
 	{
+		// Text
+		TEXT,
 		// Dmg Text
 		DMG_TEXT,
 		CRT_DMG_TEXT,
@@ -25,8 +29,14 @@ public:
 		EXP_BAR_BACK,
 		EXP_BAR,
 		EXP_BAR_FRONT,
+		// Frame
+		PLAYER_ICON_FRAME,
+		SKILL_ICON_FRAME,
 		// Icon
 		PLAYER_ICON,
+		SKILL_ICON,
+		WEAPON_ICON_BACK,
+		BUFF_ICON_BACK,
 		// Arrow
 		ATK_ARROW,
 		ATK_ARROW_FIXED
@@ -49,7 +59,7 @@ protected:
 
 	Vector2 ui_size;
 	Vector2 ui_scale;
-
+	Vector2 additional_scale;
 	vector<Clip*> clips; // 애니메이션 클립들
 	int clip_idx;
 
@@ -62,6 +72,7 @@ public:
 	virtual void PostRender() = 0;
 	void SetTarget(Transform* target) { this->target = target; }
 	void SetScale(Vector2 scale) { this->ui_scale = scale; }
+	void SetAddtionalScale(Vector2 scale) { this->additional_scale = scale; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }
 	virtual void SetState(UI::UI_STATE state) = 0;
 	virtual void SetID(UI::UI_ID id) = 0;

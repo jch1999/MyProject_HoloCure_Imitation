@@ -1,6 +1,7 @@
 #include "framework.h"
 
 HPBar::HPBar()
+	:isConstant(false)
 {
 	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
 	vector<Frame*> frames;
@@ -18,6 +19,7 @@ HPBar::HPBar()
 	state = UI::UI_STATE::IDLE;
 	ui_size = Vector2(40.0f, 5.0f);
 	ui_scale = Vector2(1, 1);
+	additional_scale = Vector2(1, 1);
 	offset = Vector2(0, 0);
 	is_active = false;
 }
@@ -31,34 +33,36 @@ void HPBar::Update()
 {
 	if (!is_active)return;
 	
-	switch (state)
+	if (!isConstant)
 	{
-	case UI::UI_STATE::IDLE:
-	{
-		if (hpRate <= 0.99f)
+		switch (state)
 		{
-			SetState(UI_STATE::ACTIVE);
-		}
-		else
-			return;
-	}
-		break;
-	case UI::UI_STATE::ACTIVE:
-	{
-		if (hpRate > 0.99f)
+		case UI::UI_STATE::IDLE:
 		{
-			SetState(UI_STATE::IDLE);
+			if (hpRate <= 0.99f)
+			{
+				SetState(UI_STATE::ACTIVE);
+			}
+			else
+				return;
+		}
+		break;
+		case UI::UI_STATE::ACTIVE:
+		{
+			if (hpRate > 0.99f)
+			{
+				SetState(UI_STATE::IDLE);
+			}
+		}
+		break;
+		default:
+			break;
 		}
 	}
-		break;
-	default:
-		break;
-	}
-
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
+	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale * additional_scale;
 	clips[clip_idx]->Update();
 
-	pos = target->pos + offset - Vector2(1-ui_scale.x/2.0f, 0) * ui_size;
+	pos = target->pos + offset - Vector2((1 - ui_scale.x) / 2.0f, 0) * ui_size * additional_scale;
 	WorldUpdate();
 }
 

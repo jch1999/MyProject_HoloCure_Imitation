@@ -256,6 +256,10 @@
     <ClInclude Include="Object\Transform\UI\DmgText.h" />
     <ClInclude Include="Object\Transform\UI\ExpBar.h" />
     <ClInclude Include="Object\Transform\UI\HPBar.h" />
+    <ClInclude Include="Object\Transform\UI\Icon.h" />
+    <ClInclude Include="Object\Transform\UI\PausePanel.h" />
+    <ClInclude Include="Object\Transform\UI\PlayerIconFrame.h" />
+    <ClInclude Include="Object\Transform\UI\Text.h" />
     <ClInclude Include="Object\Transform\UI\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\UI.h" />
     <ClInclude Include="Object\Transform\UI\UIManager.h" />
@@ -354,6 +358,10 @@
     <ClCompile Include="Object\Transform\UI\DmgText.cpp" />
     <ClCompile Include="Object\Transform\UI\ExpBar.cpp" />
     <ClCompile Include="Object\Transform\UI\HPBar.cpp" />
+    <ClCompile Include="Object\Transform\UI\Icon.cpp" />
+    <ClCompile Include="Object\Transform\UI\PausePanel.cpp" />
+    <ClCompile Include="Object\Transform\UI\PlayerIconFrame.cpp" />
+    <ClCompile Include="Object\Transform\UI\Text.cpp" />
     <ClCompile Include="Object\Transform\UI\UI.cpp" />
     <ClCompile Include="Object\Transform\UI\UIManager.cpp" />
     <ClCompile Include="Program\Program.cpp" />

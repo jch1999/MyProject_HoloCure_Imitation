@@ -33,6 +33,7 @@ DmgText::DmgText()
 	type = UI_TYPE::DMG_TEXT; 
 	ui_size = Vector2(10.0f, 14.0f);
 	ui_scale = Vector2(1, 1);
+	additional_scale = Vector2(1, 1);
 	offset = Vector2(0, 0);
 	is_active = false;
 }

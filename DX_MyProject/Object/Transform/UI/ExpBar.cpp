@@ -25,6 +25,7 @@ ExpBar::ExpBar()
 	type = UI_TYPE::EXP_BAR; 
 	ui_size = Vector2(WIN_WIDTH+20.0f, 40.0f);
 	ui_scale = Vector2(1, 1);
+	additional_scale = Vector2(1, 1);
 	offset = Vector2(WIN_CENTER_X+10.0f, 20.0f);
 	is_active = false;
 }

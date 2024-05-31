@@ -10,8 +10,15 @@ public:
 	// 0 filed_back(dmgText) 
 	// 1 field_front & Camera(hp_bar, arrow, exp_bar, player icon) 
 	// 2 pause black_effect
-	// 3 panels(level up, enhance, pause)
+	// 3 panels(level up, enhance, reward, pause) -> pause panel을 빼내서 다른 패널이 있을 때도 호출할 수 있도록 변경
+	// pause panel이 활성화되어 있을 때는 다른 panel이나 UI도 정지? UI_Pasue 라는 변수를 만들어야 하나?
 	vector<vector<UI*>> ui_list;
+
+	UI* nowPanel;// LevelUp, Enhance, Reward panel - player, anvil, reward box에서 활성, 하나가 활성되었을 때 다른 하나는 활성이 안됨.
+	// 활성대기를 위해 어떤 것이 활성대기중인지 기록해둘 변수가 필요...? 호출한 객체의 포인터와 어떤 창을 호출하려는 건지 알기 위한 enum class 정도?
+	// list vector .. list?
+	UI* pausePanel;
+	UI* levelPanel;
 private:
 	UIManager();
 	~UIManager();

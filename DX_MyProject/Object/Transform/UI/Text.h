@@ -15,6 +15,6 @@ public:
 
 	virtual void PostRender() override;
 	virtual void SetState(UI::UI_STATE state) override { this->state = state; }
-	virtual void SetID(UI::UI_ID id) override { this->id = id; }
+	virtual void SetID(UI::UI_ID id) override;
 	void SetClipIdx(int idx);
 };

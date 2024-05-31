@@ -8,21 +8,21 @@ DmgText::DmgText()
 	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
 	vector<Frame*> frames;
 	// normal dmg clip
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i <= 9; i++)
 	{
 		frames.push_back(new Frame(file, 139 + i * 7, 484, 5, 7));
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 		frames.clear();
 	}
 	// crt dmg clip
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i <= 9; i++)
 	{
 		frames.push_back(new Frame(file, 139 + i * 7, 493, 5, 7));
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 		frames.clear();
 	}
 	// player dmg clip
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i <= 9; i++)
 	{
 		frames.push_back(new Frame(file, 139 + i * 7, 502, 5, 7));
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));

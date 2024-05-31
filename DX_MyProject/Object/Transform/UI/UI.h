@@ -9,16 +9,20 @@ public:
 		DMG_TEXT,
 		LABEL,
 		IMAGE,
+		ICON,
 		FRAME,
 		PANEL,
 		HP_BAR,
 		EXP_BAR,
-		ARROW
+		ARROW,
+		SELECTOR,
+		TIMER
 	}type;
 	enum class  UI_ID
 	{
 		// Text
 		TEXT,
+		LEVEL_UP_TEXT,
 		// Dmg Text
 		DMG_TEXT,
 		CRT_DMG_TEXT,
@@ -34,14 +38,27 @@ public:
 		// Frame
 		PLAYER_ICON_FRAME,
 		SKILL_LIST_FRAME,
+		SKILL_ICON_FRAME,
 		// Icon
 		PLAYER_ICON,
+		PLAYER_FULL_ICON,
 		SKILL_ICON,
+		SKILL_LEVEL_UP_ICON,
+		SKILL_ENHANCE_ICON,
 		WEAPON_ICON_BACK,
 		BUFF_ICON_BACK,
 		// Arrow
 		ATK_ARROW,
-		ATK_ARROW_FIXED
+		ATK_ARROW_FIXED,
+		// Panel
+		LEVEL_UP_PANEL,
+		ENHANCE_PANEL,
+		REWARD_PANEL,
+		PAUSE_PANEL,
+		// Selecor
+		LEVEL_UP_SELECTOR,
+		// Timer
+		TIMER,
 	}id;
 	enum class UI_STATE
 	{
@@ -73,6 +90,7 @@ public:
 	virtual void Render() = 0;
 	virtual void PostRender() = 0;
 	void SetTarget(Transform* target) { this->target = target; }
+	void SetSize(Vector2 size) { this->ui_size = size; }
 	void SetScale(Vector2 scale) { this->ui_scale = scale; }
 	void SetAddtionalScale(Vector2 scale) { this->additional_scale = scale; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }

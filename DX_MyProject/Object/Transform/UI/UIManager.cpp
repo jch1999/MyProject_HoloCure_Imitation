@@ -1,6 +1,7 @@
 #include "framework.h"
 
 UIManager::UIManager()
+	:nowPanel(nullptr)
 {
 	ui_list.resize(4);
 
@@ -36,6 +37,9 @@ UIManager::UIManager()
 	// ATK Arrow
 	ui_list[1].push_back(new Arrow());
 
+	// Timer
+	ui_list[1].push_back(new Time_UI());
+
 	// 각 Frame과 Panel에 포함되는 UI는 해당 Frame/Panel에서 child_list로 관리
 	// Frame
 	PlayerIconFrame* pFrame = new PlayerIconFrame();
@@ -50,10 +54,15 @@ UIManager::UIManager()
 	ui_list[1].push_back(sFrame);
 
 	// Panel
-	PausePanel* pause = new PausePanel();
+	PauseBack* pause = new PauseBack();
 	pause->SetTarget(CAM);
 	pause->SetOffset(WIN_CENTER);
 	ui_list[2].push_back(pause);
+
+	levelPanel = new LevelUpPanel();
+	levelPanel->SetTarget(CAM);
+	levelPanel->SetOffset(WIN_CENTER);
+	ui_list[2].push_back(levelPanel);
 }
 
 UIManager::~UIManager()
@@ -70,6 +79,21 @@ UIManager::~UIManager()
 
 void UIManager::Update()
 {
+	if (nowPanel==nullptr)
+	{
+		if (KEY_CON->Down(VK_ESCAPE))
+		{
+			// PAUSE_PANEL 호출
+		}
+		else if (KEY_CON->Down('X'))
+		{
+			// LEVEL_UP_PANEL 호출
+			isPause = true;
+			nowPanel = levelPanel;
+			nowPanel->SetActive(true);
+		}
+	}
+
 	for (auto ui : ui_list)
 	{
 		for (auto u : ui)

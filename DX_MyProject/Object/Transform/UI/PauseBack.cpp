@@ -1,6 +1,6 @@
 #include "framework.h"
 
-PausePanel::PausePanel()
+PauseBack::PauseBack()
 {
 	wstring file = L"Textures/UI/Black.png";
 	vector<Frame*> frames;
@@ -18,11 +18,11 @@ PausePanel::PausePanel()
 	is_active = true;
 }
 
-PausePanel::~PausePanel()
+PauseBack::~PauseBack()
 {
 }
 
-void PausePanel::Update()
+void PauseBack::Update()
 {
 	if (!is_active)return;
 	switch (state)
@@ -50,7 +50,7 @@ void PausePanel::Update()
 	WorldUpdate();
 }
 
-void PausePanel::Render()
+void PauseBack::Render()
 {
 	if (!is_active)return;
 
@@ -74,16 +74,16 @@ void PausePanel::Render()
 	}
 }
 
-void PausePanel::PostRender()
+void PauseBack::PostRender()
 {
 }
 
-void PausePanel::SetState(UI::UI_STATE state)
+void PauseBack::SetState(UI::UI_STATE state)
 {
 	this->state = state;
 }
 
-void PausePanel::SetID(UI::UI_ID id)
+void PauseBack::SetID(UI::UI_ID id)
 {
 	this->id = id;
 }

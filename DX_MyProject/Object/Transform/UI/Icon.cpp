@@ -29,6 +29,20 @@ Icon::Icon()
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
+	// Player Full Icon
+	// Watson
+	frames.push_back(new Frame(files[0], 7, 2419, 73, 105));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// Kiara
+	frames.push_back(new Frame(files[1], 7, 4008, 63, 115));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// Baelz
+	frames.push_back(new Frame(files[2], 7, 858, 73, 112));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	
 	// Weapon Icon Back
 	frames.push_back(new Frame(files[3], 139, 567, 12, 11));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
@@ -81,7 +95,7 @@ Icon::Icon()
 	child_list.push_back(label);
 
 	id = UI::UI_ID::PLAYER_ICON;
-	type = UI::UI_TYPE::IMAGE;
+	type = UI::UI_TYPE::ICON;
 	state = UI::UI_STATE::IDLE;
 	ui_size = Vector2(43.0f, 38.0f);
 	ui_scale = Vector2(1, 1);
@@ -169,8 +183,41 @@ void Icon::SetID(UI::UI_ID id)
 		}
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
 		label->SetActive(false);
+		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;
+	case UI::UI_ID::PLAYER_FULL_ICON:
+	{
+		// PlayerIconFrame의 경우 생성시기가 UIManager에 Player가 대입되는 시기보다 빠름
+		// 따라서 다른 곳에서 player정보를 가져와야 함
+		Player::PLAYER_ID p_id = EnemySpawner::Get()->GetPlayer()->player_id;
+		switch (p_id)
+		{
+		case Player::PLAYER_ID::WATSON:
+		{
+			clip_idx = 3;
+			SetSize(Vector2(73.0f, 105.0f));
+		}
+		break;
+		case Player::PLAYER_ID::KIARA:
+		{
+			clip_idx = 4;
+			SetSize(Vector2(63.0f, 115.0f));
+		}
+		break;
+		case Player::PLAYER_ID::BAELZ:
+		{
+			clip_idx = 5;
+			SetSize(Vector2(73.0f, 112.0f));
+		}
+		break;
+		default:
+			break;
+		}
+		CB->data.colour = Float4(0.95f, 0.95f, 0.95f, 0.85f);
+		label->SetActive(false);
+	}
+	break;
 	case UI::UI_ID::SKILL_ICON:
 	{
 		switch (skill_id)
@@ -183,56 +230,19 @@ void Icon::SetID(UI::UI_ID id)
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
 			if (level == 7)
 			{
-				clip_idx = 5 + skill_id * 2 + 1;
+				clip_idx = 8 + skill_id * 2 + 1;
 			}
 			else
 			{
-				clip_idx = 5 + skill_id * 2;
+				clip_idx = 8 + skill_id * 2;
 			}
 			label->SetClipIdx(2);
+			label->SetLevel(level);
 		}
 			break;
 		case (int)Skill::SKILL_ID::HOLO_BOMB:
-		{
-			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
-			if (level == 7)
-			{
-				label->SetClipIdx(1);
-			}
-			else
-			{
-				label->SetClipIdx(0);
-			}
-		}
-			break;
 		case (int)Skill::SKILL_ID::ELITE_LAVA_BUCKET:
-		{
-			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
-			if (level == 7)
-			{
-				label->SetClipIdx(1);
-			}
-			else
-			{
-				label->SetClipIdx(0);
-			}
-
-		}
-			break;
 		case (int)Skill::SKILL_ID::PSYCHO_AXE:
-		{
-			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
-			if (level == 7)
-			{
-				label->SetClipIdx(1);
-			}
-			else
-			{
-				label->SetClipIdx(0);
-			}
-
-		}
-			break;
 		case (int)Skill::SKILL_ID::SPIDER_COOKING:
 		{
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
@@ -244,7 +254,8 @@ void Icon::SetID(UI::UI_ID id)
 			{
 				label->SetClipIdx(0);
 			}
-
+			label->SetLevel(level);
+			clip_idx = 14 + (int)(id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 		}
 			break;
 		default:
@@ -252,20 +263,93 @@ void Icon::SetID(UI::UI_ID id)
 		}
 		// label->SetActive(true);
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
+		SetSize(Vector2(43.0f, 38.0f));
+	}
+		break;
+	case UI::UI_ID::SKILL_LEVEL_UP_ICON:
+	{
+		switch (skill_id)
+		{
+			// WEAPON SKILL
+		case (int)Skill::SKILL_ID::PISTOL_SHOT:
+		case (int)Skill::SKILL_ID::PHOENIX_SWORD:
+		case (int)Skill::SKILL_ID::PLAY_DICE:
+		{
+			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
+			if (level == 7)
+			{
+				clip_idx = 8 + skill_id * 2 + 1;
+			}
+			else
+			{
+				clip_idx = 8 + skill_id * 2;
+			}
+		}
+		break;
+		case (int)Skill::SKILL_ID::HOLO_BOMB:
+		case (int)Skill::SKILL_ID::ELITE_LAVA_BUCKET:
+		case (int)Skill::SKILL_ID::PSYCHO_AXE:
+		case (int)Skill::SKILL_ID::SPIDER_COOKING:
+		{
+			clip_idx = 14 + (int)(id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+		}
+		break;
+		default:
+			break;
+		}
+		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
+		SetSize(Vector2(43.0f, 38.0f));
+	}
+		break;
+	case UI::UI_ID::SKILL_ENHANCE_ICON:
+	{
+		switch (skill_id)
+		{
+			// WEAPON SKILL
+		case (int)Skill::SKILL_ID::PISTOL_SHOT:
+		case (int)Skill::SKILL_ID::PHOENIX_SWORD:
+		case (int)Skill::SKILL_ID::PLAY_DICE:
+		{
+			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
+			if (level == 7)
+			{
+				clip_idx = 8 + skill_id * 2 + 1;
+			}
+			else
+			{
+				clip_idx = 8 + skill_id * 2;
+			}
+		}
+		break;
+		case (int)Skill::SKILL_ID::HOLO_BOMB:
+		case (int)Skill::SKILL_ID::ELITE_LAVA_BUCKET:
+		case (int)Skill::SKILL_ID::PSYCHO_AXE:
+		case (int)Skill::SKILL_ID::SPIDER_COOKING:
+		{
+			clip_idx = 14 + (int)(id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+		}
+		break;
+		default:
+			break;
+		}
+		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
+		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;
 	case UI::UI_ID::WEAPON_ICON_BACK:
 	{
-		clip_idx = 3;
+		clip_idx = 6;
 		label->SetActive(false);
 		CB->data.colour = Float4(0.8f, 0.8f, 0.8f, 0.3f);
+		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;
 	case UI::UI_ID::BUFF_ICON_BACK:
 	{
-		clip_idx = 4;
+		clip_idx = 7;
 		label->SetActive(false);
 		CB->data.colour = Float4(0.8f, 0.8f, 0.8f, 0.3f);
+		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;
 	default:

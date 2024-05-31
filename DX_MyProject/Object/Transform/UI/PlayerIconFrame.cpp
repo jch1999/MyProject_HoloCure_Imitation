@@ -31,9 +31,24 @@ PlayerIconFrame::PlayerIconFrame()
 	hpBar->SetState(UI::UI_STATE::ACTIVE);
 	hpBar->SetActive(true);
 
+	text_startOffset = Vector2(75.0f, -52.0f);
+	for (int i = 0; i < 7; i++)
+	{
+		Text* t = new Text();
+		t->SetID(UI_ID::TEXT);
+		t->SetTarget(this);
+		t->SetOffset(text_startOffset);
+		hpText.push_back(t);
+		t->SetActive(false);
+	}
+
 	child_list.push_back(playerIcon);
 	child_list.push_back(hpBar_back);
 	child_list.push_back(hpBar);
+	for (int i = 0; i < 7; i++)
+	{
+		child_list.push_back(hpText[i]);
+	}
 	
 	id = UI::UI_ID::PLAYER_ICON_FRAME;
 	type = UI::UI_TYPE::FRAME;
@@ -57,6 +72,9 @@ void PlayerIconFrame::Update()
 	// 자식에 추가 작업
 	float hpRate = UIManager::Get()->GetPlayer()->GetHP() / UIManager::Get()->GetPlayer()->GetMaxHP();
 	hpBar->SetHpRate(hpRate);
+	
+	// HP에 따라 text 배치
+	SetHpText();
 
 	pos = target->pos + offset;
 	WorldUpdate();
@@ -94,4 +112,87 @@ void PlayerIconFrame::SetState(UI::UI_STATE state)
 void PlayerIconFrame::SetID(UI::UI_ID id)
 {
 	this->id = id;
+}
+
+void PlayerIconFrame::SetHpText()
+{
+	int nowHp = (int)UIManager::Get()->GetPlayer()->GetHP();
+	int maxHp = (int)UIManager::Get()->GetPlayer()->GetMaxHP();
+	int textIdx = 0;
+	Vector2 nowOffset = text_startOffset;
+	Vector2 interval(15, 0);
+
+	switch (nowHp / 100)
+	{
+	case 0:
+	{
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + nowHp / 10);
+
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + nowHp % 10);
+	}
+	break;
+	default:
+	{
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + nowHp / 100);
+
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + nowHp / 10);
+
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + nowHp % 10);
+	}
+	break;
+	}
+
+	// 가운데의 slash 배치.. 이지만 임시로 1로 대체
+	nowOffset = nowOffset + interval/2.0f;
+	hpText[textIdx]->SetClipIdx(1 + 1);
+	hpText[textIdx++]->SetOffset(nowOffset);
+	nowOffset = nowOffset + interval * 1.5f;
+	
+	switch (maxHp / 100)
+	{
+	case 0:
+	{
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + maxHp / 10);
+
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + maxHp % 10);
+	}
+	break;
+	default:
+	{
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + maxHp / 100);
+
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + maxHp / 10);
+
+		hpText[textIdx]->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		hpText[textIdx++]->SetClipIdx(1 + maxHp % 10);
+	}
+	break;
+	}
+
+	for (int i = 0; i < 7; i++)
+	{
+		if (i < textIdx)
+			hpText[i]->SetActive(true);
+		else
+			hpText[i]->SetActive(false);
+	}
 }

@@ -12,6 +12,12 @@ LevelLabel::LevelLabel()
 		frames.clear();
 	}
 
+	levelText = new Text();
+	levelText->SetID(UI_ID::TEXT);
+	levelText->SetTarget(this);
+	levelText->SetOffset(Vector2(10.0f, 1.0f));
+	levelText->SetClipIdx(1);
+	
 	id = UI::UI_ID::LEVEL_LABEL;
 	type = UI::UI_TYPE::LABEL;
 	state = UI::UI_STATE::IDLE;
@@ -35,6 +41,8 @@ void LevelLabel::Update()
 
 	pos = target->pos + offset;
 	WorldUpdate();
+
+	levelText->Update();
 }
 
 void LevelLabel::Render()
@@ -47,6 +55,7 @@ void LevelLabel::Render()
 	CB->SetPS(0);
 
 	clips[clip_idx]->Render();
+	levelText->Render();
 }
 
 void LevelLabel::PostRender()
@@ -61,4 +70,26 @@ void LevelLabel::SetState(UI::UI_STATE state)
 void LevelLabel::SetID(UI::UI_ID id)
 {
 	this->id = id;
+}
+
+void LevelLabel::SetLevel(int level)
+{
+	switch (clip_idx)
+	{
+	case 0:
+		levelText->SetClipIdx(1 + level);
+		break;
+	case 1:
+		levelText->SetClipIdx(11 + level);
+		break;
+	case 2:
+		levelText->SetClipIdx(21 + level);
+		break;
+	}
+}
+
+void LevelLabel::SetActive(bool active)
+{
+	is_active = active;
+	levelText->SetActive(active);
 }

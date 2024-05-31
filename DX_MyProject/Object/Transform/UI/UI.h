@@ -7,6 +7,7 @@ public:
 	{
 		TEXT,
 		DMG_TEXT,
+		LABEL,
 		IMAGE,
 		FRAME,
 		PANEL,
@@ -22,6 +23,7 @@ public:
 		DMG_TEXT,
 		CRT_DMG_TEXT,
 		PLAYER_DMG_TEXT,
+		LEVEL_LABEL,
 		// Hp Bar
 		HP_BAR,
 		HP_BAR_BACK,
@@ -31,7 +33,7 @@ public:
 		EXP_BAR_FRONT,
 		// Frame
 		PLAYER_ICON_FRAME,
-		SKILL_ICON_FRAME,
+		SKILL_LIST_FRAME,
 		// Icon
 		PLAYER_ICON,
 		SKILL_ICON,
@@ -77,4 +79,5 @@ public:
 	virtual void SetState(UI::UI_STATE state) = 0;
 	virtual void SetID(UI::UI_ID id) = 0;
 	virtual void SetActive(bool active) { is_active = active; }
+	void SetClipIdx(int idx) { clip_idx = idx; }
 };

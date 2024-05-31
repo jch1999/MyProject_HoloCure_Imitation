@@ -11,7 +11,7 @@ PlayerIconFrame::PlayerIconFrame()
 	playerIcon = new Icon();
 	playerIcon->SetID(UI::UI_ID::PLAYER_ICON);
 	playerIcon->SetTarget(this);
-	playerIcon->SetOffset(Vector2(-160.0f, -31.0f));
+	playerIcon->SetOffset(Vector2(-140.0f, -31.0f));
 	playerIcon->SetScale(Vector2(2, 1.5f));
 	playerIcon->SetActive(true);
 

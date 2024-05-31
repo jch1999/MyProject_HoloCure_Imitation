@@ -44,6 +44,11 @@ UIManager::UIManager()
 	pFrame->SetActive(true);
 	ui_list[1].push_back(pFrame);
 
+	SkillListFrame* sFrame = new SkillListFrame();
+	sFrame->SetTarget(CAM);
+	sFrame->SetActive(true);
+	ui_list[1].push_back(sFrame);
+
 	// Panel
 	PausePanel* pause = new PausePanel();
 	pause->SetTarget(CAM);

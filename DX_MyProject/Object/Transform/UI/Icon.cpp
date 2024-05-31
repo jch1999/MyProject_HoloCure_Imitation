@@ -8,7 +8,9 @@ Icon::Icon()
 		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png",
 		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png",
 		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png",
-		// SkillIcon
+		// Back Icon
+		L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png",
+		// Skill Icon
 		L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png",
 	};
 	vector<Frame*> frames;
@@ -27,14 +29,24 @@ Icon::Icon()
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
+	// Weapon Icon Back
+	frames.push_back(new Frame(files[3], 139, 567, 12, 11));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+
+	// Buff Icon Back
+	frames.push_back(new Frame(files[3], 153, 567, 12, 11));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+
 	// Default Weapon Icon
 	// PistolShot
 	// Normal
-	frames.push_back(new Frame(files[1], 11, 1956, 18, 20));
+	frames.push_back(new Frame(files[0], 11, 1956, 18, 20));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Awake
-	frames.push_back(new Frame(files[1], 34, 1956, 24, 25));
+	frames.push_back(new Frame(files[0], 34, 1956, 24, 25));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// PhoenixSword
@@ -48,17 +60,25 @@ Icon::Icon()
 	frames.clear();
 	// PlayDice
 	// Normal
-	frames.push_back(new Frame(files[1], 9, 703, 21, 20));
+	frames.push_back(new Frame(files[2], 9, 703, 21, 20));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Awake
-	frames.push_back(new Frame(files[1], 33, 703, 25, 20));
+	frames.push_back(new Frame(files[2], 33, 703, 25, 20));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
 	// Weapon Skill Icon
 
 	// Buff Skill Icon
+
+	// Level Label
+	label = new LevelLabel();
+	label->SetTarget(this);
+	label->SetOffset(Vector2(0, 30));
+	label->SetActive(false);
+
+	child_list.push_back(label);
 
 	id = UI::UI_ID::PLAYER_ICON;
 	type = UI::UI_TYPE::IMAGE;
@@ -78,11 +98,20 @@ void Icon::Update()
 {
 	if (!is_active)return;
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
+	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale * additional_scale;
 	clips[clip_idx]->Update();
 
-	pos = target->pos + offset - Vector2((1 - ui_scale.x) / 2.0f, 0) * ui_size;
+	pos = target->pos + offset;
 	WorldUpdate();
+
+	if (id != UI_ID::PLAYER_ICON)
+	{
+		// 레이블 정보 갱신을 위한 내용이 SetID에 있으니 일단은 그것을 그대로 사용
+		SetID(this->id);
+	}
+
+	for (auto child : child_list)
+		child->Update();
 }
 
 void Icon::Render()
@@ -95,6 +124,9 @@ void Icon::Render()
 	CB->SetPS(0);
 
 	clips[clip_idx]->Render();
+
+	for (auto child : child_list)
+		child->Render();
 }
 
 void Icon::PostRender()
@@ -135,13 +167,106 @@ void Icon::SetID(UI::UI_ID id)
 		default:
 			break;
 		}
+		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
+		label->SetActive(false);
 	}
 		break;
 	case UI::UI_ID::SKILL_ICON:
+	{
+		switch (skill_id)
+		{
+			// WEAPON SKILL
+		case (int)Skill::SKILL_ID::PISTOL_SHOT:
+		case (int)Skill::SKILL_ID::PHOENIX_SWORD:
+		case (int)Skill::SKILL_ID::PLAY_DICE:
+		{
+			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
+			if (level == 7)
+			{
+				clip_idx = 5 + skill_id * 2 + 1;
+			}
+			else
+			{
+				clip_idx = 5 + skill_id * 2;
+			}
+			label->SetClipIdx(2);
+		}
+			break;
+		case (int)Skill::SKILL_ID::HOLO_BOMB:
+		{
+			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
+			if (level == 7)
+			{
+				label->SetClipIdx(1);
+			}
+			else
+			{
+				label->SetClipIdx(0);
+			}
+		}
+			break;
+		case (int)Skill::SKILL_ID::ELITE_LAVA_BUCKET:
+		{
+			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
+			if (level == 7)
+			{
+				label->SetClipIdx(1);
+			}
+			else
+			{
+				label->SetClipIdx(0);
+			}
+
+		}
+			break;
+		case (int)Skill::SKILL_ID::PSYCHO_AXE:
+		{
+			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
+			if (level == 7)
+			{
+				label->SetClipIdx(1);
+			}
+			else
+			{
+				label->SetClipIdx(0);
+			}
+
+		}
+			break;
+		case (int)Skill::SKILL_ID::SPIDER_COOKING:
+		{
+			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
+			if (level == 7)
+			{
+				label->SetClipIdx(1);
+			}
+			else
+			{
+				label->SetClipIdx(0);
+			}
+
+		}
+			break;
+		default:
+			break;
+		}
+		// label->SetActive(true);
+		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
+	}
 		break;
 	case UI::UI_ID::WEAPON_ICON_BACK:
+	{
+		clip_idx = 3;
+		label->SetActive(false);
+		CB->data.colour = Float4(0.8f, 0.8f, 0.8f, 0.3f);
+	}
 		break;
 	case UI::UI_ID::BUFF_ICON_BACK:
+	{
+		clip_idx = 4;
+		label->SetActive(false);
+		CB->data.colour = Float4(0.8f, 0.8f, 0.8f, 0.3f);
+	}
 		break;
 	default:
 		break;

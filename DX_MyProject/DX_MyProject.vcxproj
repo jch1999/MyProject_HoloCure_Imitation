@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -254,11 +254,16 @@
     <ClInclude Include="Object\Transform\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\Arrow.h" />
     <ClInclude Include="Object\Transform\UI\DmgText.h" />
+    <ClInclude Include="Object\Transform\UI\EnhancePanel.h" />
     <ClInclude Include="Object\Transform\UI\ExpBar.h" />
     <ClInclude Include="Object\Transform\UI\HPBar.h" />
     <ClInclude Include="Object\Transform\UI\Icon.h" />
+    <ClInclude Include="Object\Transform\UI\LevelLabel.h" />
+    <ClInclude Include="Object\Transform\UI\LevelUpPanel.h" />
     <ClInclude Include="Object\Transform\UI\PausePanel.h" />
     <ClInclude Include="Object\Transform\UI\PlayerIconFrame.h" />
+    <ClInclude Include="Object\Transform\UI\QuitPanel.h" />
+    <ClInclude Include="Object\Transform\UI\SkillListFrame.h" />
     <ClInclude Include="Object\Transform\UI\Text.h" />
     <ClInclude Include="Object\Transform\UI\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\UI.h" />
@@ -359,8 +364,10 @@
     <ClCompile Include="Object\Transform\UI\ExpBar.cpp" />
     <ClCompile Include="Object\Transform\UI\HPBar.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon.cpp" />
+    <ClCompile Include="Object\Transform\UI\LevelLabel.cpp" />
     <ClCompile Include="Object\Transform\UI\PausePanel.cpp" />
     <ClCompile Include="Object\Transform\UI\PlayerIconFrame.cpp" />
+    <ClCompile Include="Object\Transform\UI\SkillListFrame.cpp" />
     <ClCompile Include="Object\Transform\UI\Text.cpp" />
     <ClCompile Include="Object\Transform\UI\UI.cpp" />
     <ClCompile Include="Object\Transform\UI\UIManager.cpp" />

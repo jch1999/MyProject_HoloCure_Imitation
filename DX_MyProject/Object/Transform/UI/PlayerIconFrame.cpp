@@ -126,28 +126,44 @@ void PlayerIconFrame::SetHpText()
 	{
 	case 0:
 	{
-		hpText[textIdx]->SetOffset(nowOffset);
-		nowOffset = nowOffset + interval;
-		hpText[textIdx++]->SetClipIdx(1 + nowHp / 10);
+		if (nowHp >= 0)
+		{
+			hpText[textIdx]->SetOffset(nowOffset);
+			nowOffset = nowOffset + interval;
+			hpText[textIdx++]->SetClipIdx(1 + nowHp / 10);
 
-		hpText[textIdx]->SetOffset(nowOffset);
-		nowOffset = nowOffset + interval;
-		hpText[textIdx++]->SetClipIdx(1 + nowHp % 10);
+			hpText[textIdx]->SetOffset(nowOffset);
+			nowOffset = nowOffset + interval;
+			hpText[textIdx++]->SetClipIdx(1 + nowHp % 10);
+		}
+		else
+		{
+			hpText[textIdx++]->SetClipIdx(1);
+			hpText[textIdx++]->SetClipIdx(1);
+		}
 	}
 	break;
 	default:
 	{
 		hpText[textIdx]->SetOffset(nowOffset);
 		nowOffset = nowOffset + interval;
-		hpText[textIdx++]->SetClipIdx(1 + nowHp / 100);
+		if (nowHp >= 0)
+		{
+			hpText[textIdx++]->SetClipIdx(1 + nowHp / 100);
 
-		hpText[textIdx]->SetOffset(nowOffset);
-		nowOffset = nowOffset + interval;
-		hpText[textIdx++]->SetClipIdx(1 + nowHp / 10);
+			hpText[textIdx]->SetOffset(nowOffset);
+			nowOffset = nowOffset + interval;
+			hpText[textIdx++]->SetClipIdx(1 + nowHp / 10);
 
-		hpText[textIdx]->SetOffset(nowOffset);
-		nowOffset = nowOffset + interval;
-		hpText[textIdx++]->SetClipIdx(1 + nowHp % 10);
+			hpText[textIdx]->SetOffset(nowOffset);
+			nowOffset = nowOffset + interval;
+			hpText[textIdx++]->SetClipIdx(1 + nowHp % 10);
+		}
+		else
+		{
+			hpText[textIdx++]->SetClipIdx(1);
+			hpText[textIdx++]->SetClipIdx(1);
+		}
 	}
 	break;
 	}

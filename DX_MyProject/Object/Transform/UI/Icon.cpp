@@ -11,7 +11,7 @@ Icon::Icon()
 		// Back Icon
 		L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png",
 		// Skill Icon
-		L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png",
+		L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png",
 	};
 	vector<Frame*> frames;
 
@@ -83,7 +83,25 @@ Icon::Icon()
 	frames.clear();
 
 	// Weapon Skill Icon
-
+	// HOLO_BOMB:
+	frames.push_back(new Frame(files[4], 139, 52, 25, 20));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// ELITE_LAVA_BUCKET:
+	frames.push_back(new Frame(files[4], 31, 52, 25, 20));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	
+	// PSYCHO_AXE:
+	frames.push_back(new Frame(files[4], 166, 52, 25, 20));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	
+	// SPIDER_COOKING:
+	frames.push_back(new Frame(files[4], 4, 52, 25, 20));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	
 	// Buff Skill Icon
 
 	// Level Label
@@ -93,6 +111,14 @@ Icon::Icon()
 	label->SetActive(false);
 
 	child_list.push_back(label);
+
+	// Icon Frame
+	icon_frame = new IconFrame();
+	icon_frame->SetTarget(this);
+	icon_frame->SetScale(Vector2(1.5f, 1.5f));
+	icon_frame->SetActive(false);
+
+	child_list.push_back(icon_frame);
 
 	id = UI::UI_ID::PLAYER_ICON;
 	type = UI::UI_TYPE::ICON;
@@ -183,6 +209,7 @@ void Icon::SetID(UI::UI_ID id)
 		}
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
 		label->SetActive(false);
+		icon_frame->SetActive(false);
 		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;
@@ -216,6 +243,7 @@ void Icon::SetID(UI::UI_ID id)
 		}
 		CB->data.colour = Float4(0.95f, 0.95f, 0.95f, 0.85f);
 		label->SetActive(false);
+		icon_frame->SetActive(false);
 	}
 	break;
 	case UI::UI_ID::SKILL_ICON:
@@ -263,6 +291,7 @@ void Icon::SetID(UI::UI_ID id)
 		}
 		// label->SetActive(true);
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
+		icon_frame->SetActive(false);
 		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;
@@ -284,6 +313,8 @@ void Icon::SetID(UI::UI_ID id)
 			{
 				clip_idx = 8 + skill_id * 2;
 			}
+			icon_frame->SetActive(true);
+			icon_frame->SetClipIdx(0);
 		}
 		break;
 		case (int)Skill::SKILL_ID::HOLO_BOMB:
@@ -298,6 +329,8 @@ void Icon::SetID(UI::UI_ID id)
 			break;
 		}
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
+		icon_frame->SetActive(true);
+		icon_frame->SetClipIdx(0);
 		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;
@@ -333,6 +366,7 @@ void Icon::SetID(UI::UI_ID id)
 			break;
 		}
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
+		icon_frame->SetActive(false);
 		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;

@@ -38,7 +38,7 @@ Watson::Watson(float MaxHP,float atk, float speed,float crt,float pickUpRange,fl
 	frames.clear();
 
 	damageCollider = new RectCollider(size);
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		CircleCollider* pickupCollider = new CircleCollider(default_pickUpRange * (1.0f + 0.2f * i));
 		pickupCollider->SetActive(false);
@@ -159,7 +159,7 @@ void Watson::PostRender()
 	ImGui::SliderFloat2("Watson's move_dir", (float*)&move_dir, -1.0f, 1.0f);
 	ImGui::SliderFloat2("Watson's attack_dir", (float*)&attack_dir, -1.0f, 1.0f);
 	ImGui::Text("Now Watson looking at %d", is_looking_right);
-	ImGui::Text("EXP : %f/%f", nowExp, expLimits[level]);
+	ImGui::Text("EXP : %f/%f", nowExp, nowMaxExp);
 	//ImGui::EndChild();
 	//ImGui::End();
 }

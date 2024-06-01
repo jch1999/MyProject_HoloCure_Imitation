@@ -60,8 +60,8 @@ protected:
 	
 	// 레벨 관련
 	int level;
-	vector<float> expLimits;
 	float nowExp;
+	float nowMaxExp;
 
 	float damage_delay; // damage를 받았을 때 그 상태로 머무르는 시간
 	float now_damage_delay;
@@ -114,18 +114,24 @@ public:
 	bool isCritical();
 
 	// 최종 스테이터스 접근
+	float GetDefaultMaxHP() { return default_maxHp; }
 	float GetMaxHP() { return MaxHP; }
 	void SetMaxHP(float MaxHp) { this->MaxHP = MaxHP; }
 	float GetHP() { return HP; }
 	void SetHP(float HP) { this->HP = HP; }
+	float GetDefaultAtk() { return default_atk; }
 	float GetATK(UINT type);
 	void SetATK(float atk) { this->attack = atk; }
+	float GetDefaultSpd() { return default_spd; }
 	float GetSpeed() { return speed; }
 	void SetSPD(float spd) { this->speed = spd; }
+	float GetDefaultCrt() { return default_crt; }
 	float GetCRT() { return crt; }
 	void SetCRT(float crt) { this->crt = crt; }
 	int GetPickUpRnage() { return idx_pickUpRange; }
 	void SEtPickUpRange(int idx) { idx_pickUpRange = idx; }
+
+	float GetMaxExp() { return nowMaxExp; }
 
 	// 추가 스테이터스 접근
 	// Multi-shot Weapon의 추가 발사량 수

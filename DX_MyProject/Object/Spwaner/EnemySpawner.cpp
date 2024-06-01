@@ -371,7 +371,7 @@ void EnemySpawner::Update()
 			if (!e2->is_active)continue;
 			if (e == e2)continue;
 
-			float minDist = (e->GetAttackCollider()->Size().GetLength() + e2->GetAttackCollider()->Size().GetLength()) / 2.0f;
+			float minDist = (e->GetAttackCollider()->Size().GetLength() + e2->GetAttackCollider()->Size().GetLength()) / 1.8f;
 			float nowDist = (e->pos - e2->pos).GetLength();
 			if (minDist>nowDist)
 			{

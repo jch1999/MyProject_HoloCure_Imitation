@@ -5,6 +5,8 @@ PlayDice::PlayDice()
 	, proj_delay(0.2f), now_proj_delay(0.0f)
 	, projCnt(0)
 {
+	weight = 3;
+
 	skillDelay_table = { 0, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f };
 	minDamage_table = { 0,2,3,3,3,3,4,8 };
 	maxDamage_table = { 0,6,7,7,7,7,4,8 };
@@ -68,7 +70,7 @@ void PlayDice::Update()
 					* diceEye // 주사위 눈 만큼을 기본 데미지에 곱한다
 					+ player->GetATK((UINT)Weapon::WEAPON_TYPE::MULTI_SHOT)
 					+ enhanceDamage;
-				proj->SetStatus(damage, 100.0f * projSPD_table[now_level], hitLimt_table[now_level], 10.0f);
+				proj->SetStatus(damage, 100.0f * projSPD_table[now_level], hitLimt_table[now_level], 2.0f);
 				proj->SetDirection(player->GetAttackDir());
 				int clip_idx = max_level == now_level ? 6 + diceEye-1 : diceEye-1;
 				proj->SetClipIdx(clip_idx);

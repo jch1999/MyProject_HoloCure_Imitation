@@ -9,6 +9,7 @@
 #include "Arrow.h"
 #include "LevelLabel.h"
 #include "SkillIconFrame.h"
+#include "IconFrame.h"
 #include "Icon.h"
 #include "PlayerIconFrame.h"
 #include "SkillListFrame.h"

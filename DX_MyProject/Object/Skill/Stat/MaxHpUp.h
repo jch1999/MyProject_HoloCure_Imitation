@@ -1,17 +1,11 @@
 #pragma once
-class HoloBomb :public Weapon
+class MaxHpUp :public Skill
 {
 private:
-	float proj_delay;
-	float now_proj_delay;
-	int projCnt;
-
-	vector<Projectile*> bombs;
-	vector<Projectile*> bombEffects;
 
 public:
-	HoloBomb();
-	~HoloBomb();
+	MaxHpUp();
+	~MaxHpUp();
 
 	// Skill을(를) 통해 상속됨
 	virtual void Update() override;
@@ -20,6 +14,7 @@ public:
 	virtual bool LevelUp() override;
 	virtual bool LevelDown() override;
 
-	void UpdateBomb();
-	void UpdateBombEffect();
+	// Skill을(를) 통해 상속됨
+	virtual bool GetEnhanceAble() override;
+	virtual void Enhance(float enhanceAmount = 0.0f) override;
 };

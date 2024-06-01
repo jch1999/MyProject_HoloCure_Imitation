@@ -42,7 +42,7 @@ Kiara::Kiara(float MaxHP, float atk, float speed, float crt, float pickUpRange, 
 	renderScales.push_back(Vector2(2.5f, 1.5f));
 
 	damageCollider = kiaraCollider[(UINT)PLAYER_STATUS::IDLE];
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		CircleCollider* pickupCollider = new CircleCollider(default_pickUpRange * (1.0f + 0.2f * i));
 		pickupCollider->SetActive(false);
@@ -164,7 +164,7 @@ void Kiara::PostRender()
 	ImGui::SliderFloat2("Kiara's move_dir", (float*)&move_dir, -1.0f, 1.0f);
 	ImGui::SliderFloat2("Kiara's attack_dir", (float*)&attack_dir, -1.0f, 1.0f);
 	ImGui::Text("Now Kiara looking at %d", is_looking_right);
-	ImGui::Text("EXP : %f/%f", nowExp, expLimits[level]);
+	ImGui::Text("EXP : %f/%f", nowExp, nowMaxExp);
 	//ImGui::EndChild();
 	//ImGui::End();
 }

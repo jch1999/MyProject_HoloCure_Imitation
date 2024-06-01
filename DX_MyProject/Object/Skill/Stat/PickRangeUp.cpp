@@ -1,0 +1,45 @@
+#include "framework.h"
+#include "PickRangeUp.h"
+
+PickRangeUp::PickRangeUp()
+	:Skill(SKILL_ID::PICK_UP, SKILL_TYPE::STAT, 1)
+{
+}
+
+PickRangeUp::~PickRangeUp()
+{
+}
+
+void PickRangeUp::Update()
+{
+	return;
+}
+
+void PickRangeUp::Render()
+{
+	return;
+}
+
+void PickRangeUp::PostRender()
+{
+}
+
+bool PickRangeUp::LevelUp()
+{
+	player->SEtPickUpRange(player->GetPickUpRnage() + 1);
+	return true;
+}
+
+bool PickRangeUp::LevelDown()
+{
+	return false;
+}
+
+bool PickRangeUp::GetEnhanceAble()
+{
+	return false;
+}
+
+void PickRangeUp::Enhance(float enhanceAmount = 0.0f)
+{
+}

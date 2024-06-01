@@ -3,6 +3,7 @@
 PhoenixSword::PhoenixSword()
 	:Weapon(Skill::SKILL_ID::PHOENIX_SWORD)
 {
+	weight = 3;
 	minDamage_table = { 0,11.0f, 14.0f,14.0f, 14.0f, 14.0f, 17.0f,5.0f };
 	maxDamage_table = { 0,15.0f, 18.0f,18.0f, 18.0f, 18.0f, 21.0f,9.0f };
 	colliderIdx_table = { 0,0,0,1,1,1,1,3 };

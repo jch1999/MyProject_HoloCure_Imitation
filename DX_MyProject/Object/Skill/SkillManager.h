@@ -8,13 +8,17 @@ private:
 public:
 	vector<Skill*> skill_table; // 전체 스킬 테이블
 
-	list<Skill*> nowWeapon_list;
-	list<Skill*> nowBuff_list;
+	vector<Skill*> nowWeapon_list;
+	vector<Skill*> nowBuff_list;
 	int weaponCnt;
 	int buffCnt;
+	int total_weight_W;
+	int total_weight_B;
+	int total_weight_S;
+	int total_weight_E;
 
-	list<Skill*> enhanceAble_list;
-	list<Skill*> levelUpAble_list;
+	// 0 weapon 1 buff 2 stat 3 extra
+	vector<vector<Skill*>> levelUpAble_list;
 
 private:
 	SkillManager();
@@ -29,11 +33,11 @@ public:
 	
 	void PostRneder();
 
-	const list<Skill*>& GetEnhaceAbleList();
-	const list<Skill*>& GetLevelUpAlbeList();
 	Skill* GetSkillByID(Skill::SKILL_ID id);
 
 	void SetPlayer(Player* p);
+	void Update_LevelUpAlbeList();
+	int GetLevelUpSkillID();
 	void LevelUp(Skill::SKILL_ID id);
 	void Enhance(Skill::SKILL_ID id, float enhanceAmount=0.0f); // 강화 = LevelUp or damageUp
 };

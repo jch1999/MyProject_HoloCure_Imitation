@@ -16,8 +16,12 @@ SkillSelector::SkillSelector()
 	frames.clear();
 
 	skill_icon = new Icon();
-	skill_icon->SetTarget(this);
 	skill_icon->SetID(UI_ID::SKILL_LEVEL_UP_ICON);
+	skill_icon->SetTarget(this);
+	skill_icon->SetOffset(Vector2(-215.0f, 5.0f));
+	skill_icon->SetActive(true);
+	
+	child_list.push_back(skill_icon);
 
 
 	id = UI::UI_ID::LEVEL_UP_SELECTOR;
@@ -80,5 +84,5 @@ void SkillSelector::SetID(UI::UI_ID id)
 void SkillSelector::SetSkillID(int skill_id)
 {
 	this->skill_id = skill_id;
-
+	skill_icon->SetSkillID(skill_id);
 }

@@ -20,13 +20,7 @@ Player::Player(float MaxHP, float atk, float speed, float crt, float pickupRange
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
 	CB = new ColourBuffer();
 
-
-	expLimits.push_back(0);
-	expLimits.push_back(100);
-	for (int i = 1; i < 100; i++)
-	{
-		expLimits.push_back(expLimits[i] * 1.45f);
-	}
+	nowMaxExp = round(pow((4 * (level + 1)),2.1f)) - round(pow((4 * level),2.1f));
 }
 
 Player::~Player()
@@ -175,7 +169,10 @@ void Player::ChangeHP(float amount, Vector2 dir)
 		hp_bar->SetHpRate(HP / MaxHP);
 	}
 	if (HP <= 0.0f)
+	{
 		is_active = false;
+		HP = 0.0f;
+	}
 	else if (HP >= MaxHP)
 	{
 		HP = MaxHP;
@@ -195,10 +192,11 @@ void Player::GetExp(int expValue)
 		exp_bar->SetActive(true);
 	}
 
-	if (nowExp >= expLimits[level])
+	if (nowExp >= nowMaxExp)
 	{
-		nowExp -= expLimits[level];
+		nowExp -= nowMaxExp;
 		level++;
+		nowMaxExp = round(pow((4 * (level + 1)), 2.1f)) - round(pow((4 * level), 2.1f));
 		// 레벨 업 시 이벤트 내용은 추후 추가
 		switch (player_id)
 		{
@@ -224,7 +222,7 @@ void Player::GetExp(int expValue)
 			break;
 		}
 	}
-	exp_bar->SetExpRate(nowExp / expLimits[level]);
+	exp_bar->SetExpRate(nowExp / nowMaxExp);
 }
 
 bool Player::isCritical()

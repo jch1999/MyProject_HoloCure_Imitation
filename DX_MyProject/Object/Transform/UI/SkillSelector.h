@@ -20,4 +20,6 @@ public:
 	virtual void SetState(UI::UI_STATE state);
 	virtual void SetID(UI::UI_ID id) override;
 	void SetSkillID(int skill_id);
+	int GetSkillID() { return skill_id; }
+	const Icon* GetIcon() { return skill_icon; }
 };

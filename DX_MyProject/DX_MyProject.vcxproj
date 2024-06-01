@@ -198,8 +198,24 @@
     <ClInclude Include="Object\Shape\SRTTriangle.h" />
     <ClInclude Include="Object\Shape\Vertex.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Object\Skill\Buff\BlackSmithGear.h" />
     <ClInclude Include="Object\Skill\Buff\Buff.h" />
+    <ClInclude Include="Object\Skill\Buff\FullMeal.h" />
+    <ClInclude Include="Object\Skill\Buff\NinjaHeadband.h" />
+    <ClInclude Include="Object\Skill\Buff\NurseHorn.h" />
+    <ClInclude Include="Object\Skill\Buff\PikiPikiPiman.h" />
     <ClInclude Include="Object\Skill\Buff\SkillList.h" />
+    <ClInclude Include="Object\Skill\Buff\StudyGlasses.h" />
+    <ClInclude Include="Object\Skill\Extra\CoinUp.h" />
+    <ClInclude Include="Object\Skill\Extra\ExpUp.h" />
+    <ClInclude Include="Object\Skill\Extra\Heal.h" />
+    <ClInclude Include="Object\Skill\Extra\SkillList.h" />
+    <ClInclude Include="Object\Skill\Stat\AtkUp.h" />
+    <ClInclude Include="Object\Skill\Stat\CrtUp.h" />
+    <ClInclude Include="Object\Skill\Stat\MaxHpUp.h" />
+    <ClInclude Include="Object\Skill\Stat\PickRangeUp.h" />
+    <ClInclude Include="Object\Skill\Stat\SkillList.h" />
+    <ClInclude Include="Object\Skill\Stat\SpdUp.h" />
     <ClInclude Include="Object\Skill\Weapon\EliteLavaBucket.h" />
     <ClInclude Include="Object\Skill\Weapon\HoloBomb.h" />
     <ClInclude Include="Object\Skill\Weapon\PlayDice.h" />
@@ -244,6 +260,8 @@
     <ClInclude Include="Object\Transform\Player\Watson.h" />
     <ClInclude Include="Object\Transform\Projectile\BaelzDice.h" />
     <ClInclude Include="Object\Transform\Projectile\Blaze.h" />
+    <ClInclude Include="Object\Transform\Projectile\Bomb.h" />
+    <ClInclude Include="Object\Transform\Projectile\BombEffect.h" />
     <ClInclude Include="Object\Transform\Projectile\KiaraSlash.h" />
     <ClInclude Include="Object\Transform\Projectile\Projectile.h" />
     <ClInclude Include="Object\Transform\Projectile\TransformList.h" />
@@ -258,6 +276,7 @@
     <ClInclude Include="Object\Transform\UI\ExpBar.h" />
     <ClInclude Include="Object\Transform\UI\HPBar.h" />
     <ClInclude Include="Object\Transform\UI\Icon.h" />
+    <ClInclude Include="Object\Transform\UI\IconFrame.h" />
     <ClInclude Include="Object\Transform\UI\LevelLabel.h" />
     <ClInclude Include="Object\Transform\UI\LevelUpPanel.h" />
     <ClInclude Include="Object\Transform\UI\Panel.h" />
@@ -324,11 +343,23 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Object\Skill\Buff\Buff.cpp" />
+    <ClCompile Include="Object\Skill\Extra\CoinUp.cpp" />
+    <ClCompile Include="Object\Skill\Extra\ExpUp.cpp" />
+    <ClCompile Include="Object\Skill\Extra\Heal.cpp" />
     <ClCompile Include="Object\Skill\SkillManager.cpp" />
+    <ClCompile Include="Object\Skill\Stat\AtkUp.cpp" />
+    <ClCompile Include="Object\Skill\Stat\CrtUp.cpp" />
+    <ClCompile Include="Object\Skill\Stat\MaxHpUp.cpp" />
+    <ClCompile Include="Object\Skill\Stat\PickRangeUp.cpp" />
+    <ClCompile Include="Object\Skill\Stat\SpdUp.cpp" />
+    <ClCompile Include="Object\Skill\Weapon\EliteLavaBucket.cpp" />
+    <ClCompile Include="Object\Skill\Weapon\HoloBomb.cpp" />
     <ClCompile Include="Object\Skill\Weapon\PhoenixSword.cpp" />
     <ClCompile Include="Object\Skill\Skill.cpp" />
     <ClCompile Include="Object\Skill\Weapon\PistolShot.cpp" />
     <ClCompile Include="Object\Skill\Weapon\PlayDice.cpp" />
+    <ClCompile Include="Object\Skill\Weapon\PsychoAxe.cpp" />
+    <ClCompile Include="Object\Skill\Weapon\SpiderCooking.cpp" />
     <ClCompile Include="Object\Skill\Weapon\Weapon.cpp" />
     <ClCompile Include="Object\Spwaner\EnemySpawner.cpp" />
     <ClCompile Include="Object\Spwaner\ItemSpawner.cpp" />
@@ -368,6 +399,7 @@
     <ClCompile Include="Object\Transform\UI\ExpBar.cpp" />
     <ClCompile Include="Object\Transform\UI\HPBar.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon.cpp" />
+    <ClCompile Include="Object\Transform\UI\IconFrame.cpp" />
     <ClCompile Include="Object\Transform\UI\LevelLabel.cpp" />
     <ClCompile Include="Object\Transform\UI\LevelUpPanel.cpp" />
     <ClCompile Include="Object\Transform\UI\PauseBack.cpp" />

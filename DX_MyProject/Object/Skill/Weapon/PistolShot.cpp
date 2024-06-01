@@ -5,6 +5,7 @@ PistolShot::PistolShot()
 	,proj_delay(0.2f),now_proj_delay(0.0f)
 	,projCnt(0)
 {
+	weight = 3;
 	skillDelay_table = { 0,1.33f, 1.33f, 1.33f, 1.33f, 1.0f,1.0f,1.0f };
 	minDamage_table = { 0,8,8,10,10,10,12,12 };
 	maxDamage_table = { 0,12,12,14,14,14,16,16 };

@@ -61,6 +61,8 @@ void BaelzDice::Update()
 	{
 		collider->SetActive(false);
 		move_dir = Vector2(0.0f, 0.0f);
+		// 다 이동하고 나면 시간 체크를 시작
+		nowTime += DELTA;
 	}
 
 	if (nowTime >= lifeTime)

@@ -27,4 +27,5 @@ public:
 	virtual void SetState(UI::UI_STATE state);
 	virtual void SetID(UI::UI_ID id) override;
 	virtual void SetActive(bool active) override;
+	void SetSkillSelector();
 };

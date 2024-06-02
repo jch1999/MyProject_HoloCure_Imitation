@@ -25,6 +25,7 @@ TestScene::TestScene()
 		item->Respawn();
 		ItemSpawner::Get()->AddItem(item);
 	}*/
+	BackGroundManager::Get()->SetPlayer(player);
 	ItemSpawner::Get()->SetPlayer(player);
 	EnemySpawner::Get()->SetPlayer(player);
 	SkillManager::Get()->SetPlayer(player);
@@ -53,6 +54,7 @@ TestScene::~TestScene()
 	//delete proj;
 	//delete enemy;
 	//delete item;
+	BackGroundManager::Delete();
 	EnemySpawner::Delete();
 	SkillManager::Delete();
 	UIManager::Delete();
@@ -95,6 +97,7 @@ void TestScene::Update()
 	if (KEY_CON->Down('X'))
 		player->GetExp(100.0f);
 
+	BackGroundManager::Get()->Update();
 	EnemySpawner::Get()->Update();
 	ItemSpawner::Get()->Update();
 	SkillManager::Get()->Update();
@@ -114,6 +117,7 @@ void TestScene::Update()
 // Render ¼ø¼­ item ->player->enemy->skill->ui
 void TestScene::Render()
 {
+	BackGroundManager::Get()->Render();
 	//item->Render();
 	ItemSpawner::Get()->Render();
 	player->Render();

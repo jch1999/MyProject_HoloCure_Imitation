@@ -236,6 +236,13 @@
     <ClInclude Include="Object\Spwaner\SpawnerList.h" />
     <ClInclude Include="Object\Transform\AnimateScene\AnimatePlayer.h" />
     <ClInclude Include="Object\Transform\AnimateScene\TransformList.h" />
+    <ClInclude Include="Object\Transform\BackGround\BackGroundManager.h" />
+    <ClInclude Include="Object\Transform\BackGround\Flower.h" />
+    <ClInclude Include="Object\Transform\BackGround\Grass.h" />
+    <ClInclude Include="Object\Transform\BackGround\SunLight.h" />
+    <ClInclude Include="Object\Transform\BackGround\Tile.h" />
+    <ClInclude Include="Object\Transform\BackGround\TransformList.h" />
+    <ClInclude Include="Object\Transform\BackGround\Tree.h" />
     <ClInclude Include="Object\Transform\Enemy\DeadBeat.h" />
     <ClInclude Include="Object\Transform\Enemy\Enemy.h" />
     <ClInclude Include="Object\Transform\Enemy\BloomGloom.h" />
@@ -376,6 +383,8 @@
     <ClCompile Include="Object\Spwaner\EnemySpawner.cpp" />
     <ClCompile Include="Object\Spwaner\ItemSpawner.cpp" />
     <ClCompile Include="Object\Transform\AnimateScene\AnimatePlayer.cpp" />
+    <ClCompile Include="Object\Transform\BackGround\BackGroundManager.cpp" />
+    <ClCompile Include="Object\Transform\BackGround\Tile.cpp" />
     <ClCompile Include="Object\Transform\Enemy\DeadBeat.cpp" />
     <ClCompile Include="Object\Transform\Enemy\Enemy.cpp" />
     <ClCompile Include="Object\Transform\Enemy\BloomGloom.cpp" />

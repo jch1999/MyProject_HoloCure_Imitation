@@ -39,7 +39,7 @@ bool ExpUp::GetEnhanceAble()
 	return false;
 }
 
-void ExpUp::Enhance(float enhanceAmount = 0.0f)
+void ExpUp::Enhance(float enhanceAmount)
 {
 	return;
 }

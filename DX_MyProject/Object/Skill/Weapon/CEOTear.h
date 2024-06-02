@@ -1,13 +1,21 @@
 #pragma once
-class NurseHorn :public Buff
+class CEOTear :public Weapon
 {
-protected:
+private:
+	float proj_delay;
+	float now_proj_delay;
+	int projCnt;
+
+	vector<Projectile*> tears;
 
 public:
-	NurseHorn();
-	~NurseHorn();
+	CEOTear();
+	~CEOTear();
 
-	// Buff을(를) 통해 상속됨
+
+	void UpdateTears();
+
+	// Weapon을(를) 통해 상속됨
 	virtual bool LevelDown() override;
 	virtual void Update() override;
 	virtual void Render() override;

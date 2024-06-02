@@ -3,6 +3,7 @@
 EliteLavaBucket::EliteLavaBucket()
 	:Weapon(Skill::SKILL_ID::ELITE_LAVA_BUCKET)
 {
+	weight = 3;
 }
 
 EliteLavaBucket::~EliteLavaBucket()
@@ -32,10 +33,14 @@ void EliteLavaBucket::PostRender()
 
 bool EliteLavaBucket::LevelUp()
 {
-	if(now_level==max_level)
-		return false;
+	if (now_level == max_level)return false;
 
 	now_level++;
+	if (now_level == 1)
+	{
+		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
+	}
+	return true;
 }
 
 bool EliteLavaBucket::LevelDown()

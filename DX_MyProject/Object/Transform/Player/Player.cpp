@@ -15,6 +15,8 @@ Player::Player(float MaxHP, float atk, float speed, float crt, float pickupRange
 	,damage_Melee(0.0f),damage_Range(0.0f),damage_Shot(0.0f)
 	,hp_bar(nullptr)
 	,hp_back(nullptr)
+	,isHealDouble(false)
+	,expAddtionalRate(0.0f)
 {
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
@@ -117,7 +119,12 @@ void Player::CheckMoveDir()
 
 void Player::ChangeHP(float amount, Vector2 dir)
 {
-	HP += amount;
+	if (amount > 0 && isHealDouble)
+	{
+		HP += amount * 2.0f;
+	}
+	else
+		HP += amount;
 
 	// DmgText출력
 	if (amount < 0)
@@ -185,7 +192,7 @@ void Player::ChangeHP(float amount, Vector2 dir)
 
 void Player::GetExp(int expValue)
 {
-	nowExp += expValue;
+	nowExp += expValue * (1 + expAddtionalRate);
 	if (exp_bar == nullptr)
 	{
 		exp_bar = (ExpBar*)(UIManager::Get()->GetUI(UI::UI_ID::EXP_BAR));
@@ -198,6 +205,7 @@ void Player::GetExp(int expValue)
 		level++;
 		nowMaxExp = round(pow((4 * (level + 1)), 2.1f)) - round(pow((4 * level), 2.1f));
 		// 레벨 업 시 이벤트 내용은 추후 추가
+		/*
 		switch (player_id)
 		{
 		case Player::PLAYER_ID::WATSON:
@@ -221,6 +229,8 @@ void Player::GetExp(int expValue)
 		default:
 			break;
 		}
+		*/
+		UIManager::Get()->isLevelUp = true;
 	}
 	exp_bar->SetExpRate(nowExp / nowMaxExp);
 }

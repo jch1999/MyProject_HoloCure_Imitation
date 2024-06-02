@@ -18,6 +18,8 @@ public:
 		MOVE
 	}action_status;
 
+	bool isHealDouble;
+	float expAddtionalRate;
 protected:
 	bool is_looking_right;
 

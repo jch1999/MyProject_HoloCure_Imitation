@@ -1,5 +1,5 @@
 #pragma once
-class LevelUpPanel :public UI
+class LevelUpPanel :public Panel
 {
 protected:
 	// Level UP! 을 띄우는 텍스트
@@ -22,10 +22,8 @@ public:
 	virtual void Update() override;
 
 	virtual void Render() override;
-
 	virtual void PostRender() override;
-	virtual void SetState(UI::UI_STATE state);
-	virtual void SetID(UI::UI_ID id) override;
+
 	virtual void SetActive(bool active) override;
 	void SetSkillSelector();
 };

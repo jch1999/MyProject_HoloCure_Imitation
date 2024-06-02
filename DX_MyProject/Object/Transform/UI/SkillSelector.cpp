@@ -69,6 +69,7 @@ void SkillSelector::Render()
 
 void SkillSelector::PostRender()
 {
+	ImGui::Text("Now Skill ID : %d", skill_id);
 }
 
 void SkillSelector::SetState(UI::UI_STATE state)

@@ -206,6 +206,7 @@
     <ClInclude Include="Object\Skill\Buff\PikiPikiPiman.h" />
     <ClInclude Include="Object\Skill\Buff\SkillList.h" />
     <ClInclude Include="Object\Skill\Buff\StudyGlasses.h" />
+    <ClInclude Include="Object\Skill\Buff\SuperChattoTime.h" />
     <ClInclude Include="Object\Skill\Extra\CoinUp.h" />
     <ClInclude Include="Object\Skill\Extra\ExpUp.h" />
     <ClInclude Include="Object\Skill\Extra\Heal.h" />
@@ -216,6 +217,8 @@
     <ClInclude Include="Object\Skill\Stat\PickRangeUp.h" />
     <ClInclude Include="Object\Skill\Stat\SkillList.h" />
     <ClInclude Include="Object\Skill\Stat\SpdUp.h" />
+    <ClInclude Include="Object\Skill\Weapon\BounceBall.h" />
+    <ClInclude Include="Object\Skill\Weapon\CEOTear.h" />
     <ClInclude Include="Object\Skill\Weapon\EliteLavaBucket.h" />
     <ClInclude Include="Object\Skill\Weapon\HoloBomb.h" />
     <ClInclude Include="Object\Skill\Weapon\PlayDice.h" />
@@ -342,7 +345,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Object\Skill\Buff\BlackSmithGear.cpp" />
     <ClCompile Include="Object\Skill\Buff\Buff.cpp" />
+    <ClCompile Include="Object\Skill\Buff\FullMeal.cpp" />
+    <ClCompile Include="Object\Skill\Buff\NinjaHeadband.cpp" />
+    <ClCompile Include="Object\Skill\Buff\NurseHorn.cpp" />
+    <ClCompile Include="Object\Skill\Buff\PikiPikiPiman.cpp" />
+    <ClCompile Include="Object\Skill\Buff\StudyGlasses.cpp" />
+    <ClCompile Include="Object\Skill\Buff\SuperChattoTime.cpp" />
     <ClCompile Include="Object\Skill\Extra\CoinUp.cpp" />
     <ClCompile Include="Object\Skill\Extra\ExpUp.cpp" />
     <ClCompile Include="Object\Skill\Extra\Heal.cpp" />
@@ -352,6 +362,8 @@
     <ClCompile Include="Object\Skill\Stat\MaxHpUp.cpp" />
     <ClCompile Include="Object\Skill\Stat\PickRangeUp.cpp" />
     <ClCompile Include="Object\Skill\Stat\SpdUp.cpp" />
+    <ClCompile Include="Object\Skill\Weapon\BounceBall.cpp" />
+    <ClCompile Include="Object\Skill\Weapon\CEOTear.cpp" />
     <ClCompile Include="Object\Skill\Weapon\EliteLavaBucket.cpp" />
     <ClCompile Include="Object\Skill\Weapon\HoloBomb.cpp" />
     <ClCompile Include="Object\Skill\Weapon\PhoenixSword.cpp" />
@@ -402,6 +414,7 @@
     <ClCompile Include="Object\Transform\UI\IconFrame.cpp" />
     <ClCompile Include="Object\Transform\UI\LevelLabel.cpp" />
     <ClCompile Include="Object\Transform\UI\LevelUpPanel.cpp" />
+    <ClCompile Include="Object\Transform\UI\Panel.cpp" />
     <ClCompile Include="Object\Transform\UI\PauseBack.cpp" />
     <ClCompile Include="Object\Transform\UI\PlayerIconFrame.cpp" />
     <ClCompile Include="Object\Transform\UI\SkillListFrame.cpp" />

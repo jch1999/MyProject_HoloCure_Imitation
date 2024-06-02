@@ -10,13 +10,6 @@ LevelUpPanel::LevelUpPanel()
 	levelUp_text->SetOffset(Vector2(-WIN_CENTER_X * 0.65f, -WIN_CENTER_Y * 0.45f));
 	child_list.push_back(levelUp_text);
 
-	player_full_icon = new Icon();
-	player_full_icon->SetID(UI_ID::PLAYER_FULL_ICON);
-	player_full_icon->SetTarget(this);
-	player_full_icon->SetScale(Vector2(3.0f, 3.0f));
-	player_full_icon->SetOffset(Vector2(-WIN_CENTER_X * 0.65f, WIN_CENTER_Y * 0.15f));
-	child_list.push_back(player_full_icon);
-
 	Vector2 selector_initOffset(WIN_CENTER_X * 0.5f, -WIN_CENTER_Y * 0.4f);
 	Vector2 interval(0.0f, 100.0f);
 	for (int i = 0; i < 4; i++)
@@ -75,43 +68,30 @@ void LevelUpPanel::Update()
 	if (KEY_CON->Down(VK_RETURN))
 	{
 		// selector에서 id를 가져와 해당 아이디의 스킬의 level을 상승
-		SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)(skill_selectors[select_idx]->GetSkillID()));
+		SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)(skill_selectors[select_idx]->GetSkillID()))->LevelUp();
 		isPause = false;
 		UIManager::Get()->nowPanel = nullptr;
+		UIManager::Get()->isLevelUp = false;
 		SetActive(false);
 		return;
 	}
 
 	
 
-	pos = target->pos + offset;
-	WorldUpdate();
-
-	for (auto ui : child_list)
-		ui->Update();
+	Panel::Update();
 }
 
 void LevelUpPanel::Render()
 {
-	if(!is_active)return;
-
-
-	for (auto ui : child_list)
-		ui->Render();
+	Panel::Render();
 }
 
 void LevelUpPanel::PostRender()
 {
-}
-
-void LevelUpPanel::SetState(UI::UI_STATE state)
-{
-	this->state = state;
-}
-
-void LevelUpPanel::SetID(UI::UI_ID id)
-{
-	this->id = id;
+	for (int i = 0; i < 4; i++)
+	{
+		skill_selectors[i]->PostRender();
+	}
 }
 
 void LevelUpPanel::SetActive(bool active)
@@ -123,4 +103,37 @@ void LevelUpPanel::SetActive(bool active)
 
 void LevelUpPanel::SetSkillSelector()
 {
+	vector<int> selected_list;
+	for (int i = 0; i < 4; i++)
+	{
+		int cnt = 0; // 중복 횟수
+		while (cnt < 3) // 최대 3번 까지 중복 검사
+		{
+			bool equal = false;
+			int selected_id = SkillManager::Get()->GetLevelUpSkillID();
+			for (int j = 0; j < selected_list.size(); j++)
+			{
+				if (selected_list[j] == selected_id)
+				{
+					equal = true;
+					break;
+				}
+			}
+			if (equal)
+				cnt++;
+			else
+			{
+				selected_list.push_back(selected_id);
+				break;
+			}
+		}
+		if (cnt == 3) // 3번 중복되면 extra에서 차출
+		{
+			selected_list.push_back(SkillManager::Get()->GetLevelUpSkillID_E());
+		}
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		skill_selectors[i]->SetSkillID(selected_list[i]);
+	}
 }

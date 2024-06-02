@@ -92,6 +92,8 @@ void TestScene::Update()
 	}
 	if (KEY_CON->Down('H'))
 		player->ChangeHP(20);
+	if (KEY_CON->Down('X'))
+		player->GetExp(100.0f);
 
 	EnemySpawner::Get()->Update();
 	ItemSpawner::Get()->Update();
@@ -140,4 +142,5 @@ void TestScene::PostRender()
 
 	SkillManager::Get()->PostRneder();
 	ItemSpawner::Get()->PostRneder();
+	UIManager::Get()->PostRneder();
 }

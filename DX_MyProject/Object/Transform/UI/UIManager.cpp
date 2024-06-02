@@ -85,11 +85,12 @@ void UIManager::Update()
 		{
 			// PAUSE_PANEL 호출
 		}
-		else if (KEY_CON->Down('X'))
+		else if (isLevelUp)
 		{
 			// LEVEL_UP_PANEL 호출
 			isPause = true;
 			nowPanel = levelPanel;
+			levelPanel->SetSkillSelector();
 			nowPanel->SetActive(true);
 		}
 	}

@@ -4,6 +4,7 @@
 CrtUp::CrtUp()
 	:Skill(SKILL_ID::CRT,SKILL_TYPE::STAT,1)
 {
+	weight = 3;
 }
 
 CrtUp::~CrtUp()
@@ -35,7 +36,7 @@ bool CrtUp::GetEnhanceAble()
 	return false;
 }
 
-void CrtUp::Enhance(float enhanceAmount = 0.0f)
+void CrtUp::Enhance(float enhanceAmount)
 {
 }
 

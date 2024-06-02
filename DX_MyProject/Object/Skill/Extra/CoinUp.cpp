@@ -26,7 +26,7 @@ void CoinUp::PostRender()
 
 bool CoinUp::LevelUp()
 {
-	ItemSpawner::Get()->nowCoinValue += 246;
+	ItemSpawner::Get()->nowCoinValue += 100;
 	return true;
 }
 
@@ -40,7 +40,7 @@ bool CoinUp::GetEnhanceAble()
 	return false;
 }
 
-void CoinUp::Enhance(float enhanceAmount = 0.0f)
+void CoinUp::Enhance(float enhanceAmount)
 {
 	return;
 }

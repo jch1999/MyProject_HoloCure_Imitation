@@ -4,6 +4,7 @@
 SpdUp::SpdUp()
 	:Skill(SKILL_ID::CRT, SKILL_TYPE::STAT, 1)
 {
+	weight = 4;
 }
 
 SpdUp::~SpdUp()
@@ -35,11 +36,11 @@ bool SpdUp::GetEnhanceAble()
 	return false;
 }
 
-void SpdUp::Enhance(float enhanceAmount = 0.0f)
+void SpdUp::Enhance(float enhanceAmount)
 {
 }
 
-bool CrtUp::LevelDown()
+bool SpdUp::LevelDown()
 {
 	return false;
 }

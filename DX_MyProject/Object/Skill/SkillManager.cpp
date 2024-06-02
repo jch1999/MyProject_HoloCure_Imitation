@@ -5,6 +5,9 @@ SkillManager::SkillManager()
 {
 	weaponCnt = 0;
 	buffCnt = 0;
+	nowWeapon_list.resize(6);
+	nowBuff_list.resize(6);
+
 	skill_table = {
 		// DEFAULT WEAPON SKILL
 		new PistolShot(),
@@ -14,9 +17,17 @@ SkillManager::SkillManager()
 		new HoloBomb(),
 		new EliteLavaBucket(),
 		new PsychoAxe(),
+		new BounceBall(),
+		new CEOTear(),
 		new SpiderCooking(),
 		// BUFF SKILL
-
+		new NurseHorn(),
+		new FullMeal(),
+		new PikiPikiPiman(),
+		new StudyGlasses(),
+		new SuperChattoTime(),
+		new BlackSmithGear(),
+		new NinjaHeadband(),
 		// STAT SKILL
 		new MaxHpUp(),
 		new AtkUp(),
@@ -24,23 +35,27 @@ SkillManager::SkillManager()
 		new CrtUp(),
 		new PickRangeUp(),
 		// EXTRA SKILL
-		new ExpUp(),
-		new Heal(),
 		new CoinUp(),
+		new Heal(), // FOOD에 해당
+		new ExpUp(),
 	};
 
-	player = EnemySpawner::Get()->GetPlayer();
-	switch (player->player_id)
+	for (int i = 0; i < 4; i++)
 	{
-	case Player::PLAYER_ID::BAELZ:
-		SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PLAY_DICE)->LevelUp();
-		break;
-	case Player::PLAYER_ID::KIARA:
-		SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PHOENIX_SWORD)->LevelUp();
-		break;
-	case Player::PLAYER_ID::WATSON:
-		SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PISTOL_SHOT)->LevelUp();
-		break;
+		vector<Skill*> list;
+		levelUpAble_list.push_back(list);
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		int idx = (int)Skill::SKILL_ID::MAX_HP + i;
+		levelUpAble_list[2].push_back(skill_table[idx]);
+		total_weight_S += skill_table[idx]->weight;
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		int idx = (int)Skill::SKILL_ID::COIN + i;
+		levelUpAble_list[3].push_back(skill_table[idx]);
+		total_weight_E += skill_table[idx]->weight;
 	}
 }
 
@@ -59,25 +74,45 @@ void SkillManager::Update()
 	if (isPause||!player->is_active)return;
 
 	for (auto s : nowWeapon_list)
-		s->Update();
+	{
+		if(s!=nullptr)
+			s->Update();
+	}
 	for (auto s : nowBuff_list)
-		s->Update();
+	{
+		if (s != nullptr)
+			s->Update();
+	}
 }
 
 void SkillManager::Render()
 {
 	for (auto s : nowWeapon_list)
-		s->Render();
+	{
+		if (s != nullptr)
+			s->Render();
+	}
 	for (auto s : nowBuff_list)
-		s->Render();
+	{
+		if (s != nullptr)
+			s->Render();
+	}
 }
 
 void SkillManager::PostRneder()
 {
+	ImGui::Text("nowWeaponCnt : %d", weaponCnt);
+	ImGui::Text("nowBuffCnt : %d", buffCnt);
 	for (auto s : nowWeapon_list)
-		s->PostRender();
+	{
+		if (s != nullptr)
+			s->PostRender();
+	}
 	for (auto s : nowBuff_list)
-		s->PostRender();
+	{
+		if (s != nullptr)
+			s->PostRender();
+	}
 }
 
 Skill* SkillManager::GetSkillByID(Skill::SKILL_ID id)
@@ -100,7 +135,6 @@ void SkillManager::SetPlayer(Player* p)
 		nowWeapon_list.push_back(skill_table[(int)Skill::SKILL_ID::PISTOL_SHOT]);
 		skill_table[(int)Skill::SKILL_ID::PISTOL_SHOT]->LevelUp();
 		skill_table[(int)Skill::SKILL_ID::PISTOL_SHOT]->SetPlayer(player);
-		weaponCnt++;
 	}
 		break; 
 	case Player::PLAYER_ID::KIARA:
@@ -108,7 +142,6 @@ void SkillManager::SetPlayer(Player* p)
 		nowWeapon_list.push_back(skill_table[(int)Skill::SKILL_ID::PHOENIX_SWORD]);
 		skill_table[(int)Skill::SKILL_ID::PHOENIX_SWORD]->LevelUp();
 		skill_table[(int)Skill::SKILL_ID::PHOENIX_SWORD]->SetPlayer(player);
-		weaponCnt++;
 	}
 			break;
 	case Player::PLAYER_ID::BAELZ:
@@ -116,10 +149,13 @@ void SkillManager::SetPlayer(Player* p)
 		nowWeapon_list.push_back(skill_table[(int)Skill::SKILL_ID::PLAY_DICE]);
 		skill_table[(int)Skill::SKILL_ID::PLAY_DICE]->LevelUp();
 		skill_table[(int)Skill::SKILL_ID::PLAY_DICE]->SetPlayer(player);
-		weaponCnt++;
 	}
 		break;
+	default:
+		break;
 	}
+	for (auto s : skill_table)
+		s->SetPlayer(player);
 
 	Update_LevelUpAlbeList();
 }
@@ -129,6 +165,8 @@ void SkillManager::Update_LevelUpAlbeList()
 	// 2(stat), 3(extra)은 업데이트할 필요 없음
 	levelUpAble_list[0].clear();
 	levelUpAble_list[1].clear();
+	total_weight_W = 0;
+	total_weight_B = 0;
 
 	switch (player->player_id)
 	{
@@ -136,18 +174,21 @@ void SkillManager::Update_LevelUpAlbeList()
 		if (skill_table[(int)Skill::SKILL_ID::PISTOL_SHOT]->GetLevelUpAble())
 		{
 			levelUpAble_list[0].push_back(skill_table[(int)Skill::SKILL_ID::PISTOL_SHOT]);
+			total_weight_W += skill_table[(int)Skill::SKILL_ID::PISTOL_SHOT]->weight;
 		}
 		break;
 	case Player::PLAYER_ID::KIARA:
 		if (skill_table[(int)Skill::SKILL_ID::PHOENIX_SWORD]->GetLevelUpAble())
 		{
 			levelUpAble_list[0].push_back(skill_table[(int)Skill::SKILL_ID::PHOENIX_SWORD]);
+			total_weight_W += skill_table[(int)Skill::SKILL_ID::PHOENIX_SWORD]->weight;
 		}
 		break;
 	case Player::PLAYER_ID::BAELZ:
 		if (skill_table[(int)Skill::SKILL_ID::PLAY_DICE]->GetLevelUpAble())
 		{
 			levelUpAble_list[0].push_back(skill_table[(int)Skill::SKILL_ID::PLAY_DICE]);
+			total_weight_W += skill_table[(int)Skill::SKILL_ID::PLAY_DICE]->weight;
 		}
 		break;
 	}
@@ -159,6 +200,7 @@ void SkillManager::Update_LevelUpAlbeList()
 			if (nowWeapon_list[i]->GetLevelUpAble())
 			{
 				levelUpAble_list[0].push_back(skill_table[(int)nowWeapon_list[i]->id]);
+				total_weight_W += skill_table[(int)nowWeapon_list[i]->id]->weight;
 			}
 		}
 	}
@@ -173,6 +215,7 @@ void SkillManager::Update_LevelUpAlbeList()
 				if (skill_table[i]->GetLevelUpAble())
 				{
 					levelUpAble_list[0].push_back(skill_table[i]);
+					total_weight_W += skill_table[i]->weight;
 				}
 			}
 		}
@@ -185,6 +228,7 @@ void SkillManager::Update_LevelUpAlbeList()
 			if (nowBuff_list[i]->GetLevelUpAble())
 			{
 				levelUpAble_list[1].push_back(skill_table[(int)nowBuff_list[i]->id]);
+				total_weight_B += skill_table[(int)nowBuff_list[i]->id]->weight;
 			}
 		}
 	}
@@ -199,6 +243,7 @@ void SkillManager::Update_LevelUpAlbeList()
 				if (skill_table[i]->GetLevelUpAble())
 				{
 					levelUpAble_list[1].push_back(skill_table[i]);
+					total_weight_B += skill_table[i]->weight;
 				}
 			}
 		}
@@ -207,41 +252,90 @@ void SkillManager::Update_LevelUpAlbeList()
 
 int SkillManager::GetLevelUpSkillID()
 {
-	int skill_id=-1;
-	if (levelUpAble_list[0].size() + levelUpAble_list[1].size() < 4)
+	Update_LevelUpAlbeList();
+	int skill_id = -1;
+	int rand = Random::Get()->GetRandomInt(0, 19);
+	if (rand < 10)
 	{
-		int rand = Random::Get()->GetRandomInt(0, 2);
-		skill_id = (int)Skill::SKILL_ID::MAX_HP + rand;
+		skill_id = GetLevelUpSkillID_W();
+	}
+	else if(rand<19)
+	{
+		skill_id = GetLevelUpSkillID_B();
 	}
 	else
 	{
-		int rand = Random::Get()->GetRandomInt(0, 19);
-		if (rand < 11)
-		{
-			if (levelUpAble_list[0].size() == 0)
-			{
-
-			}
-			else
-			{
-
-			}
-		}
-		else if (rand < 18)
-		{
-
-		}
-		else
-		{
-
-		}
+		skill_id = GetLevelUpSkillID_S();
 	}
 
 	return skill_id;
 }
 
+int SkillManager::GetLevelUpSkillID_W()
+{
+	if (levelUpAble_list[0].size() != 0)
+	{
+		int target_weight = Random::Get()->GetRandomInt(1, total_weight_W);
+		int now_weight = 0;
+		for (int i = 0; i < levelUpAble_list[0].size(); i++)
+		{
+			now_weight += levelUpAble_list[0][i]->weight;
+			if (now_weight >= target_weight)
+			{
+				return (int)levelUpAble_list[0][i]->id;
+			}
+		}
+	}
+	else
+	{
+		return GetLevelUpSkillID_B();
+	}
+}
+
+int SkillManager::GetLevelUpSkillID_B()
+{
+	if (levelUpAble_list[1].size() != 0)
+	{
+		int target_weight = Random::Get()->GetRandomInt(1, total_weight_B);
+		int now_weight = 0;
+		for (int i = 0; i < levelUpAble_list[1].size(); i++)
+		{
+			now_weight += levelUpAble_list[1][i]->weight;
+			if (now_weight >= target_weight)
+			{
+				return (int)levelUpAble_list[1][i]->id;
+			}
+		}
+	}
+	else
+	{
+		return GetLevelUpSkillID_S();
+	}
+}
+
+int SkillManager::GetLevelUpSkillID_S()
+{
+	int target_weight = Random::Get()->GetRandomInt(1, total_weight_S);
+	int now_weight = 0;
+	for (int i = 0; i < levelUpAble_list[2].size(); i++)
+	{
+		now_weight += levelUpAble_list[2][i]->weight;
+		if (now_weight >= target_weight)
+		{
+			return (int)levelUpAble_list[2][i]->id;
+		}
+	}
+}
+
+int SkillManager::GetLevelUpSkillID_E()
+{
+	int skill_idx = Random::Get()->GetRandomInt(0, levelUpAble_list[3].size() - 1);
+	return (int)(levelUpAble_list[3][skill_idx]->id);
+}
+
 void SkillManager::LevelUp(Skill::SKILL_ID id)
 {
+	
 }
 
 void SkillManager::Enhance(Skill::SKILL_ID id, float enhanceAmount)

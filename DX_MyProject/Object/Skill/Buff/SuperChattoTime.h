@@ -1,11 +1,11 @@
 #pragma once
-class PikiPikiPiman :public Buff
+class SuperChattoTime :public Buff
 {
 protected:
 
 public:
-	PikiPikiPiman();
-	~PikiPikiPiman();
+	SuperChattoTime();
+	~SuperChattoTime();
 
 
 	// Buff을(를) 통해 상속됨

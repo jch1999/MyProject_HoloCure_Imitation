@@ -62,16 +62,15 @@ void SkillListFrame::Update()
 	clips[0]->Update();
 
 	// 자식에 추가 작업 - weponList, buffList를 가져와 Icon 정보를 갱신하는 코드를 여기에
-	list<Skill*>& weaponList = (SkillManager::Get()->nowWeapon_list);
-	list<Skill*>::iterator weponIter = weaponList.begin();
+	vector<Skill*>& weaponList = (SkillManager::Get()->nowWeapon_list);
 	for (int i = 0; i < 6; i++)
 	{
+		int cnt = SkillManager::Get()->weaponCnt;
 		if (i < SkillManager::Get()->weaponCnt)
 		{
 			weaponIconList[i]->SetID(UI_ID::SKILL_ICON);
-			weaponIconList[i]->SetSkillID((int)(*weponIter)->id);
+			weaponIconList[i]->SetSkillID((int)weaponList[i]->id);
 			weaponIconList[i]->SetLabelActive(true);
-			weponIter++;
 		}
 		else
 		{
@@ -79,16 +78,14 @@ void SkillListFrame::Update()
 		}
 	}
 
-	list<Skill*>& buffList = (SkillManager::Get()->nowBuff_list);
-	list<Skill*>::iterator buffIter = buffList.begin();
+	vector<Skill*>& buffList = (SkillManager::Get()->nowBuff_list);
 	for (int i = 0; i < 6; i++)
 	{
 		if (i < SkillManager::Get()->buffCnt)
 		{
 			buffIconList[i]->SetID(UI_ID::SKILL_ICON);
-			buffIconList[i]->SetSkillID((int)(*buffIter)->id);
+			buffIconList[i]->SetSkillID((int)buffList[i]->id);
 			buffIconList[i]->SetLabelActive(true);
-			buffIter++;
 		}
 		else
 		{

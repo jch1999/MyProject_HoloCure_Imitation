@@ -4,6 +4,7 @@
 PickRangeUp::PickRangeUp()
 	:Skill(SKILL_ID::PICK_UP, SKILL_TYPE::STAT, 1)
 {
+	weight = 4;
 }
 
 PickRangeUp::~PickRangeUp()
@@ -40,6 +41,6 @@ bool PickRangeUp::GetEnhanceAble()
 	return false;
 }
 
-void PickRangeUp::Enhance(float enhanceAmount = 0.0f)
+void PickRangeUp::Enhance(float enhanceAmount)
 {
 }

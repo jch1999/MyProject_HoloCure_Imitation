@@ -4,6 +4,7 @@
 AtkUp::AtkUp()
 	:Skill(SKILL_ID::ATK, SKILL_TYPE::STAT, 1)
 {
+	weight = 3;
 }
 
 AtkUp::~AtkUp()
@@ -40,7 +41,7 @@ bool AtkUp::GetEnhanceAble()
 	return false;
 }
 
-void AtkUp::Enhance(float enhanceAmount = 0.0f)
+void AtkUp::Enhance(float enhanceAmount)
 {
 	return;
 }

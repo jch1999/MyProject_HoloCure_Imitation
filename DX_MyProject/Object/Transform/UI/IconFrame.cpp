@@ -12,8 +12,12 @@ IconFrame::IconFrame()
 	frames.push_back(new Frame(file, 152.0f, 1872.0f, 35.0f, 36.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 	frames.clear();
-	// extra iconframe clip
+	// Stat iconframe clip
 	frames.push_back(new Frame(file, 115.0f, 1872.0f, 35.0f, 36.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+	// Extra iconframe clip
+	frames.push_back(new Frame(file, 4.0f, 1872.0f, 35.0f, 36.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 	frames.clear();
 

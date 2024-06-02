@@ -13,6 +13,8 @@ public:
 		HOLO_BOMB,
 		ELITE_LAVA_BUCKET,
 		PSYCHO_AXE,
+		BOUNCE_BALL,
+		CEO_TEAR,
 		SPIDER_COOKING,
 		// BUFF SKILL
 		NURSE_HORN,
@@ -29,9 +31,9 @@ public:
 		CRT,
 		PICK_UP,
 		// EXTRA
-		EXP, // 범위 내에서 랜덤한 값을 획득
 		COIN, // 범위 내에서 랜덤한 값을 획득
-		FOOD // 체력 회복
+		FOOD, // 체력 회복
+		EXP, // 범위 내에서 랜덤한 값을 획득
 	}id;
 	enum class SKILL_TYPE
 	{
@@ -45,15 +47,15 @@ public:
 		COOLDOWN,
 		PLAY
 	}action_status;
+
+	// 스킬 가중치
+	int weight;
 protected:
 	// 투사체에 플레이어를 전달하기 위해 필요
 	Player* player;
 
 	int max_level;
 	int now_level;
-
-	// 스킬 가중치
-	int weight;
 
 	// 스킬 대기 시간
 	vector<float> skillDelay_table;

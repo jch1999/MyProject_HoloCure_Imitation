@@ -4,6 +4,7 @@
 MaxHpUp::MaxHpUp()
 	:Skill(SKILL_ID::MAX_HP, SKILL_TYPE::STAT, 1)
 {
+	weight = 2;
 }
 
 MaxHpUp::~MaxHpUp()
@@ -40,7 +41,7 @@ bool MaxHpUp::GetEnhanceAble()
 	return false;
 }
 
-void MaxHpUp::Enhance(float enhanceAmount = 0.0f)
+void MaxHpUp::Enhance(float enhanceAmount)
 {
 	return;
 }

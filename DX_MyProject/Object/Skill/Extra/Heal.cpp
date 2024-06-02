@@ -37,7 +37,7 @@ bool Heal::GetEnhanceAble()
 	return false;
 }
 
-void Heal::Enhance(float enhanceAmount = 0.0f)
+void Heal::Enhance(float enhanceAmount)
 {
 	return;
 }

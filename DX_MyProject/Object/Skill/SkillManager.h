@@ -38,6 +38,10 @@ public:
 	void SetPlayer(Player* p);
 	void Update_LevelUpAlbeList();
 	int GetLevelUpSkillID();
+	int GetLevelUpSkillID_W();
+	int GetLevelUpSkillID_B();
+	int GetLevelUpSkillID_S();
+	int GetLevelUpSkillID_E();
 	void LevelUp(Skill::SKILL_ID id);
 	void Enhance(Skill::SKILL_ID id, float enhanceAmount=0.0f); // °­È­ = LevelUp or damageUp
 };

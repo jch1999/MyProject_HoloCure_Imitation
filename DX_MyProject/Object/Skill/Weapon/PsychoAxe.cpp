@@ -3,6 +3,7 @@
 PsychoAxe::PsychoAxe()
 	:Weapon(Skill::SKILL_ID::PSYCHO_AXE)
 {
+	weight = 3;
 }
 
 PsychoAxe::~PsychoAxe()
@@ -26,10 +27,14 @@ void PsychoAxe::PostRender()
 
 bool PsychoAxe::LevelUp()
 {
-	if (now_level == max_level)
-		return false;
+	if (now_level == max_level)return false;
 
 	now_level++;
+	if (now_level == 1)
+	{
+		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
+	}
+	return true;
 }
 
 bool PsychoAxe::LevelDown()

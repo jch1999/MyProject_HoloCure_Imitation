@@ -3,6 +3,7 @@
 HoloBomb::HoloBomb()
 	:Weapon(Skill::SKILL_ID::HOLO_BOMB)
 {
+	weight = 3;
 }
 
 HoloBomb::~HoloBomb()
@@ -30,10 +31,14 @@ void HoloBomb::PostRender()
 
 bool HoloBomb::LevelUp()
 {
-	if (now_level == max_level)
-		return false;
+	if (now_level == max_level)return false;
 
 	now_level++;
+	if (now_level == 1)
+	{
+		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
+	}
+	return true;
 }
 
 bool HoloBomb::LevelDown()

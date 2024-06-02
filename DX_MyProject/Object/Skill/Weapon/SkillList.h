@@ -7,3 +7,5 @@
 #include "PsychoAxe.h"
 #include "EliteLavaBucket.h"
 #include "SpiderCooking.h"
+#include "BounceBall.h"
+#include "CEOTear.h"

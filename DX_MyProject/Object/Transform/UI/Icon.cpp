@@ -96,6 +96,16 @@ Icon::Icon()
 	frames.push_back(new Frame(files[4], 166, 52, 25, 20));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
+
+	// BOUNCE_BALL:
+	frames.push_back(new Frame(files[4], 58, 76, 25, 22));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+
+	// CEO_TEAR:
+	frames.push_back(new Frame(files[4], 58, 52, 25, 22));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
 	
 	// SPIDER_COOKING:
 	frames.push_back(new Frame(files[4], 4, 52, 25, 20));
@@ -103,7 +113,57 @@ Icon::Icon()
 	frames.clear();
 	
 	// Buff Skill Icon
+	// NURSE_HORN
+	frames.push_back(new Frame(files[4], 31.0f, 224.0f, 25.0f, 20.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// FULL_MEAL
+	frames.push_back(new Frame(files[4], 58.0f, 224.0f, 25.0f, 20.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// PIKIPIK_PIMAN
+	frames.push_back(new Frame(files[4], 112.0f, 224.0f, 25.0f, 22.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// STUDY_GLASSES
+	frames.push_back(new Frame(files[4], 139.0f, 248.0f, 25.0f, 20.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// SUPER_CHATTO_TIME
+	frames.push_back(new Frame(files[4], 4.0f, 272.0f, 25.0f, 20.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// BLACKSMITH_GEAR
+	frames.push_back(new Frame(files[4], 31.0f, 272.0f, 25.0f, 22.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// NINJA_HEADBAND
+	frames.push_back(new Frame(files[4], 4.0f, 176.0f, 25.0f, 22.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
 
+	// Stat Skill Icon
+	// MAX_HP ATK SPD CRT PICK_UP
+	for (int i = 0; i < 5; i++)
+	{
+		frames.push_back(new Frame(files[4], 4.0f +i *27.0f, 322.0f, 25.0f, 25.0f));
+		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+		frames.clear();
+	}
+	// Extra Skill Icon
+	// COIN
+	frames.push_back(new Frame(files[4], 200.0f, 322.0f, 15.0f, 15.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// FOOD
+	frames.push_back(new Frame(files[4], 166.0f, 322.0f, 32.0f, 32.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.clear();
+	// EXP
+	//frames.push_back(new Frame(files[4], 4.0f, 322.0f, 25.0f, 25.0f));
+	//clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	//frames.clear();
+	
 	// Level Label
 	label = new LevelLabel();
 	label->SetTarget(this);
@@ -250,7 +310,7 @@ void Icon::SetID(UI::UI_ID id)
 	{
 		switch (skill_id)
 		{
-			// WEAPON SKILL
+			// DEFAULT WEAPON SKILL
 		case (int)Skill::SKILL_ID::PISTOL_SHOT:
 		case (int)Skill::SKILL_ID::PHOENIX_SWORD:
 		case (int)Skill::SKILL_ID::PLAY_DICE:
@@ -268,13 +328,23 @@ void Icon::SetID(UI::UI_ID id)
 			label->SetLevel(level);
 		}
 			break;
+		// WEAPON & BUFF SKILL
 		case (int)Skill::SKILL_ID::HOLO_BOMB:
 		case (int)Skill::SKILL_ID::ELITE_LAVA_BUCKET:
 		case (int)Skill::SKILL_ID::PSYCHO_AXE:
+		case (int)Skill::SKILL_ID::BOUNCE_BALL:
+		case (int)Skill::SKILL_ID::CEO_TEAR:
 		case (int)Skill::SKILL_ID::SPIDER_COOKING:
+		case (int)Skill::SKILL_ID::NURSE_HORN:
+		case (int)Skill::SKILL_ID::FULL_MEAL:
+		case (int)Skill::SKILL_ID::PIKIPIK_PIMAN:
+		case (int)Skill::SKILL_ID::STUDY_GLASSES:
+		case (int)Skill::SKILL_ID::SUPER_CHATTO_TIME:
+		case (int)Skill::SKILL_ID::BLACKSMITH_GEAR:
+		case (int)Skill::SKILL_ID::NINJA_HEADBAND:
 		{
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
-			if (level == 7)
+			if (!SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevelUpAble())
 			{
 				label->SetClipIdx(1);
 			}
@@ -283,9 +353,12 @@ void Icon::SetID(UI::UI_ID id)
 				label->SetClipIdx(0);
 			}
 			label->SetLevel(level);
-			clip_idx = 14 + (int)(id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clip_idx = 14 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 		}
 			break;
+		{
+
+		}
 		default:
 			break;
 		}
@@ -320,17 +393,50 @@ void Icon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::HOLO_BOMB:
 		case (int)Skill::SKILL_ID::ELITE_LAVA_BUCKET:
 		case (int)Skill::SKILL_ID::PSYCHO_AXE:
+		case (int)Skill::SKILL_ID::BOUNCE_BALL:
+		case (int)Skill::SKILL_ID::CEO_TEAR:
 		case (int)Skill::SKILL_ID::SPIDER_COOKING:
 		{
-			clip_idx = 14 + (int)(id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clip_idx = 14 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			icon_frame->SetActive(true);
+			icon_frame->SetClipIdx(0);
 		}
 		break;
+		case (int)Skill::SKILL_ID::NURSE_HORN:
+		case (int)Skill::SKILL_ID::FULL_MEAL:
+		case (int)Skill::SKILL_ID::PIKIPIK_PIMAN:
+		case (int)Skill::SKILL_ID::STUDY_GLASSES:
+		case (int)Skill::SKILL_ID::SUPER_CHATTO_TIME:
+		case (int)Skill::SKILL_ID::BLACKSMITH_GEAR:
+		case (int)Skill::SKILL_ID::NINJA_HEADBAND:
+		{
+			clip_idx = 14 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			icon_frame->SetActive(true);
+			icon_frame->SetClipIdx(1);
+		}
+		break;
+		case (int)Skill::SKILL_ID::MAX_HP:
+		case (int)Skill::SKILL_ID::ATK:
+		case (int)Skill::SKILL_ID::SPD:
+		case (int)Skill::SKILL_ID::CRT:
+		case (int)Skill::SKILL_ID::PICK_UP:
+		{
+			clip_idx = 14 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			icon_frame->SetActive(true);
+			icon_frame->SetClipIdx(2);
+		}
+		break;
+		case (int)Skill::SKILL_ID::COIN:
+		case (int)Skill::SKILL_ID::FOOD:
+		{
+			clip_idx = 14 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			icon_frame->SetActive(true);
+			icon_frame->SetClipIdx(3);
+		}
 		default:
 			break;
 		}
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
-		icon_frame->SetActive(true);
-		icon_frame->SetClipIdx(0);
 		SetSize(Vector2(43.0f, 38.0f));
 	}
 		break;
@@ -357,9 +463,11 @@ void Icon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::HOLO_BOMB:
 		case (int)Skill::SKILL_ID::ELITE_LAVA_BUCKET:
 		case (int)Skill::SKILL_ID::PSYCHO_AXE:
+		case (int)Skill::SKILL_ID::BOUNCE_BALL:
+		case (int)Skill::SKILL_ID::CEO_TEAR:
 		case (int)Skill::SKILL_ID::SPIDER_COOKING:
 		{
-			clip_idx = 14 + (int)(id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clip_idx = 14 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 		}
 		break;
 		default:

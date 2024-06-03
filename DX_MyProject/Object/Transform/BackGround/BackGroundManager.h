@@ -14,9 +14,7 @@ private:
 	BackGroundManager();
 	~BackGroundManager();
 
-
-	void SetPos(Tile* t);
-	map<pair<int, int>, list<Tile*>> partition;
+	float now_time;
 
 public:
 	friend class Singleton;
@@ -29,7 +27,5 @@ public:
 
 	const vector<Tile*>& GetTileList() { return tiles; }
 	void SetPlayer(Player* p);
-	const map<pair<int, int>, list<Tile*>>& GetTile() { return partition; }
-	const list<Tile*>& GetPartition(pair<int, int> pos) { return partition[pos]; }
 	Player* GetPlayer() { return player; }
 };

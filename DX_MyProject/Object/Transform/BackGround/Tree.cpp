@@ -74,12 +74,12 @@ void Tree::SetIndex(int idx)
 	case 0:
 		clip_idx = 0;
 		render_size = Vector2(137.0f, 133.0f) * 1.5f;
-		collider_offset = Vector2(0, 75.0f);
+		collider_offset = Vector2(0, 70.0f);
 		break;
 	case 1:
 		clip_idx = 1;
 		render_size = Vector2(116.0f, 127.0f) * 1.5f;
-		collider_offset = Vector2(0, 75.0f);
+		collider_offset = Vector2(0, 70.0f);
 		break;
 	default:
 		break;

@@ -3,7 +3,7 @@ class LevelUpPanel :public Panel
 {
 protected:
 	// Level UP! 을 띄우는 텍스트
-	Text* levelUp_text;
+	LevelText* levelUp_text;
 	// Player 이미지를 띄울 이미지
 	Icon* player_full_icon;
 

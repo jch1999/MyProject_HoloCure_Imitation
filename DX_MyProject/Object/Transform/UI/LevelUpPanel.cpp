@@ -2,7 +2,7 @@
 
 LevelUpPanel::LevelUpPanel()
 {
-	levelUp_text = new Text();
+	levelUp_text = new LevelText();
 	levelUp_text->SetID(UI_ID::LEVEL_UP_TEXT);
 	levelUp_text->SetTarget(this);
 	levelUp_text->SetSize(Vector2(94.0f, 20.0f));

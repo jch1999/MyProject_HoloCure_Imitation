@@ -1,7 +1,7 @@
 #include "framework.h"
 
 BackGroundManager::BackGroundManager()
-	:player(nullptr)
+	:player(nullptr),now_time(0.0f)
 {
 	// 이 방식은 tile이 900개다...256,256으로 크기를 변경하면 225개이긴 한데 랜더해야 할 사이즈가 커지니 부하 자체는 비슷한가?
 	// 크기를 늘려?
@@ -86,11 +86,53 @@ BackGroundManager::~BackGroundManager()
 		delete l;
 }
 
-void BackGroundManager::SetPos(Tile* t)
+void BackGroundManager::Update()
 {
+	now_time += DELTA;
+	if (now_time > 0.2f)
+	{
+		now_time -= 0.2f;
+		FixedUpdate();
+	}
+	for (auto t : trees)
+	{
+		if ((player->pos - t->pos).GetLength() < Vector2(128.0f, 128.0f).GetLength())
+		{
+			Vector2 obstacle_area;
+			if (player->GetDamageCollider()->isCollision(t->GetCollider(), &obstacle_area))
+			{
+
+				Vector2 player_pos = player->GetDamageCollider()->pos;
+				Vector2 obstacle_pos = t->GetCollider()->pos;
+
+				if (obstacle_area.x > obstacle_area.y)
+				{
+					if (player_pos.y > obstacle_pos.y)
+					{
+						player->pos.y += obstacle_area.y;
+					}
+					else
+					{
+						player->pos.y -= obstacle_area.y;
+					}
+				}
+				else
+				{
+					if (player_pos.x > obstacle_pos.x)
+					{
+						player->pos.x += obstacle_area.x;
+					}
+					else
+					{
+						player->pos.x -= obstacle_area.x;
+					}
+				}
+			}
+		}
+	}
 }
 
-void BackGroundManager::Update()
+void BackGroundManager::FixedUpdate()
 {
 	Vector2 move_dir = player->GetMoveDir();
 	int x = round(move_dir.x);
@@ -104,7 +146,7 @@ void BackGroundManager::Update()
 				t->pos = Vector2(t->pos.x + 3840.0f, t->pos.y);
 			}
 		}
-		else if(x==-1)
+		else if (x == -1)
 		{
 			if (t->pos.x - player->pos.x > 1920.0f)
 			{
@@ -144,10 +186,6 @@ void BackGroundManager::Update()
 	{
 		l->Update();
 	}
-}
-
-void BackGroundManager::FixedUpdate()
-{
 }
 
 void BackGroundManager::Render()

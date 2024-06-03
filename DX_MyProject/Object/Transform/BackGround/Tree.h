@@ -31,4 +31,5 @@ public:
 	void SetOffset(Vector2 offset) { this->offset = offset; }
 	void ChangePos();
 	void SetColor(Float4 color) { CB->data.colour = color; }
+	Collider* GetCollider() { return collider; }
 };

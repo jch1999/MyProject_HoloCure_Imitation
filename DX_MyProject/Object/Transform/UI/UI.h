@@ -23,6 +23,7 @@ public:
 		// Text
 		TEXT,
 		LEVEL_UP_TEXT,
+		LEVEL_TEXT,
 		// Dmg Text
 		DMG_TEXT,
 		CRT_DMG_TEXT,

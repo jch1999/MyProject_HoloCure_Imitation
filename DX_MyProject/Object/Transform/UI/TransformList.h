@@ -2,6 +2,7 @@
 #include "UI.h"
 #include "UIManager.h"
 #include "HPBar.h"
+#include "LevelText.h"
 #include "Text.h"
 #include "Time_UI.h"
 #include "DmgText.h"

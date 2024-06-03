@@ -7,7 +7,7 @@ Time_UI::Time_UI()
 
 	for (int i = 0; i < 5; i++)
 	{
-		Text* t = new Text();
+		LevelText* t = new LevelText();
 		t->SetTarget(this);
 		if (i == 2)
 			nowOffset = nowOffset + interval / 2.0f;

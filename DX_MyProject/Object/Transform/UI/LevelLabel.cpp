@@ -12,7 +12,7 @@ LevelLabel::LevelLabel()
 		frames.clear();
 	}
 
-	levelText = new Text();
+	levelText = new LevelText();
 	levelText->SetID(UI_ID::TEXT);
 	levelText->SetTarget(this);
 	levelText->SetOffset(Vector2(10.0f, 1.0f));

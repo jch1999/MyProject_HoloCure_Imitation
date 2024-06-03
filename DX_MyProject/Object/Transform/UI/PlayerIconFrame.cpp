@@ -34,7 +34,7 @@ PlayerIconFrame::PlayerIconFrame()
 	text_startOffset = Vector2(75.0f, -52.0f);
 	for (int i = 0; i < 7; i++)
 	{
-		Text* t = new Text();
+		LevelText* t = new LevelText();
 		t->SetID(UI_ID::TEXT);
 		t->SetTarget(this);
 		t->SetOffset(text_startOffset);

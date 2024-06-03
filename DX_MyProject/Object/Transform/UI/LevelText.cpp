@@ -1,6 +1,6 @@
 #include "framework.h"
 
-Text::Text()
+LevelText::LevelText()
 {
 	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
 	vector<Frame*> frames;
@@ -29,7 +29,6 @@ Text::Text()
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 		frames.clear();
 	}
-	// 이제 글자를 출력해야 하는데... 적절한 폰트가 있을까? 폰트 -> 분해 -> sprite sheet 실패. 분해를 어떻게 하는지 모르겠어
 
 	id = UI_ID::TEXT;
 	type = UI_TYPE::TEXT;
@@ -40,11 +39,11 @@ Text::Text()
 	is_active = false;
 }
 
-Text::~Text()
+LevelText::~LevelText()
 {
 }
 
-void Text::Update()
+void LevelText::Update()
 {
 	if (!is_active)return;
 
@@ -55,7 +54,7 @@ void Text::Update()
 	WorldUpdate();
 }
 
-void Text::Render()
+void LevelText::Render()
 {
 	if (!is_active)return;
 	VS->Set();
@@ -67,11 +66,11 @@ void Text::Render()
 	clips[clip_idx]->Render();
 }
 
-void Text::PostRender()
+void LevelText::PostRender()
 {
 }
 
-void Text::SetID(UI::UI_ID id)
+void LevelText::SetID(UI::UI_ID id)
 {
 	this->id = id;
 	switch (id)
@@ -86,7 +85,7 @@ void Text::SetID(UI::UI_ID id)
 	}
 }
 
-void Text::SetClipIdx(int idx)
+void LevelText::SetClipIdx(int idx)
 {
 	clip_idx = idx;
 }

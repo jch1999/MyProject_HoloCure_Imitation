@@ -2,7 +2,7 @@
 class Time_UI :public UI
 {
 protected:
-	vector<Text*> time_text;
+	vector<LevelText*> time_text;
 
 public:
 	Time_UI();

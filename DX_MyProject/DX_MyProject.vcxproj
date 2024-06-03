@@ -434,6 +434,7 @@
     <ClCompile Include="Object\Transform\UI\SkillListFrame.cpp" />
     <ClCompile Include="Object\Transform\UI\SkillSelector.cpp" />
     <ClCompile Include="Object\Transform\UI\LevelText.cpp" />
+    <ClCompile Include="OBJECT\TRANSFORM\UI\Text.cpp" />
     <ClCompile Include="Object\Transform\UI\Time_UI.cpp" />
     <ClCompile Include="Object\Transform\UI\UI.cpp" />
     <ClCompile Include="Object\Transform\UI\UIManager.cpp" />

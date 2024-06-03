@@ -30,7 +30,7 @@ LevelText::LevelText()
 		frames.clear();
 	}
 
-	id = UI_ID::TEXT;
+	id = UI_ID::LEVEL_TEXT;
 	type = UI_TYPE::TEXT;
 	ui_size = Vector2(10.0f, 14.0f);
 	ui_scale = Vector2(1, 1);
@@ -73,16 +73,6 @@ void LevelText::PostRender()
 void LevelText::SetID(UI::UI_ID id)
 {
 	this->id = id;
-	switch (id)
-	{
-	case UI::UI_ID::LEVEL_UP_TEXT:
-	{
-		clip_idx = 0;
-	}
-		break;
-	default:
-		break;
-	}
 }
 
 void LevelText::SetClipIdx(int idx)

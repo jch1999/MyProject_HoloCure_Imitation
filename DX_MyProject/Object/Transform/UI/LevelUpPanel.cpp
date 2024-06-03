@@ -3,7 +3,8 @@
 LevelUpPanel::LevelUpPanel()
 {
 	levelUp_text = new LevelText();
-	levelUp_text->SetID(UI_ID::LEVEL_UP_TEXT);
+	levelUp_text->SetID(UI_ID::LEVEL_TEXT);
+	levelUp_text->SetClipIdx(0);
 	levelUp_text->SetTarget(this);
 	levelUp_text->SetSize(Vector2(94.0f, 20.0f));
 	levelUp_text->SetScale(Vector2(2.0f, 2.0f));

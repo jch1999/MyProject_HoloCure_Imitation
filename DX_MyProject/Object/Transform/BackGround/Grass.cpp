@@ -1,7 +1,7 @@
 #include "framework.h"
 
 Grass::Grass()
-	:spawn_rate(0.5f)
+	:spawn_rate(0.05f)
 {
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
@@ -16,21 +16,29 @@ Grass::Grass()
 		frames.clear();
 	}
 	render_size = Vector2(29.0f, 30.0f);
-	is_active = true;
+	ChangePos();
 }
 
 Grass::~Grass()
 {
+	for (auto c : clips)
+		delete c;
+	delete CB;
 }
 
 void Grass::Update()
 {
-	if (!is_active)return;
-
 	clips[clip_idx]->Update();
 	scale = clips[clip_idx]->GetFrameSize() * render_size / clips[clip_idx]->GetFrameOriginSize();
+	
+	Vector2 before_pos = pos;
 	pos = target->pos + offset;
 	WorldUpdate();
+
+	if ((before_pos - pos).GetLength() > 1.0f)
+	{
+		ChangePos();
+	}
 }
 
 void Grass::Render()
@@ -53,21 +61,30 @@ void Grass::SetIndex(int idx)
 	clip_idx = idx;
 }
 
-void Grass::SetActive(bool active)
+void Grass::ChangePos()
 {
-	if (active)
+	pair<int, int> now_pos = make_pair((int)pos.x, (int)pos.y);
+	if (active_record.find(now_pos) == active_record.end())
 	{
 		float rand = Random::Get()->GetRandomFloat(0.0f, 1.0f);
 		if (rand < spawn_rate)
 		{
-			is_active = active;
-			SetIndex(Random::Get()->GetRandomInt(0, 2));
+			is_active = true;
+			SetIndex(Random::Get()->GetRandomInt(0, 1));
+			active_record[now_pos] = true;
+			clip_record[now_pos] = clip_idx;
 		}
 		else
 		{
 			is_active = false;
+			active_record[now_pos] = false;
 		}
 	}
 	else
-		is_active = false;
+	{
+		is_active = active_record[now_pos];
+		SetIndex(clip_record[now_pos]);
+	}
 }
+
+

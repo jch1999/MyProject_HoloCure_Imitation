@@ -20,17 +20,21 @@ Tree::Tree()
 
 	collider = new RectCollider(Vector2(58.0f, 30.0f));
 
-	is_active = true;
-	collider->SetActive(true);
+	ChangePos();
 }
 
 Tree::~Tree()
 {
+	for (auto c : clips)
+		delete c;
+
+	delete collider;
+	delete CB;
 }
 
 void Tree::Update()
 {
-	if (!is_active)return;
+	//if (!is_active)return;
 
 	clips[clip_idx]->Update();
 	scale = clips[clip_idx]->GetFrameSize() * render_size / clips[clip_idx]->GetFrameOriginSize();
@@ -43,7 +47,7 @@ void Tree::Update()
 
 	if ((before_pos - pos).GetLength() > 1.0f)
 	{
-		SetActive(true);
+		ChangePos();
 	}
 }
 
@@ -82,26 +86,31 @@ void Tree::SetIndex(int idx)
 	}
 }
 
-void Tree::SetActive(bool active)
+void Tree::ChangePos()
 {
-	if (active)
+	pair<int, int> now_pos = make_pair((int)pos.x, (int)pos.y);
+	if (active_record.find(now_pos)==active_record.end())
 	{
 		float rand = Random::Get()->GetRandomFloat(0.0f, 1.0f);
 		if (rand < spawn_rate)
 		{
-			is_active = active;
+			is_active = true;
 			SetIndex(Random::Get()->GetRandomInt(0, 1));
-			collider->SetActive(active);
+			collider->SetActive(true);
+			active_record[now_pos] = true;
+			clip_record[now_pos] = clip_idx;
 		}
 		else
 		{
 			is_active = false;
 			collider->SetActive(false);
+			active_record[now_pos] = false;
 		}
 	}
 	else
 	{
-		is_active = false;
-		collider->SetActive(false);
+		is_active = active_record[now_pos];
+		collider->SetActive(is_active);
+		SetIndex(clip_record[now_pos]);
 	}
 }

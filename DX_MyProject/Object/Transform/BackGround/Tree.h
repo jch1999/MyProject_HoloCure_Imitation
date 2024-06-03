@@ -16,6 +16,9 @@ private:
 
 	RectCollider* collider;
 	Vector2 collider_offset;
+
+	map<pair<int, int>, bool> active_record;
+	map<pair<int, int>, int> clip_record;
 public:
 	Tree();
 	~Tree();
@@ -26,6 +29,6 @@ public:
 	void SetIndex(int idx);
 	void SetTarget(Transform* t) { target = t; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }
-	void SetActive(bool active);
+	void ChangePos();
 	void SetColor(Float4 color) { CB->data.colour = color; }
 };

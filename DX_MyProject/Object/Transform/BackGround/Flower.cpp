@@ -15,22 +15,31 @@ Flower::Flower()
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 		frames.clear();
 	}
-	render_size = Vector2(29.0f, 38.0f);
-	is_active = true;
+	render_size = Vector2(29.0f, 38.0f)*1.2f;
+	
+	ChangePos();
 }
 
 Flower::~Flower()
 {
+	for (auto c : clips)
+		delete c;
+	delete CB;
 }
 
 void Flower::Update()
 {
-	if (!is_active)return;
-
 	clips[clip_idx]->Update();
 	scale = clips[clip_idx]->GetFrameSize() * render_size / clips[clip_idx]->GetFrameOriginSize();
+	
+	Vector2 before_pos = pos;
 	pos = target->pos + offset;
 	WorldUpdate();
+
+	if ((before_pos - pos).GetLength() > 1.0f)
+	{
+		ChangePos();
+	}
 }
 
 void Flower::Render()
@@ -53,21 +62,28 @@ void Flower::SetIndex(int idx)
 	clip_idx = idx;
 }
 
-void Flower::SetActive(bool active)
+void Flower::ChangePos()
 {
-	if (active)
+	pair<int, int> now_pos = make_pair((int)pos.x, (int)pos.y);
+	if (active_record.find(now_pos) == active_record.end())
 	{
 		float rand = Random::Get()->GetRandomFloat(0.0f, 1.0f);
 		if (rand < spawn_rate)
 		{
-			is_active = active;
+			is_active = true;
 			SetIndex(Random::Get()->GetRandomInt(0, 5));
+			active_record[now_pos] = true;
+			clip_record[now_pos] = clip_idx;
 		}
 		else
 		{
 			is_active = false;
+			active_record[now_pos] = false;
 		}
 	}
 	else
-		is_active = false;
+	{
+		is_active = active_record[now_pos];
+		SetIndex(clip_record[now_pos]);
+	}
 }

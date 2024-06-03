@@ -7,7 +7,7 @@ BackGroundManager::BackGroundManager()
 	// 크기를 늘려?
 	// player이동에 따라 tile의 위치를 수정하는 식을 짜야 하는데...
 	Vector2 initPos(-1280.0f, -1280.0f);
-	for (int a = 0; a < 3; a++)
+	for (int a = 0; a < 3; a++) // 4중? 5중 for문 에반데?
 	{
 		for (int b = 0; b < 3; b++)
 		{
@@ -17,11 +17,42 @@ BackGroundManager::BackGroundManager()
 				{
 					Tile* t = new Tile(i * 10 + j);
 					t->pos = Vector2(initPos.x + 1280.0f * a + i * 128.0f, initPos.y + 1280.0f * b + j * 128.0f);
-					if ((i == 2)&&(j==3||j==7))
+					if ((i == 2) && (j == 3 || j == 7) )
 					{
 						Tree* tree = new Tree();
 						tree->SetTarget(t);
 						trees.push_back(tree);
+
+						for (int k = 0; k < 3; k++)
+						{
+							Flower* f = new Flower();
+							f->SetTarget(t);
+							f->SetOffset(Vector2(-40.0f + 40.0f * k, 100.0f));
+							flowers.push_back(f);
+						}
+					}
+					else if (((i == 0 || i == 3) || (i == 5 || i == 7)) && ((j == 0 || j == 2) || (j == 5 || j == 8)))
+					{
+						for (int k = 0; k < 3; k++)
+						{
+							Flower* f = new Flower();
+							f->SetTarget(t);
+							f->SetOffset(Vector2(-40.0f + 40.0f * k, 100.0f));
+							flowers.push_back(f);
+						}
+					}
+					else// if((i==3||i==9)&&((j==1||j==5)||j==8))
+					{
+						for (int k = 0; k<3; k++)
+						{
+							for (int l = 0; l < 2; l++)
+							{
+								Grass* g = new Grass();
+								g->SetTarget(t);
+								g->SetOffset(Vector2(k * 40.0f, 60.0f + l * 60.0f));
+								grasses.push_back(g);
+							}
+						}
 					}
 					t->SetActive(true);
 					tiles.push_back(t);
@@ -30,12 +61,29 @@ BackGroundManager::BackGroundManager()
 		}
 	}
 	
+	for (int i = 0; i < 2; i++)
+	{
+		SunLight* light = new SunLight();
+		light->SetTarget(CAM);
+		light->SetOffset(WIN_CENTER);
+		light->SetIndex(i);
+		light->SetActive(true);
+		lights.push_back(light);
+	}
 }
 
 BackGroundManager::~BackGroundManager()
 {
 	for (auto t : tiles)
 		delete t;
+	for (auto t : trees)
+		delete t;
+	for (auto f : flowers)
+		delete f;
+	for (auto g : grasses)
+		delete g;
+	for (auto l : lights)
+		delete l;
 }
 
 void BackGroundManager::SetPos(Tile* t)
@@ -84,6 +132,18 @@ void BackGroundManager::Update()
 	{
 		t->Update();
 	}
+	for (auto f : flowers)
+	{
+		f->Update();
+	}
+	for (auto g : grasses)
+	{
+		g->Update();
+	}
+	for (auto l : lights)
+	{
+		l->Update();
+	}
 }
 
 void BackGroundManager::FixedUpdate()
@@ -108,6 +168,24 @@ void BackGroundManager::Render()
 			}
 		}
 	}
+	for (auto f : flowers)
+	{
+		if ((f->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
+		{
+			if (f->pos.y< player->pos.y)
+			{
+				f->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				f->Render();
+			}
+		}
+	}
+	for (auto g : grasses)
+	{
+		if ((g->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
+		{
+			g->Render();
+		}
+	}
 }
 
 void BackGroundManager::AfterRender()
@@ -125,6 +203,24 @@ void BackGroundManager::AfterRender()
 				t->Render();
 			}
 		}
+	}
+	for (auto f : flowers)
+	{
+		if ((f->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
+		{
+			if (f->pos.y > player->pos.y)
+			{
+				if (f->pos.y - player->pos.y > 5.0f)
+					f->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				else
+					f->SetColor(Float4(1.0f, 1.0f, 1.0f, 0.85f));
+				f->Render();
+			}
+		}
+	}
+	for (auto l : lights)
+	{
+		l->Render();
 	}
 }
 

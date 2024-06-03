@@ -13,6 +13,9 @@ private:
 	VertexShader* VS;
 	PixelShader* PS;
 	ColourBuffer* CB;
+
+	map<pair<int, int>, bool> active_record;
+	map<pair<int, int>, int> clip_record;
 public:
 	Grass();
 	~Grass();
@@ -23,5 +26,5 @@ public:
 	void SetIndex(int idx);
 	void SetTarget(Transform* t) { target = t; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }
-	void SetActive(bool active);
+	void ChangePos();
 };

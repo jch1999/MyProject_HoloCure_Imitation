@@ -9,6 +9,7 @@ public:
 	vector<Tree*> trees;
 	vector<Flower*> flowers;
 	vector<Grass*> grasses;
+	vector<SunLight*> lights;
 private:
 	BackGroundManager();
 	~BackGroundManager();

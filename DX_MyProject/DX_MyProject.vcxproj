@@ -386,6 +386,7 @@
     <ClCompile Include="Object\Transform\BackGround\BackGroundManager.cpp" />
     <ClCompile Include="Object\Transform\BackGround\Flower.cpp" />
     <ClCompile Include="Object\Transform\BackGround\Grass.cpp" />
+    <ClCompile Include="Object\Transform\BackGround\SunLight.cpp" />
     <ClCompile Include="Object\Transform\BackGround\Tile.cpp" />
     <ClCompile Include="Object\Transform\BackGround\Tree.cpp" />
     <ClCompile Include="Object\Transform\Enemy\DeadBeat.cpp" />

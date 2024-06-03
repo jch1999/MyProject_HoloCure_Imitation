@@ -38,26 +38,37 @@ void BackGroundManager::SetPos(Tile* t)
 void BackGroundManager::Update()
 {
 	Vector2 move_dir = player->GetMoveDir();
+	int x = round(move_dir.x);
+	int y = round(move_dir.y);
 	for (auto t : tiles)
 	{
-		if (move_dir.x > 0.0f)
+		if (x == 1)
 		{
-			if(t->pos.x - player->pos.x < 1920)
-				t->pos = Vector2(t->pos.x + 5120.0f, t->pos.y);
+			if (t->pos.x - player->pos.x < -1920.0f)
+			{
+				t->pos = Vector2(t->pos.x + 3840.0f, t->pos.y);
+			}
 		}
-		else
+		else if(x==-1)
 		{
-			if (t->pos.x - player->pos.x < 2560.0f)
-				t->pos = Vector2(t->pos.x + 5120.0f, t->pos.y);
+			if (t->pos.x - player->pos.x > 1920.0f)
+			{
+				t->pos = Vector2(t->pos.x - 3840.0f, t->pos.y);
+			}
 		}
-
-		if (move_dir.y > 0.0f)
+		if (y == 1)
 		{
-
+			if (t->pos.y - player->pos.y < -1920.0f)
+			{
+				t->pos = Vector2(t->pos.x, t->pos.y + 3840.0f);
+			}
 		}
-		else
+		else if (y == -1)
 		{
-
+			if (t->pos.y - player->pos.y > 1920.0f)
+			{
+				t->pos = Vector2(t->pos.x, t->pos.y - 3840.0f);
+			}
 		}
 		t->Update();
 	}
@@ -70,7 +81,10 @@ void BackGroundManager::FixedUpdate()
 void BackGroundManager::Render()
 {
 	for (auto t : tiles)
-		t->Render();
+	{
+		if((t->pos-player->pos).GetLength()<Vector2(WIN_WIDTH,WIN_HEIGHT).GetLength())
+			t->Render();
+	}
 }
 
 void BackGroundManager::PostRneder()

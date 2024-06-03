@@ -419,7 +419,10 @@ void EnemySpawner::Update()
 void EnemySpawner::Render()
 {
 	for (auto e : enemy_list)
-		e->Render();
+	{
+		if ((e->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
+			e->Render();
+	}
 }
 
 void EnemySpawner::PostRneder()

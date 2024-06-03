@@ -364,7 +364,10 @@ void ItemSpawner::FixedUpdate()
 void ItemSpawner::Render()
 {
 	for (auto i : item_list)
-		i->Render();
+	{
+		if ((i->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
+			i->Render();
+	}
 }
 
 void ItemSpawner::PostRneder()

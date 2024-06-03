@@ -6,7 +6,9 @@ private:
 
 public:
 	vector<Tile*> tiles;
-
+	vector<Tree*> trees;
+	vector<Flower*> flowers;
+	vector<Grass*> grasses;
 private:
 	BackGroundManager();
 	~BackGroundManager();
@@ -21,6 +23,7 @@ public:
 	void Update();
 	void FixedUpdate();
 	void Render();
+	void AfterRender();
 	void PostRneder();
 
 	const vector<Tile*>& GetTileList() { return tiles; }

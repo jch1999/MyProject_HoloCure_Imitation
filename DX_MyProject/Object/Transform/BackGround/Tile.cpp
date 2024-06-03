@@ -7,7 +7,7 @@ Tile::Tile(int idx)
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
 	CB = new ColourBuffer();
 
-	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains.png";
+	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
 	vector<Frame*> frames;
 	frames.push_back(new Frame(file, 4.0f + idx / 10 * 128.0f, 323.0f + idx % 10 * 128.0f, 128.0f, 128.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
@@ -43,4 +43,9 @@ void Tile::Render()
 
 void Tile::PostRender()
 {
+}
+
+void Tile::SetActive(bool active)
+{
+	is_active = active;
 }

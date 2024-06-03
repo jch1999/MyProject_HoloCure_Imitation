@@ -125,6 +125,7 @@ void TestScene::Render()
 	//proj->Render();
 
 	EnemySpawner::Get()->Render();
+	BackGroundManager::Get()->AfterRender();
 	//enemy->Render();
 	SkillManager::Get()->Render();
 	UIManager::Get()->Render();

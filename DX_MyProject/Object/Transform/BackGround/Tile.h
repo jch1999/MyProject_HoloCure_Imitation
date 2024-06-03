@@ -16,4 +16,5 @@ public:
 	void Update();
 	void Render();
 	void PostRender();
+	void SetActive(bool active);
 };

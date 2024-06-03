@@ -17,6 +17,13 @@ BackGroundManager::BackGroundManager()
 				{
 					Tile* t = new Tile(i * 10 + j);
 					t->pos = Vector2(initPos.x + 1280.0f * a + i * 128.0f, initPos.y + 1280.0f * b + j * 128.0f);
+					if ((i == 2)&&(j==3||j==7))
+					{
+						Tree* tree = new Tree();
+						tree->SetTarget(t);
+						trees.push_back(tree);
+					}
+					t->SetActive(true);
 					tiles.push_back(t);
 				}
 			}
@@ -72,6 +79,11 @@ void BackGroundManager::Update()
 		}
 		t->Update();
 	}
+
+	for (auto t : trees)
+	{
+		t->Update();
+	}
 }
 
 void BackGroundManager::FixedUpdate()
@@ -85,10 +97,44 @@ void BackGroundManager::Render()
 		if((t->pos-player->pos).GetLength()<Vector2(WIN_WIDTH,WIN_HEIGHT).GetLength())
 			t->Render();
 	}
+	for (auto t : trees)
+	{
+		if ((t->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
+		{
+			if (t->pos.y + 30.0f < player->pos.y)
+			{
+				t->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				t->Render();
+			}
+		}
+	}
+}
+
+void BackGroundManager::AfterRender()
+{
+	for (auto t : trees)
+	{
+		if ((t->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
+		{
+			if (t->pos.y+30.0f > player->pos.y)
+			{
+				if(t->pos.y-player->pos.y>50.0f)
+					t->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				else
+					t->SetColor(Float4(1.0f, 1.0f, 1.0f, 0.85f));
+				t->Render();
+			}
+		}
+	}
 }
 
 void BackGroundManager::PostRneder()
 {
+	for (auto t : tiles)
+	{
+		if ((t->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
+			t->PostRender();
+	}
 }
 
 void BackGroundManager::SetPlayer(Player* p)

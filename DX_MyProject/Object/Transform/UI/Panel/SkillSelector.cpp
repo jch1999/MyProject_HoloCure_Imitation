@@ -15,7 +15,7 @@ SkillSelector::SkillSelector()
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
-	skill_icon = new Icon();
+	skill_icon = new SkillIcon();
 	skill_icon->SetID(UI_ID::SKILL_LEVEL_UP_ICON);
 	skill_icon->SetTarget(this);
 	skill_icon->SetOffset(Vector2(-215.0f, 5.0f));

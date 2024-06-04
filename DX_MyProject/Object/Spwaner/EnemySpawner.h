@@ -14,6 +14,7 @@ public:
 	float spawnDelay;
 	float nowDelay;
 
+	int defeatCnt;
 	// 老馆 各
 	// 利 积己 矫 积己且 荐
 	vector<pair<float, int>> spawnCnt_table;
@@ -69,7 +70,7 @@ public:
 
 	const vector<Enemy*> &GetEnemyList() { return enemy_list; }
 	void SetPlayer(Player* p);
-	void EnemyDead() { nowSpawnCnt--; }
+	void EnemyDead();
 	void AddEnemy(Enemy* enemy) { enemy_list.push_back(enemy); }
 	const map<pair<int, int>, list<Enemy*>>& GetPartition() { return partition; }
 	const list<Enemy*>& GetPartition(pair<int,int> pos) { return partition[pos]; }

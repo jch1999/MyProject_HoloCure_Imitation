@@ -12,7 +12,7 @@ SkillListFrame::SkillListFrame()
 	Vector2 initOffset = Vector2(-75, -15);
 	for (int i = 0; i < 6; i++)
 	{
-		Icon* weaponIcon = new Icon();
+		SkillIcon* weaponIcon = new SkillIcon();
 		weaponIcon->SetTarget(this);
 		if (i == 0)
 		{
@@ -33,7 +33,7 @@ SkillListFrame::SkillListFrame()
 	initOffset = Vector2(-75, 45);
 	for (int i = 0; i < 6; i++)
 	{
-		Icon* buffIcon = new Icon();
+		SkillIcon* buffIcon = new SkillIcon();
 		buffIcon->SetTarget(this);
 		buffIcon->SetID(UI_ID::BUFF_ICON_BACK);
 		buffIcon->SetOffset(initOffset + Vector2(50 * i, 0));

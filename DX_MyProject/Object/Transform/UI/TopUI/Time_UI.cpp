@@ -2,12 +2,31 @@
 
 Time_UI::Time_UI()
 {
-	Vector2 nowOffset(-37.5f,0.0f);
+	Vector2 nowOffset(-25.0f,-10.0f);
 	Vector2 interval(15, 0);
-
+	// Stage text
 	for (int i = 0; i < 5; i++)
 	{
-		LevelText* t = new LevelText();
+		Text* t = new Text();
+		t->SetTarget(this);
+		t->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		t->SetScale(Vector2(0.5f, 0.5f));
+		t->SetActive(true);
+		stage_text.push_back(t);
+		child_list.push_back(t);
+	}
+	stage_text[0]->SetText('S');
+	stage_text[1]->SetText('t');
+	stage_text[2]->SetText('a');
+	stage_text[3]->SetText('g');
+	stage_text[4]->SetText('e');
+
+	// Time
+	nowOffset = Vector2(-35.0f, 20.0f);
+	for (int i = 0; i < 5; i++)
+	{
+		Text* t = new Text();
 		t->SetTarget(this);
 		if (i == 2)
 			nowOffset = nowOffset + interval / 2.0f;
@@ -15,7 +34,9 @@ Time_UI::Time_UI()
 		if (i == 2)
 			nowOffset = nowOffset + interval / 2.0f;
 		nowOffset = nowOffset + interval;
+		t->SetScale(Vector2(0.3f, 0.3f));
 		t->SetActive(true);
+		time_text.push_back(t);
 		child_list.push_back(t);
 	}
 
@@ -39,13 +60,13 @@ void Time_UI::Update()
 	WorldUpdate();
 	
 	int nowTime = (int)EnemySpawner::Get()->nowTime;
-	child_list[0]->SetClipIdx(1 + (nowTime / 600));
-	child_list[1]->SetClipIdx(1 + (nowTime / 60));
+	time_text[0]->SetText('0'+(nowTime / 600));
+	time_text[1]->SetText('0' + (nowTime / 60));
 	
-	child_list[2]->SetClipIdx(2);
+	time_text[2]->SetText('/');
 
-	child_list[3]->SetClipIdx(1 + ((nowTime % 60) / 10));
-	child_list[4]->SetClipIdx(1 + ((nowTime % 60) % 10));
+	time_text[3]->SetText('0' + ((nowTime % 60) / 10));
+	time_text[4]->SetText('0' + ((nowTime % 60) % 10));
 
 	
 	for (auto child : child_list)

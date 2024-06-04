@@ -6,6 +6,7 @@ EnemySpawner::EnemySpawner()
 	,nowTime(0.0f),endTime(600.0f)
 	,spawnDelay(1.5f)
 	,fixedInterval(FIXED_INTERVAL),nowInterval(FIXED_INTERVAL)
+	,defeatCnt(0)
 {
 	// Normal Enemey
 	// 각 ENEMY_NAME에 따른 생성 시작 시간 설정
@@ -436,6 +437,12 @@ void EnemySpawner::SetPlayer(Player* p)
 	player = p;
 	for (auto e : enemy_list)
 		e->SetPlayer(player);
+}
+
+void EnemySpawner::EnemyDead()
+{
+	nowSpawnCnt--;
+	defeatCnt++;
 }
 
 void EnemySpawner::FixedUpdate()

@@ -1,14 +1,13 @@
 #pragma once
-class SkillSelector :public UI
+class Time_UI :public UI
 {
 protected:
-	// Skill::SKILL_ID s_id;
-	int skill_id;
-	Icon* skill_icon;
+	vector<Text*> stage_text;
+	vector<Text*> time_text;
 
 public:
-	SkillSelector();
-	~SkillSelector();
+	Time_UI();
+	~Time_UI();
 
 
 	// UI을(를) 통해 상속됨
@@ -19,7 +18,4 @@ public:
 	virtual void PostRender() override;
 	virtual void SetState(UI::UI_STATE state);
 	virtual void SetID(UI::UI_ID id) override;
-	void SetSkillID(int skill_id);
-	int GetSkillID() { return skill_id; }
-	const Icon* GetIcon() { return skill_icon; }
 };

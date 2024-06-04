@@ -94,6 +94,7 @@ void BackGroundManager::Update()
 		now_time -= 0.2f;
 		FixedUpdate();
 	}
+	lights[0]->Update();
 	for (auto t : trees)
 	{
 		if ((player->pos - t->pos).GetLength() < Vector2(128.0f, 128.0f).GetLength())
@@ -182,10 +183,7 @@ void BackGroundManager::FixedUpdate()
 	{
 		g->Update();
 	}
-	for (auto l : lights)
-	{
-		l->Update();
-	}
+	lights[1]->Update();
 }
 
 void BackGroundManager::Render()

@@ -2,8 +2,8 @@
 class SkillListFrame :public UI
 {
 protected:
-	vector<Icon*> weaponIconList;
-	vector<Icon*> buffIconList;
+	vector<SkillIcon*> weaponIconList;
+	vector<SkillIcon*> buffIconList;
 
 public:
 	SkillListFrame();

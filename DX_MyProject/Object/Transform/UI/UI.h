@@ -16,7 +16,8 @@ public:
 		EXP_BAR,
 		ARROW,
 		SELECTOR,
-		TIMER
+		TIMER,
+		COUNTER,
 	}type;
 	enum class  UI_ID
 	{
@@ -47,6 +48,8 @@ public:
 		SKILL_ENHANCE_ICON,
 		WEAPON_ICON_BACK,
 		BUFF_ICON_BACK,
+		COUNTER_ICON,
+		STAT_ICON,
 		// Arrow
 		ATK_ARROW,
 		ATK_ARROW_FIXED,
@@ -59,6 +62,8 @@ public:
 		LEVEL_UP_SELECTOR,
 		// Timer
 		TIMER,
+		//Counter
+		COUNTER,
 	}id;
 	enum class UI_STATE
 	{

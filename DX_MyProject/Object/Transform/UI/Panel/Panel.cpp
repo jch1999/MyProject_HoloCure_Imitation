@@ -2,7 +2,7 @@
 
 Panel::Panel()
 {
-	player_full_icon = new Icon();
+	player_full_icon = new PlayerIcon();
 	player_full_icon->SetID(UI_ID::PLAYER_FULL_ICON);
 	player_full_icon->SetTarget(this);
 	player_full_icon->SetScale(Vector2(3.0f, 3.0f));

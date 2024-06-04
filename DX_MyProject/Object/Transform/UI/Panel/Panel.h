@@ -3,7 +3,7 @@ class Panel :public UI
 {
 protected:
 	// Player 이미지를 띄울 이미지
-	Icon* player_full_icon;
+	PlayerIcon* player_full_icon;
 
 	// 선택지 번호
 	int select_idx;

@@ -6,13 +6,13 @@ Text::Text()
 	vector<Frame*> frames;
 	
 	// number clip
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)//0~9
 	{
 		frames.push_back(new Frame(file, i * 32.0f, 242.0f, 32.0f, 40.0f));
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 		frames.clear();
 	}
-	// Capital clip
+	// Capital clip // 10 ~35
 	{
 		// A
 		frames.push_back(new Frame(file, 2.0f, 3.0f, 35.0f, 38.0f));
@@ -123,7 +123,7 @@ Text::Text()
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 		frames.clear();
 	}
-	// small clip
+	// small clip // 36 ~61
 	{
 		// a
 		frames.push_back(new Frame(file, 1.0f, 146.0f, 29.0f, 46.0f));
@@ -235,6 +235,16 @@ Text::Text()
 		frames.clear();
 	}
 
+	// Extra clip
+	// ':' // 62
+	frames.push_back(new Frame(file, 29.0f, 289.0f, 12.0f, 46.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+	// '/' // 63
+	frames.push_back(new Frame(file, 42.0f, 289.0f, 31.0f, 46.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+
 	id = UI_ID::LEVEL_TEXT;
 	type = UI_TYPE::TEXT;
 	SetText('0');
@@ -327,7 +337,13 @@ void Text::SetText(char c)
 	case 'x':
 	case 'y':
 	case 'z':
-		clip_idx = 37 + (int)(c - 'a');
+		clip_idx = 36 + (int)(c - 'a');
+		break;
+	case ':':
+		clip_idx = 62;
+		break;
+	case '/':
+		clip_idx = 63;
 		break;
 	}
 	SetSize(c);
@@ -504,6 +520,12 @@ void Text::SetSize(char c)
 		break;
 	case 'z':
 		ui_size = Vector2(24.0f, 46.0f);
+		break;
+	case ':':
+		ui_size = Vector2(12.0f, 46.0f);
+		break;
+	case '/':
+		ui_size = Vector2(31.0f, 46.0f);
 		break;
 	}
 }

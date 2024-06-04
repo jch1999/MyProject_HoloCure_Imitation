@@ -2,7 +2,7 @@
 
 TestScene::TestScene()
 {
-	player = new Baelz();
+	player = new Watson();
 	player->pos = WIN_CENTER;
 
 	CAM->SetTarget(player);
@@ -117,9 +117,10 @@ void TestScene::Update()
 // Render ¼ø¼­ item ->player->enemy->skill->ui
 void TestScene::Render()
 {
-	BackGroundManager::Get()->Render();
+	BackGroundManager::Get()->BeforeRender();
 	//item->Render();
 	ItemSpawner::Get()->Render();
+	BackGroundManager::Get()->Render();
 	player->Render();
 	//skill->Render();
 	//proj->Render();

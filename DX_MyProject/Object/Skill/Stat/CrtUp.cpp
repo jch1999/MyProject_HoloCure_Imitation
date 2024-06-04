@@ -5,6 +5,7 @@ CrtUp::CrtUp()
 	:Skill(SKILL_ID::CRT,SKILL_TYPE::STAT,1)
 {
 	weight = 3;
+	level_scripts.push_back("Crt +3% Up.");
 }
 
 CrtUp::~CrtUp()
@@ -27,7 +28,7 @@ void CrtUp::PostRender()
 
 bool CrtUp::LevelUp()
 {
-	player->SetCRT(player->GetCRT() + player->GetDefaultCrt() * 0.03f);
+	player->SetCRT(player->GetCRT() + 3.0f);
 	return true;
 }
 

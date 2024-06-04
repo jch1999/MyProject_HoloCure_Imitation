@@ -4,6 +4,13 @@ HoloBomb::HoloBomb()
 	:Weapon(Skill::SKILL_ID::HOLO_BOMB)
 {
 	weight = 3;
+	level_scripts.push_back("A bomb that explodes, dealing damage to all nearby targets.");
+	level_scripts.push_back("Increase explosion size by 15%.");
+	level_scripts.push_back("Increase damage by 20%.");
+	level_scripts.push_back("Throw 2 bombs.");
+	level_scripts.push_back("Reduce the time between attacks by 20%.");
+	level_scripts.push_back("Increase explosion size by 20%.");
+	level_scripts.push_back("Throw 3 bombs.");
 }
 
 HoloBomb::~HoloBomb()

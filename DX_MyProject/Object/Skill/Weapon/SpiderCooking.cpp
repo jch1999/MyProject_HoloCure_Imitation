@@ -5,6 +5,13 @@ SpiderCooking::SpiderCooking()
 	,poision(nullptr)
 {
 	weight = 4;
+	level_scripts.push_back("Create an area of miasma around, dealing slow damage to enemies inside.");
+	level_scripts.push_back("Increase area by 15%.");
+	level_scripts.push_back("Increase damage by 30%.");
+	level_scripts.push_back("Increase area by 25%.");
+	level_scripts.push_back("Increase frequency of hits by 20%.");
+	level_scripts.push_back("Increase damage by 60%.");
+	level_scripts.push_back("Add small knockback on hit.");
 }
 
 SpiderCooking::~SpiderCooking()

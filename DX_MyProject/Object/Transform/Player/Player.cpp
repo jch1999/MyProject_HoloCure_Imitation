@@ -12,11 +12,8 @@ Player::Player(float MaxHP, float atk, float speed, float crt, float pickupRange
 	,size(size)
 	,projCnt(0)
 	,colIdx_Melee(0),colIdx_Range(0),colIdx_Shot(0)
-	,damage_Melee(0.0f),damage_Range(0.0f),damage_Shot(0.0f)
 	,hp_bar(nullptr)
 	,hp_back(nullptr)
-	,isHealDouble(false)
-	,expAddtionalRate(0.0f)
 {
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
@@ -119,7 +116,7 @@ void Player::CheckMoveDir()
 
 void Player::ChangeHP(float amount, Vector2 dir)
 {
-	if (amount > 0 && isHealDouble)
+	if (amount > 0 && SkillManager::Get()->isHealDoubled)
 	{
 		HP += amount * 2.0f;
 	}
@@ -192,7 +189,7 @@ void Player::ChangeHP(float amount, Vector2 dir)
 
 void Player::GetExp(int expValue)
 {
-	nowExp += expValue * (1 + expAddtionalRate);
+	nowExp += expValue * (1 + SkillManager::Get()->add_expRate);
 	if (exp_bar == nullptr)
 	{
 		exp_bar = (ExpBar*)(UIManager::Get()->GetUI(UI::UI_ID::EXP_BAR));
@@ -242,19 +239,4 @@ bool Player::isCritical()
 		return true;
 	else
 		return false;
-}
-
-float Player::GetATK(UINT type)
-{
-	switch (type)
-	{
-	case (UINT)Weapon::WEAPON_TYPE::MULTI_SHOT:
-		return attack + damage_Shot;
-	case (UINT)Weapon::WEAPON_TYPE::RANGE:
-		return attack + damage_Range;
-	case (UINT)Weapon::WEAPON_TYPE::MELEE:
-		return attack + damage_Melee;
-	default:
-		return attack;
-	}
 }

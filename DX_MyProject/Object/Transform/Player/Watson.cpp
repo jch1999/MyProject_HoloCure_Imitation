@@ -154,12 +154,11 @@ void Watson::PostRender()
 	//ImGui::Begin("Watsib's Status", (bool*)1);
 	ImGui::NewLine();
 	//ImGui::BeginChild("Watson's Status");
-	ImGui::Text("Watson's HP %d/%d", (int)HP, (int)MaxHP);
-	ImGui::SliderFloat("Watson's moveSpeed", &speed,0.0f,1000.0f);
-	ImGui::SliderFloat2("Watson's move_dir", (float*)&move_dir, -1.0f, 1.0f);
-	ImGui::SliderFloat2("Watson's attack_dir", (float*)&attack_dir, -1.0f, 1.0f);
-	ImGui::Text("Now Watson looking at %d", is_looking_right);
 	ImGui::Text("EXP : %f/%f", nowExp, nowMaxExp);
+	ImGui::Text("Watson's HP %d/%d", (int)HP, (int)MaxHP);
+	ImGui::Text("Watson's moveSpeed : %f", speed);
+	ImGui::Text("Watson's ATK : %f", attack);
+	ImGui::Text("Watson's CRT : %f", crt);
 	//ImGui::EndChild();
 	//ImGui::End();
 }

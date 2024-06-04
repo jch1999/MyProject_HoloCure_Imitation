@@ -4,6 +4,13 @@ CEOTear::CEOTear()
 	:Weapon(SKILL_ID::CEO_TEAR)
 {
 	weight = 2;
+	level_scripts.push_back("Fires rapid tears at random targets.");
+	level_scripts.push_back("Increases damage by 20%.");
+	level_scripts.push_back("Shoot 2 tears.");
+	level_scripts.push_back("Reduce the time between attacks by 33%.");
+	level_scripts.push_back("Tears are 25% faster and increase damage by 20%.");
+	level_scripts.push_back("Reduce the time between attacks by 50%.");
+	level_scripts.push_back("Shoot 4 tears.");
 }
 
 CEOTear::~CEOTear()

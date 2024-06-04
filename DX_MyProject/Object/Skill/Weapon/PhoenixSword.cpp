@@ -4,6 +4,14 @@ PhoenixSword::PhoenixSword()
 	:Weapon(Skill::SKILL_ID::PHOENIX_SWORD)
 {
 	weight = 3;
+	level_scripts.push_back("Short ranged slash in front.");
+	level_scripts.push_back("Increase damage by 20%.");
+	level_scripts.push_back("Increase attack area by 25%.");
+	level_scripts.push_back("Reduce the time between attacks by 15%.");
+	level_scripts.push_back("Can hit twice per slash.");
+	level_scripts.push_back("Increase damage by 20%.");
+	level_scripts.push_back("Sword is engulfed in flames, and can hit many times. Also leave a burning fire under hit targets.");
+	
 	minDamage_table = { 0,11.0f, 14.0f,14.0f, 14.0f, 14.0f, 17.0f,5.0f };
 	maxDamage_table = { 0,15.0f, 18.0f,18.0f, 18.0f, 18.0f, 21.0f,9.0f };
 	colliderIdx_table = { 0,0,0,1,1,1,1,3 };
@@ -47,7 +55,8 @@ void PhoenixSword::Update()
 
 			// slash 정보 초기화
 			float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
-				+ player->GetATK((UINT)Weapon::WEAPON_TYPE::MELEE)
+				* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Melee)
+				+ player->GetATK()
 				+ enhanceDamage;
 			slash->SetStatus(damage, 250.0f, -1, playTime_table[0]);
 			slash->SetDirection(player->GetAttackDir());
@@ -220,7 +229,7 @@ void PhoenixSword::UpdateSlash()
 						}
 						blaze->pos = m.first->pos;
 						float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
-							+ player->GetATK((UINT)Weapon::WEAPON_TYPE::MELEE)
+							+ player->GetATK()
 							+ enhanceDamage;
 						blaze->SetStatus(damage * 0.2f, 0.0f, -1, 5.0f);
 						blaze->respwan();

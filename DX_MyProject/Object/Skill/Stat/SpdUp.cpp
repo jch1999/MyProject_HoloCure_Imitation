@@ -5,6 +5,7 @@ SpdUp::SpdUp()
 	:Skill(SKILL_ID::CRT, SKILL_TYPE::STAT, 1)
 {
 	weight = 4;
+	level_scripts.push_back("SPD +12% Up.");
 }
 
 SpdUp::~SpdUp()
@@ -27,7 +28,7 @@ void SpdUp::PostRender()
 
 bool SpdUp::LevelUp()
 {
-	player->SetSPD(player->GetSpeed() + player->GetDefaultSpd() * 0.12f);
+	player->SetSPD(player->GetSPD() + player->GetDefaultSpd() * 0.12f);
 	return true;
 }
 

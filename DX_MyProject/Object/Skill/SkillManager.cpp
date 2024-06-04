@@ -2,6 +2,8 @@
 
 SkillManager::SkillManager()
 	:total_weight_W(0),total_weight_B(0),total_weight_S(0),total_weight_E(0)
+	, isHealDoubled(false), add_expRate(0.0f),add_MainWeapon_dmgRate(0.0f)
+	,damageRate_Melee(0.0f),damageRate_Shot(0.0f),damageRate_Range(0.0f)
 {
 	weaponCnt = 0;
 	buffCnt = 0;

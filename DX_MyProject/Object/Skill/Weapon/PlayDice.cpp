@@ -4,8 +4,16 @@ PlayDice::PlayDice()
 	:Weapon(SKILL_ID::PLAY_DICE)
 	, proj_delay(0.2f), now_proj_delay(0.0f)
 	, projCnt(0)
+	,isKnockBack(false)
 {
 	weight = 3;
+	level_scripts.push_back("Throw out a die. The number on the dice determines the damage.");
+	level_scripts.push_back("Increase damage by 30%.");
+	level_scripts.push_back("Throw 2 dice.");
+	level_scripts.push_back("Dice shoots out farther, and increase area of attack by 30%.");
+	level_scripts.push_back("Adds small knockback on hit.");
+	level_scripts.push_back("Increase damage by 30%.");
+	level_scripts.push_back("Throw 3 dice.");
 
 	skillDelay_table = { 0, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f, 1.25f };
 	minDamage_table = { 0,2,3,3,3,3,4,8 };
@@ -68,7 +76,8 @@ void PlayDice::Update()
 				int diceEye = GetDiceEye();
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
 					* diceEye // 주사위 눈 만큼을 기본 데미지에 곱한다
-					+ player->GetATK((UINT)Weapon::WEAPON_TYPE::MULTI_SHOT)
+					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
+					+ player->GetATK()
 					+ enhanceDamage;
 				proj->SetStatus(damage, 100.0f * projSPD_table[now_level], hitLimt_table[now_level], 2.0f);
 				proj->SetDirection(player->GetAttackDir());
@@ -95,7 +104,6 @@ void PlayDice::Update()
 	}
 
 	// 충돌 처리
-	const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
 	for (int i = 0; i < projectiles.size(); i++)
 	{
 		Projectile* p = projectiles[i];
@@ -103,45 +111,52 @@ void PlayDice::Update()
 
 		p->Update();
 		// 충돌 처리
+		pair<int, int> pPos = make_pair((int)(p->pos.x) / CELL_X, (int)(p->pos.y) / CELL_Y);
+		list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
 		for (auto e : enemyList)
 		{
 			if (!e->is_active)continue;
 
-			if (p->GetCollider()->isCollision(e->GetDamageCollider()))
+			if ((e->pos - p->pos).GetLength() < (p->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength())/2.0f)
 			{
-				bool exist = false;
-				for (auto e2 : hitEnemies[i])
+				if (p->GetCollider()->isCollision(e->GetDamageCollider()))
 				{
-					if (e == e2)
+					bool exist = false;
+					for (auto e2 : hitEnemies[i])
 					{
-						exist = true;
-						break;
+						if (e == e2)
+						{
+							exist = true;
+							break;
+						}
 					}
-				}
-				// 이미 충돌한 적이 있다면 넘어가고
-				if (exist)continue;
-				// 더 이상 부딪힐 횟수가 없다면 이 탄환의 충돌처리 종료
-				if (!p->is_active)break;
+					// 이미 충돌한 적이 있다면 넘어가고
+					if (exist)continue;
+					// 더 이상 부딪힐 횟수가 없다면 이 탄환의 충돌처리 종료
+					if (!p->is_active)break;
 
-				if (player->isCritical())
-					e->ChangeHP(-(p->GetDamage()) * 1.5f, true);
-				else
-					e->ChangeHP(-(p->GetDamage()), false);
-				p->Hit();
-				hitEnemies[i].push_back(e);
+					if (player->isCritical())
+						e->ChangeHP(-(p->GetDamage()) * 1.5f, true);
+					else
+						e->ChangeHP(-(p->GetDamage()), false);
+					p->Hit();
+					if(isKnockBack)
+						e->SetKnockBack(p->move_dir, 0.2f);
+					hitEnemies[i].push_back(e);
 
-				if (ricochet_table[now_level] > 0) // 도탄 생성
-				{
-					int cnt = p->GetRemainHitCnt();
-					int cnt2 = ricochetCnt[i];
-					if (ricochetCnt[i] < ricochet_table[now_level])
+					if (ricochet_table[now_level] > 0) // 도탄 생성
 					{
-						float newRot = Random::Get()->GetRandomFloat(0, 360.0f);
-						p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-						p->rot.z = newRot;
-						ricochetCnt[i]++;
-						p->respwan();
-						break;
+						int cnt = p->GetRemainHitCnt();
+						int cnt2 = ricochetCnt[i];
+						if (ricochetCnt[i] < ricochet_table[now_level])
+						{
+							float newRot = Random::Get()->GetRandomFloat(0, 360.0f);
+							p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
+							p->rot.z = newRot;
+							ricochetCnt[i]++;
+							p->respwan();
+							break;
+						}
 					}
 				}
 			}
@@ -185,6 +200,10 @@ bool PlayDice::LevelUp()
 	if (now_level == 1)
 	{
 		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
+	}
+	else if (now_level == 5)
+	{
+		isKnockBack = true;
 	}
 	return true;
 }

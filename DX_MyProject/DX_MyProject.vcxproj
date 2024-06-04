@@ -449,6 +449,7 @@
     <ClCompile Include="Program\Program.cpp" />
     <ClCompile Include="Scenes\AnimateScene.cpp" />
     <ClCompile Include="Scenes\CollisionScene.cpp" />
+    <ClCompile Include="Scenes\MyGame\PlayScene.cpp" />
     <ClCompile Include="Scenes\MyGame\TestScene.cpp" />
     <ClCompile Include="Framework\Math\Transform.cpp" />
   </ItemGroup>

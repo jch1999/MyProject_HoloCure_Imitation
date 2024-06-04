@@ -4,6 +4,13 @@ BounceBall::BounceBall()
 	:Weapon(SKILL_ID::BOUNCE_BALL)
 {
 	weight = 4;
+	level_scripts.push_back("Drops a falling bounce ball on a random target. Size of ball varies between characters.");
+	level_scripts.push_back("Increase damage by 20%.");
+	level_scripts.push_back("Drop 2 balls.");
+	level_scripts.push_back("Gain knockback effect. The strength of knockback varies from character.");
+	level_scripts.push_back("Drop 3 balls.");
+	level_scripts.push_back("Reduce the time between attacks by 15%.");
+	level_scripts.push_back("Increase damage by 30% and drop 4 balls.");
 }
 
 BounceBall::~BounceBall()

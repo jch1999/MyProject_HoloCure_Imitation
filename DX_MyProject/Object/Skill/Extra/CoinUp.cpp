@@ -3,6 +3,7 @@
 CoinUp::CoinUp()
 	:Skill(SKILL_ID::COIN,SKILL_TYPE::EXTRA,1)
 {
+	level_scripts.push_back("Get 100 HoloCoin.");
 }
 
 CoinUp::~CoinUp()

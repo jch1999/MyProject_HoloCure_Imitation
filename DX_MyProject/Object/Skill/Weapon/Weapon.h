@@ -13,6 +13,7 @@ protected:
 	vector<float> minDamage_table;
 	vector<float> maxDamage_table;
 	vector<int> colliderIdx_table;
+	int enhanceLevel;
 	float enhanceDamage;
 
 public:

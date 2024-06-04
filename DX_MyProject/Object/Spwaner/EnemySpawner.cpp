@@ -393,20 +393,14 @@ void EnemySpawner::Update()
 	}
 	// Enemy & Player
 	pair<int, int> pPos = make_pair(player->pos.x / CELL_X, player->pos.y / CELL_Y);
-	for(int i=-1;i<=1;i++)
+	list<Enemy*> enemyList = GetPartition(make_pair(pPos.first, pPos.second));
+	for (auto e : enemyList)
 	{
-		for (int j = -1; j <= 1; j++)
-		{
-			list<Enemy*> enemyList = GetPartition(make_pair(pPos.first + i, pPos.second + j));
-			for (auto e : enemyList)
-			{
-				if (!e->is_active || !e->IsAttackable())continue;
+		if (!e->is_active || !e->IsAttackable())continue;
 
-				if (e->GetAttackCollider()->isCollision(player->GetDamageCollider()))
-				{
-					e->Attack();
-				}
-			}
+		if (e->GetAttackCollider()->isCollision(player->GetDamageCollider()))
+		{
+			e->Attack();
 		}
 	}
 

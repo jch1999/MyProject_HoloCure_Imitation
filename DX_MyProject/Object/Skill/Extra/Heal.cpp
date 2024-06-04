@@ -3,6 +3,7 @@
 Heal::Heal()
 	:Skill(SKILL_ID::FOOD, SKILL_TYPE::EXTRA,1)
 {
+	level_scripts.push_back("Heal +20% of HP.");
 }
 
 Heal::~Heal()

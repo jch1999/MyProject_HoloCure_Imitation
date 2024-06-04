@@ -1,7 +1,7 @@
 #include "framework.h"
 
 Count_UI::Count_UI()
-	:up_speed(3.0f)
+	:up_speed(10.0f)
 	, now_coinCnt(0.0f), target_coinCnt(0.0f)
 	,now_defeatCnt(0.0f),target_defeatCnt(0.0f)
 {
@@ -112,7 +112,7 @@ void Count_UI::UpdateCoinCnt()
 	else if (now_coinCnt > target_coinCnt)
 		now_coinCnt = target_coinCnt;
 
-	int cnt = (int)now_coinCnt;
+	int cnt = round(now_coinCnt);
 	vector<int> cntText;
 	while (cnt != 0)
 	{
@@ -145,7 +145,7 @@ void Count_UI::UpdateDefeatCnt()
 	else if (now_defeatCnt > target_defeatCnt)
 		now_defeatCnt = target_defeatCnt;
 
-	int cnt = (int)now_defeatCnt;
+	int cnt = round(now_defeatCnt);
 	vector<int> cntText;
 	while (cnt != 0)
 	{

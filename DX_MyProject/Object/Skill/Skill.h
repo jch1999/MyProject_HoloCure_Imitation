@@ -67,6 +67,8 @@ protected:
 	vector<float> playTime_table;
 	int idx_playTime;
 	
+	vector<string> level_scripts;
+
 public:
 	Skill(SKILL_ID id, SKILL_TYPE type,int maxLevl);
 	virtual ~Skill();

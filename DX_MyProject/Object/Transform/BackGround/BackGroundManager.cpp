@@ -186,13 +186,18 @@ void BackGroundManager::FixedUpdate()
 	lights[1]->Update();
 }
 
-void BackGroundManager::Render()
+void BackGroundManager::BeforeRender()
 {
 	for (auto t : tiles)
 	{
-		if((t->pos-player->pos).GetLength()<Vector2(WIN_WIDTH,WIN_HEIGHT).GetLength())
+		if ((t->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
 			t->Render();
 	}
+}
+
+void BackGroundManager::Render()
+{
+	
 	for (auto t : trees)
 	{
 		if ((t->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())

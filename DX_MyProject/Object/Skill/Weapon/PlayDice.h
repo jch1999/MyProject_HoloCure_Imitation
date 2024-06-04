@@ -6,6 +6,7 @@ private:
 	float now_proj_delay;
 	int projCnt;
 
+	bool isKnockBack;
 	// level 당 투사체 수, 속도, hit 제한수, 공격 딜레이, 도탄 횟수, 넉백 속도, 이동 거리
 
 	vector<float> projCnt_talbe;

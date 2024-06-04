@@ -18,8 +18,6 @@ public:
 		MOVE
 	}action_status;
 
-	bool isHealDouble;
-	float expAddtionalRate;
 protected:
 	bool is_looking_right;
 
@@ -52,10 +50,6 @@ protected:
 	int colIdx_Melee;
 	int colIdx_Shot;
 	int colIdx_Range;
-	// Weapon type별 damage 증가량
-	float damage_Melee;
-	float damage_Shot;
-	float damage_Range;
 	
 	float default_pickUpRange;
 	int idx_pickUpRange;
@@ -101,7 +95,7 @@ public:
 	// 받은 데미지 처리
 	virtual void ChangeHP(float amount, Vector2 dir = Vector2(0, 0));
 	// 공격은 투사체에서 처리하도록 할 예정- 플레이어는 공격력을 전달할 뿐
-	virtual float GetAttack() { return attack; }
+	//virtual float GetAttack() { return attack; }
 
 	virtual void SetStatus(PLAYER_STATUS newStatus, UINT playOption=0) = 0;
 	void SetColor(Float4 color)
@@ -122,16 +116,16 @@ public:
 	float GetHP() { return HP; }
 	void SetHP(float HP) { this->HP = HP; }
 	float GetDefaultAtk() { return default_atk; }
-	float GetATK(UINT type);
+	float GetATK() { return attack; }
 	void SetATK(float atk) { this->attack = atk; }
 	float GetDefaultSpd() { return default_spd; }
-	float GetSpeed() { return speed; }
+	float GetSPD() { return speed; }
 	void SetSPD(float spd) { this->speed = spd; }
 	float GetDefaultCrt() { return default_crt; }
 	float GetCRT() { return crt; }
 	void SetCRT(float crt) { this->crt = crt; }
 	int GetPickUpRnage() { return idx_pickUpRange; }
-	void SEtPickUpRange(int idx) { idx_pickUpRange = idx; }
+	void SetPickUpRange(int idx) { idx_pickUpRange = idx; }
 
 	float GetMaxExp() { return nowMaxExp; }
 
@@ -146,11 +140,4 @@ public:
 	void SetColIdxShot(int idx) { colIdx_Shot = idx; }
 	int GetColIdxRange() { return colIdx_Range; }
 	void SetColIdxRange(int idx) { colIdx_Range = idx; }
-	// Weapon type별 damage 증가량
-	float GetDamageMelee() { return damage_Melee; }
-	void SetDamageMelee(float damage) { damage_Melee = damage; }
-	float GetDamageShot() { return damage_Shot; }
-	void SetDamageShot(float damage) { damage_Shot = damage; }
-	float GetDamageRange() { return damage_Range; }
-	void SetDamageRange(float damage) { damage_Range = damage; }
 };

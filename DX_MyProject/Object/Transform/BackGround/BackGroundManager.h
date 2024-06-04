@@ -21,6 +21,7 @@ public:
 
 	void Update();
 	void FixedUpdate();
+	void BeforeRender();
 	void Render();
 	void AfterRender();
 	void PostRneder();

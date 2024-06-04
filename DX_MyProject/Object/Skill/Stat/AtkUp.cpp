@@ -5,6 +5,7 @@ AtkUp::AtkUp()
 	:Skill(SKILL_ID::ATK, SKILL_TYPE::STAT, 1)
 {
 	weight = 3;
+	level_scripts.push_back("ATK +10% Up.");
 }
 
 AtkUp::~AtkUp()
@@ -27,7 +28,7 @@ void AtkUp::PostRender()
 
 bool AtkUp::LevelUp()
 {
-	player->SetATK(player->GetATK(4) + player->GetDefaultAtk() * 0.08f);
+	player->SetATK(player->GetATK() + player->GetDefaultAtk() * 0.08f);
 	return true;
 }
 

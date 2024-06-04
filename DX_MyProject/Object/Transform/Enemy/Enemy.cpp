@@ -116,12 +116,12 @@ void Enemy::Move()
 	else if (badStatus_table[(UINT)Enemy::BAD_STATUS::FROZEN] > 0.0f)
 		moveSPD *= 0.7f;
 
-	for (int i=0;i<knockbackTime_list.size();i++)
+	for (auto knockback:knockback_map)
 	{
-		if (knockbackTime_list[i]>0.0f)
+		if (knockback.second>0.f)
 		{
-			knockbackTime_list[i] -= DELTA;
-			addtional_dir += Vector2(knockbackDir_list[i].first, knockbackDir_list[i].second);
+			knockback_map[knockback.first] -= DELTA;
+			addtional_dir += Vector2(knockback.first.first, knockback.first.second);
 		}
 	}
 
@@ -195,16 +195,6 @@ void Enemy::Respawn()
 
 void Enemy::SetKnockBack(Vector2 dir, float time)
 {
-	pair<int, int> newDir = make_pair(dir.x, dir.y);
-	for (int i = 0; i < knockbackDir_list.size(); i++)
-	{
-		if (newDir == knockbackDir_list[i])
-		{
-			knockbackTime_list[i] += time;
-			return;
-		}
-	}
-
-	knockbackDir_list.push_back(newDir);
-	knockbackTime_list.push_back(time);
+	pair<int, int> key = make_pair(round(dir.x), round(dir.y));
+	knockback_map[key] += time;
 }

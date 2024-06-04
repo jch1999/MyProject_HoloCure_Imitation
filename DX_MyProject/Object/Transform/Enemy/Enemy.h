@@ -101,8 +101,7 @@ protected:
 	Vector2 move_dir; // 이동 방향
 	Vector2 addtional_dir; // 외부 영향으로 이동 방향의 변경 정도
 	
-	vector<pair<int,int>> knockbackDir_list;
-	vector<float> knockbackTime_list;
+	map<pair<int, int>, float> knockback_map;
 
 	Vector2 dest; // 목적지 - MOVE_TYPE::CHASE가 아닐 경우 사용
 	Player* player; // 공격 & 추적 대상

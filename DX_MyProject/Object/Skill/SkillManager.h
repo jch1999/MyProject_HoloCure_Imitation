@@ -17,6 +17,15 @@ public:
 	int total_weight_S;
 	int total_weight_E;
 
+	// About Skill Effect
+	bool isHealDoubled;
+	float add_expRate;
+	float add_MainWeapon_dmgRate;
+	float add_Weapon_dmgRate;
+	// Weapon type별 damage 증가량
+	float damageRate_Melee;
+	float damageRate_Shot;
+	float damageRate_Range;
 	// 0 weapon 1 buff 2 stat 3 extra
 	vector<vector<Skill*>> levelUpAble_list;
 

@@ -6,6 +6,14 @@ PistolShot::PistolShot()
 	,projCnt(0)
 {
 	weight = 3;
+	level_scripts.push_back("Shoots 3 Projectiles forward.");
+	level_scripts.push_back("Shoot 2 additional shot, and each bullet can pierce +1 times.");
+	level_scripts.push_back("Increase damage by 20%.");
+	level_scripts.push_back("Bullets ricochet if hit limit is reached.");
+	level_scripts.push_back("Each bullet can pierce +1 times. Reduce the time between attacks by 25%.");
+	level_scripts.push_back("Increase damage by 20%.");
+	level_scripts.push_back("For the next 2 seconds, 15% of all damage taken by target is stored in time. Then target takes total of stored damage.");
+
 	skillDelay_table = { 0,1.33f, 1.33f, 1.33f, 1.33f, 1.0f,1.0f,1.0f };
 	minDamage_table = { 0,8,8,10,10,10,12,12 };
 	maxDamage_table = { 0,12,12,14,14,14,16,16 };
@@ -87,7 +95,8 @@ void PistolShot::Update()
 				}
 
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
-					+ player->GetATK((UINT)Weapon::WEAPON_TYPE::MULTI_SHOT)
+					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
+					+ player->GetATK()
 					+ enhanceDamage;
 				proj->SetStatus(damage, 250.0f, hitLimt_table[now_level], 2.0f);
 				proj->SetDirection(player->GetAttackDir());
@@ -111,7 +120,6 @@ void PistolShot::Update()
 	}
 
 	// 충돌 처리
-	const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
 	for (int i=0;i< projectiles.size();i++)
 	{
 		Projectile* p = projectiles[i];
@@ -119,83 +127,89 @@ void PistolShot::Update()
 
 		p->Update();
 		// 충돌 처리
+		pair<int, int> pPos = make_pair((int)(p->pos.x) / CELL_X, (int)(p->pos.y) / CELL_Y);
+		list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
 		for (auto e : enemyList)
 		{
 			if (!e->is_active)continue;
-
-			if (p->GetCollider()->isCollision(e->GetDamageCollider()))
+			
+			if ((e->pos - p->pos).GetLength() < (p->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength()) / 2.0f)
 			{
-				bool exist = false;
-				for (auto e2 : hitEnemies[i])
+				if (p->GetCollider()->isCollision(e->GetDamageCollider()))
 				{
-					if (e == e2)
+					bool exist = false;
+					for (auto e2 : hitEnemies[i])
 					{
-						exist = true;
-						break;
+						if (e == e2)
+						{
+							exist = true;
+							break;
+						}
 					}
-				}
-				// 이미 충돌한 적이 있다면 넘어가고
-				if (exist)continue;
-				// 더 이상 부딪힐 횟수가 없다면 이 탄환의 충돌처리 종료
-				if (!p->is_active)break;
+					// 이미 충돌한 적이 있다면 넘어가고
+					if (exist)continue;
+					// 더 이상 부딪힐 횟수가 없다면 이 탄환의 충돌처리 종료
+					if (!p->is_active)break;
 
-				bool isCrt = player->isCritical();
-				if (isCrt)
-					e->ChangeHP(-(p->GetDamage()) * 1.5f, true);
-				else
-					e->ChangeHP(-(p->GetDamage()), false);
-				p->Hit();
-				hitEnemies[i].push_back(e);
+					bool isCrt = player->isCritical();
+					if (isCrt)
+						e->ChangeHP(-(p->GetDamage()) * 1.5f, true);
+					else
+						e->ChangeHP(-(p->GetDamage()), false);
+					p->Hit();
+					hitEnemies[i].push_back(e);
 
-				if (ricochet_table[now_level] > 0 &&!p->is_active) // 도탄 생성
-				{
-					int cnt = p->GetRemainHitCnt();
-					int cnt2=ricochetCnt[i];
-					if (ricochetCnt[i] == 0)
+					if (ricochet_table[now_level] > 0 && !p->is_active) // 도탄 생성
 					{
-						int rand = Random::Get()->GetRandomInt(0, 4);
-						switch (rand)
+						int cnt = p->GetRemainHitCnt();
+						int cnt2 = ricochetCnt[i];
+						if (ricochetCnt[i] == 0)
 						{
-						case 0:
-						{
-							Vector2 dir = Vector2(-1, -1) * p->move_dir;
-							float newRot = atan(dir.y / dir.x) + 45;
-							p->rot.z = newRot;
-							p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
+							int rand = Random::Get()->GetRandomInt(0, 4);
+							switch (rand)
+							{
+							case 0:
+							{
+								Vector2 dir = Vector2(-1, -1) * p->move_dir;
+								float newRot = atan(dir.y / dir.x) + 45;
+								p->rot.z = newRot;
+								p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
+							}
+							break;
+							case 1:
+							{
+								Vector2 dir = Vector2(-1, -1) * p->move_dir;
+								float newRot = atan(dir.y / dir.x) + 90;
+								p->rot.z = newRot;
+								p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
+							}
+							break;
+							case 2:
+							{
+								Vector2 dir = Vector2(-1, -1) * p->move_dir;
+								float newRot = atan(dir.y / dir.x) - 45;
+								p->rot.z = newRot;
+								p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
+							}
+							break;
+							case 3:
+							{
+								Vector2 dir = Vector2(-1, -1) * p->move_dir;
+								float newRot = atan(dir.y / dir.x) - 90;
+								p->rot.z = newRot;
+								p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
+							}
+							break;
+							}
+							float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
+								* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
+								+ player->GetATK()
+								+ enhanceDamage;
+							p->SetStatus(damage, 250.0f, hitLimt_table[now_level], 2.0f);
+							ricochetCnt[i]++;
+							p->respwan();
+							break;
 						}
-						break;
-						case 1:
-						{
-							Vector2 dir = Vector2(-1, -1) * p->move_dir;
-							float newRot = atan(dir.y / dir.x) + 90;
-							p->rot.z = newRot;
-							p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-						}
-						break;
-						case 2:
-						{
-							Vector2 dir = Vector2(-1, -1) * p->move_dir;
-							float newRot = atan(dir.y / dir.x) - 45;
-							p->rot.z = newRot;
-							p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-						}
-						break;
-						case 3:
-						{
-							Vector2 dir = Vector2(-1, -1) * p->move_dir;
-							float newRot = atan(dir.y / dir.x) - 90;
-							p->rot.z = newRot;
-							p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-						}
-						break;
-						}
-						float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
-							+ player->GetATK((UINT)Weapon::WEAPON_TYPE::MULTI_SHOT)
-							+ enhanceDamage;
-						p->SetStatus(damage, 250.0f, hitLimt_table[now_level], 2.0f);
-						ricochetCnt[i]++;
-						p->respwan();
-						break;
 					}
 				}
 			}

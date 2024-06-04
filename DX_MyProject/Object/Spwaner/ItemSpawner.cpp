@@ -1,11 +1,14 @@
 #include "framework.h"
 
 ItemSpawner::ItemSpawner()
-	:anvilDefualt(1.0f / 1301.0f),anvilDropRate(anvilDefualt),anvilUseCnt(1)
+	:anvilDefualt(1.0f / 1301.0f),anvilDropRate(anvilDefualt)
+	,anvilUseCnt(1),enhanceDmg(2.0f)
 	,magnetDropRate(1.0f / 3000.0f)
-	,coinDefault(1.0f / 90.0f),coinRate(coinDefault),coinValue(10),nowCoinValue(0)
+	,coinDefault(1.0f / 90.0f),coinRate(coinDefault)
+	,coinValueDefault(10.0f),coinValue(coinValueDefault),nowCoinValue(0.0f)
 	,foodDefault(1.0f/200.0f),foodRate(foodDefault)
 	,nowTime(FIXED_INTERVAL)
+	,isCoinAutoPick(false)
 {
 	for (int i = 0; i < 100; i++)
 	{
@@ -249,7 +252,6 @@ void ItemSpawner::Update()
 		switch (i->id)
 		{
 		case Item::ITEM_ID::EXP:
-		case Item::ITEM_ID::COIN:
 		{
 			pair<int, int> iPos = make_pair(i->pos.x / CELL_X, i->pos.y / CELL_Y);
 			list<Item*> itemList = GetPartition(iPos);
@@ -262,7 +264,7 @@ void ItemSpawner::Update()
 
 				float minDist = (i->GetCollider()->Size().GetLength() + i2->GetCollider()->Size().GetLength()) / 2.0f;
 				float nowDist = (i->pos - i2->pos).GetLength();
-				if (minDist>nowDist)
+				if (minDist > nowDist)
 				{
 					if (i->id == i2->id) // 같은 종류면 서로 당기기
 					{
@@ -283,6 +285,50 @@ void ItemSpawner::Update()
 				}
 			}
 		}
+			break;
+		case Item::ITEM_ID::COIN:
+		{
+			if (!isCoinAutoPick)
+			{
+				pair<int, int> iPos = make_pair(i->pos.x / CELL_X, i->pos.y / CELL_Y);
+				list<Item*> itemList = GetPartition(iPos);
+				i->SetAddtionalDir(Vector2(0, 0));
+				for (auto i2 : itemList)
+				{
+					if (!i2->is_active)continue;
+					if (!(i2->state == Item::ITEM_STATE::IDLE))continue;
+					if (i == i2)continue;
+
+					float minDist = (i->GetCollider()->Size().GetLength() + i2->GetCollider()->Size().GetLength()) / 2.0f;
+					float nowDist = (i->pos - i2->pos).GetLength();
+					if (minDist > nowDist)
+					{
+						if (i->id == i2->id) // 같은 종류면 서로 당기기
+						{
+							if ((i->pos - i2->pos).GetLength() < 0.1f)// 거리가 0.1f이하이면 합치기
+							{
+								i->SetAmount(i->GetAmount() + i2->GetAmount());
+								i2->SetActive(false);
+							}
+							else
+							{
+								i->SetAddtionalDir(i->GetAddtionalDir() + (i2->pos - i->pos).Normalized());
+							}
+						}
+						else // 다른 종류면 서로 밀어내기
+						{
+							i->SetAddtionalDir(i->GetAddtionalDir() + (i->pos - i2->pos).Normalized());
+						}
+					}
+				}
+			}
+			else
+			{
+				// 플레이어 추적 활성
+				i->SetState(Item::ITEM_STATE::ACTIVE);
+			}
+		}
+			break;
 		default:
 			break;
 		}
@@ -376,7 +422,10 @@ void ItemSpawner::PostRneder()
 	for (auto i : item_list)
 		i->PostRender();
 	*/
-	ImGui::Text("Now Coin : %d", nowCoinValue);
+	ImGui::Text("Now Coin : %f", nowCoinValue);
+	ImGui::Text("Now Gettable CoinAmount : %f", coinValue);
+	ImGui::Text("Now Anvil UseCnt : %d", anvilUseCnt);
+	ImGui::Text("Now EnhanceDmg : %f", enhanceDmg);
 }
 
 void ItemSpawner::SetPlayer(Player* p)

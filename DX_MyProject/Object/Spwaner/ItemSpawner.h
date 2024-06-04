@@ -16,7 +16,8 @@ public:
 	// 모루 생성 확률 및 사용가능 횟수
 	float anvilDefualt;
 	float anvilDropRate;
-	float anvilUseCnt;
+	int anvilUseCnt;
+	float enhanceDmg;
 
 	// EXP 자석 생성 확률
 	float magnetDropRate;
@@ -24,8 +25,10 @@ public:
 	// Coin 생성 확률
 	float coinDefault;
 	float coinRate;
-	int coinValue;
+	float coinValueDefault;
+	float coinValue;
 	int nowCoinValue;
+	bool isCoinAutoPick;
 
 	// Food 생성 확률
 	float foodDefault;

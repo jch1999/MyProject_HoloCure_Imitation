@@ -6,7 +6,7 @@ CounterIcon::CounterIcon()
 	vector<Frame*> frames;
 	for (int i = 0; i < 2; i++)
 	{
-		frames.push_back(new Frame(file, 167.0f + 17.0f, 567.0f, 15.0f, 16.0f));
+		frames.push_back(new Frame(file, 167.0f + 17.0f * i, 567.0f, 15.0f, 16.0f));
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1));
 		frames.clear();
 	}

@@ -41,7 +41,6 @@ UIManager::UIManager()
 	ui_list[1].push_back(new Time_UI());
 
 	// Counter
-
 	ui_list[1].push_back(new Count_UI());
 
 	// 각 Frame과 Panel에 포함되는 UI는 해당 Frame/Panel에서 child_list로 관리

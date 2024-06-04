@@ -8,6 +8,8 @@ protected:
 
 	float now_coinCnt, target_coinCnt;
 	float now_defeatCnt, target_defeatCnt;
+	float up_speed;
+
 public:
 	Count_UI();
 	~Count_UI();

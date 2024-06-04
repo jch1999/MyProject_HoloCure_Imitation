@@ -34,8 +34,8 @@ void Program::Update()
 	{
 		isPause = !isPause;
 	}
-	scenes[scene_idx]->Update();
 	CAM->Update();
+	scenes[scene_idx]->Update();
 }
 
 void Program::Render()

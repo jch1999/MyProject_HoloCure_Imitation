@@ -437,6 +437,23 @@ void EnemySpawner::EnemyDead()
 {
 	nowSpawnCnt--;
 	defeatCnt++;
+	if (SkillManager::Get()->nurseHron_active)
+	{
+		int rand = Random::Get()->GetRandomInt(0, 9);
+		if (rand < 3) // 30 %
+		{
+			NurseHorn* skill = (NurseHorn*)(SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::NURSE_HORN));
+			// 지정된 비율보다 hp가 낮다면
+			if ((player->GetHP() / player->GetMaxHP())<skill->GetTargetRate())
+			{
+				player->ChangeHP(player->GetMaxHP() * 0.2f);
+			}
+			else
+			{
+				player->ChangeHP(skill->GetHealAmount());
+			}
+		}
+	}
 }
 
 void EnemySpawner::FixedUpdate()

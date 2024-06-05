@@ -2,7 +2,8 @@
 class PikiPikiPiman :public Buff
 {
 protected:
-
+	float per_rate;
+	float now_addRate;
 public:
 	PikiPikiPiman();
 	~PikiPikiPiman();

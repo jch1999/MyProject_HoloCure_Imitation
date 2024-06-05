@@ -117,8 +117,8 @@ void PlayerIconFrame::SetID(UI::UI_ID id)
 
 void PlayerIconFrame::SetHpText()
 {
-	int nowHp = (int)UIManager::Get()->GetPlayer()->GetHP();
-	int maxHp = (int)UIManager::Get()->GetPlayer()->GetMaxHP();
+	int nowHp = round(UIManager::Get()->GetPlayer()->GetHP());
+	int maxHp = round(UIManager::Get()->GetPlayer()->GetMaxHP());
 	int textIdx = 0;
 	Vector2 nowOffset = text_startOffset;
 	Vector2 interval(10.0f, 0.0f);
@@ -154,7 +154,7 @@ void PlayerIconFrame::SetHpText()
 
 			hpText[textIdx]->SetOffset(nowOffset);
 			nowOffset = nowOffset + interval;
-			hpText[textIdx++]->SetText('0' + nowHp / 10);
+			hpText[textIdx++]->SetText('0' + (nowHp / 10) % 10);
 
 			hpText[textIdx]->SetOffset(nowOffset);
 			nowOffset = nowOffset + interval;
@@ -196,7 +196,7 @@ void PlayerIconFrame::SetHpText()
 
 		hpText[textIdx]->SetOffset(nowOffset);
 		nowOffset = nowOffset + interval;
-		hpText[textIdx++]->SetText('0' + maxHp / 10);
+		hpText[textIdx++]->SetText('0' + (maxHp / 10) % 10);
 
 		hpText[textIdx]->SetOffset(nowOffset);
 		nowOffset = nowOffset + interval;

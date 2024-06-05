@@ -2,7 +2,8 @@
 class NurseHorn :public Buff
 {
 protected:
-
+	float healAmount;
+	float hpRate;
 public:
 	NurseHorn();
 	~NurseHorn();
@@ -13,4 +14,7 @@ public:
 	virtual void Render() override;
 	virtual void PostRender() override;
 	virtual bool LevelUp() override;
+
+	float GetHealAmount() { return healAmount; }
+	float GetTargetRate() { return hpRate; }
 };

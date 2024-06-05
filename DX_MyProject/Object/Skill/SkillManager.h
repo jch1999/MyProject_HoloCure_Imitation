@@ -19,6 +19,7 @@ public:
 
 	// About Skill Effect
 	bool isHealDoubled;
+	bool nurseHron_active;
 	float add_expRate;
 	float add_MainWeapon_dmgRate;
 	float add_Weapon_dmgRate;

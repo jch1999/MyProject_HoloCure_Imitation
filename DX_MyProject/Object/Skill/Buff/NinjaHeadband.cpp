@@ -4,6 +4,7 @@ NinjaHeadband::NinjaHeadband()
 	:Buff(SKILL_ID::NINJA_HEADBAND,3)
 {
 	weight = 4;
+	skill_name = "NINJA HEADBAND";
 	level_scripts.push_back("Increase SPD by 20%. In addition, increase damage of Melee weapons by 5%.");
 	level_scripts.push_back("Increase SPD by 30%. In addition, increase damage of Melee weapons by 10%.");
 	level_scripts.push_back("Increase SPD by 40%. In addition, increase damage of Melee weapons by 15%.");

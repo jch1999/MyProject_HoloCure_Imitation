@@ -4,6 +4,7 @@ FullMeal::FullMeal()
     :Buff(SKILL_ID::FULL_MEAL,1)
 {
     weight = 1;
+    skill_name = "FULL MEAL";
     level_scripts.push_back("All healing is doubled.");
 }
 

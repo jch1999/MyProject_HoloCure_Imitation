@@ -4,6 +4,7 @@ StudyGlasses::StudyGlasses()
 	:Buff(SKILL_ID::STUDY_GLASSES,5)
 {
 	weight = 3;
+	skill_name = "STUDY GLASSES";
 	level_scripts.push_back("Increase EXP gain by 10%. On every level up, increase Weapon damage by 0.3%.");
 	level_scripts.push_back("Increase EXP gain by 15%. On every level up, increase Weapon damage by 0.3%.");
 	level_scripts.push_back("Increase EXP gain by 20%. On every level up, increase Weapon damage by 0.3%.");

@@ -67,6 +67,7 @@ protected:
 	vector<float> playTime_table;
 	int idx_playTime;
 	
+	string skill_name;
 	vector<string> level_scripts;
 
 public:
@@ -88,4 +89,6 @@ public:
 	virtual bool GetEnhanceAble() = 0;
 	virtual void Enhance(float enhanceAmount=0.0f) = 0;
 	int GetLevel() { return now_level; }
+	string GetScript() { return level_scripts[now_level]; }
+	string GetSkillName() { return skill_name; }
 };

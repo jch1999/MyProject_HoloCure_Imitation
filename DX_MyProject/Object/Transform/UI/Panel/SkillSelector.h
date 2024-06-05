@@ -5,6 +5,13 @@ protected:
 	// Skill::SKILL_ID s_id;
 	int skill_id;
 	SkillIcon* skill_icon;
+	vector<Text*> text_vec;
+	int line_length;
+	Vector2 char_interval;
+	Vector2 char_pos;
+	Vector2 char_size;
+	Vector2 name_offset;
+	Vector2 script_offset;
 
 public:
 	SkillSelector();
@@ -22,4 +29,5 @@ public:
 	void SetSkillID(int skill_id);
 	int GetSkillID() { return skill_id; }
 	const SkillIcon* GetIcon() { return skill_icon; }
+	void SetText();
 };

@@ -4,6 +4,7 @@ EliteLavaBucket::EliteLavaBucket()
 	:Weapon(Skill::SKILL_ID::ELITE_LAVA_BUCKET)
 {
 	weight = 3;
+	skill_name = "ELITE LAVA BUCKET";
 	level_scripts.push_back("Drop lava on the ground, burning targets slowly.");
 	level_scripts.push_back("Increase lava area by 20%.");
 	level_scripts.push_back("Throw 2 lava buckets.");

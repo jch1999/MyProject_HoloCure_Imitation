@@ -5,6 +5,7 @@ SpiderCooking::SpiderCooking()
 	,poision(nullptr)
 {
 	weight = 4;
+	skill_name = "SPIDER COOKING";
 	level_scripts.push_back("Create an area of miasma around, dealing slow damage to enemies inside.");
 	level_scripts.push_back("Increase area by 15%.");
 	level_scripts.push_back("Increase damage by 30%.");

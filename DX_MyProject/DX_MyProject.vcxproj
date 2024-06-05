@@ -282,6 +282,7 @@
     <ClInclude Include="Object\Transform\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\Arrow.h" />
     <ClInclude Include="Object\Transform\UI\Icon\CounterIcon.h" />
+    <ClInclude Include="Object\Transform\UI\Text\TextPrinter.h" />
     <ClInclude Include="Object\Transform\UI\TopUI\Count_UI.h" />
     <ClInclude Include="Object\Transform\UI\Text\DmgText.h" />
     <ClInclude Include="Object\Transform\UI\Panel\EnhancePanel.h" />
@@ -428,6 +429,7 @@
     <ClCompile Include="Object\Transform\UI\Icon\CounterIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\PlayerIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\SkillIcon.cpp" />
+    <ClCompile Include="Object\Transform\UI\Text\TextPrinter.cpp" />
     <ClCompile Include="Object\Transform\UI\TopUI\Count_UI.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\DmgText.cpp" />
     <ClCompile Include="Object\Transform\UI\Bar\ExpBar.cpp" />

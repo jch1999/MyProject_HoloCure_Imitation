@@ -6,6 +6,7 @@
 #include "Text/LevelText.h"
 #include "Text/Text.h"
 #include "Text/DmgText.h"
+#include "Text/TextPrinter.h"
 #include "Arrow.h"
 #include "Icon/LevelLabel.h"
 #include "Icon/SkillIconFrame.h"

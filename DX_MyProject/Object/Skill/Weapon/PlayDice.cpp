@@ -7,6 +7,7 @@ PlayDice::PlayDice()
 	,isKnockBack(false)
 {
 	weight = 3;
+	skill_name = "PLAY DICE";
 	level_scripts.push_back("Throw out a die. The number on the dice determines the damage.");
 	level_scripts.push_back("Increase damage by 30%.");
 	level_scripts.push_back("Throw 2 dice.");

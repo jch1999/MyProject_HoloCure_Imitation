@@ -4,6 +4,7 @@ PsychoAxe::PsychoAxe()
 	:Weapon(Skill::SKILL_ID::PSYCHO_AXE)
 {
 	weight = 3;
+	skill_name = "PSYCHO AXE";
 	level_scripts.push_back("Throw an axe that spirals outward from the player.");
 	level_scripts.push_back("Increase size of axe by 20%. Increase damage of axe by 20%.");
 	level_scripts.push_back("Reduce delay between attacks by 20%.");

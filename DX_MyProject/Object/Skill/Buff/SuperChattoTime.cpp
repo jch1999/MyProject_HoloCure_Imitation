@@ -4,6 +4,7 @@ SuperChattoTime::SuperChattoTime()
 	:Buff(SKILL_ID::SUPER_CHATTO_TIME,5)
 {
 	weight = 2;
+	skill_name = "SUPER CHATTO TIME!";
 	level_scripts.push_back("Targets drop 20% more HoloCoins. All HoloCoins are picked automatically.");
 	level_scripts.push_back("Targets drop 40% more HoloCoins. All HoloCoins are picked automatically.");
 	level_scripts.push_back("Targets drop 60% more HoloCoins. All HoloCoins are picked automatically.");

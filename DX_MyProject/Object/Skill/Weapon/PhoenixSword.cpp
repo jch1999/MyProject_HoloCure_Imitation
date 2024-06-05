@@ -4,6 +4,7 @@ PhoenixSword::PhoenixSword()
 	:Weapon(Skill::SKILL_ID::PHOENIX_SWORD)
 {
 	weight = 3;
+	skill_name = "PHOENIX SWORD";
 	level_scripts.push_back("Short ranged slash in front.");
 	level_scripts.push_back("Increase damage by 20%.");
 	level_scripts.push_back("Increase attack area by 25%.");

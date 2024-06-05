@@ -1,6 +1,7 @@
 #pragma once
 class LevelUpPanel;
 class Panel;
+class TextPrinter;
 class UIManager :public Singleton<UIManager>
 {
 private:
@@ -21,6 +22,7 @@ public:
 	// list vector .. list?
 	UI* pausePanel;
 	LevelUpPanel* levelPanel;
+	TextPrinter* printer;
 
 	// 창 대기 여부
 	bool isLevelUp;

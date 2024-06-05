@@ -1,6 +1,9 @@
 #include "framework.h"
 
 SkillSelector::SkillSelector()
+	:char_pos(Vector2(0,0)),char_interval(Vector2(10.0f,20.0f)), line_length(40)
+	,name_offset(Vector2(-230.0f,-35.0f))
+	,script_offset(Vector2(-180.0f,-10.0f))
 {
 	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
 	vector<Frame*> frames;
@@ -23,6 +26,16 @@ SkillSelector::SkillSelector()
 	
 	child_list.push_back(skill_icon);
 
+	// text 
+	for (int i = 0; i < 80; i++)
+	{
+		Text* text = new Text();
+		text->SetID(UI_ID::TEXT);
+		text->SetTarget(this);
+		text->SetScale(Vector2(0.3f, 0.3f));
+		text_vec.push_back(text);
+		child_list.push_back(text);
+	}
 
 	id = UI::UI_ID::LEVEL_UP_SELECTOR;
 	type = UI::UI_TYPE::SELECTOR;
@@ -86,4 +99,85 @@ void SkillSelector::SetSkillID(int skill_id)
 {
 	this->skill_id = skill_id;
 	skill_icon->SetSkillID(skill_id);
+	
+	SetText();
+}
+
+void SkillSelector::SetText()
+{
+	Skill* skill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skill_id);
+	string name = skill->GetSkillName();
+	string scripts = skill->GetScript();
+
+	char_pos = Vector2(0, 0);
+	int text_idx = 0;
+	for (int i = 0; i < name.length(); i++)
+	{
+		if (name[i] != ' ')
+		{
+			text_vec[text_idx]->SetText(name[i]);
+			text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
+			text_vec[text_idx]->SetActive(true);
+			text_idx++;
+		}
+
+		char_pos.x++;
+	}
+	// LV Ç¥½Ã
+	{
+		char_pos.x += 2;
+		text_vec[text_idx]->SetText('L');
+		text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
+		text_vec[text_idx]->SetActive(true);
+		char_pos.x += 1;
+		text_idx++;
+		text_vec[text_idx]->SetText('V');
+		text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
+		text_vec[text_idx]->SetActive(true);
+		char_pos.x += 2;
+		text_idx++;
+		text_vec[text_idx]->SetText('0' + skill->GetLevel() + 1);
+		text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
+		text_vec[text_idx]->SetActive(true);
+		char_pos.x += 1;
+		text_idx++;
+	}
+
+	char_pos = Vector2(0, 0);
+	for (int i = 0; i < scripts.length(); i++)
+	{
+		if (text_idx >= text_vec.size())
+		{
+			for (int j = 0; j < 10; j++)
+			{
+				Text* text = new Text();
+				text->SetID(UI_ID::TEXT);
+				text->SetTarget(this);
+				text->SetScale(Vector2(0.3f, 0.3f));
+				text_vec.push_back(text);
+				child_list.push_back(text);
+			}
+		}
+
+		if (scripts[i] != ' ')
+		{
+			text_vec[text_idx]->SetText(scripts[i]);
+			text_vec[text_idx]->SetOffset(script_offset + char_interval * char_pos);
+			text_vec[text_idx]->SetActive(true);
+			text_idx++;
+		}
+		if (char_pos.x < line_length)
+		{
+			char_pos.x++;
+		}
+		else
+		{
+			char_pos.x = 0;
+			char_pos.y += 1;
+		}
+	}
+	for (int i = text_idx; i < text_vec.size(); i++)
+	{
+		text_vec[i]->SetActive(false);
+	}
 }

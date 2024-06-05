@@ -4,6 +4,7 @@ BlackSmithGear::BlackSmithGear()
     :Buff(SKILL_ID::BLACKSMITH_GEAR,3)
 {
 	weight = 1;
+	skill_name = "BLACK SMITH GEAR";
 	level_scripts.push_back("Normal anvils can be used twice. Only applies to anvils since taking this item.");
 	level_scripts.push_back("Normal anvils can be used twice. Weapon enhancements increase damage by 2.5 instead of 2 per level.");
 	level_scripts.push_back("Normal anvils can be used twice. Weapon enhancements increase damage by 3 instead of 2 per level.");

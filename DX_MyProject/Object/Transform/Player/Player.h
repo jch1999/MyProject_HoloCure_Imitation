@@ -128,6 +128,7 @@ public:
 	void SetPickUpRange(int idx) { idx_pickUpRange = idx; }
 
 	float GetMaxExp() { return nowMaxExp; }
+	int GetLevel() { return level; }
 
 	// 추가 스테이터스 접근
 	// Multi-shot Weapon의 추가 발사량 수

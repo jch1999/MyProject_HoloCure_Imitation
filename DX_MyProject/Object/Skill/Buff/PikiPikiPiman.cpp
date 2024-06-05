@@ -5,6 +5,7 @@ PikiPikiPiman::PikiPikiPiman()
 	,per_rate(0.0f)
 {
     weight = 4;
+	skill_name = "PIKIPIKI PIMAN";
 	level_scripts.push_back("Gain 15 Max HP. For every 6 points of total Max HP, increase damage of Main Weapon by 1%.");
 	level_scripts.push_back("Gain 20 Max HP. For every 5 points of total Max HP, increase damage of Main Weapon by 1%.");
 	level_scripts.push_back("Gain 25 Max HP. For every 4 points of total Max HP, increase damage of Main Weapon by 1%.");

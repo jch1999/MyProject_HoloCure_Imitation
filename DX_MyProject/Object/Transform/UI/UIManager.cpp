@@ -43,6 +43,15 @@ UIManager::UIManager()
 	// Counter
 	ui_list[1].push_back(new Count_UI());
 
+	// LV Text Printer
+	printer = new TextPrinter();
+	printer->SetTarget(CAM);
+	printer->SetOffset(Vector2(WIN_CENTER_X, 15.0f));
+	printer->SetCharInterval(Vector2(10.0f, 20.0f));
+	printer->SetCharScale(Vector2(0.3f, 0.3f));
+	printer->SetActive(true);
+	ui_list[1].push_back(printer);
+
 	// 각 Frame과 Panel에 포함되는 UI는 해당 Frame/Panel에서 child_list로 관리
 	// Frame
 	PlayerIconFrame* pFrame = new PlayerIconFrame();
@@ -97,6 +106,8 @@ void UIManager::Update()
 			nowPanel->SetActive(true);
 		}
 	}
+
+	printer->SetText("LV " + to_string(player->GetLevel()));
 
 	for (auto ui : ui_list)
 	{

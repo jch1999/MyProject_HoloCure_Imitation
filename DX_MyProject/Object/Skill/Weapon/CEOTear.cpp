@@ -4,6 +4,7 @@ CEOTear::CEOTear()
 	:Weapon(SKILL_ID::CEO_TEAR)
 {
 	weight = 2;
+	skill_name = "CEO'S TEAR";
 	level_scripts.push_back("Fires rapid tears at random targets.");
 	level_scripts.push_back("Increases damage by 20%.");
 	level_scripts.push_back("Shoot 2 tears.");

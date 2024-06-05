@@ -5,6 +5,7 @@ CrtUp::CrtUp()
 	:Skill(SKILL_ID::CRT,SKILL_TYPE::STAT,1)
 {
 	weight = 3;
+	skill_name = "CRT UP";
 	level_scripts.push_back("Crt +3% Up.");
 }
 

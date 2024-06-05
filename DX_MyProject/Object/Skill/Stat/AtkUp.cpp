@@ -5,6 +5,7 @@ AtkUp::AtkUp()
 	:Skill(SKILL_ID::ATK, SKILL_TYPE::STAT, 1)
 {
 	weight = 3;
+	skill_name = "ATK UP";
 	level_scripts.push_back("ATK +10% Up.");
 }
 

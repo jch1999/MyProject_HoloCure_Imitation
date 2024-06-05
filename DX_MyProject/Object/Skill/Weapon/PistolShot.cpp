@@ -6,13 +6,14 @@ PistolShot::PistolShot()
 	,projCnt(0)
 {
 	weight = 3;
+	skill_name = "PISTOL SHOT";
 	level_scripts.push_back("Shoots 3 Projectiles forward.");
 	level_scripts.push_back("Shoot 2 additional shot, and each bullet can pierce +1 times.");
 	level_scripts.push_back("Increase damage by 20%.");
 	level_scripts.push_back("Bullets ricochet if hit limit is reached.");
 	level_scripts.push_back("Each bullet can pierce +1 times. Reduce the time between attacks by 25%.");
 	level_scripts.push_back("Increase damage by 20%.");
-	level_scripts.push_back("For the next 2 seconds, 15% of all damage taken by target is stored in time. Then target takes total of stored damage.");
+	level_scripts.push_back("For the next 2 seconds, 15% of all damage taken by target is stored in time. Then target takes total of stored damage.(Not implemented)");
 
 	skillDelay_table = { 0,1.33f, 1.33f, 1.33f, 1.33f, 1.0f,1.0f,1.0f };
 	minDamage_table = { 0,8,8,10,10,10,12,12 };

@@ -24,6 +24,7 @@ public:
 		// Text
 		TEXT,
 		LEVEL_TEXT,
+		TEXT_PRINTER,
 		// Dmg Text
 		DMG_TEXT,
 		CRT_DMG_TEXT,

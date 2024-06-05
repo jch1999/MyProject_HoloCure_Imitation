@@ -4,6 +4,7 @@ BounceBall::BounceBall()
 	:Weapon(SKILL_ID::BOUNCE_BALL)
 {
 	weight = 4;
+	skill_name = "BOUNCE BALL";
 	level_scripts.push_back("Drops a falling bounce ball on a random target. Size of ball varies between characters.");
 	level_scripts.push_back("Increase damage by 20%.");
 	level_scripts.push_back("Drop 2 balls.");

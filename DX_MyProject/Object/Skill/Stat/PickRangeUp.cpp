@@ -5,6 +5,7 @@ PickRangeUp::PickRangeUp()
 	:Skill(SKILL_ID::PICK_UP, SKILL_TYPE::STAT, 1)
 {
 	weight = 4;
+	skill_name = "PICK UP RANGE UP";
 	level_scripts.push_back("Pick Up Range +20% Up.");
 }
 

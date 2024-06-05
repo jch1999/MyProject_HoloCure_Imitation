@@ -214,7 +214,7 @@ Text::Text()
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 		frames.clear();
 		// v
-		frames.push_back(new Frame(file, 182.0f, 194.0f, 72.0f, 46.0f));
+		frames.push_back(new Frame(file, 182.0f, 190.0f, 27.0f, 46.0f));
 		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 		frames.clear();
 		// w
@@ -244,6 +244,23 @@ Text::Text()
 	frames.push_back(new Frame(file, 42.0f, 289.0f, 31.0f, 46.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 	frames.clear();
+	// '+' //64
+	frames.push_back(new Frame(file, 77.0f, 375.0f, 30.0f, 46.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+	// '%' // 65
+	frames.push_back(new Frame(file, 220.0f, 287.0f, 40.0f, 46.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+	// '.' //66
+	frames.push_back(new Frame(file, 2.0f, 283.0f, 12.0f, 46.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+	// ',' // 67
+	frames.push_back(new Frame(file, 15.0f, 289.0f, 13.0f, 46.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+
 
 	id = UI_ID::LEVEL_TEXT;
 	type = UI_TYPE::TEXT;
@@ -344,6 +361,18 @@ void Text::SetText(char c)
 		break;
 	case '/':
 		clip_idx = 63;
+		break;
+	case '+':
+		clip_idx = 64;
+		break;
+	case '%':
+		clip_idx = 65;
+		break;
+	case '.':
+		clip_idx = 66;
+		break;
+	case ',':
+		clip_idx = 67;
 		break;
 	}
 	SetSize(c);
@@ -526,6 +555,18 @@ void Text::SetSize(char c)
 		break;
 	case '/':
 		ui_size = Vector2(31.0f, 46.0f);
+		break;
+	case '+':
+		ui_size = Vector2(31.0f, 46.0f);
+		break;
+	case '%':
+		ui_size = Vector2(40.0f, 46.0f);
+		break;
+	case '.':
+		ui_size = Vector2(12.0f, 46.0f);
+		break;
+	case ',':
+		ui_size = Vector2(13.0f, 46.0f);
 		break;
 	}
 }

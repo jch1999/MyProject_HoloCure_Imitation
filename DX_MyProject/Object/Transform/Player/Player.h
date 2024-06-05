@@ -112,7 +112,7 @@ public:
 	// 최종 스테이터스 접근
 	float GetDefaultMaxHP() { return default_maxHp; }
 	float GetMaxHP() { return MaxHP; }
-	void SetMaxHP(float MaxHp) { this->MaxHP = MaxHP; }
+	void SetMaxHP(float MaxHp) { this->MaxHP = MaxHp; }
 	float GetHP() { return HP; }
 	void SetHP(float HP) { this->HP = HP; }
 	float GetDefaultAtk() { return default_atk; }

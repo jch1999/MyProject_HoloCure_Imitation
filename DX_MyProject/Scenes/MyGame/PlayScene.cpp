@@ -38,8 +38,9 @@ void PlayScene::Update()
 
 void PlayScene::Render()
 {
-	BackGroundManager::Get()->Render();
+	BackGroundManager::Get()->BeforeRender();
 	ItemSpawner::Get()->Render();
+	BackGroundManager::Get()->Render();
 	player->Render();
 	EnemySpawner::Get()->Render();
 	BackGroundManager::Get()->AfterRender();

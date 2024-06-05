@@ -3,9 +3,9 @@
 
 
 Player::Player(float MaxHP, float atk, float speed, float crt, float pickupRange, float damage_delay,int idx_pickUpRange,Vector2 size)
-	:default_maxHp(MaxHP),MaxHP(MaxHP),HP(MaxHP)
-	,default_atk(atk),attack(atk),default_spd(speed),speed(speed)
-	,default_crt(crt),crt(crt),default_pickUpRange(pickupRange)
+	:default_maxHp(MaxHP),MaxHP(default_maxHp),HP(default_maxHp)
+	,default_atk(atk),attack(default_atk),default_spd(speed),speed(default_spd)
+	,default_crt(crt),crt(default_crt),default_pickUpRange(pickupRange)
 	,damage_delay(damage_delay),now_damage_delay(damage_delay)
 	,idx_pickUpRange(idx_pickUpRange)
 	,nowExp(0.0f),level(1)

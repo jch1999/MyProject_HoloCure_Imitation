@@ -2,7 +2,7 @@
 #include "SpdUp.h"
 
 SpdUp::SpdUp()
-	:Skill(SKILL_ID::CRT, SKILL_TYPE::STAT, 1)
+	:Skill(SKILL_ID::SPD, SKILL_TYPE::STAT, 1)
 {
 	weight = 4;
 	level_scripts.push_back("SPD +12% Up.");

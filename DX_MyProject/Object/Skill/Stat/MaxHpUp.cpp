@@ -28,7 +28,8 @@ void MaxHpUp::PostRender()
 
 bool MaxHpUp::LevelUp()
 {
-	player->SetCRT(player->GetMaxHP() + player->GetDefaultMaxHP() * 0.1f);
+	float newMaxHp = player->GetMaxHP() + player->GetDefaultMaxHP() * 0.1f;
+	player->SetMaxHP(newMaxHp);
 	return true;
 }
 

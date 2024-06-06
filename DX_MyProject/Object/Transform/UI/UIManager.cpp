@@ -46,9 +46,9 @@ UIManager::UIManager()
 	// LV Text Printer
 	printer = new TextPrinter();
 	printer->SetTarget(CAM);
-	printer->SetOffset(Vector2(WIN_CENTER_X, 15.0f));
+	printer->SetOffset(Vector2(WIN_WIDTH-90.0f, 18.0f));
 	printer->SetCharInterval(Vector2(10.0f, 20.0f));
-	printer->SetCharScale(Vector2(0.3f, 0.3f));
+	printer->SetCharScale(Vector2(0.5f, 0.5f));
 	printer->SetActive(true);
 	ui_list[1].push_back(printer);
 
@@ -107,7 +107,7 @@ void UIManager::Update()
 		}
 	}
 
-	printer->SetText("LV " + to_string(player->GetLevel()));
+	printer->SetText("LV: " + to_string(player->GetLevel()));
 
 	for (auto ui : ui_list)
 	{

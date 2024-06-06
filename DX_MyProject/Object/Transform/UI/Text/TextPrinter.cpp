@@ -1,11 +1,20 @@
 #include "framework.h"
 
 TextPrinter::TextPrinter()
-	:line_length(10)
+	:line_length(10),text_idx(0)
+	,char_scale(Vector2(0,0)),char_pos(Vector2(0,0))
+	, char_interval(Vector2(0,0))
+	,printStr("")
 {
 	for (int i = 0; i < 5; i++)
-		text_list.push_back(new Text());
-
+	{
+		Text* text = new Text();
+		text->SetID(UI_ID::TEXT);
+		text->SetTarget(this);
+		text->SetScale(char_scale);
+		text_list.push_back(text);
+		child_list.push_back(text);
+	}
 	id = UI_ID::TEXT_PRINTER;
 	type = UI_TYPE::TEXT;
 	ui_scale = Vector2(1, 1);
@@ -42,6 +51,7 @@ void TextPrinter::PostRender()
 
 void TextPrinter::SetState(UI::UI_STATE state)
 {
+	this->state = state;
 }
 
 void TextPrinter::SetID(UI::UI_ID id)
@@ -76,7 +86,6 @@ void TextPrinter::SetText(string str)
 			text_list[text_idx]->SetOffset(char_interval * char_pos);
 			text_list[text_idx]->SetScale(char_scale);
 			text_list[text_idx]->SetActive(true);
-			text_idx++;
 		}
 		if (char_pos.x < line_length)
 		{
@@ -87,6 +96,7 @@ void TextPrinter::SetText(string str)
 			char_pos.x = 0;
 			char_pos.y += 1;
 		}
+		text_idx++;
 	}
 	for (int i = text_idx; i < text_list.size(); i++)
 		text_list[i]->SetActive(false);

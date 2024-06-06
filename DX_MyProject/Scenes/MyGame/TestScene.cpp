@@ -7,24 +7,6 @@ TestScene::TestScene()
 
 	CAM->SetTarget(player);
 
-	//skill = new PlayDice();
-	//skill->SetPlayer(player);
-	/*{
-		proj = new BaelzDice(Vector2(36.0f, 36.0f));
-		proj->pos = player->pos + Vector2(50.0f, 100.0f);
-		proj->SetStatus(100, 16, 100, 5.0f);
-		proj->respwan();
-		proj->move_dir = player->GetMoveDir();
-	}*/
-	/* {
-		item = new RewardBox();
-		item->pos = player->pos + Vector2(50.0f, 100.0f);
-		item->SetPlayer(player);
-		item->SetStatus(Item::ITEM_ID::REWORD_BOX, 0);
-		item->SetState(Item::ITEM_STATE::IDLE);
-		item->Respawn();
-		ItemSpawner::Get()->AddItem(item);
-	}*/
 	BackGroundManager::Get()->SetPlayer(player);
 	ItemSpawner::Get()->SetPlayer(player);
 	EnemySpawner::Get()->SetPlayer(player);
@@ -32,28 +14,11 @@ TestScene::TestScene()
 	UIManager::Get()->SetPlayer(player);
 	player->GetExp(0);
 	player->CheckMoveDir();
-	/*{
-		enemy = new MiniBoss();
-		enemy->SetEnemyName(Enemy::ENEMY_NAME::MEGA_SHRIMP);
-		enemy->pos = player->pos + WIN_CENTER;
-		enemy->SetPlayer(player);
-		enemy->Respawn();
-		EnemySpawner::Get()->AddEnemy(enemy);
-	}*/
-	//hpBar = new HPBar();
-	//hpBar->SetTarget(player);
-	//hpBar->SetOffset(Vector2(0.0f, -35.0f));
-	//UIManager::Get()->AddUI(hpBar);
-	//UIManager::Get()->AddUI(hpBar);
 }
 
 TestScene::~TestScene()
 {
 	delete player;
-	//delete skill;
-	//delete proj;
-	//delete enemy;
-	//delete item;
 	BackGroundManager::Delete();
 	EnemySpawner::Delete();
 	SkillManager::Delete();
@@ -103,34 +68,20 @@ void TestScene::Update()
 	SkillManager::Get()->Update();
 	player->Update();
 	UIManager::Get()->Update();
-	//item->Update();
-
-	//skill->Update();
-
-	//proj->Update();
-
-	//enemy->Update();
-	//hpBar->SetSize(Vector2(player->GetHP() / player->GetMaxHP(), 1.0f));
-	//hpBar->Update();
 }
 
 // Render ¼ø¼­ item ->player->enemy->skill->ui
 void TestScene::Render()
 {
 	BackGroundManager::Get()->BeforeRender();
-	//item->Render();
 	ItemSpawner::Get()->Render();
 	BackGroundManager::Get()->Render();
 	player->Render();
-	//skill->Render();
-	//proj->Render();
 
 	EnemySpawner::Get()->Render();
 	BackGroundManager::Get()->AfterRender();
-	//enemy->Render();
 	SkillManager::Get()->Render();
 	UIManager::Get()->Render();
-	//hpBar->Render();
 }
 
 void TestScene::PostRender()
@@ -140,11 +91,6 @@ void TestScene::PostRender()
 	ImGui::Text("Sources2 : https://holocure.fandom.com/wiki/HoloCure_Wiki");
 	ImGui::Text("Cam's pos : %f %f", CAM->pos.x, CAM->pos.y);
 	player->PostRender();
-	//skill->PostRender();
-	
-	//EnemySpawner::Get()->PostRneder();
-	// enemy->PostRender();
-	//hpBar->PostRender();
 
 	SkillManager::Get()->PostRneder();
 	ItemSpawner::Get()->PostRneder();

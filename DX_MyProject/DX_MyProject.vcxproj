@@ -429,6 +429,7 @@
     <ClCompile Include="Object\Transform\UI\Icon\CounterIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\PlayerIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\SkillIcon.cpp" />
+    <ClCompile Include="Object\Transform\UI\Panel\EnhancePanel.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\TextPrinter.cpp" />
     <ClCompile Include="Object\Transform\UI\TopUI\Count_UI.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\DmgText.cpp" />

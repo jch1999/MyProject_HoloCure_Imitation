@@ -46,29 +46,41 @@ void EnhancePanel::Update()
 {
 	if (!is_active)return;
 	
+	// 선택 항목 이동 입력
 	if (KEY_CON->Down(VK_UP))
 	{
 		select_type -= 1;
 		select_type %= 2;
 	}
-	if (KEY_CON->Down(VK_DOWN))
+	else if (KEY_CON->Down(VK_DOWN))
 	{
 
 		select_type += 1;
 		select_type %= 2;
 	}
-	if (KEY_CON->Down(VK_LEFT))
+	else if (KEY_CON->Down(VK_LEFT))
 	{
 		select_idx -= 1;
 		select_idx %= 6;
 	}
-	if (KEY_CON->Down(VK_RIGHT))
+	else if (KEY_CON->Down(VK_RIGHT))
 	{
 
 		select_idx += 1;
 		select_idx %= 6;
 	}
-	
+
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			if(i==select_type&&j==select_idx)
+				(skillIcon_list[i][j]->GetFrame())->SetClipIdx(5);
+			else
+				(skillIcon_list[i][j]->GetFrame())->SetClipIdx(4);
+		}
+	}
+	// 선택 취소 입력
 
 	pos = target->pos + offset;
 	WorldUpdate();

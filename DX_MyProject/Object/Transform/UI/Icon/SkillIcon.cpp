@@ -199,7 +199,8 @@ void SkillIcon::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	if(clip_idx!=-1)
+		clips[clip_idx]->Render();
 
 	for (auto child : child_list)
 		child->Render();
@@ -380,15 +381,29 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::BOUNCE_BALL:
 		case (int)Skill::SKILL_ID::CEO_TEAR:
 		case (int)Skill::SKILL_ID::SPIDER_COOKING:
-		{
+		case (int)Skill::SKILL_ID::NURSE_HORN:
+		case (int)Skill::SKILL_ID::FULL_MEAL:
+		case (int)Skill::SKILL_ID::PIKIPIK_PIMAN:
+		case (int)Skill::SKILL_ID::STUDY_GLASSES:
+		case (int)Skill::SKILL_ID::SUPER_CHATTO_TIME:
+		case (int)Skill::SKILL_ID::BLACKSMITH_GEAR:
+		case (int)Skill::SKILL_ID::NINJA_HEADBAND:
+		case (int)Skill::SKILL_ID::MAX_HP:
+		case (int)Skill::SKILL_ID::ATK:
+		case (int)Skill::SKILL_ID::SPD:
+		case (int)Skill::SKILL_ID::CRT:
+		case (int)Skill::SKILL_ID::PICK_UP:
+		case (int)Skill::SKILL_ID::COIN:
+		case (int)Skill::SKILL_ID::FOOD:
 			clip_idx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
-		}
-		break;
+			break;
 		default:
+			clip_idx = -1;
 			break;
 		}
-		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f);
-		icon_frame->SetActive(false);
+		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f); 
+		icon_frame->SetActive(true);
+		icon_frame->SetClipIdx(4);
 		SetSize(Vector2(43.0f, 38.0f));
 	}
 	break;

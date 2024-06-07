@@ -20,6 +20,14 @@ IconFrame::IconFrame()
 	frames.push_back(new Frame(file, 4.0f, 1872.0f, 35.0f, 36.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 	frames.clear();
+	// Default Iconframe clip
+	frames.push_back(new Frame(file, 138.0f, 4078.0f, 32.0f, 32.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+	// Default Select Iconframe clip
+	frames.push_back(new Frame(file, 172.0f, 4078.0f, 36.0f, 36.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
 
 	id = UI::UI_ID::SKILL_ICON_FRAME;
 	type = UI::UI_TYPE::FRAME;

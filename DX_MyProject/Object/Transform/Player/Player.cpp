@@ -227,7 +227,7 @@ void Player::GetExp(int expValue)
 			break;
 		}
 		*/
-		UIManager::Get()->isLevelUp = true;
+		UIManager::Get()->levelUpCnt++;
 	}
 	exp_bar->SetExpRate(nowExp / nowMaxExp);
 }

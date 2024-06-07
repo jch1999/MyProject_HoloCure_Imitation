@@ -9,7 +9,7 @@ protected:
 	// 1 buffIcon_list
 	vector<vector<SkillIcon*>> skillIcon_list;
 
-
+	Anvil* usedAnvil;
 	// 레벨업 보상 선택지를 띄울 창 -- 각 선택지 칸의 보관과 출력은 이 창이 하도록 구현할 예정
 	SkillSelector* selector;
 
@@ -28,4 +28,5 @@ public:
 	virtual void PostRender() override;
 
 	virtual void SetActive(bool active) override;
+	void SetAnvil(Anvil* anvil) { usedAnvil = anvil; }
 };

@@ -306,7 +306,6 @@
     <ClInclude Include="Object\Transform\UI\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\UI.h" />
     <ClInclude Include="Object\Transform\UI\UIManager.h" />
-    <ClInclude Include="Object\Transform\UI\Icon\SkillIconFrame.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scenes\AnimateScene.h" />

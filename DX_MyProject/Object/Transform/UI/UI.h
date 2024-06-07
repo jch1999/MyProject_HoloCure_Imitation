@@ -60,7 +60,7 @@ public:
 		REWARD_PANEL,
 		PAUSE_PANEL,
 		// Selecor
-		LEVEL_UP_SELECTOR,
+		SELECTOR,
 		// Timer
 		TIMER,
 		//Counter

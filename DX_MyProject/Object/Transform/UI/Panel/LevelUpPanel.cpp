@@ -72,7 +72,7 @@ void LevelUpPanel::Update()
 		SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)(skill_selectors[select_idx]->GetSkillID()))->LevelUp();
 		isPause = false;
 		UIManager::Get()->nowPanel = nullptr;
-		UIManager::Get()->isLevelUp = false;
+		UIManager::Get()->levelUpCnt--;
 		SetActive(false);
 		return;
 	}

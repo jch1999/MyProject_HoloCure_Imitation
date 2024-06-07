@@ -21,5 +21,5 @@ public:
 	void SetSkillID(int skill_id) { this->skill_id = skill_id; }
 	void SetLabelActive(bool active) { label->SetActive(active); }
 	const LevelLabel* GetLabel() { return label; }
-	const IconFrame* GetFrame() { return icon_frame; }
+	IconFrame* GetFrame() { return icon_frame; }
 };

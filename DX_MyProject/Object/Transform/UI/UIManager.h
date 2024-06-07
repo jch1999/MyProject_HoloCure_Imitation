@@ -25,7 +25,7 @@ public:
 	TextPrinter* printer;
 
 	// 창 대기 여부
-	bool isLevelUp;
+	int levelUpCnt;
 	bool isEnhance;
 
 private:

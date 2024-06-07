@@ -2,6 +2,7 @@
 
 UIManager::UIManager()
 	:nowPanel(nullptr)
+	,levelUpCnt(0)
 {
 	ui_list.resize(4);
 
@@ -97,7 +98,7 @@ void UIManager::Update()
 		{
 			// PAUSE_PANEL 호출
 		}
-		else if (isLevelUp)
+		else if (levelUpCnt>0)
 		{
 			// LEVEL_UP_PANEL 호출
 			isPause = true;

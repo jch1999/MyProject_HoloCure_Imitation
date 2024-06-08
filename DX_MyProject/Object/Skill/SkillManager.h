@@ -52,6 +52,6 @@ public:
 	int GetLevelUpSkillID_B();
 	int GetLevelUpSkillID_S();
 	int GetLevelUpSkillID_E();
-	void LevelUp(Skill::SKILL_ID id);
-	void Enhance(Skill::SKILL_ID id, float enhanceAmount=0.0f); // 강화 = LevelUp or damageUp
+	//void LevelUp(Skill::SKILL_ID id);
+	//void Enhance(Skill::SKILL_ID id, float enhanceAmount=0.0f); // 강화 = LevelUp or damageUp
 };

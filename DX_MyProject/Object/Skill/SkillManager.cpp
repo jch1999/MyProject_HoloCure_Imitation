@@ -336,12 +336,3 @@ int SkillManager::GetLevelUpSkillID_E()
 	return (int)(levelUpAble_list[3][skill_idx]->id);
 }
 
-void SkillManager::LevelUp(Skill::SKILL_ID id)
-{
-	
-}
-
-void SkillManager::Enhance(Skill::SKILL_ID id, float enhanceAmount)
-{
-
-}

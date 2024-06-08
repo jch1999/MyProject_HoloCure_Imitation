@@ -43,6 +43,6 @@ bool PickRangeUp::GetEnhanceAble()
 	return false;
 }
 
-void PickRangeUp::Enhance(float enhanceAmount)
+void PickRangeUp::Enhance()
 {
 }

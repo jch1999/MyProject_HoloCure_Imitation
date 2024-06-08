@@ -37,7 +37,7 @@ SkillSelector::SkillSelector()
 		child_list.push_back(text);
 	}
 
-	id = UI::UI_ID::LEVEL_UP_SELECTOR;
+	id = UI::UI_ID::SELECTOR;
 	type = UI::UI_TYPE::SELECTOR;
 	state = UI::UI_STATE::IDLE;
 	ui_size = Vector2(386.0f, 69.0f);

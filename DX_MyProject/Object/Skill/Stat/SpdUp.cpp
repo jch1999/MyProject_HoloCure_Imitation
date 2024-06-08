@@ -38,7 +38,7 @@ bool SpdUp::GetEnhanceAble()
 	return false;
 }
 
-void SpdUp::Enhance(float enhanceAmount)
+void SpdUp::Enhance()
 {
 }
 

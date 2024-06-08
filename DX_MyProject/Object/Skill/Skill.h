@@ -87,7 +87,7 @@ public:
 	bool GetLevelUpAble() { return now_level < max_level; }
 	// Enhance
 	virtual bool GetEnhanceAble() = 0;
-	virtual void Enhance(float enhanceAmount=0.0f) = 0;
+	virtual void Enhance() = 0;
 	int GetLevel() { return now_level; }
 	string GetScript() { return level_scripts[now_level]; }
 	string GetSkillName() { return skill_name; }

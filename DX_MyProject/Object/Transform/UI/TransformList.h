@@ -9,7 +9,6 @@
 #include "Text/TextPrinter.h"
 #include "Arrow.h"
 #include "Icon/LevelLabel.h"
-#include "Icon/SkillIconFrame.h"
 #include "Icon/IconFrame.h"
 #include "Icon/Icon.h"
 #include "Icon/PlayerIcon.h"

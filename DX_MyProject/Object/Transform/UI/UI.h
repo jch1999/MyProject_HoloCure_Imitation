@@ -104,4 +104,5 @@ public:
 	virtual void SetID(UI::UI_ID id) = 0;
 	virtual void SetActive(bool active) { is_active = active; }
 	void SetClipIdx(int idx) { clip_idx = idx; }
+	void SetColor(Float4 color) { CB->data.colour = color; }
 };

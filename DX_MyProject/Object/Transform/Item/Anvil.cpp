@@ -54,7 +54,6 @@ void Anvil::Update()
 		}
 		break;
 	case Item::ITEM_STATE::ACTIVE:
-		SetState(ITEM_STATE::USED);
 		break;
 	case Item::ITEM_STATE::USED:
 		is_active = false;
@@ -145,7 +144,8 @@ void Anvil::SetState(ITEM_STATE state)
 		break;
 	case Item::ITEM_STATE::ACTIVE:
 	{
-		isPause = true;
+		UIManager::Get()->isEnhance = true;
+		UIManager::Get()->enhancePanel->SetAnvil(this);
 		collider->SetActive(false);
 	}
 		break;

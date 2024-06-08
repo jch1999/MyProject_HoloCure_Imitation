@@ -44,7 +44,7 @@ bool MaxHpUp::GetEnhanceAble()
 	return false;
 }
 
-void MaxHpUp::Enhance(float enhanceAmount)
+void MaxHpUp::Enhance()
 {
 	return;
 }

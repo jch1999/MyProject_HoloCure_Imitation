@@ -26,5 +26,5 @@ public:
 
 	virtual bool LevelUp() = 0;
 	virtual bool GetEnhanceAble() { return true; }
-	virtual void Enhance(float enhanceAmount = 0.0f) { this->enhanceDamage += enhanceAmount; }
+	virtual void Enhance();
 };

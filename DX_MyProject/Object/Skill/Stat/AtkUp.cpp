@@ -43,7 +43,7 @@ bool AtkUp::GetEnhanceAble()
 	return false;
 }
 
-void AtkUp::Enhance(float enhanceAmount)
+void AtkUp::Enhance()
 {
 	return;
 }

@@ -76,6 +76,11 @@ UIManager::UIManager()
 	levelPanel->SetTarget(CAM);
 	levelPanel->SetOffset(WIN_CENTER);
 	ui_list[2].push_back(levelPanel);
+
+	enhancePanel = new EnhancePanel();
+	enhancePanel->SetTarget(CAM);
+	enhancePanel->SetOffset(WIN_CENTER);
+	ui_list[2].push_back(enhancePanel);
 }
 
 UIManager::~UIManager()

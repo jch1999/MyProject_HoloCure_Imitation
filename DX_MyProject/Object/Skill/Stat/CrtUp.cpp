@@ -38,7 +38,7 @@ bool CrtUp::GetEnhanceAble()
 	return false;
 }
 
-void CrtUp::Enhance(float enhanceAmount)
+void CrtUp::Enhance()
 {
 }
 

@@ -19,6 +19,7 @@ public:
 	virtual void SetID(UI::UI_ID id);
 
 	void SetSkillID(int skill_id) { this->skill_id = skill_id; }
+	int GetSkillID() { return skill_id; }
 	void SetLabelActive(bool active) { label->SetActive(active); }
 	const LevelLabel* GetLabel() { return label; }
 	IconFrame* GetFrame() { return icon_frame; }

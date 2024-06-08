@@ -174,9 +174,11 @@ void SkillIcon::Update()
 {
 	if (!is_active)return;
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale * additional_scale;
-	clips[clip_idx]->Update();
-
+	if (clip_idx != -1)
+	{
+		scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale * additional_scale;
+		clips[clip_idx]->Update();
+	}
 	pos = target->pos + offset;
 	WorldUpdate();
 

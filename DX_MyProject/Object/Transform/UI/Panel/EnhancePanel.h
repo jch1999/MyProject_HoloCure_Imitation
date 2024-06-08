@@ -32,4 +32,5 @@ public:
 
 	virtual void SetActive(bool active) override;
 	void SetAnvil(Anvil* anvil) { usedAnvil = anvil; }
+	void ChoseSkill();
 };

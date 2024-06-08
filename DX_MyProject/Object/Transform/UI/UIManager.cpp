@@ -111,6 +111,12 @@ void UIManager::Update()
 			levelPanel->SetSkillSelector();
 			nowPanel->SetActive(true);
 		}
+		else if (isEnhance)
+		{
+			isPause = true;
+			nowPanel = enhancePanel;
+			nowPanel->SetActive(true);
+		}
 	}
 
 	printer->SetText("LV: " + to_string(player->GetLevel()));

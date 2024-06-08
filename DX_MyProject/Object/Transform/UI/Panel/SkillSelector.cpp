@@ -105,75 +105,79 @@ void SkillSelector::SetSkillID(int skill_id)
 
 void SkillSelector::SetText()
 {
-	Skill* skill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skill_id);
-	string name = skill->GetSkillName();
-	string scripts = skill->GetScript();
-
-	char_pos = Vector2(0, 0);
 	int text_idx = 0;
-	for (int i = 0; i < name.length(); i++)
+	if (skill_id != -1)
 	{
-		if (name[i] != ' ')
-		{
-			text_vec[text_idx]->SetText(name[i]);
-			text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
-			text_vec[text_idx]->SetActive(true);
-			text_idx++;
-		}
+		Skill* skill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skill_id);
+		string name = skill->GetSkillName();
+		string scripts = skill->GetScript();
 
-		char_pos.x++;
-	}
-	// LV 표시
-	{
-		char_pos.x += 2;
-		text_vec[text_idx]->SetText('L');
-		text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
-		text_vec[text_idx]->SetActive(true);
-		char_pos.x += 1;
-		text_idx++;
-		text_vec[text_idx]->SetText('V');
-		text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
-		text_vec[text_idx]->SetActive(true);
-		char_pos.x += 2;
-		text_idx++;
-		text_vec[text_idx]->SetText('0' + skill->GetLevel() + 1);
-		text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
-		text_vec[text_idx]->SetActive(true);
-		char_pos.x += 1;
-		text_idx++;
-	}
-
-	char_pos = Vector2(0, 0);
-	for (int i = 0; i < scripts.length(); i++)
-	{
-		if (text_idx >= text_vec.size())
+		char_pos = Vector2(0, 0);
+		
+		for (int i = 0; i < name.length(); i++)
 		{
-			for (int j = 0; j < 10; j++)
+			if (name[i] != ' ')
 			{
-				Text* text = new Text();
-				text->SetID(UI_ID::TEXT);
-				text->SetTarget(this);
-				text->SetScale(Vector2(0.3f, 0.3f));
-				text_vec.push_back(text);
-				child_list.push_back(text);
+				text_vec[text_idx]->SetText(name[i]);
+				text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
+				text_vec[text_idx]->SetActive(true);
+				text_idx++;
 			}
-		}
 
-		if (scripts[i] != ' ')
-		{
-			text_vec[text_idx]->SetText(scripts[i]);
-			text_vec[text_idx]->SetOffset(script_offset + char_interval * char_pos);
-			text_vec[text_idx]->SetActive(true);
-			text_idx++;
-		}
-		if (char_pos.x < line_length)
-		{
 			char_pos.x++;
 		}
-		else
+		// LV 표시
 		{
-			char_pos.x = 0;
-			char_pos.y += 1;
+			char_pos.x += 2;
+			text_vec[text_idx]->SetText('L');
+			text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
+			text_vec[text_idx]->SetActive(true);
+			char_pos.x += 1;
+			text_idx++;
+			text_vec[text_idx]->SetText('V');
+			text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
+			text_vec[text_idx]->SetActive(true);
+			char_pos.x += 2;
+			text_idx++;
+			text_vec[text_idx]->SetText('0' + skill->GetLevel() + 1);
+			text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
+			text_vec[text_idx]->SetActive(true);
+			char_pos.x += 1;
+			text_idx++;
+		}
+
+		char_pos = Vector2(0, 0);
+		for (int i = 0; i < scripts.length(); i++)
+		{
+			if (text_idx >= text_vec.size())
+			{
+				for (int j = 0; j < 10; j++)
+				{
+					Text* text = new Text();
+					text->SetID(UI_ID::TEXT);
+					text->SetTarget(this);
+					text->SetScale(Vector2(0.3f, 0.3f));
+					text_vec.push_back(text);
+					child_list.push_back(text);
+				}
+			}
+
+			if (scripts[i] != ' ')
+			{
+				text_vec[text_idx]->SetText(scripts[i]);
+				text_vec[text_idx]->SetOffset(script_offset + char_interval * char_pos);
+				text_vec[text_idx]->SetActive(true);
+				text_idx++;
+			}
+			if (char_pos.x < line_length)
+			{
+				char_pos.x++;
+			}
+			else
+			{
+				char_pos.x = 0;
+				char_pos.y += 1;
+			}
 		}
 	}
 	for (int i = text_idx; i < text_vec.size(); i++)

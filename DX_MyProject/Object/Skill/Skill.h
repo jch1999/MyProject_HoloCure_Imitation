@@ -81,6 +81,7 @@ public:
 	Player* GetPlayer() { return player; }
 	void SetPlayer(Player* player) { this->player = player; }
 
+	Skill::SKILL_ID GetSkillID() { return id; }
 	// LevelUp
 	virtual bool LevelUp() = 0;
 	virtual bool LevelDown() = 0;

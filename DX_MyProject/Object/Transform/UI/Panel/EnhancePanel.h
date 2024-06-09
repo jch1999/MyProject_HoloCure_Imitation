@@ -15,7 +15,6 @@ protected:
 
 	// 선택지 번호
 	// 스킬 선택지
-	int select_type;
 	int select_idx;
 	bool selected;
 	int final_idx;

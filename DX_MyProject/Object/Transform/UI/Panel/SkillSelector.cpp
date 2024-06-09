@@ -27,15 +27,22 @@ SkillSelector::SkillSelector()
 	child_list.push_back(skill_icon);
 
 	// text 
-	for (int i = 0; i < 80; i++)
-	{
-		Text* text = new Text();
-		text->SetID(UI_ID::TEXT);
-		text->SetTarget(this);
-		text->SetScale(Vector2(0.3f, 0.3f));
-		text_vec.push_back(text);
-		child_list.push_back(text);
-	}
+	skillName_text = new TextPrinter();
+	skillName_text->SetTarget(this);
+	skillName_text->SetOffset(name_offset);
+	skillName_text->SetCharInterval(char_interval);
+	skillName_text->SetLineLength(line_length);
+	skillName_text->SetCharScale(Vector2(0.3f, 0.3f));
+
+	SkillScript_text = new TextPrinter();
+	SkillScript_text->SetTarget(this);
+	SkillScript_text->SetOffset(script_offset);
+	SkillScript_text->SetCharInterval(char_interval);
+	SkillScript_text->SetLineLength(line_length);
+	SkillScript_text->SetCharScale(Vector2(0.3f, 0.3f));
+
+	child_list.push_back(skillName_text);
+	child_list.push_back(SkillScript_text);
 
 	id = UI::UI_ID::SELECTOR;
 	type = UI::UI_TYPE::SELECTOR;
@@ -109,79 +116,29 @@ void SkillSelector::SetText()
 	if (skill_id != -1)
 	{
 		Skill* skill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skill_id);
-		string name = skill->GetSkillName();
-		string scripts = skill->GetScript();
-
-		char_pos = Vector2(0, 0);
 		
-		for (int i = 0; i < name.length(); i++)
-		{
-			if (name[i] != ' ')
-			{
-				text_vec[text_idx]->SetText(name[i]);
-				text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
-				text_vec[text_idx]->SetActive(true);
-				text_idx++;
-			}
 
-			char_pos.x++;
-		}
-		// LV Ç¥½Ã
+		if (skill->GetLevelUpAble())
 		{
-			char_pos.x += 2;
-			text_vec[text_idx]->SetText('L');
-			text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
-			text_vec[text_idx]->SetActive(true);
-			char_pos.x += 1;
-			text_idx++;
-			text_vec[text_idx]->SetText('V');
-			text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
-			text_vec[text_idx]->SetActive(true);
-			char_pos.x += 2;
-			text_idx++;
-			text_vec[text_idx]->SetText('0' + skill->GetLevel() + 1);
-			text_vec[text_idx]->SetOffset(name_offset + char_interval * char_pos);
-			text_vec[text_idx]->SetActive(true);
-			char_pos.x += 1;
-			text_idx++;
+			string name = skill->GetSkillName() + " LV "+ to_string(skill->GetLevel() + 1);
+			string scripts = skill->GetScript();
+			skillName_text->SetText(name);
+			SkillScript_text->SetText(scripts);
+			skillName_text->SetActive(true);
+			SkillScript_text->SetActive(true);
 		}
-
-		char_pos = Vector2(0, 0);
-		for (int i = 0; i < scripts.length(); i++)
+		else
 		{
-			if (text_idx >= text_vec.size())
-			{
-				for (int j = 0; j < 10; j++)
-				{
-					Text* text = new Text();
-					text->SetID(UI_ID::TEXT);
-					text->SetTarget(this);
-					text->SetScale(Vector2(0.3f, 0.3f));
-					text_vec.push_back(text);
-					child_list.push_back(text);
-				}
-			}
-
-			if (scripts[i] != ' ')
-			{
-				text_vec[text_idx]->SetText(scripts[i]);
-				text_vec[text_idx]->SetOffset(script_offset + char_interval * char_pos);
-				text_vec[text_idx]->SetActive(true);
-				text_idx++;
-			}
-			if (char_pos.x < line_length)
-			{
-				char_pos.x++;
-			}
-			else
-			{
-				char_pos.x = 0;
-				char_pos.y += 1;
-			}
+			string name = skill->GetSkillName() + " LV MAX";
+			skillName_text->SetText(name);
+			skillName_text->SetActive(true);
+			SkillScript_text->SetActive(false);
 		}
+		
 	}
-	for (int i = text_idx; i < text_vec.size(); i++)
+	else
 	{
-		text_vec[i]->SetActive(false);
+		skillName_text->SetActive(false);
+		SkillScript_text->SetActive(false);
 	}
 }

@@ -25,7 +25,7 @@ IconFrame::IconFrame()
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 	frames.clear();
 	// Default Select Iconframe clip
-	frames.push_back(new Frame(file, 172.0f, 4078.0f, 36.0f, 36.0f));
+	frames.push_back(new Frame(file, 172.0f, 4078.0f, 33.0f, 33.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 	frames.clear();
 

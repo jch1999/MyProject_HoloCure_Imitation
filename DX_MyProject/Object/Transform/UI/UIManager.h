@@ -24,7 +24,7 @@ public:
 	UI* pausePanel;
 	LevelUpPanel* levelPanel;
 	EnhancePanel* enhancePanel;
-	TextPrinter* printer;
+	TextPrinter* lv_text, *ctr_text;
 
 	// 창 대기 여부
 	int levelUpCnt;

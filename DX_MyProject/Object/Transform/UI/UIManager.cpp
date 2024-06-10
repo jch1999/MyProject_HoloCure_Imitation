@@ -45,13 +45,23 @@ UIManager::UIManager()
 	ui_list[1].push_back(new Count_UI());
 
 	// LV Text Printer
-	printer = new TextPrinter();
-	printer->SetTarget(CAM);
-	printer->SetOffset(Vector2(WIN_WIDTH-90.0f, 18.0f));
-	printer->SetCharInterval(Vector2(10.0f, 20.0f));
-	printer->SetCharScale(Vector2(0.5f, 0.5f));
-	printer->SetActive(true);
-	ui_list[1].push_back(printer);
+	lv_text = new TextPrinter();
+	lv_text->SetTarget(CAM);
+	lv_text->SetOffset(Vector2(WIN_WIDTH-90.0f, 18.0f));
+	lv_text->SetCharInterval(Vector2(10.0f, 20.0f));
+	lv_text->SetCharScale(Vector2(0.5f, 0.5f));
+	lv_text->SetActive(true);
+	ui_list[1].push_back(lv_text);
+
+	ctr_text = new TextPrinter();
+	ctr_text->SetTarget(CAM);
+	ctr_text->SetOffset(Vector2(WIN_WIDTH * 0.78f, WIN_HEIGHT * 0.98f));
+	ctr_text->SetCharInterval(Vector2(9.5f, 15.0f));
+	ctr_text->SetLineLength(50);
+	ctr_text->SetCharScale(Vector2(0.3f, 0.3f));
+	ctr_text->SetText("CONFIRM: ENTER I CANCEL: ESC");
+	ctr_text->SetActive(true);
+	ui_list[1].push_back(ctr_text);
 
 	// 각 Frame과 Panel에 포함되는 UI는 해당 Frame/Panel에서 child_list로 관리
 	// Frame
@@ -119,7 +129,7 @@ void UIManager::Update()
 		}
 	}
 
-	printer->SetText("LV: " + to_string(player->GetLevel()));
+	lv_text->SetText("LV: " + to_string(player->GetLevel()));
 
 	for (auto ui : ui_list)
 	{

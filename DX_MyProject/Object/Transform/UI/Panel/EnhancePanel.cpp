@@ -5,14 +5,13 @@ EnhancePanel::EnhancePanel()
 {
 	upgrade_text = new TextPrinter();
 	upgrade_text->SetTarget(this);
-	upgrade_text->SetOffset(Vector2(WIN_CENTER_X / 4.0f, 50.0f));
+	upgrade_text->SetOffset(Vector2(WIN_CENTER_X*0.2f, -WIN_CENTER_Y*0.5f));
+	upgrade_text->SetCharScale(Vector2(1.0f, 1.0f));
+	upgrade_text->SetCharInterval(Vector2(30.0f, 20.0f));
 	upgrade_text->SetText("UPGRADE!");
-	upgrade_text->SetCharScale(Vector2(0.5f, 0.5f));
-	upgrade_text->SetCharInterval(Vector2(10.0f, 20.0f));
-	upgrade_text->SetActive(true);
 	child_list.push_back(upgrade_text);
 
-	Vector2 iconStartPos(0.0f, -30.0f);
+	Vector2 iconStartPos(WIN_CENTER_X*0.05f, -WIN_CENTER_Y*0.3f);
 	Vector2 iconInterval(80.0f, 80.0f);
 	skillIcon_list.resize(2);
 	for (int i = 0; i < 2; i++)
@@ -31,10 +30,10 @@ EnhancePanel::EnhancePanel()
 
 	selector = new SkillSelector();
 	selector->SetTarget(this);
-	selector->SetOffset(Vector2(WIN_CENTER_X/3.0f, WIN_CENTER_Y * 0.5f));
+	selector->SetOffset(Vector2(WIN_CENTER_X*0.35f, WIN_CENTER_Y * 0.25f));
 	selector->SetScale(Vector2(1.5f, 1.5f));
 	selector->SetIconOffset(Vector2(-245.0f, 5.0f));
-	selector->SetNameTOffset(Vector2(-260.0f, -35.0f));
+	selector->SetNameTOffset(Vector2(-260.0f, -40.0f));
 	selector->SetScriptTOffset(Vector2(-210.0f, -10.0f));
 	child_list.push_back(selector);
 
@@ -116,8 +115,6 @@ void EnhancePanel::SetActive(bool active)
 		{
 			skillIcon_list[0][i]->SetSkillID(-1);
 		}
-		skillIcon_list[0][i]->SetActive(active);
-		
 	}
 	// buff
 	for (int i = 0; i < 6; i++)
@@ -139,8 +136,6 @@ void EnhancePanel::SetActive(bool active)
 		{
 			skillIcon_list[1][i]->SetSkillID(-1);
 		}
-		skillIcon_list[1][i]->SetActive(active);
-
 	}
 
 	selector->SetClipIdx(1);

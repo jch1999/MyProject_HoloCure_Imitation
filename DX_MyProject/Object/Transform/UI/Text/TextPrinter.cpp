@@ -86,6 +86,7 @@ void TextPrinter::SetText(string str)
 			text_list[text_idx]->SetOffset(char_interval * char_pos);
 			text_list[text_idx]->SetScale(char_scale);
 			text_list[text_idx]->SetActive(true);
+			text_idx++;
 		}
 		if (char_pos.x < line_length)
 		{
@@ -96,7 +97,6 @@ void TextPrinter::SetText(string str)
 			char_pos.x = 0;
 			char_pos.y += 1;
 		}
-		text_idx++;
 	}
 	for (int i = text_idx; i < text_list.size(); i++)
 		text_list[i]->SetActive(false);

@@ -134,10 +134,11 @@ void SkillSelector::SetText()
 			skillName_text->SetActive(true);
 			SkillScript_text->SetActive(false);
 		}
-		
+		skill_icon->SetActive(true);
 	}
 	else
 	{
+		skill_icon->SetActive(false);
 		skillName_text->SetActive(false);
 		SkillScript_text->SetActive(false);
 	}

@@ -23,6 +23,7 @@ EnhancePanel::EnhancePanel()
 			icon->SetOffset(Vector2(iconStartPos.x + iconInterval.x * j,
 				iconStartPos.y + iconInterval.y * i));
 			icon->SetID(UI_ID::SKILL_ENHANCE_ICON);
+			icon->GetFrame()->SetClipIdx(4);
 			skillIcon_list[i].push_back(icon);
 			child_list.push_back(icon);
 		}
@@ -63,10 +64,10 @@ void EnhancePanel::Update()
 			if (i == select_idx / 6 && j == select_idx % 6)
 			{
 				selector->SetSkillID(skillIcon_list[i][j]->GetSkillID());
-				(skillIcon_list[i][j]->GetFrame())->SetClipIdx(5);
+				skillIcon_list[i][j]->GetFrame()->SetClipIdx(5);
 			}
 			else
-				(skillIcon_list[i][j]->GetFrame())->SetClipIdx(4);
+				skillIcon_list[i][j]->GetFrame()->SetClipIdx(4);
 		}
 	}
 

@@ -405,7 +405,6 @@ void SkillIcon::SetID(UI::UI_ID id)
 		}
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f); 
 		icon_frame->SetActive(true);
-		icon_frame->SetClipIdx(4);
 		SetSize(Vector2(43.0f, 38.0f));
 	}
 	break;

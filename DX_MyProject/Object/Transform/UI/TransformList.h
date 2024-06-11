@@ -7,6 +7,7 @@
 #include "Text/Text.h"
 #include "Text/DmgText.h"
 #include "Text/TextPrinter.h"
+#include "Button/Button.h"
 #include "Arrow.h"
 #include "Icon/LevelLabel.h"
 #include "Icon/IconFrame.h"

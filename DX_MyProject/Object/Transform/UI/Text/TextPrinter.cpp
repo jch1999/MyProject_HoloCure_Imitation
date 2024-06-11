@@ -1,9 +1,9 @@
 #include "framework.h"
 
 TextPrinter::TextPrinter()
-	:line_length(10),text_idx(0)
-	,char_scale(Vector2(0,0)),char_pos(Vector2(0,0))
-	, char_interval(Vector2(0,0))
+	:lineLength(10),textIdx(0)
+	,charScale(Vector2(0,0)),charPos(Vector2(0,0))
+	, charInterval(Vector2(0,0))
 	,printStr("")
 {
 	for (int i = 0; i < 5; i++)
@@ -11,8 +11,8 @@ TextPrinter::TextPrinter()
 		Text* text = new Text();
 		text->SetID(UI_ID::TEXT);
 		text->SetTarget(this);
-		text->SetScale(char_scale);
-		text_list.push_back(text);
+		text->SetScale(charScale);
+		textList.push_back(text);
 		child_list.push_back(text);
 	}
 	id = UI_ID::TEXT_PRINTER;
@@ -63,41 +63,42 @@ void TextPrinter::SetText(string str)
 {
 	printStr = str;
 
-	char_pos = Vector2(0, 0);
-	text_idx = 0;
+	charPos = Vector2(0, 0);
+	textIdx = 0;
 	for (int i = 0; i < printStr.length(); i++)
 	{
-		if (text_idx >= text_list.size())
+		if (textIdx >= textList.size())
 		{
 			for (int j = 0; j < 10; j++)
 			{
 				Text* text = new Text();
 				text->SetID(UI_ID::TEXT);
 				text->SetTarget(this);
-				text->SetScale(char_scale);
-				text_list.push_back(text);
+				text->SetScale(charScale);
+				textList.push_back(text);
 				child_list.push_back(text);
 			}
 		}
 
 		if (printStr[i] != ' ')
 		{
-			text_list[text_idx]->SetText(printStr[i]);
-			text_list[text_idx]->SetOffset(char_interval * char_pos);
-			text_list[text_idx]->SetScale(char_scale);
-			text_list[text_idx]->SetActive(true);
-			text_idx++;
+			textList[textIdx]->SetText(printStr[i]);
+			textList[textIdx]->SetOffset(charInterval * charPos);
+			textList[textIdx]->SetScale(charScale);
+			textList[textIdx]->SetColor(this->CB->data.colour);
+			textList[textIdx]->SetActive(true);
+			textIdx++;
 		}
-		if (char_pos.x < line_length)
+		if (charPos.x < lineLength)
 		{
-			char_pos.x++;
+			charPos.x++;
 		}
 		else
 		{
-			char_pos.x = 0;
-			char_pos.y += 1;
+			charPos.x = 0;
+			charPos.y += 1;
 		}
 	}
-	for (int i = text_idx; i < text_list.size(); i++)
-		text_list[i]->SetActive(false);
+	for (int i = textIdx; i < textList.size(); i++)
+		textList[i]->SetActive(false);
 }

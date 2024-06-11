@@ -2,13 +2,13 @@
 class TextPrinter :public UI
 {
 protected:
-	vector<Text*> text_list;
-	int line_length;
-	Vector2 char_pos;
-	Vector2 char_scale;
-	Vector2 char_interval;
+	vector<Text*> textList;
+	int lineLength;
+	Vector2 charPos;
+	Vector2 charScale;
+	Vector2 charInterval;
 	string printStr;
-	int text_idx;
+	int textIdx;
 public:
 	TextPrinter();
 	~TextPrinter();
@@ -20,7 +20,13 @@ public:
 	virtual void SetState(UI::UI_STATE state);
 	virtual void SetID(UI::UI_ID id);
 	void SetText(string str);
-	void SetLineLength(int len) { line_length = len; }
-	void SetCharScale(Vector2 c_scale) { char_scale = c_scale; }
-	void SetCharInterval(Vector2 interval) { char_interval = interval; }
+	void SetTextInfo(Vector2 cScale, Vector2 cInterval, int len = 40)
+	{
+		this->charScale = cScale;
+		this->charInterval = cInterval;
+		this->lineLength = len;
+	}
+	void SetLineLength(int len) { lineLength = len; }
+	void SetCharScale(Vector2 c_scale) { charScale = c_scale; }
+	void SetCharInterval(Vector2 interval) { charInterval = interval; }
 };

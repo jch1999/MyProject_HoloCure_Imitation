@@ -281,6 +281,7 @@
     <ClInclude Include="Object\Transform\SRTCircle.h" />
     <ClInclude Include="Object\Transform\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\Arrow.h" />
+    <ClInclude Include="Object\Transform\UI\Button\Button.h" />
     <ClInclude Include="Object\Transform\UI\Icon\CounterIcon.h" />
     <ClInclude Include="Object\Transform\UI\Text\TextPrinter.h" />
     <ClInclude Include="Object\Transform\UI\TopUI\Count_UI.h" />
@@ -425,6 +426,7 @@
     <ClCompile Include="Object\Transform\ScrollingBG.cpp" />
     <ClCompile Include="Object\Transform\SRTCircle.cpp" />
     <ClCompile Include="Object\Transform\UI\Arrow.cpp" />
+    <ClCompile Include="Object\Transform\UI\Button\Button.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\CounterIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\PlayerIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\SkillIcon.cpp" />

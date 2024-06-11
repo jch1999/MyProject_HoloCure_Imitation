@@ -3,15 +3,13 @@ class LevelUpPanel :public Panel
 {
 protected:
 	// Level UP! 을 띄우는 텍스트
-	LevelText* levelUp_text;
-	// Player 이미지를 띄울 이미지
-	Icon* player_full_icon;
+	LevelText* levelUpText;
 
 	// 레벨업 보상 선택지를 띄울 창 -- 각 선택지 칸의 보관과 출력은 이 창이 하도록 구현할 예정
-	vector<SkillSelector*> skill_selectors;
+	vector<SkillSelector*> skillSelectors;
 
 	// 선택지 번호
-	int select_idx;
+	int selectIdx;
 
 public:
 	LevelUpPanel();

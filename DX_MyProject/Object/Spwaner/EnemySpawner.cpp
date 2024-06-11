@@ -444,9 +444,9 @@ void EnemySpawner::EnemyDead()
 		{
 			NurseHorn* skill = (NurseHorn*)(SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::NURSE_HORN));
 			// 지정된 비율보다 hp가 낮다면
-			if ((player->GetHP() / player->GetMaxHP())<skill->GetTargetRate())
+			if ((player->GetHP() / player->GetMaxHP()) < 0.15f)
 			{
-				player->ChangeHP(player->GetMaxHP() * 0.2f);
+				player->ChangeHP(player->GetMaxHP() * skill->GetTargetRate());
 			}
 			else
 			{

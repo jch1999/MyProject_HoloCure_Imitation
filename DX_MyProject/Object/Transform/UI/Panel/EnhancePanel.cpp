@@ -1,19 +1,18 @@
 #include "framework.h"
 
 EnhancePanel::EnhancePanel()
-	: select_idx(0)
+	: selectIdx(0)
 {
-	upgrade_text = new TextPrinter();
-	upgrade_text->SetTarget(this);
-	upgrade_text->SetOffset(Vector2(WIN_CENTER_X*0.2f, -WIN_CENTER_Y*0.5f));
-	upgrade_text->SetCharScale(Vector2(1.0f, 1.0f));
-	upgrade_text->SetCharInterval(Vector2(30.0f, 20.0f));
-	upgrade_text->SetText("UPGRADE!");
-	child_list.push_back(upgrade_text);
+	upgradeText = new TextPrinter();
+	upgradeText->SetTarget(this);
+	upgradeText->SetOffset(Vector2(WIN_CENTER_X*0.2f, -WIN_CENTER_Y*0.5f));
+	upgradeText->SetTextInfo(Vector2(1.0f, 1.0f), Vector2(30.0f, 20.0f));
+	upgradeText->SetText("UPGRADE!");
+	child_list.push_back(upgradeText);
 
 	Vector2 iconStartPos(WIN_CENTER_X*0.05f, -WIN_CENTER_Y*0.3f);
 	Vector2 iconInterval(80.0f, 80.0f);
-	skillIcon_list.resize(2);
+	skillIconList.resize(2);
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 6; j++)
@@ -24,7 +23,7 @@ EnhancePanel::EnhancePanel()
 				iconStartPos.y + iconInterval.y * i));
 			icon->SetID(UI_ID::SKILL_ENHANCE_ICON);
 			icon->GetFrame()->SetClipIdx(4);
-			skillIcon_list[i].push_back(icon);
+			skillIconList[i].push_back(icon);
 			child_list.push_back(icon);
 		}
 	}
@@ -37,6 +36,14 @@ EnhancePanel::EnhancePanel()
 	selector->SetNameTOffset(Vector2(-260.0f, -40.0f));
 	selector->SetScriptTOffset(Vector2(-210.0f, -10.0f));
 	child_list.push_back(selector);
+
+	btn = new Button();
+	btn->SetTarget(this);
+	btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
+	btn->SetScale(Vector2(1.5f, 1.5f));
+	btn->SetState(UI::UI_STATE::IDLE);
+	btn->GetBtnText()->SetText("UPGRADE");
+	child_list.push_back(btn);
 
 	id = UI::UI_ID::ENHANCE_PANEL;
 	type = UI::UI_TYPE::PANEL;
@@ -61,13 +68,21 @@ void EnhancePanel::Update()
 	{
 		for (int j = 0; j < 6; j++)
 		{
-			if (i == select_idx / 6 && j == select_idx % 6)
+			if (i == selectIdx / 6 && j == selectIdx % 6)
 			{
-				selector->SetSkillID(skillIcon_list[i][j]->GetSkillID());
-				skillIcon_list[i][j]->GetFrame()->SetClipIdx(5);
+				selector->SetSkillID(skillIconList[i][j]->GetSkillID());
+				skillIconList[i][j]->GetFrame()->SetClipIdx(5);
+				if (skillIconList[i][j]->GetSkillID()==-1||!SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skillIconList[i][j]->GetSkillID())->GetEnhanceAble())
+				{
+					btn->SetState(UI::UI_STATE::IDLE);
+				}
+				else
+				{
+					btn->SetState(UI::UI_STATE::ACTIVE);
+				}
 			}
 			else
-				skillIcon_list[i][j]->GetFrame()->SetClipIdx(4);
+				skillIconList[i][j]->GetFrame()->SetClipIdx(4);
 		}
 	}
 
@@ -88,33 +103,33 @@ void EnhancePanel::Render()
 
 void EnhancePanel::PostRender()
 {
-	ImGui::Text("Type : %d, Idx : %d", select_idx/6, select_idx%6);
+	ImGui::Text("Type : %d, Idx : %d", selectIdx/6, selectIdx%6);
 }
 
 void EnhancePanel::SetActive(bool active)
 {
 	this->is_active = active;
-	select_idx = 0;
+	selectIdx = 0;
 	
 	// weapon
 	for (int i = 0; i < 6; i++)
 	{
 		if (i < SkillManager::Get()->weaponCnt)
 		{
-			int nowSkill_id = (int)(SkillManager::Get()->nowWeapon_list[i]->GetSkillID());
-			skillIcon_list[0][i]->SetSkillID(nowSkill_id);
-			if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkill_id)->GetEnhanceAble())
+			int nowSkillId = (int)(SkillManager::Get()->nowWeapon_list[i]->GetSkillID());
+			skillIconList[0][i]->SetSkillID(nowSkillId);
+			if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkillId)->GetEnhanceAble())
 			{
-				skillIcon_list[0][i]->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				skillIconList[0][i]->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 			else
 			{
-				skillIcon_list[0][i]->SetColor(Float4(0.8f, 0.8f, 0.8f, 0.3f));
+				skillIconList[0][i]->SetColor(Float4(0.8f, 0.8f, 0.8f, 0.3f));
 			}
 		}
 		else
 		{
-			skillIcon_list[0][i]->SetSkillID(-1);
+			skillIconList[0][i]->SetSkillID(-1);
 		}
 	}
 	// buff
@@ -123,19 +138,19 @@ void EnhancePanel::SetActive(bool active)
 		if (i < SkillManager::Get()->buffCnt)
 		{
 			int nowSkill_id = (int)(SkillManager::Get()->nowBuff_list[i]->GetSkillID());
-			skillIcon_list[1][i]->SetSkillID(nowSkill_id);
+			skillIconList[1][i]->SetSkillID(nowSkill_id);
 			if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkill_id)->GetEnhanceAble())
 			{
-				skillIcon_list[1][i]->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				skillIconList[1][i]->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 			else
 			{
-				skillIcon_list[1][i]->SetColor(Float4(0.8f, 0.8f, 0.8f, 0.3f));
+				skillIconList[1][i]->SetColor(Float4(0.8f, 0.8f, 0.8f, 0.3f));
 			}
 		}
 		else
 		{
-			skillIcon_list[1][i]->SetSkillID(-1);
+			skillIconList[1][i]->SetSkillID(-1);
 		}
 	}
 
@@ -152,35 +167,38 @@ void EnhancePanel::ChoseSkill()
 		// 선택 항목 이동 입력
 		if (KEY_CON->Down(VK_UP))
 		{
-			select_idx -= 6;
-			if (select_idx < 0)
-				select_idx += 12;
+			selectIdx -= 6;
+			if (selectIdx < 0)
+				selectIdx += 12;
 		}
 		else if (KEY_CON->Down(VK_DOWN))
 		{
-			select_idx += 6;
-			select_idx %= 12;
+			selectIdx += 6;
+			selectIdx %= 12;
 		}
 		else if (KEY_CON->Down(VK_LEFT))
 		{
-			select_idx -= 1;
-			if (select_idx < 0)
-				select_idx = 11;
+			selectIdx -= 1;
+			if (selectIdx < 0)
+				selectIdx = 11;
 		}
 		else if (KEY_CON->Down(VK_RIGHT))
 		{
-			select_idx += 1;
-			select_idx %= 12;
+			selectIdx += 1;
+			selectIdx %= 12;
 		}
 		// 현재 포커스 스킬 선택
 		else if (KEY_CON->Down(VK_RETURN)) // Enter로 결정
 		{
-			int now_skillId = skillIcon_list[select_idx/6][select_idx%6]->GetSkillID();
-			if (now_skillId != -1)
+			int nowSkillId = skillIconList[selectIdx/6][selectIdx%6]->GetSkillID();
+			if (nowSkillId != -1)
 			{
-				Skill* nowSkill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)now_skillId);
+				Skill* nowSkill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkillId);
 				if (nowSkill->GetEnhanceAble())
+				{
 					selected = true;
+					btn->SetState(UI::UI_STATE::ACTIVE);
+				}
 			}
 		}
 		else if (KEY_CON->Down(VK_ESCAPE) || KEY_CON->Down(VK_BACK))
@@ -196,20 +214,10 @@ void EnhancePanel::ChoseSkill()
 	// 선택 확정 or 취소 입력
 	else
 	{
-		if (KEY_CON->Down(VK_LEFT))
-		{
-			final_idx -= 1;
-			if (final_idx < 0)final_idx = 1;
-		}
-		else if (KEY_CON->Down(VK_RIGHT))
-		{
-			final_idx += 1;
-			final_idx %= 2;
-		}
 		// 모루 사용
-		else if (KEY_CON->Down(VK_RETURN))
+		if (KEY_CON->Down(VK_RETURN))
 		{
-			Skill* nowSkill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skillIcon_list[select_idx/6][select_idx%6]->GetSkillID());
+			Skill* nowSkill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skillIconList[selectIdx/6][selectIdx%6]->GetSkillID());
 			if (nowSkill->GetLevelUpAble())
 			{
 				nowSkill->LevelUp();

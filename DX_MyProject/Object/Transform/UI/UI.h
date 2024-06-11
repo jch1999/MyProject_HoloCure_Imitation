@@ -10,6 +10,7 @@ public:
 		LABEL,
 		IMAGE,
 		ICON,
+		BUTTON,
 		FRAME,
 		PANEL,
 		HP_BAR,
@@ -51,6 +52,8 @@ public:
 		BUFF_ICON_BACK,
 		COUNTER_ICON,
 		STAT_ICON,
+		// Button
+		BUTTON,
 		// Arrow
 		ATK_ARROW,
 		ATK_ARROW_FIXED,
@@ -95,11 +98,17 @@ public:
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	virtual void PostRender() = 0;
+
 	void SetTarget(Transform* target) { this->target = target; }
+	const Transform* GetTarget() { return target; }
 	void SetSize(Vector2 size) { this->ui_size = size; }
+	const Vector2& GetSize() { return ui_size; }
 	void SetScale(Vector2 scale) { this->ui_scale = scale; }
+	const Vector2& GetScale() { return ui_scale; }
 	void SetAddtionalScale(Vector2 scale) { this->additional_scale = scale; }
+	const Vector2& GetAdditionalScale() { return additional_scale; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }
+	const Vector2& GetOffset() { return offset; }
 	virtual void SetState(UI::UI_STATE state) = 0;
 	virtual void SetID(UI::UI_ID id) = 0;
 	virtual void SetActive(bool active) { is_active = active; }

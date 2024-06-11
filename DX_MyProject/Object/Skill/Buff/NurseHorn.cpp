@@ -43,19 +43,19 @@ bool NurseHorn::LevelUp()
 		SkillManager::Get()->nowBuff_list[SkillManager::Get()->buffCnt++] = this;
 		SkillManager::Get()->nurseHron_active = true;
 		healAmount = 2.0f;
-		hpRate = 15.0f;
+		hpRate = 0.2f;
 	}
 	break;
 	case 2:
 	{
 		healAmount = 4.0f;
-		hpRate = 25.0f;
+		hpRate = 0.25f;
 	}
 		break;
 	case 3:
 	{
 		healAmount = 6.0f;
-		hpRate = 30.0f;
+		hpRate = 0.3f;
 	}
 		break;
 	default:

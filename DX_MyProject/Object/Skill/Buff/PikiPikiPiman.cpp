@@ -25,7 +25,7 @@ void PikiPikiPiman::Update()
 	if (now_level >= 1)
 	{
 		SkillManager::Get()->add_MainWeapon_dmgRate -= now_addRate;
-		now_addRate = (player->GetMaxHP() / per_rate);
+		now_addRate = (player->GetMaxHP() / per_rate) / 100.0f;
 		SkillManager::Get()->add_MainWeapon_dmgRate += now_addRate;
 	}
 }
@@ -57,7 +57,7 @@ bool PikiPikiPiman::LevelUp()
 		player->SetMaxHP(player->GetMaxHP() + 5.0f);
 		SkillManager::Get()->add_MainWeapon_dmgRate -= now_addRate;
 		per_rate = 5.0f;
-		now_addRate = (player->GetMaxHP() / per_rate);
+		now_addRate = (player->GetMaxHP() / per_rate) / 100.0f;
 		SkillManager::Get()->add_MainWeapon_dmgRate += now_addRate;
 	}
 		break;
@@ -66,7 +66,7 @@ bool PikiPikiPiman::LevelUp()
 		player->SetMaxHP(player->GetMaxHP() + 5.0f);
 		SkillManager::Get()->add_MainWeapon_dmgRate -= now_addRate;
 		per_rate = 4.0f;
-		now_addRate = (player->GetMaxHP() / per_rate);
+		now_addRate = (player->GetMaxHP() / per_rate) / 100.0f;
 		SkillManager::Get()->add_MainWeapon_dmgRate += now_addRate;
 	}
 		break;

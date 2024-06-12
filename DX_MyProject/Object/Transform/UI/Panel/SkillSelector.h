@@ -7,7 +7,7 @@ protected:
 	SkillIcon* skill_icon;
 	//vector<Text*> text_vec;
 	TextPrinter* skillName_text;
-	TextPrinter* SkillScript_text;
+	TextPrinter* skillScript_text;
 	int line_length;
 	Vector2 char_interval;
 	Vector2 char_pos;
@@ -32,9 +32,9 @@ public:
 	int GetSkillID() { return skill_id; }
 	const SkillIcon* GetIcon() { return skill_icon; }
 	const TextPrinter* GetNameText() { return skillName_text; }
-	const TextPrinter* GetScriptText() { return SkillScript_text; }
+	const TextPrinter* GetScriptText() { return skillScript_text; }
 	void SetIconOffset(Vector2 offset) { return skill_icon->SetOffset(offset); }
 	void SetNameTOffset(Vector2 offset) { return skillName_text->SetOffset(offset); }
-	void SetScriptTOffset(Vector2 offset) { return SkillScript_text->SetOffset(offset); }
+	void SetScriptTOffset(Vector2 offset) { return skillScript_text->SetOffset(offset); }
 	void SetText();
 };

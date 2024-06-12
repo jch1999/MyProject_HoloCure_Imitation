@@ -34,15 +34,15 @@ SkillSelector::SkillSelector()
 	skillName_text->SetLineLength(line_length);
 	skillName_text->SetCharScale(Vector2(0.3f, 0.3f));
 
-	SkillScript_text = new TextPrinter();
-	SkillScript_text->SetTarget(this);
-	SkillScript_text->SetOffset(script_offset);
-	SkillScript_text->SetCharInterval(char_interval);
-	SkillScript_text->SetLineLength(line_length);
-	SkillScript_text->SetCharScale(Vector2(0.3f, 0.3f));
+	skillScript_text = new TextPrinter();
+	skillScript_text->SetTarget(this);
+	skillScript_text->SetOffset(script_offset);
+	skillScript_text->SetCharInterval(char_interval);
+	skillScript_text->SetLineLength(line_length);
+	skillScript_text->SetCharScale(Vector2(0.3f, 0.3f));
 
 	child_list.push_back(skillName_text);
-	child_list.push_back(SkillScript_text);
+	child_list.push_back(skillScript_text);
 
 	id = UI::UI_ID::SELECTOR;
 	type = UI::UI_TYPE::SELECTOR;
@@ -122,17 +122,25 @@ void SkillSelector::SetText()
 		{
 			string name = skill->GetSkillName() + " LV "+ to_string(skill->GetLevel() + 1);
 			string scripts = skill->GetScript();
+			if (scripts.length() > 120)
+			{
+				skillScript_text->SetTextInfo(Vector2(0.25f, 0.25f), char_interval * 0.7f, 60);
+			}
+			else
+			{
+				skillScript_text->SetTextInfo(Vector2(0.3f, 0.3f), char_interval, 40);
+			}
 			skillName_text->SetText(name);
-			SkillScript_text->SetText(scripts);
+			skillScript_text->SetText(scripts);
 			skillName_text->SetActive(true);
-			SkillScript_text->SetActive(true);
+			skillScript_text->SetActive(true);
 		}
 		else
 		{
 			string name = skill->GetSkillName() + " LV MAX";
 			skillName_text->SetText(name);
 			skillName_text->SetActive(true);
-			SkillScript_text->SetActive(false);
+			skillScript_text->SetActive(false);
 		}
 		skill_icon->SetActive(true);
 	}
@@ -140,6 +148,6 @@ void SkillSelector::SetText()
 	{
 		skill_icon->SetActive(false);
 		skillName_text->SetActive(false);
-		SkillScript_text->SetActive(false);
+		skillScript_text->SetActive(false);
 	}
 }

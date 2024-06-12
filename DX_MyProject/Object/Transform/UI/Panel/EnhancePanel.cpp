@@ -43,6 +43,7 @@ EnhancePanel::EnhancePanel()
 	btn->SetScale(Vector2(1.5f, 1.5f));
 	btn->SetState(UI::UI_STATE::IDLE);
 	btn->GetBtnText()->SetText("UPGRADE");
+	btn->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
 	child_list.push_back(btn);
 
 	id = UI::UI_ID::ENHANCE_PANEL;
@@ -155,6 +156,12 @@ void EnhancePanel::SetActive(bool active)
 	}
 
 	selector->SetClipIdx(1);
+	
+	btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
+	btn->SetScale(Vector2(1.5f, 1.5f));
+	btn->SetState(UI::UI_STATE::IDLE);
+	btn->GetBtnText()->SetText("UPGRADE");
+	btn->GetBtnText()->SetOffset(Vector2(-35.0f,0.0f));
 
 	for (auto c : child_list)
 		c->SetActive(active);
@@ -197,7 +204,15 @@ void EnhancePanel::ChoseSkill()
 				if (nowSkill->GetEnhanceAble())
 				{
 					selected = true;
-					btn->SetState(UI::UI_STATE::ACTIVE);
+					btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.6f));
+					btn->SetScale(Vector2(1.5f, 1.5f) * Vector2(2.0f, 1.0f));
+					string str = "Cost :      " + to_string(nowSkill->GetEnhanceCost());
+					
+					for (int i = str.length(); i < 19; i++)
+						str += " ";
+					str += "UPGRADE";
+					btn->GetBtnText()->SetText(str);
+					btn->GetBtnText()->AddOffset(Vector2(-90.0f, 0.0f));
 				}
 			}
 		}
@@ -238,6 +253,11 @@ void EnhancePanel::ChoseSkill()
 		else if (KEY_CON->Down(VK_ESCAPE) || KEY_CON->Down(VK_BACK))
 		{
 			selected = false;
+
+			btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
+			btn->SetScale(Vector2(1.5f, 1.5f));
+			btn->GetBtnText()->SetText("UPGRADE");
+			btn->GetBtnText()->AddOffset(Vector2(90.0f, 0.0f));
 		}
 	}
 }

@@ -57,6 +57,8 @@ protected:
 	int max_level;
 	int now_level;
 
+	int enhance_level;
+
 	// 스킬 대기 시간
 	vector<float> skillDelay_table;
 	float now_skill_delay;
@@ -86,10 +88,13 @@ public:
 	virtual bool LevelUp() = 0;
 	virtual bool LevelDown() = 0;
 	bool GetLevelUpAble() { return now_level < max_level; }
+	int GetLevel() { return now_level; }
 	// Enhance
 	virtual bool GetEnhanceAble() = 0;
 	virtual void Enhance() = 0;
-	int GetLevel() { return now_level; }
+	int GetEnhanceLevel() { return enhance_level; }
+	int GetEnhanceCost();
+
 	string GetScript() { return level_scripts[now_level]; }
 	string GetSkillName() { return skill_name; }
 };

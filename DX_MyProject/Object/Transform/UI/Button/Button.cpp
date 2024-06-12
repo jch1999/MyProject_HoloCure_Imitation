@@ -17,8 +17,9 @@ Button::Button()
 
 	btnText = new TextPrinter();
 	btnText->SetTarget(this);
-	btnText->SetOffset(this->ui_size/2.0f);
+	btnText->SetOffset(this->ui_size / 2.0f * this->ui_scale);
 	btnText->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(10.0f, 20.0f));
+	btnText->SetActive(true);
 	child_list.push_back(btnText);
 
 	id = UI::UI_ID::BUTTON;

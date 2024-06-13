@@ -8,3 +8,12 @@ Buff::Buff(SKILL_ID id, int maxLevel)
 Buff::~Buff()
 {
 }
+
+// Buff는 레벨 업 이상 강화 불가
+void Buff::Enhance()
+{
+	if (GetEnhanceAble())
+	{
+		LevelUp();
+	}
+}

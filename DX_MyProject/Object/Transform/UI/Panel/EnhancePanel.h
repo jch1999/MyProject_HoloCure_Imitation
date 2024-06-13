@@ -10,8 +10,10 @@ protected:
 	vector<vector<SkillIcon*>> skillIconList;
 
 	Anvil* usedAnvil;
-	// 레벨업 보상 선택지를 띄울 창 -- 각 선택지 칸의 보관과 출력은 이 창이 하도록 구현할 예정
+	// 선택된 스킬의 정보를 출력할 셀렉터
 	SkillSelector* selector;
+	// 강화 가능할 때는 확률을, 불가능할 때는 불가능한 이유(코인 부족) 출력
+	TextPrinter* enhanceRateText; 
 	Button* btn;
 
 	// 선택지 번호

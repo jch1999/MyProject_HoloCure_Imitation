@@ -12,6 +12,21 @@ Weapon::~Weapon()
 
 void Weapon::Enhance()
 {
-	enhanceLevel++;
-	// 강화 데미지 상승 매커니즘(스킬 관련한 것도 포함해서 추후 작성)
+	if (GetLevelUpAble())
+	{
+		LevelUp();
+	}
+	else if (GetEnhanceAble())
+	{
+		float rand = Random::Get()->GetRandomFloat(0.0f, 1.0f);
+		if (rand <= enhance_rate)
+		{
+			enhance_rate -= 0.1f;
+			if (enhance_rate < 0.1f)
+				enhance_rate = 0.1f;
+			ItemSpawner::Get()->nowCoinValue -= enhance_level * 50.0f;
+			enhanceLevel++;
+			enhanceDamage += ItemSpawner::Get()->enhanceDmg;
+		}
+	}
 }

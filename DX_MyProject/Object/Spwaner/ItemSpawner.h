@@ -25,8 +25,10 @@ public:
 	// Coin 생성 확률
 	float coinDefault;
 	float coinRate;
+	// 획득 가능한 코인량
 	float coinValueDefault;
 	float coinValue;
+	// 현재 획득한 코인 량
 	int nowCoinValue;
 	bool isCoinAutoPick;
 

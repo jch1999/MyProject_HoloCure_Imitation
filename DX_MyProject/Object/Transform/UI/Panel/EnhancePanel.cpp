@@ -37,6 +37,13 @@ EnhancePanel::EnhancePanel()
 	selector->SetScriptTOffset(Vector2(-210.0f, -10.0f));
 	child_list.push_back(selector);
 
+	enhanceRateText = new TextPrinter();
+	enhanceRateText->SetTarget(this);
+	enhanceRateText->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
+	enhanceRateText->SetState(UI::UI_STATE::IDLE);
+	enhanceRateText->SetActive(false);
+	child_list.push_back(enhanceRateText);
+
 	btn = new Button();
 	btn->SetTarget(this);
 	btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
@@ -165,6 +172,8 @@ void EnhancePanel::SetActive(bool active)
 
 	for (auto c : child_list)
 		c->SetActive(active);
+
+	enhanceRateText->SetActive(false);
 }
 
 void EnhancePanel::ChoseSkill()
@@ -213,6 +222,16 @@ void EnhancePanel::ChoseSkill()
 					str += "UPGRADE";
 					btn->GetBtnText()->SetText(str);
 					btn->GetBtnText()->AddOffset(Vector2(-90.0f, 0.0f));
+
+					enhanceRateText->SetActive(true);
+					if (nowSkill->GetEnhanceCost() < ItemSpawner::Get()->nowCoinValue)
+					{
+						enhanceRateText->SetText("Success Rate : " + to_string(nowSkill->GetEnhanceRate()));
+					}
+					else
+					{
+						enhanceRateText->SetText("Not Enought HoloCoin!");
+					}
 				}
 			}
 		}
@@ -233,21 +252,17 @@ void EnhancePanel::ChoseSkill()
 		if (KEY_CON->Down(VK_RETURN))
 		{
 			Skill* nowSkill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skillIconList[selectIdx/6][selectIdx%6]->GetSkillID());
-			if (nowSkill->GetLevelUpAble())
+			if (nowSkill->GetEnhanceAble()
+				&&ItemSpawner::Get()->nowCoinValue>nowSkill->GetEnhanceCost())
 			{
-				nowSkill->LevelUp();
+				selected = false;
+				usedAnvil->SetState(Item::ITEM_STATE::USED);
+				usedAnvil = nullptr;
+				isPause = false;
+				UIManager::Get()->nowPanel = nullptr;
+				UIManager::Get()->isEnhance = false;
+				SetActive(false);
 			}
-			else
-			{
-				nowSkill->Enhance();
-			}
-			selected = false;
-			usedAnvil->SetState(Item::ITEM_STATE::USED);
-			usedAnvil = nullptr;
-			isPause = false;
-			UIManager::Get()->nowPanel = nullptr;
-			UIManager::Get()->isEnhance = false;
-			SetActive(false);
 		}
 		// 스킬 재 선택
 		else if (KEY_CON->Down(VK_ESCAPE) || KEY_CON->Down(VK_BACK))

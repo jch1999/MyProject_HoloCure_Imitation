@@ -13,5 +13,5 @@ public:
 
 	virtual bool LevelUp() = 0;
 	virtual bool GetEnhanceAble() { return GetLevelUpAble(); }
-	virtual void Enhance() { LevelUp(); } // Buff는 레벨 업 이상 강화 불가
+	virtual void Enhance();
 };

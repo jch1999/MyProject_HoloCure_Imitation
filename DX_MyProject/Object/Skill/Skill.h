@@ -58,7 +58,7 @@ protected:
 	int now_level;
 
 	int enhance_level;
-
+	float enhance_rate;
 	// 스킬 대기 시간
 	vector<float> skillDelay_table;
 	float now_skill_delay;
@@ -94,6 +94,7 @@ public:
 	virtual void Enhance() = 0;
 	int GetEnhanceLevel() { return enhance_level; }
 	int GetEnhanceCost();
+	int GetEnhanceRate() { return round(enhance_rate); }
 
 	string GetScript() { return level_scripts[now_level]; }
 	string GetSkillName() { return skill_name; }

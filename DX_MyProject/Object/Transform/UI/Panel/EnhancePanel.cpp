@@ -39,8 +39,9 @@ EnhancePanel::EnhancePanel()
 
 	enhanceRateText = new TextPrinter();
 	enhanceRateText->SetTarget(this);
-	enhanceRateText->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
+	enhanceRateText->SetOffset(Vector2(WIN_CENTER_X * 0.2f, WIN_CENTER_Y * 0.5f));
 	enhanceRateText->SetState(UI::UI_STATE::IDLE);
+	enhanceRateText->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(10.0f, 20.0f));
 	enhanceRateText->SetActive(false);
 	child_list.push_back(enhanceRateText);
 
@@ -52,6 +53,16 @@ EnhancePanel::EnhancePanel()
 	btn->GetBtnText()->SetText("UPGRADE");
 	btn->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
 	child_list.push_back(btn);
+
+	coinIcon = new SkillIcon();
+	coinIcon->SetTarget(btn);
+	coinIcon->SetOffset(Vector2(-40.0f, -2.0f));
+	coinIcon->SetSkillID((int)Skill::SKILL_ID::COIN);
+	coinIcon->SetScale(Vector2(0.7f, 0.7f));
+	coinIcon->SetID(UI::UI_ID::SKILL_ICON);
+	coinIcon->SetState(UI::UI_STATE::IDLE);
+	coinIcon->SetActive(false);
+	child_list.push_back(coinIcon);
 
 	id = UI::UI_ID::ENHANCE_PANEL;
 	type = UI::UI_TYPE::PANEL;
@@ -174,6 +185,7 @@ void EnhancePanel::SetActive(bool active)
 		c->SetActive(active);
 
 	enhanceRateText->SetActive(false);
+	coinIcon->SetActive(false);
 }
 
 void EnhancePanel::ChoseSkill()
@@ -224,14 +236,15 @@ void EnhancePanel::ChoseSkill()
 					btn->GetBtnText()->AddOffset(Vector2(-90.0f, 0.0f));
 
 					enhanceRateText->SetActive(true);
-					if (nowSkill->GetEnhanceCost() < ItemSpawner::Get()->nowCoinValue)
+					if (round(nowSkill->GetEnhanceCost()) <= round(ItemSpawner::Get()->nowCoinValue))
 					{
-						enhanceRateText->SetText("Success Rate : " + to_string(nowSkill->GetEnhanceRate()));
+						enhanceRateText->SetText("Success Rate : " + to_string(nowSkill->GetEnhanceRate()) + "%");
 					}
 					else
 					{
 						enhanceRateText->SetText("Not Enought HoloCoin!");
 					}
+					coinIcon->SetActive(true);
 				}
 			}
 		}
@@ -253,8 +266,9 @@ void EnhancePanel::ChoseSkill()
 		{
 			Skill* nowSkill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skillIconList[selectIdx/6][selectIdx%6]->GetSkillID());
 			if (nowSkill->GetEnhanceAble()
-				&&ItemSpawner::Get()->nowCoinValue>nowSkill->GetEnhanceCost())
+				&&round(ItemSpawner::Get()->nowCoinValue)>=round(nowSkill->GetEnhanceCost()))
 			{
+				nowSkill->Enhance();
 				selected = false;
 				usedAnvil->SetState(Item::ITEM_STATE::USED);
 				usedAnvil = nullptr;
@@ -269,6 +283,8 @@ void EnhancePanel::ChoseSkill()
 		{
 			selected = false;
 
+			enhanceRateText->SetActive(false);
+			coinIcon->SetActive(false);
 			btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
 			btn->SetScale(Vector2(1.5f, 1.5f));
 			btn->GetBtnText()->SetText("UPGRADE");

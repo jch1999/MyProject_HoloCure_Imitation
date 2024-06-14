@@ -14,6 +14,7 @@ protected:
 	SkillSelector* selector;
 	// 강화 가능할 때는 확률을, 불가능할 때는 불가능한 이유(코인 부족) 출력
 	TextPrinter* enhanceRateText; 
+	SkillIcon* coinIcon;
 	Button* btn;
 
 	// 선택지 번호
@@ -33,5 +34,6 @@ public:
 
 	virtual void SetActive(bool active) override;
 	void SetAnvil(Anvil* anvil) { usedAnvil = anvil; }
+	Anvil* const GetAnvil() { return usedAnvil; }
 	void ChoseSkill();
 };

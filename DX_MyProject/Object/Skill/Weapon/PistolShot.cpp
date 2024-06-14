@@ -233,7 +233,7 @@ void PistolShot::PostRender()
 	if (now_level == 0)return;
 
 	ImGui::Text("watsonWeapon's skill level : %d", now_level);
-
+	ImGui::Text("now enhance level : %d  now enhance rate : %f", enhance_level, enhance_rate);
 	//for (Projectile *p : projectiles)
 	//	p->PostRender();
 }

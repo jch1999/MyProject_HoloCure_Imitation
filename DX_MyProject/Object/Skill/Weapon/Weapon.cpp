@@ -2,7 +2,7 @@
 
 Weapon::Weapon(SKILL_ID id, int maxLevel)
 	:Skill(id, SKILL_TYPE::WEAPON, maxLevel)
-	, enhanceLevel(0),enhanceDamage(0.0f)
+	, enhanceDamage(0.0f)
 {
 }
 
@@ -25,7 +25,7 @@ void Weapon::Enhance()
 			if (enhance_rate < 0.1f)
 				enhance_rate = 0.1f;
 			ItemSpawner::Get()->nowCoinValue -= enhance_level * 50.0f;
-			enhanceLevel++;
+			enhance_level++;
 			enhanceDamage += ItemSpawner::Get()->enhanceDmg;
 		}
 	}

@@ -54,6 +54,12 @@ void Anvil::Update()
 		}
 		break;
 	case Item::ITEM_STATE::ACTIVE:
+	{
+		if (UIManager::Get()->enhancePanel->GetAnvil() != this)
+		{
+			SetState(Item::ITEM_STATE::IDLE);
+		}
+	}
 		break;
 	case Item::ITEM_STATE::USED:
 		is_active = false;

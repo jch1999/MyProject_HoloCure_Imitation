@@ -259,6 +259,13 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::SUPER_CHATTO_TIME:
 		case (int)Skill::SKILL_ID::BLACKSMITH_GEAR:
 		case (int)Skill::SKILL_ID::NINJA_HEADBAND:
+		case (int)Skill::SKILL_ID::MAX_HP:
+		case (int)Skill::SKILL_ID::ATK:
+		case (int)Skill::SKILL_ID::SPD:
+		case (int)Skill::SKILL_ID::CRT:
+		case (int)Skill::SKILL_ID::PICK_UP:
+		case (int)Skill::SKILL_ID::COIN:
+		case (int)Skill::SKILL_ID::FOOD:
 		{
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
 			if (!SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevelUpAble())

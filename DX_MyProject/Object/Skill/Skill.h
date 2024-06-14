@@ -94,7 +94,7 @@ public:
 	virtual void Enhance() = 0;
 	int GetEnhanceLevel() { return enhance_level; }
 	int GetEnhanceCost();
-	int GetEnhanceRate() { return round(enhance_rate); }
+	int GetEnhanceRate() { return (int)round(enhance_rate * 100.0f); }
 
 	string GetScript() { return level_scripts[now_level]; }
 	string GetSkillName() { return skill_name; }

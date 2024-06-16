@@ -10,10 +10,12 @@ Buff::~Buff()
 }
 
 // Buff는 레벨 업 이상 강화 불가
-void Buff::Enhance()
+bool Buff::Enhance()
 {
 	if (GetEnhanceAble())
 	{
 		LevelUp();
+		return true;
 	}
+	return false;
 }

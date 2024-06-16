@@ -54,15 +54,22 @@ EnhancePanel::EnhancePanel()
 	btn->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
 	child_list.push_back(btn);
 
-	coinIcon = new SkillIcon();
-	coinIcon->SetTarget(btn);
-	coinIcon->SetOffset(Vector2(-40.0f, -2.0f));
-	coinIcon->SetSkillID((int)Skill::SKILL_ID::COIN);
-	coinIcon->SetScale(Vector2(0.7f, 0.7f));
-	coinIcon->SetID(UI::UI_ID::SKILL_ICON);
-	coinIcon->SetState(UI::UI_STATE::IDLE);
-	coinIcon->SetActive(false);
-	child_list.push_back(coinIcon);
+	coinImg = new ImageArea(new Frame(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
+		, 200.0f, 322.0f, 15.0f, 15.0f));
+	coinImg->SetTarget(btn);
+	coinImg->SetOffset(Vector2(-40.0f, -2.0f));
+	coinImg->SetScale(Vector2(0.7f, 0.7f));
+	coinImg->SetState(UI::UI_STATE::IDLE);
+	child_list.push_back(coinImg);
+
+	popUp=new ImageArea(new Frame(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
+		, 4.0f, 790.0f, 208.0f, 240.0f));
+	popUp->SetSize(Vector2(208.0f, 240.0f));
+	popUp->SetScale(Vector2(2.0f, 2.0f));
+	popUp->SetTarget(this);
+	popUp->SetOffset(Vector2(0.0f, 0.0f));
+	popUp->SetState(UI_STATE::IDLE);
+	child_list.push_back(popUp);
 
 	id = UI::UI_ID::ENHANCE_PANEL;
 	type = UI::UI_TYPE::PANEL;
@@ -81,30 +88,15 @@ void EnhancePanel::Update()
 {
 	if (!is_active)return;
 
-	ChoseSkill();
-
-	for (int i = 0; i < 2; i++)
+	if (!isEnhancing)
 	{
-		for (int j = 0; j < 6; j++)
-		{
-			if (i == selectIdx / 6 && j == selectIdx % 6)
-			{
-				selector->SetSkillID(skillIconList[i][j]->GetSkillID());
-				skillIconList[i][j]->GetFrame()->SetClipIdx(5);
-				if (skillIconList[i][j]->GetSkillID()==-1||!SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skillIconList[i][j]->GetSkillID())->GetEnhanceAble())
-				{
-					btn->SetState(UI::UI_STATE::IDLE);
-				}
-				else
-				{
-					btn->SetState(UI::UI_STATE::ACTIVE);
-				}
-			}
-			else
-				skillIconList[i][j]->GetFrame()->SetClipIdx(4);
-		}
+		ChoseSkill();
 	}
-
+	else
+	{
+		// Enhance animation 진행
+		PlayEnhancing();
+	}
 	pos = target->pos + offset;
 	WorldUpdate();
 
@@ -122,7 +114,6 @@ void EnhancePanel::Render()
 
 void EnhancePanel::PostRender()
 {
-	ImGui::Text("Type : %d, Idx : %d", selectIdx/6, selectIdx%6);
 }
 
 void EnhancePanel::SetActive(bool active)
@@ -130,62 +121,66 @@ void EnhancePanel::SetActive(bool active)
 	this->is_active = active;
 	selectIdx = 0;
 	
-	// weapon
-	for (int i = 0; i < 6; i++)
+	if (active == true)
 	{
-		if (i < SkillManager::Get()->weaponCnt)
+		// weapon
+		for (int i = 0; i < 6; i++)
 		{
-			int nowSkillId = (int)(SkillManager::Get()->nowWeapon_list[i]->GetSkillID());
-			skillIconList[0][i]->SetSkillID(nowSkillId);
-			if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkillId)->GetEnhanceAble())
+			if (i < SkillManager::Get()->weaponCnt)
 			{
-				skillIconList[0][i]->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				int nowSkillId = (int)(SkillManager::Get()->nowWeapon_list[i]->GetSkillID());
+				skillIconList[0][i]->SetSkillID(nowSkillId);
+				if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkillId)->GetEnhanceAble())
+				{
+					skillIconList[0][i]->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				}
+				else
+				{
+					skillIconList[0][i]->SetColor(Float4(0.8f, 0.8f, 0.8f, 0.3f));
+				}
 			}
 			else
 			{
-				skillIconList[0][i]->SetColor(Float4(0.8f, 0.8f, 0.8f, 0.3f));
+				skillIconList[0][i]->SetSkillID(-1);
 			}
 		}
-		else
+		// buff
+		for (int i = 0; i < 6; i++)
 		{
-			skillIconList[0][i]->SetSkillID(-1);
-		}
-	}
-	// buff
-	for (int i = 0; i < 6; i++)
-	{
-		if (i < SkillManager::Get()->buffCnt)
-		{
-			int nowSkill_id = (int)(SkillManager::Get()->nowBuff_list[i]->GetSkillID());
-			skillIconList[1][i]->SetSkillID(nowSkill_id);
-			if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkill_id)->GetEnhanceAble())
+			if (i < SkillManager::Get()->buffCnt)
 			{
-				skillIconList[1][i]->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				int nowSkill_id = (int)(SkillManager::Get()->nowBuff_list[i]->GetSkillID());
+				skillIconList[1][i]->SetSkillID(nowSkill_id);
+				if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkill_id)->GetEnhanceAble())
+				{
+					skillIconList[1][i]->SetColor(Float4(1.0f, 1.0f, 1.0f, 1.0f));
+				}
+				else
+				{
+					skillIconList[1][i]->SetColor(Float4(0.8f, 0.8f, 0.8f, 0.3f));
+				}
 			}
 			else
 			{
-				skillIconList[1][i]->SetColor(Float4(0.8f, 0.8f, 0.8f, 0.3f));
+				skillIconList[1][i]->SetSkillID(-1);
 			}
 		}
-		else
-		{
-			skillIconList[1][i]->SetSkillID(-1);
-		}
+
+		selector->SetClipIdx(1);
+
+		btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
+		btn->SetScale(Vector2(1.5f, 1.5f));
+		btn->SetState(UI::UI_STATE::IDLE);
+		btn->GetBtnText()->SetText("UPGRADE");
+		btn->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
+
+		for (auto c : child_list)
+			c->SetActive(active);
+
+		enhanceRateText->SetActive(false);
+		coinImg->SetState(UI_STATE::IDLE);
+		popUp->SetState(UI_STATE::IDLE);
 	}
-
-	selector->SetClipIdx(1);
-	
-	btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
-	btn->SetScale(Vector2(1.5f, 1.5f));
-	btn->SetState(UI::UI_STATE::IDLE);
-	btn->GetBtnText()->SetText("UPGRADE");
-	btn->GetBtnText()->SetOffset(Vector2(-35.0f,0.0f));
-
-	for (auto c : child_list)
-		c->SetActive(active);
-
-	enhanceRateText->SetActive(false);
-	coinIcon->SetActive(false);
 }
 
 void EnhancePanel::ChoseSkill()
@@ -244,7 +239,8 @@ void EnhancePanel::ChoseSkill()
 					{
 						enhanceRateText->SetText("Not Enought HoloCoin!");
 					}
-					coinIcon->SetActive(true);
+					//coinIcon->SetActive(true);
+					coinImg->SetState(UI_STATE::ACTIVE);
 				}
 			}
 		}
@@ -268,14 +264,23 @@ void EnhancePanel::ChoseSkill()
 			if (nowSkill->GetEnhanceAble()
 				&&round(ItemSpawner::Get()->nowCoinValue)>=round(nowSkill->GetEnhanceCost()))
 			{
-				nowSkill->Enhance();
-				selected = false;
-				usedAnvil->SetState(Item::ITEM_STATE::USED);
-				usedAnvil = nullptr;
-				isPause = false;
-				UIManager::Get()->nowPanel = nullptr;
-				UIManager::Get()->isEnhance = false;
-				SetActive(false);
+				if (nowSkill->GetLevelUpAble())
+				{
+					nowSkill->Enhance();
+					selected = false;
+					usedAnvil->SetState(Item::ITEM_STATE::USED);
+					usedAnvil = nullptr;
+					isPause = false;
+					UIManager::Get()->nowPanel = nullptr;
+					UIManager::Get()->isEnhance = false;
+					SetActive(false);
+				}
+				else
+				{
+					isEnhancing = true;
+					popUp->SetState(UI_STATE::ACTIVE);
+					enhanceRateText->SetActive(false);
+				}
 			}
 		}
 		// 스킬 재 선택
@@ -284,11 +289,37 @@ void EnhancePanel::ChoseSkill()
 			selected = false;
 
 			enhanceRateText->SetActive(false);
-			coinIcon->SetActive(false);
+			coinImg->SetState(UI_STATE::IDLE);
 			btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
 			btn->SetScale(Vector2(1.5f, 1.5f));
 			btn->GetBtnText()->SetText("UPGRADE");
 			btn->GetBtnText()->AddOffset(Vector2(90.0f, 0.0f));
 		}
 	}
+	
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			if (i == selectIdx / 6 && j == selectIdx % 6)
+			{
+				selector->SetSkillID(skillIconList[i][j]->GetSkillID());
+				skillIconList[i][j]->GetFrame()->SetClipIdx(5);
+				if (skillIconList[i][j]->GetSkillID() == -1 || !SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skillIconList[i][j]->GetSkillID())->GetEnhanceAble())
+				{
+					btn->SetState(UI::UI_STATE::IDLE);
+				}
+				else
+				{
+					btn->SetState(UI::UI_STATE::ACTIVE);
+				}
+			}
+			else
+				skillIconList[i][j]->GetFrame()->SetClipIdx(4);
+		}
+	}
+}
+
+void EnhancePanel::PlayEnhancing()
+{
 }

@@ -16,5 +16,5 @@ public:
 
 	// Skill을(를) 통해 상속됨
 	virtual bool GetEnhanceAble() override;
-	virtual void Enhance() override;
+	virtual bool Enhance() override;
 };

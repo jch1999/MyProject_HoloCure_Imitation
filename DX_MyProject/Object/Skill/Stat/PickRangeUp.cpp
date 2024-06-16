@@ -43,6 +43,7 @@ bool PickRangeUp::GetEnhanceAble()
 	return false;
 }
 
-void PickRangeUp::Enhance()
+bool PickRangeUp::Enhance()
 {
+	return false;
 }

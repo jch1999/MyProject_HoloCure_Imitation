@@ -38,8 +38,9 @@ bool CrtUp::GetEnhanceAble()
 	return false;
 }
 
-void CrtUp::Enhance()
+bool CrtUp::Enhance()
 {
+	return false;
 }
 
 bool CrtUp::LevelDown()

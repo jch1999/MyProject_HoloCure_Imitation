@@ -44,7 +44,7 @@ bool MaxHpUp::GetEnhanceAble()
 	return false;
 }
 
-void MaxHpUp::Enhance()
+bool MaxHpUp::Enhance()
 {
-	return;
+	return false;
 }

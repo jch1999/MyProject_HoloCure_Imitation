@@ -22,6 +22,8 @@ public:
 	}type;
 	enum class  UI_ID
 	{
+		//IMAGE
+		IMAGE,
 		// Text
 		TEXT,
 		LEVEL_TEXT,

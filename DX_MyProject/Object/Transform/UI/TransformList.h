@@ -1,6 +1,8 @@
 #pragma once
 #include "UI.h"
 #include "UIManager.h"
+#include "ImageArea.h"
+#include "Effect/LigthEffect.h"
 #include "Bar/HPBar.h"
 #include "Bar/ExpBar.h"
 #include "Text/LevelText.h"

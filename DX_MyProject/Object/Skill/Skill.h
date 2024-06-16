@@ -91,7 +91,7 @@ public:
 	int GetLevel() { return now_level; }
 	// Enhance
 	virtual bool GetEnhanceAble() = 0;
-	virtual void Enhance() = 0;
+	virtual bool Enhance() = 0;
 	int GetEnhanceLevel() { return enhance_level; }
 	int GetEnhanceCost();
 	int GetEnhanceRate() { return (int)round(enhance_rate * 100.0f); }

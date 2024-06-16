@@ -10,11 +10,12 @@ Weapon::~Weapon()
 {
 }
 
-void Weapon::Enhance()
+bool Weapon::Enhance()
 {
 	if (GetLevelUpAble())
 	{
 		LevelUp();
+		return true;
 	}
 	else if (GetEnhanceAble())
 	{
@@ -27,6 +28,8 @@ void Weapon::Enhance()
 			ItemSpawner::Get()->nowCoinValue -= enhance_level * 50.0f;
 			enhance_level++;
 			enhanceDamage += ItemSpawner::Get()->enhanceDmg;
+			return true;
 		}
 	}
+	return false;
 }

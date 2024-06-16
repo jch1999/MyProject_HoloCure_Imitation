@@ -42,7 +42,7 @@ bool CoinUp::GetEnhanceAble()
 	return false;
 }
 
-void CoinUp::Enhance()
+bool CoinUp::Enhance()
 {
-	return;
+	return false;
 }

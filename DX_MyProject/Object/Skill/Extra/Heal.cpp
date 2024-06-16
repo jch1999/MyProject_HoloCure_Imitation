@@ -39,7 +39,7 @@ bool Heal::GetEnhanceAble()
 	return false;
 }
 
-void Heal::Enhance()
+bool Heal::Enhance()
 {
-	return;
+	return false;
 }

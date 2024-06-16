@@ -14,6 +14,7 @@ protected:
 	SkillSelector* selector;
 	// 강화 가능할 때는 확률을, 불가능할 때는 불가능한 이유(코인 부족) 출력
 	TextPrinter* enhanceRateText; 
+	ImageArea* coinImg;
 	SkillIcon* coinIcon;
 	Button* btn;
 
@@ -21,6 +22,13 @@ protected:
 	// 스킬 선택지
 	int selectIdx;
 	bool selected;
+	bool isEnhancing;	// 강화 도중 - popUp창과 skill의 Icon, charge effect, 기타 anim 등 조작 여부
+	
+	ImageArea* popUp;
+	SkillIcon* icon;
+	bool isReturning;	// false이면 icon이 원점에서 멀어짐, true면 돌아옴
+	float moveRot;		// icon의 이동각도
+	float playTime;		// 애니메이션 재생 시간
 
 public:
 	EnhancePanel();
@@ -36,4 +44,5 @@ public:
 	void SetAnvil(Anvil* anvil) { usedAnvil = anvil; }
 	Anvil* const GetAnvil() { return usedAnvil; }
 	void ChoseSkill();
+	void PlayEnhancing();
 };

@@ -38,8 +38,9 @@ bool SpdUp::GetEnhanceAble()
 	return false;
 }
 
-void SpdUp::Enhance()
+bool SpdUp::Enhance()
 {
+	return false;
 }
 
 bool SpdUp::LevelDown()

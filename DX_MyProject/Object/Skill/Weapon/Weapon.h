@@ -26,5 +26,5 @@ public:
 
 	virtual bool LevelUp() = 0;
 	virtual bool GetEnhanceAble() { return true; }
-	virtual void Enhance();
+	virtual bool Enhance();
 };

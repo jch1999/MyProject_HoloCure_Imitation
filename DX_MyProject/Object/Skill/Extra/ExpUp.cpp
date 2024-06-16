@@ -39,7 +39,7 @@ bool ExpUp::GetEnhanceAble()
 	return false;
 }
 
-void ExpUp::Enhance()
+bool ExpUp::Enhance()
 {
-	return;
+	return false;
 }

@@ -43,7 +43,7 @@ bool AtkUp::GetEnhanceAble()
 	return false;
 }
 
-void AtkUp::Enhance()
+bool AtkUp::Enhance()
 {
-	return;
+	return false;
 }

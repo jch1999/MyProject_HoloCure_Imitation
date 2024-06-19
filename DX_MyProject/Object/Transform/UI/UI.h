@@ -19,6 +19,7 @@ public:
 		SELECTOR,
 		TIMER,
 		COUNTER,
+		EFFECT
 	}type;
 	enum class  UI_ID
 	{
@@ -70,6 +71,8 @@ public:
 		TIMER,
 		//Counter
 		COUNTER,
+		// Effect
+		CHARGE_EFFECT
 	}id;
 	enum class UI_STATE
 	{

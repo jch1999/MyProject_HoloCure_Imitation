@@ -87,6 +87,13 @@ EnhancePanel::EnhancePanel()
 	
 	iconOffset = popUp->GetSize() / 2.0f - icon->GetSize() / 2.0f;
 
+	effect = new ChargeEffect();
+	effect->SetTarget(popUp);
+	effect->SetOffset(Vector2(0.0f, 0.0f));
+	effect->SetActive(false);
+	effect->SetState(UI_STATE::IDLE);
+	child_list.push_back(effect);
+
 	id = UI::UI_ID::ENHANCE_PANEL;
 	type = UI::UI_TYPE::PANEL;
 	state = UI::UI_STATE::IDLE;
@@ -309,10 +316,12 @@ void EnhancePanel::ChoseSkill()
 					enhanceRateText->SetActive(false);
 					icon->SetActive(true);
 					icon->SetSkillID(skillIconList[selectIdx / 6][selectIdx % 6]->GetSkillID());
-					icon->pos = popUp->pos + Vector2();
+					icon->pos = popUp->pos;
 					popUp->SetState(UI_STATE::ACTIVE);
 					btn->SetActive(false);
 					selector->SetActive(false);
+					effect->SetActive(true);
+					effect->SetState(UI_STATE::ACTIVE);
 
 					playTime = 0.0f;
 					moveTime = 0.0f;
@@ -410,6 +419,8 @@ void EnhancePanel::PlayEnhancing()
 		usedAnvil->SetState(Item::ITEM_STATE::USED);
 		usedAnvil = nullptr;
 		enhance_state = ENHANCE_STATE::END;
+		effect->SetState(UI_STATE::IDLE);
+		effect->SetActive(false);
 		// btn ¿Á»∞º∫
 		// text End
 		

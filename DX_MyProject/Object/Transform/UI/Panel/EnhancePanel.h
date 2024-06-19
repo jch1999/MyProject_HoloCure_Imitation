@@ -34,6 +34,7 @@ protected:
 	ImageArea* popUp;
 	SkillIcon* icon;
 	TextPrinter* enhanceResultText;
+	ChargeEffect* effect;
 
 	Vector2 iconOffset;
 	float iconMoveSpd;

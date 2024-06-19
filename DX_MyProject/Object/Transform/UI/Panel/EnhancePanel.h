@@ -1,6 +1,13 @@
 #pragma once
 class EnhancePanel :public Panel
 {
+public:
+	enum class ENHANCE_STATE
+	{
+		START,
+		ENHANCING,
+		END
+	}enhance_state;
 protected:
 	// UPGRADE! 을 띄우는 텍스트
 	TextPrinter* upgradeText;
@@ -15,7 +22,7 @@ protected:
 	// 강화 가능할 때는 확률을, 불가능할 때는 불가능한 이유(코인 부족) 출력
 	TextPrinter* enhanceRateText; 
 	ImageArea* coinImg;
-	SkillIcon* coinIcon;
+	
 	Button* btn;
 
 	// 선택지 번호
@@ -26,10 +33,14 @@ protected:
 	
 	ImageArea* popUp;
 	SkillIcon* icon;
+	TextPrinter* enhanceResultText;
+
+	Vector2 iconOffset;
+	float iconMoveSpd;
 	bool isReturning;	// false이면 icon이 원점에서 멀어짐, true면 돌아옴
 	float moveRot;		// icon의 이동각도
-	float playTime;		// 애니메이션 재생 시간
-
+	float playTime, targetPlayTime;		// 애니메이션 재생 시간
+	float moveTime, targetMoveTime;		// 이동시간, 매 방향전환 마다 다시 0으로 초기화
 public:
 	EnhancePanel();
 	~EnhancePanel();
@@ -45,4 +56,5 @@ public:
 	Anvil* const GetAnvil() { return usedAnvil; }
 	void ChoseSkill();
 	void PlayEnhancing();
+	void EnhanceEnd();
 };

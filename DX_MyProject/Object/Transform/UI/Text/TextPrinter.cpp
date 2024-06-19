@@ -30,7 +30,8 @@ void TextPrinter::Update()
 {
 	if (!is_active)return;
 
-	pos = target->pos + offset;
+	if(target!=nullptr)
+		pos = target->pos + offset;
 	WorldUpdate();
 
 	for (auto c : child_list)

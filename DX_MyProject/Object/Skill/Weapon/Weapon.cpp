@@ -25,7 +25,10 @@ bool Weapon::Enhance()
 			enhance_rate -= 0.1f;
 			if (enhance_rate < 0.1f)
 				enhance_rate = 0.1f;
-			ItemSpawner::Get()->nowCoinValue -= enhance_level * 50.0f;
+			if (ItemSpawner::Get()->nowCoinValue - enhance_level * 50.0f < 0.0f)
+				ItemSpawner::Get()->nowCoinValue = 0.0f;
+			else
+				ItemSpawner::Get()->nowCoinValue -= enhance_level * 50.0f;
 			enhance_level++;
 			enhanceDamage += ItemSpawner::Get()->enhanceDmg;
 			return true;

@@ -2,6 +2,8 @@
 
 EnhancePanel::EnhancePanel()
 	: selectIdx(0)
+	,moveRot(0.0f),iconMoveSpd(300.0f)
+	,targetPlayTime(2.0f),targetMoveTime(0.1f)
 {
 	upgradeText = new TextPrinter();
 	upgradeText->SetTarget(this);
@@ -71,6 +73,20 @@ EnhancePanel::EnhancePanel()
 	popUp->SetState(UI_STATE::IDLE);
 	child_list.push_back(popUp);
 
+	icon = new SkillIcon();
+	icon->SetScale(Vector2(2.0f, 2.0f));
+	icon->SetID(UI_ID::SKILL_ICON);
+	icon->SetActive(false);
+	child_list.push_back(icon);
+
+	enhanceResultText = new TextPrinter();
+	enhanceResultText->SetActive(false);
+	enhanceResultText->SetTarget(popUp);
+	enhanceResultText->SetOffset(Vector2(-80.0f, -150.0f));
+	child_list.push_back(enhanceResultText);
+	
+	iconOffset = popUp->GetSize() / 2.0f - icon->GetSize() / 2.0f;
+
 	id = UI::UI_ID::ENHANCE_PANEL;
 	type = UI::UI_TYPE::PANEL;
 	state = UI::UI_STATE::IDLE;
@@ -88,15 +104,22 @@ void EnhancePanel::Update()
 {
 	if (!is_active)return;
 
-	if (!isEnhancing)
+	switch (enhance_state)
 	{
+	case EnhancePanel::ENHANCE_STATE::START:
 		ChoseSkill();
-	}
-	else
-	{
-		// Enhance animation 진행
+		break;
+	case EnhancePanel::ENHANCE_STATE::ENHANCING:
 		PlayEnhancing();
+		break;
+	case EnhancePanel::ENHANCE_STATE::END:
+		EnhanceEnd();
+		break;
+	default:
+		break;
 	}
+	
+
 	pos = target->pos + offset;
 	WorldUpdate();
 
@@ -177,9 +200,14 @@ void EnhancePanel::SetActive(bool active)
 		for (auto c : child_list)
 			c->SetActive(active);
 
+		// popUp 관련
 		enhanceRateText->SetActive(false);
+		enhanceResultText->SetActive(false);
+		icon->SetActive(false);
+
 		coinImg->SetState(UI_STATE::IDLE);
 		popUp->SetState(UI_STATE::IDLE);
+		enhance_state = ENHANCE_STATE::START;
 	}
 }
 
@@ -278,8 +306,19 @@ void EnhancePanel::ChoseSkill()
 				else
 				{
 					isEnhancing = true;
-					popUp->SetState(UI_STATE::ACTIVE);
 					enhanceRateText->SetActive(false);
+					icon->SetActive(true);
+					icon->SetSkillID(skillIconList[selectIdx / 6][selectIdx % 6]->GetSkillID());
+					icon->pos = popUp->pos + Vector2();
+					popUp->SetState(UI_STATE::ACTIVE);
+					btn->SetActive(false);
+					selector->SetActive(false);
+
+					playTime = 0.0f;
+					moveTime = 0.0f;
+					moveRot = 0.0f;
+					isReturning = false;
+					enhance_state = ENHANCE_STATE::ENHANCING;
 				}
 			}
 		}
@@ -322,4 +361,71 @@ void EnhancePanel::ChoseSkill()
 
 void EnhancePanel::PlayEnhancing()
 {
+	playTime += DELTA;
+	moveTime += DELTA;
+	if (playTime < targetPlayTime)
+	{
+		if (moveTime >= targetMoveTime)
+		{
+			if (isReturning)
+			{
+				isReturning = false;
+				moveRot += 30.0f;
+				icon->pos = popUp->pos + iconOffset;;
+			}
+			else
+				isReturning = true;
+			moveTime -= 0.1f;
+		}
+		else
+		{
+			if (isReturning)
+			{
+				icon->pos = icon->pos - Vector2(cosf(moveRot), sinf(moveRot)) * iconMoveSpd * DELTA;
+
+			}
+			else
+			{
+				icon->pos = icon->pos + Vector2(cosf(moveRot), sinf(moveRot)) * iconMoveSpd * DELTA;
+			}
+		}
+	}
+	else
+	{
+		bool succed = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)icon->GetSkillID())->Enhance(); 
+		icon->pos = popUp->pos + iconOffset;
+		enhanceResultText->SetActive(true);
+		enhanceResultText->SetTextInfo(Vector2(1.0f, 1.0f), Vector2(30.0f, 12.0f));
+		if (succed)
+		{
+			enhanceResultText->SetOffset(Vector2(-85.0f, -150.0f));
+			enhanceResultText->SetText("SUCCESS");
+		}
+		else
+		{
+			enhanceResultText->SetOffset(Vector2(-65.0f, -150.0f));
+			enhanceResultText->SetText("FAILED");
+		}
+		selected = false;
+		usedAnvil->SetState(Item::ITEM_STATE::USED);
+		usedAnvil = nullptr;
+		enhance_state = ENHANCE_STATE::END;
+		// btn 재활성
+		// text End
+		
+		// Selector 재활성
+		// skill name + enhance level
+		// skill script = enhace damage difference
+	}
+}
+
+void EnhancePanel::EnhanceEnd()
+{
+	if (KEY_CON->Down(VK_RETURN))
+	{
+		isPause = false;
+		UIManager::Get()->nowPanel = nullptr;
+		UIManager::Get()->isEnhance = false;
+		SetActive(false);
+	}
 }

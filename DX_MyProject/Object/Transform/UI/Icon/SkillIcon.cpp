@@ -179,7 +179,10 @@ void SkillIcon::Update()
 		scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale * additional_scale;
 		clips[clip_idx]->Update();
 	}
-	pos = target->pos + offset;
+
+	if(target!=nullptr)
+		pos = target->pos + offset;
+	
 	WorldUpdate();
 
 	if (id != UI_ID::PLAYER_ICON)

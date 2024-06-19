@@ -15,7 +15,8 @@ ImageArea::ImageArea(Frame* f)
 
 ImageArea::~ImageArea()
 {
-	delete frame;
+	if(frame!=nullptr)
+		delete frame;
 }
 
 void ImageArea::Update()
@@ -24,7 +25,9 @@ void ImageArea::Update()
 
 	scale = frame->GetFrameSize() * ui_size / frame->GetFrameOriginSize() * ui_scale;
 
-	pos = target->pos + offset;
+	if(target!=nullptr)
+		pos = target->pos + offset;
+	
 	WorldUpdate();
 }
 

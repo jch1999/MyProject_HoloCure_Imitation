@@ -85,12 +85,13 @@ EnhancePanel::EnhancePanel()
 	enhanceResultText->SetOffset(Vector2(-80.0f, -150.0f));
 	child_list.push_back(enhanceResultText);
 	
-	iconOffset = popUp->GetSize() / 2.0f - icon->GetSize() / 2.0f;
+	iconOffset = Vector2(0.0f, 0.0f);
 
 	effect = new ChargeEffect();
 	effect->SetTarget(popUp);
 	effect->SetOffset(Vector2(0.0f, 0.0f));
 	effect->SetActive(false);
+	effect->SetScale(Vector2(2.0f, 2.0f));
 	effect->SetState(UI_STATE::IDLE);
 	child_list.push_back(effect);
 
@@ -380,7 +381,7 @@ void EnhancePanel::PlayEnhancing()
 			{
 				isReturning = false;
 				moveRot += 30.0f;
-				icon->pos = popUp->pos + iconOffset;;
+				icon->pos = popUp->pos + iconOffset;
 			}
 			else
 				isReturning = true;

@@ -12,7 +12,7 @@ ChargeEffect::ChargeEffect()
 			frames.push_back(new Frame(file, 4.0f + 130.0f * j, 1058.0f + 130.0f * i, 128.0f, 128.0f));
 		}
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 15.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 0.5f / 15.0f));
 	frames.clear();
 
 	type = UI_TYPE::EFFECT;

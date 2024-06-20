@@ -264,7 +264,13 @@ Text::Text()
 	frames.push_back(new Frame(file, 123.0f, 287.0f, 14.0f, 46.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
 	frames.clear();
-
+	// '<', '>' // 69 70
+	frames.push_back(new Frame(file, 330.0f, 287.0f, 29.0f, 46.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
+	frames.push_back(new Frame(file, 358.0f, 287.0f, 29.0f, 46.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
+	frames.clear();
 
 	id = UI_ID::LEVEL_TEXT;
 	type = UI_TYPE::TEXT;
@@ -380,6 +386,12 @@ void Text::SetText(char c)
 		break;
 	case '!':
 		clip_idx = 68;
+		break;
+	case '<':
+		clip_idx = 69;
+		break;
+	case '>':
+		clip_idx = 70;
 		break;
 	default:
 		break;
@@ -579,6 +591,12 @@ void Text::SetSize(char c)
 		break;
 	case '!':
 		ui_size = Vector2(13.0f, 46.0f);
+		break;
+	case '<':
+		ui_size = Vector2(29.0f, 46.0f);
+		break;
+	case '>':
+		ui_size = Vector2(29.0f, 46.0f);
 		break;
 	default:
 		break;

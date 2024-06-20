@@ -14,7 +14,6 @@ protected:
 	vector<float> maxDamage_table;
 	vector<int> colliderIdx_table;
 	
-	float enhanceDamage;
 
 public:
 	Weapon(SKILL_ID id,int maxLevel=7);

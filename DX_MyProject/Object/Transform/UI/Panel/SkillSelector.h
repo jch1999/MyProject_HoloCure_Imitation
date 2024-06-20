@@ -37,4 +37,5 @@ public:
 	void SetNameTOffset(Vector2 offset) { return skillName_text->SetOffset(offset); }
 	void SetScriptTOffset(Vector2 offset) { return skillScript_text->SetOffset(offset); }
 	void SetText();
+	void SetText(string& nameStr, string& scriptStr);
 };

@@ -67,9 +67,9 @@ EnhancePanel::EnhancePanel()
 	popUp=new ImageArea(new Frame(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
 		, 4.0f, 790.0f, 208.0f, 240.0f));
 	popUp->SetSize(Vector2(208.0f, 240.0f));
-	popUp->SetScale(Vector2(2.0f, 2.0f));
+	popUp->SetScale(Vector2(1.7f, 1.7f));
 	popUp->SetTarget(this);
-	popUp->SetOffset(Vector2(0.0f, 0.0f));
+	popUp->SetOffset(Vector2(0.0f, -WIN_CENTER_Y * 0.2f));
 	popUp->SetState(UI_STATE::IDLE);
 	child_list.push_back(popUp);
 
@@ -198,7 +198,10 @@ void EnhancePanel::SetActive(bool active)
 		}
 
 		selector->SetClipIdx(1);
+		selector->SetTarget(this);
+		selector->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.25f));
 
+		btn->SetTarget(this);
 		btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
 		btn->SetScale(Vector2(1.5f, 1.5f));
 		btn->SetState(UI::UI_STATE::IDLE);
@@ -320,6 +323,7 @@ void EnhancePanel::ChoseSkill()
 					icon->pos = popUp->pos;
 					popUp->SetState(UI_STATE::ACTIVE);
 					btn->SetActive(false);
+					coinImg->SetState(UI_STATE::IDLE);
 					selector->SetActive(false);
 					effect->SetActive(true);
 					effect->SetState(UI_STATE::ACTIVE);
@@ -424,10 +428,28 @@ void EnhancePanel::PlayEnhancing()
 		effect->SetActive(false);
 		// btn 재활성
 		// text End
-		
+		btn->SetActive(true);
+		btn->SetTarget(popUp);
+		btn->SetScale(Vector2(1.5f, 1.5f));
+		btn->SetOffset(Vector2(0.0f, WIN_CENTER_Y * 1.0f));
+		btn->SetState(UI_STATE::ACTIVE);
+		btn->GetBtnText()->SetText("CONFRIM");
+		btn->GetBtnText()->AddOffset(Vector2(90.0f, 0.0f));
 		// Selector 재활성
 		// skill name + enhance level
 		// skill script = enhace damage difference
+		selector->SetActive(true);
+		selector->SetTarget(popUp);
+		selector->SetOffset(Vector2(0.0f, WIN_CENTER_Y * 0.75f));
+		selector->SetSkillID(icon->GetSkillID());
+		Skill* skill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)icon->GetSkillID());
+		string name = skill->GetSkillName() + " +" + to_string(skill->GetEnhanceLevel());
+		// 데미지 소수점 출력 자릿수를 2자리까지로 제한
+		string beforeDmg = to_string(skill->GetEnhanceDamge() - ItemSpawner::Get()->enhanceDmg);
+		string nowDmg = to_string(skill->GetEnhanceDamge());
+		string script = "Enhance Damage: " + beforeDmg.substr(0, beforeDmg.find('.') + 2 + 1) + "  >>  "
+			+ nowDmg.substr(0, nowDmg.find('.') + 2 + 1);
+		selector->SetText(name, script);
 	}
 }
 

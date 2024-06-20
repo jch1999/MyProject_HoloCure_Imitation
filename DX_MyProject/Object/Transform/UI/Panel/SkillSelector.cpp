@@ -151,3 +151,11 @@ void SkillSelector::SetText()
 		skillScript_text->SetActive(false);
 	}
 }
+
+void SkillSelector::SetText(string& nameStr, string& scriptStr)
+{
+	skillName_text->SetText(nameStr);
+	skillScript_text->SetText(scriptStr);
+	skillName_text->SetActive(true);
+	skillScript_text->SetActive(true);
+}

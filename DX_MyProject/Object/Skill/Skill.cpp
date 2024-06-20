@@ -5,6 +5,7 @@ Skill::Skill(SKILL_ID id, SKILL_TYPE type,int maxLevel)
 	,max_level(maxLevel),now_level(0)
 	,enhance_level(0)
 	,enhance_rate(1.0f)
+	,enhanceDamage(0.0f)
 {
 }
 

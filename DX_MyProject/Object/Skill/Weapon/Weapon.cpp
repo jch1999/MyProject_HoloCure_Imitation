@@ -2,7 +2,6 @@
 
 Weapon::Weapon(SKILL_ID id, int maxLevel)
 	:Skill(id, SKILL_TYPE::WEAPON, maxLevel)
-	, enhanceDamage(0.0f)
 {
 }
 

@@ -6,8 +6,9 @@ EnhanceSuccessEffect::EnhanceSuccessEffect()
 	for (int i = 0; i < 5; i++)
 	{
 		ImageArea* light = new ImageArea(new Frame(file, 218.0f, 953.0f, 24.0f, 43.0f));
+		light->SetSize(Vector2(24.0f, 43.0f));
 		lightEffect.push_back(light);
-		light->rot.z = 72.0f * i;
+		light->SetAngle(72.0f * M_PI / 180.0f * i);
 		light->SetTarget(this);
 		child_list.push_back(light);
 	}
@@ -25,7 +26,7 @@ void EnhanceSuccessEffect::Update()
 		pos = target->pos + offset;
 	for (auto c : child_list)
 	{
-		c->SetOffset(Vector2(cosf(90.0f + c->rot.z), -sinf(90.0f + c->rot.z)) * dist);
+		c->SetOffset(Vector2(round(cosf(90.0f*180.0f/M_PI + c->GetAngle())), round(sinf(90.0f*180.0f/M_PI + c->GetAngle()))) * dist);
 	}
 	WorldUpdate();
 	for (auto c : child_list)
@@ -54,4 +55,11 @@ void EnhanceSuccessEffect::SetState(UI::UI_STATE state)
 void EnhanceSuccessEffect::SetID(UI::UI_ID id)
 {
 	this->id = id;
+}
+
+void EnhanceSuccessEffect::SetScale(Vector2 _scale)
+{
+	this->ui_scale = _scale;
+	for (auto i : lightEffect)
+		i->SetScale(_scale);
 }

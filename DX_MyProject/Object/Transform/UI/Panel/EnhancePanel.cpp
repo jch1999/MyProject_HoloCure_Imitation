@@ -47,23 +47,6 @@ EnhancePanel::EnhancePanel()
 	enhanceRateText->SetActive(false);
 	child_list.push_back(enhanceRateText);
 
-	btn = new Button();
-	btn->SetTarget(this);
-	btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
-	btn->SetScale(Vector2(1.5f, 1.5f));
-	btn->SetState(UI::UI_STATE::IDLE);
-	btn->GetBtnText()->SetText("UPGRADE");
-	btn->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
-	child_list.push_back(btn);
-
-	coinImg = new ImageArea(new Frame(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
-		, 200.0f, 322.0f, 15.0f, 15.0f));
-	coinImg->SetTarget(btn);
-	coinImg->SetOffset(Vector2(-40.0f, -2.0f));
-	coinImg->SetScale(Vector2(0.7f, 0.7f));
-	coinImg->SetState(UI::UI_STATE::IDLE);
-	child_list.push_back(coinImg);
-
 	popUp=new ImageArea(new Frame(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
 		, 4.0f, 790.0f, 208.0f, 240.0f));
 	popUp->SetSize(Vector2(208.0f, 240.0f));
@@ -74,10 +57,27 @@ EnhancePanel::EnhancePanel()
 	child_list.push_back(popUp);
 
 	icon = new SkillIcon();
-	icon->SetScale(Vector2(2.0f, 2.0f));
+	icon->SetScale(Vector2(1.5f, 1.5f));
 	icon->SetID(UI_ID::SKILL_ICON);
 	icon->SetActive(false);
 	child_list.push_back(icon);
+
+	btn = new Button();
+	btn->SetTarget(this);
+	btn->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.55f));
+	btn->SetScale(Vector2(1.5f, 1.5f));
+	btn->SetState(UI::UI_STATE::IDLE);
+	btn->GetBtnText()->SetText("UPGRADE");
+	btn->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
+	child_list.push_back(btn);
+	
+	coinImg = new ImageArea(new Frame(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
+		, 200.0f, 322.0f, 15.0f, 15.0f));
+	coinImg->SetTarget(btn);
+	coinImg->SetOffset(Vector2(-40.0f, -2.0f));
+	coinImg->SetScale(Vector2(0.7f, 0.7f));
+	coinImg->SetState(UI::UI_STATE::IDLE);
+	child_list.push_back(coinImg);
 
 	enhanceResultText = new TextPrinter();
 	enhanceResultText->SetActive(false);
@@ -101,7 +101,7 @@ EnhancePanel::EnhancePanel()
 	sEffect->SetActive(false);
 	sEffect->SetScale(Vector2(2.0f, 2.0f));
 	sEffect->SetState(UI_STATE::IDLE);
-	sEffect->SetDist(50.0f);
+	sEffect->SetDist(80.0f);
 	child_list.push_back(sEffect);
 
 	id = UI::UI_ID::ENHANCE_PANEL;
@@ -287,7 +287,6 @@ void EnhancePanel::ChoseSkill()
 					{
 						enhanceRateText->SetText("Not Enought HoloCoin!");
 					}
-					//coinIcon->SetActive(true);
 					coinImg->SetState(UI_STATE::ACTIVE);
 				}
 			}
@@ -441,11 +440,11 @@ void EnhancePanel::PlayEnhancing()
 		// text End
 		btn->SetActive(true);
 		btn->SetTarget(popUp);
-		btn->SetScale(Vector2(1.5f, 1.5f));
-		btn->SetOffset(Vector2(0.0f, WIN_CENTER_Y * 1.0f));
+		btn->SetScale(Vector2(1.0f, 1.5f));
+		btn->SetOffset(Vector2(0.0f, WIN_CENTER_Y * 0.4f));
 		btn->SetState(UI_STATE::ACTIVE);
-		btn->GetBtnText()->SetText("CONFRIM");
-		btn->GetBtnText()->AddOffset(Vector2(90.0f, 0.0f));
+		btn->GetBtnText()->SetText("OK");
+		btn->GetBtnText()->AddOffset(Vector2(120.0f, 0.0f));
 		// Selector ¿Á»∞º∫
 		// skill name + enhance level
 		// skill script = enhace damage difference

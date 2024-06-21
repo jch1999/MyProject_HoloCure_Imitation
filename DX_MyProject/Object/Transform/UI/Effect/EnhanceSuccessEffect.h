@@ -15,4 +15,5 @@ public:
 	virtual void SetState(UI::UI_STATE state);
 	virtual void SetID(UI::UI_ID id);
 	void SetDist(float dist) { this->dist = dist; }
+	void SetScale(Vector2 _scale);
 };

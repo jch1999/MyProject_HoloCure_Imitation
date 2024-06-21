@@ -1,3 +1,3 @@
 #pragma once
-#include "LigthEffect.h"
+#include "EnhanceSuccessEffect.h"
 #include "ChargeEffect.h"

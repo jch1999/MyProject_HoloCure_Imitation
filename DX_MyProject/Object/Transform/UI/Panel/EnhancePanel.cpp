@@ -87,13 +87,22 @@ EnhancePanel::EnhancePanel()
 	
 	iconOffset = Vector2(0.0f, 0.0f);
 
-	effect = new ChargeEffect();
-	effect->SetTarget(popUp);
-	effect->SetOffset(Vector2(0.0f, 0.0f));
-	effect->SetActive(false);
-	effect->SetScale(Vector2(2.0f, 2.0f));
-	effect->SetState(UI_STATE::IDLE);
-	child_list.push_back(effect);
+	cEffect = new ChargeEffect();
+	cEffect->SetTarget(popUp);
+	cEffect->SetOffset(Vector2(0.0f, 0.0f));
+	cEffect->SetActive(false);
+	cEffect->SetScale(Vector2(2.0f, 2.0f));
+	cEffect->SetState(UI_STATE::IDLE);
+	child_list.push_back(cEffect);
+
+	sEffect = new EnhanceSuccessEffect();
+	sEffect->SetTarget(icon);
+	sEffect->SetOffset(Vector2(0.0f, 0.0f));
+	sEffect->SetActive(false);
+	sEffect->SetScale(Vector2(2.0f, 2.0f));
+	sEffect->SetState(UI_STATE::IDLE);
+	sEffect->SetDist(50.0f);
+	child_list.push_back(sEffect);
 
 	id = UI::UI_ID::ENHANCE_PANEL;
 	type = UI::UI_TYPE::PANEL;
@@ -325,8 +334,8 @@ void EnhancePanel::ChoseSkill()
 					btn->SetActive(false);
 					coinImg->SetState(UI_STATE::IDLE);
 					selector->SetActive(false);
-					effect->SetActive(true);
-					effect->SetState(UI_STATE::ACTIVE);
+					cEffect->SetActive(true);
+					cEffect->SetState(UI_STATE::ACTIVE);
 
 					playTime = 0.0f;
 					moveTime = 0.0f;
@@ -414,6 +423,8 @@ void EnhancePanel::PlayEnhancing()
 		{
 			enhanceResultText->SetOffset(Vector2(-85.0f, -150.0f));
 			enhanceResultText->SetText("SUCCESS");
+			sEffect->SetActive(true);
+			sEffect->SetState(UI_STATE::ACTIVE);
 		}
 		else
 		{
@@ -424,8 +435,8 @@ void EnhancePanel::PlayEnhancing()
 		usedAnvil->SetState(Item::ITEM_STATE::USED);
 		usedAnvil = nullptr;
 		enhance_state = ENHANCE_STATE::END;
-		effect->SetState(UI_STATE::IDLE);
-		effect->SetActive(false);
+		cEffect->SetState(UI_STATE::IDLE);
+		cEffect->SetActive(false);
 		// btn ÀçÈ°¼º
 		// text End
 		btn->SetActive(true);
@@ -457,6 +468,8 @@ void EnhancePanel::EnhanceEnd()
 {
 	if (KEY_CON->Down(VK_RETURN))
 	{
+		sEffect->SetState(UI_STATE::IDLE);
+		sEffect->SetActive(false);
 		isPause = false;
 		UIManager::Get()->nowPanel = nullptr;
 		UIManager::Get()->isEnhance = false;

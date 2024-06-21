@@ -283,7 +283,7 @@
     <ClInclude Include="Object\Transform\UI\Arrow.h" />
     <ClInclude Include="Object\Transform\UI\Button\Button.h" />
     <ClInclude Include="Object\Transform\UI\Effect\ChargeEffect.h" />
-    <ClInclude Include="Object\Transform\UI\Effect\LigthEffect.h" />
+    <ClInclude Include="Object\Transform\UI\Effect\EnhanceSuccessEffect.h" />
     <ClInclude Include="Object\Transform\UI\Effect\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\Icon\CounterIcon.h" />
     <ClInclude Include="Object\Transform\UI\ImageArea.h" />
@@ -432,6 +432,7 @@
     <ClCompile Include="Object\Transform\UI\Arrow.cpp" />
     <ClCompile Include="Object\Transform\UI\Button\Button.cpp" />
     <ClCompile Include="Object\Transform\UI\Effect\ChargeEffect.cpp" />
+    <ClCompile Include="Object\Transform\UI\Effect\EnhanceSuccessEffect.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\CounterIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\PlayerIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\SkillIcon.cpp" />

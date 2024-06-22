@@ -26,8 +26,13 @@ void EnhanceSuccessEffect::Update()
 		pos = target->pos + offset;
 	for (auto c : child_list)
 	{
-		c->SetOffset(Vector2(round(cosf(90.0f*180.0f/M_PI + c->GetAngle())), round(sinf(90.0f*180.0f/M_PI + c->GetAngle()))) * dist);
+		c->SetOffset(Vector2(round(cosf(90.0f * M_PI / 180.0f + c->GetAngle())), round(sinf(90.0f * M_PI / 180.0f + c->GetAngle()))) * dist * -1.0f
+			+ Vector2(0.0f, -10.0f));
 	}
+	lightEffect[1]->SetOffset(lightEffect[1]->GetOffset() + Vector2(10.0f, -15.0f));
+	lightEffect[4]->SetOffset(lightEffect[4]->GetOffset() + Vector2(-10.0f, -15.0f));
+	lightEffect[2]->SetOffset(lightEffect[2]->GetOffset() + Vector2(-15.0f, 10.0f));
+	lightEffect[3]->SetOffset(lightEffect[3]->GetOffset() + Vector2(15.0f, 10.0f));
 	WorldUpdate();
 	for (auto c : child_list)
 		c->Update();
@@ -43,6 +48,7 @@ void EnhanceSuccessEffect::Render()
 
 void EnhanceSuccessEffect::PostRender()
 {
+	ImGui::SliderFloat("Dist", &dist, 0.0f, 150.0f);
 }
 
 void EnhanceSuccessEffect::SetState(UI::UI_STATE state)

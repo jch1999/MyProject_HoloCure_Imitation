@@ -24,6 +24,6 @@
 #include "Panel/Panel.h"
 #include "Panel/LevelUpPanel.h"
 #include "Panel/EnhancePanel.h"
-#include "Panel/QuitPanel.h"
+#include "Panel/ExitPanel.h"
 #include "TopUI/Time_UI.h"
 #include "TopUI/Count_UI.h"

@@ -301,7 +301,7 @@
     <ClInclude Include="Object\Transform\UI\Panel\PauseBack.h" />
     <ClInclude Include="Object\Transform\UI\Icon\PlayerIcon.h" />
     <ClInclude Include="Object\Transform\UI\TopUI\PlayerIconFrame.h" />
-    <ClInclude Include="Object\Transform\UI\Panel\QuitPanel.h" />
+    <ClInclude Include="Object\Transform\UI\Panel\ExitPanel.h" />
     <ClInclude Include="Object\Transform\UI\TopUI\SkillListFrame.h" />
     <ClInclude Include="Object\Transform\UI\Panel\SkillSelector.h" />
     <ClInclude Include="Object\Transform\UI\Text\LevelText.h" />
@@ -438,6 +438,7 @@
     <ClCompile Include="Object\Transform\UI\Icon\SkillIcon.cpp" />
     <ClCompile Include="Object\Transform\UI\ImageArea.cpp" />
     <ClCompile Include="Object\Transform\UI\Panel\EnhancePanel.cpp" />
+    <ClCompile Include="Object\Transform\UI\Panel\ExitPanel.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\TextPrinter.cpp" />
     <ClCompile Include="Object\Transform\UI\TopUI\Count_UI.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\DmgText.cpp" />

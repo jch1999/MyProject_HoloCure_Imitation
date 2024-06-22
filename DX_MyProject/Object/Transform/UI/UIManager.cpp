@@ -48,8 +48,7 @@ UIManager::UIManager()
 	lv_text = new TextPrinter();
 	lv_text->SetTarget(CAM);
 	lv_text->SetOffset(Vector2(WIN_WIDTH-90.0f, 18.0f));
-	lv_text->SetCharInterval(Vector2(10.0f, 20.0f));
-	lv_text->SetCharScale(Vector2(0.5f, 0.5f));
+	lv_text->SetTextInfo(Vector2(0.5f, 0.5f), Vector2(14.0f, 20.0f));
 	lv_text->SetActive(true);
 	ui_list[1].push_back(lv_text);
 

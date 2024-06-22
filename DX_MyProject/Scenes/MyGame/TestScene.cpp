@@ -60,7 +60,7 @@ void TestScene::Update()
 	if (KEY_CON->Down('H'))
 		player->ChangeHP(20);
 	if (KEY_CON->Down('X'))
-		player->GetExp(100.0f);
+		player->GetExp(1000.0f);
 	if (KEY_CON->Down('S'))
 		ItemSpawner::Get()->GenerateItem(player->pos + Vector2(50.0f, 50.0f), Item::ITEM_ID::ANVIL, ItemSpawner::Get()->anvilUseCnt);
 	if(KEY_CON->Down('Q'))

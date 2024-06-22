@@ -101,7 +101,7 @@ EnhancePanel::EnhancePanel()
 	sEffect->SetActive(false);
 	sEffect->SetScale(Vector2(2.0f, 2.0f));
 	sEffect->SetState(UI_STATE::IDLE);
-	sEffect->SetDist(80.0f);
+	sEffect->SetDist(70.0f);
 	child_list.push_back(sEffect);
 
 	id = UI::UI_ID::ENHANCE_PANEL;
@@ -154,6 +154,7 @@ void EnhancePanel::Render()
 
 void EnhancePanel::PostRender()
 {
+	sEffect->PostRender();
 }
 
 void EnhancePanel::SetActive(bool active)

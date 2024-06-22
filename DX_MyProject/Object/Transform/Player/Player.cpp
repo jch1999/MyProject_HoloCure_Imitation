@@ -196,37 +196,13 @@ void Player::GetExp(int expValue)
 		exp_bar->SetActive(true);
 	}
 
-	if (nowExp >= nowMaxExp)
+	while(nowExp >= nowMaxExp)
 	{
 		nowExp -= nowMaxExp;
 		level++;
 		nowMaxExp = round(pow((4 * (level + 1)), 2.1f)) - round(pow((4 * level), 2.1f));
 		// 레벨 업 시 이벤트 내용은 추후 추가
-		/*
-		switch (player_id)
-		{
-		case Player::PLAYER_ID::WATSON:
-		{
-			if(SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PISTOL_SHOT)->GetLevelUpAble())
-				SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PISTOL_SHOT)->LevelUp();
-		}
-			break;
-		case Player::PLAYER_ID::KIARA:
-		{
-			if (SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PHOENIX_SWORD)->GetLevelUpAble())
-				SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PHOENIX_SWORD)->LevelUp();
-		}
-			break;
-		case Player::PLAYER_ID::BAELZ:
-		{
-			if (SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PLAY_DICE)->GetLevelUpAble())
-				SkillManager::Get()->GetSkillByID(Skill::SKILL_ID::PLAY_DICE)->LevelUp();
-		}
-			break;
-		default:
-			break;
-		}
-		*/
+		
 		UIManager::Get()->levelUpCnt++;
 	}
 	exp_bar->SetExpRate(nowExp / nowMaxExp);

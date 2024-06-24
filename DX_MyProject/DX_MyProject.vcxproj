@@ -443,6 +443,7 @@
     <ClCompile Include="Object\Transform\UI\Panel\EnhancePanel.cpp" />
     <ClCompile Include="Object\Transform\UI\Panel\ExitPanel.cpp" />
     <ClCompile Include="Object\Transform\UI\Panel\RewardBox\RewardBoxAnim.cpp" />
+    <ClCompile Include="Object\Transform\UI\Panel\RewardPanel.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\TextPrinter.cpp" />
     <ClCompile Include="Object\Transform\UI\TopUI\Count_UI.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\DmgText.cpp" />

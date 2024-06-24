@@ -17,6 +17,13 @@ RewardPanel::RewardPanel()
 	anim->SetAnimState(RewardBoxAnim::BOX_STATE::FALL);
 	child_list.push_back(anim);
 
+	spotLight = new ImageArea(new Frame(L"Textures/Item/PC Computer - HoloCure - Save the Fans - Holozon Box.png"
+		, 250.0f, 252.0f, 263.0f, 360.0f));
+	spotLight->SetState(UI_STATE::ACTIVE);
+	spotLight->SetSize(Vector2(263.0f, 360.0f));
+	spotLight->SetTarget(popUp);
+	spotLight->SetOffset(-1.0f * popUp->GetSize() / 2.0f);
+	child_list.push_back(spotLight);
 
 	id = UI_ID::REWARD_PANEL;
 	type = UI_TYPE::PANEL;

@@ -287,6 +287,9 @@
     <ClInclude Include="Object\Transform\UI\Effect\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\Icon\CounterIcon.h" />
     <ClInclude Include="Object\Transform\UI\ImageArea.h" />
+    <ClInclude Include="Object\Transform\UI\Panel\RewardBox\RewardBoxAnim.h" />
+    <ClInclude Include="Object\Transform\UI\Panel\RewardPanel.h" />
+    <ClInclude Include="Object\Transform\UI\Panel\TransformList.h" />
     <ClInclude Include="Object\Transform\UI\Text\TextPrinter.h" />
     <ClInclude Include="Object\Transform\UI\TopUI\Count_UI.h" />
     <ClInclude Include="Object\Transform\UI\Text\DmgText.h" />
@@ -439,6 +442,7 @@
     <ClCompile Include="Object\Transform\UI\ImageArea.cpp" />
     <ClCompile Include="Object\Transform\UI\Panel\EnhancePanel.cpp" />
     <ClCompile Include="Object\Transform\UI\Panel\ExitPanel.cpp" />
+    <ClCompile Include="Object\Transform\UI\Panel\RewardBox\RewardBoxAnim.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\TextPrinter.cpp" />
     <ClCompile Include="Object\Transform\UI\TopUI\Count_UI.cpp" />
     <ClCompile Include="Object\Transform\UI\Text\DmgText.cpp" />

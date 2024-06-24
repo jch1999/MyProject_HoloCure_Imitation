@@ -64,7 +64,8 @@ public:
 		LEVEL_UP_PANEL,
 		ENHANCE_PANEL,
 		REWARD_PANEL,
-		PAUSE_PANEL,
+		PAUSE_PANEL, 
+		EXIT_PANEL,
 		// Selecor
 		SELECTOR,
 		// Timer

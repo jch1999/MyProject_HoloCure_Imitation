@@ -90,6 +90,11 @@ UIManager::UIManager()
 	enhancePanel->SetTarget(CAM);
 	enhancePanel->SetOffset(WIN_CENTER);
 	ui_list[2].push_back(enhancePanel);
+
+	exitPanel = new ExitPanel();
+	exitPanel->SetTarget(CAM);
+	exitPanel->SetOffset(WIN_CENTER);
+	ui_list[2].push_back(exitPanel);
 }
 
 UIManager::~UIManager()
@@ -110,7 +115,10 @@ void UIManager::Update()
 	{
 		if (KEY_CON->Down(VK_ESCAPE))
 		{
-			// PAUSE_PANEL 호출
+			// EXIT_PANEL 호출
+			isPause = true;
+			nowPanel = exitPanel;
+			nowPanel->SetActive(true);
 		}
 		else if (levelUpCnt>0)
 		{

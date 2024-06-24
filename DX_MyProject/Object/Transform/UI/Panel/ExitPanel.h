@@ -3,8 +3,10 @@ class ExitPanel :public Panel
 {
 protected:
 	ImageArea* popUp;
-	Button* resumBtn, exitBtn;
+	vector<Button*> btns;
+	TextPrinter* pauseText;
 	int selectIdx;
+
 public:
 	ExitPanel();
 	~ExitPanel();
@@ -13,4 +15,5 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void PostRender() override;
+	virtual void SetActive(bool active)override;
 };

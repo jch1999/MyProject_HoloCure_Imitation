@@ -2,6 +2,7 @@
 class Panel;
 class LevelUpPanel;
 class EnhancePanel;
+class ExitPanel;
 class TextPrinter;
 class UIManager :public Singleton<UIManager>
 {
@@ -24,6 +25,7 @@ public:
 	UI* pausePanel;
 	LevelUpPanel* levelPanel;
 	EnhancePanel* enhancePanel;
+	ExitPanel* exitPanel;
 	TextPrinter* lv_text, *ctr_text;
 
 	// 창 대기 여부

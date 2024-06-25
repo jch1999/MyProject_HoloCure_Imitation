@@ -40,7 +40,12 @@ void RewardBox::Update()
 	case Item::ITEM_STATE::IDLE:
 		break;
 	case Item::ITEM_STATE::ACTIVE:
-		SetState(ITEM_STATE::USED);
+	{
+		if (UIManager::Get()->rewardPanel->GetBox() != this)
+		{
+			SetState(ITEM_STATE::IDLE);
+		}
+	}
 		break;
 	case Item::ITEM_STATE::USED:
 		is_active = false;
@@ -107,11 +112,15 @@ void RewardBox::SetState(ITEM_STATE state)
 	{
 	case Item::ITEM_STATE::IDLE:
 	{
+		collider->SetActive(true);
 	}
 	break;
 	case Item::ITEM_STATE::ACTIVE:
 	{
 		isPause = true;
+		collider->SetActive(false); 
+		UIManager::Get()->isReward = true;
+		UIManager::Get()->rewardPanel->SetBox(this);
 		collider->SetActive(false);
 	}
 	break;

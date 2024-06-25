@@ -22,7 +22,7 @@ RewardPanel::RewardPanel()
 	spotLight->SetState(UI_STATE::ACTIVE);
 	spotLight->SetSize(Vector2(263.0f, 360.0f));
 	spotLight->SetTarget(popUp);
-	spotLight->SetOffset(-1.0f * popUp->GetSize() / 2.0f);
+	spotLight->SetOffset(popUp->GetSize() / 2.0f * -1.0f);
 	child_list.push_back(spotLight);
 
 	id = UI_ID::REWARD_PANEL;
@@ -42,11 +42,21 @@ void RewardPanel::Update()
 {
 	if (!is_active)return;
 
+	if(target!=nullptr)
+		pos = target->pos + offset;
+
+	WorldUpdate();
+
+	for (auto c : child_list)
+		c->Update();
 }
 
 void RewardPanel::Render()
 {
 	if (!is_active)return;
+
+	for (auto c : child_list)
+		c->Render();
 }
 
 void RewardPanel::PostRender()

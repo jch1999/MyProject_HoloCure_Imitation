@@ -3,6 +3,7 @@ class Panel;
 class LevelUpPanel;
 class EnhancePanel;
 class ExitPanel;
+class RewardPanel;
 class TextPrinter;
 class UIManager :public Singleton<UIManager>
 {
@@ -26,11 +27,13 @@ public:
 	LevelUpPanel* levelPanel;
 	EnhancePanel* enhancePanel;
 	ExitPanel* exitPanel;
+	RewardPanel* rewardPanel;
 	TextPrinter* lv_text, *ctr_text;
 
 	// 창 대기 여부
 	int levelUpCnt;
 	bool isEnhance;
+	bool isReward;
 
 private:
 	UIManager();

@@ -1,5 +1,5 @@
 #pragma once
-class RewardPanel :public UI
+class RewardPanel :public Panel
 {
 protected:
 	ImageArea* popUp;
@@ -25,4 +25,6 @@ public:
 
 	virtual void SetID(UI::UI_ID id);
 	virtual void SetActive(bool active)override;
+	void SetBox(RewardBox* box) { nowBox = box; }
+	const RewardBox* GetBox() { return nowBox; }
 };

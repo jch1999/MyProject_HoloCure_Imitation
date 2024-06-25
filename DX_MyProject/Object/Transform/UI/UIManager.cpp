@@ -90,6 +90,11 @@ UIManager::UIManager()
 	enhancePanel->SetTarget(CAM);
 	enhancePanel->SetOffset(WIN_CENTER);
 	ui_list[2].push_back(enhancePanel);
+	
+	rewardPanel = new RewardPanel();
+	rewardPanel->SetTarget(CAM);
+	rewardPanel->SetOffset(WIN_CENTER);
+	ui_list[2].push_back(rewardPanel);
 
 	exitPanel = new ExitPanel();
 	exitPanel->SetTarget(CAM);
@@ -132,6 +137,12 @@ void UIManager::Update()
 		{
 			isPause = true;
 			nowPanel = enhancePanel;
+			nowPanel->SetActive(true);
+		}
+		else if (isReward)
+		{
+			isPause = true;
+			nowPanel = rewardPanel;
 			nowPanel->SetActive(true);
 		}
 	}

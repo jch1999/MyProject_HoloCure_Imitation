@@ -56,6 +56,26 @@ void RewardBoxAnim::Update()
 {
 	if (!is_active)return;
 
+	switch (boxState)
+	{
+	case RewardBoxAnim::BOX_STATE::FALL:
+		if (clips[clip_idx]->GetFrameNum() == 3)
+		{
+			SetAnimState(BOX_STATE::CLOSED);
+		}
+		break;
+	case RewardBoxAnim::BOX_STATE::CLOSED:
+		break;
+	case RewardBoxAnim::BOX_STATE::BOUNCING:
+		break;
+	case RewardBoxAnim::BOX_STATE::OPENING:
+		break;
+	case RewardBoxAnim::BOX_STATE::OPEN:
+		break;
+	default:
+		break;
+	}
+	clips[clip_idx]->Update();
 	ui_size = clips[clip_idx]->GetFrameSize();
 	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
 	for (auto c : child_list)
@@ -77,6 +97,31 @@ void RewardBoxAnim::PostRender()
 
 void RewardBoxAnim::SetState(UI::UI_STATE state)
 {
+}
+
+void RewardBoxAnim::SetAnimState(BOX_STATE bState)
+{
+	boxState = bState;
+	switch (boxState)
+	{
+	case RewardBoxAnim::BOX_STATE::FALL:
+		clip_idx = 0;
+		break;
+	case RewardBoxAnim::BOX_STATE::CLOSED:
+		clip_idx = 1;
+		break;
+	case RewardBoxAnim::BOX_STATE::BOUNCING:
+		clip_idx = 2;
+		break;
+	case RewardBoxAnim::BOX_STATE::OPENING:
+		clip_idx = 3;
+		break;
+	case RewardBoxAnim::BOX_STATE::OPEN:
+		clip_idx = 4;
+		break;
+	default:
+		break;
+	}
 }
 
 void RewardBoxAnim::SetID(UI::UI_ID id)

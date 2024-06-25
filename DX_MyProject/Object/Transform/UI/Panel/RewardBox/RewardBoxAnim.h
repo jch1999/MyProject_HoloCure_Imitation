@@ -25,7 +25,7 @@ public:
 	virtual void PostRender() override;
 
 	virtual void SetState(UI::UI_STATE state);
-	void SetAnimState(BOX_STATE bState) { boxState = bState; }
+	void SetAnimState(BOX_STATE bState);
 	virtual void SetID(UI::UI_ID id);
 
 };

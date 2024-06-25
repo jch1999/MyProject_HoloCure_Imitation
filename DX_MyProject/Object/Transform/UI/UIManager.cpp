@@ -38,12 +38,6 @@ UIManager::UIManager()
 	// ATK Arrow
 	ui_list[1].push_back(new Arrow());
 
-	// Timer
-	ui_list[1].push_back(new Time_UI());
-
-	// Counter
-	ui_list[1].push_back(new Count_UI());
-
 	// LV Text Printer
 	lv_text = new TextPrinter();
 	lv_text->SetTarget(CAM);
@@ -100,6 +94,12 @@ UIManager::UIManager()
 	exitPanel->SetTarget(CAM);
 	exitPanel->SetOffset(WIN_CENTER);
 	ui_list[2].push_back(exitPanel);
+
+	// Timer
+	ui_list[2].push_back(new Time_UI());
+
+	// Counter
+	ui_list[2].push_back(new Count_UI());
 }
 
 UIManager::~UIManager()

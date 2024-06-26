@@ -1,6 +1,6 @@
 #include "framework.h"
 
-EnhanceSuccessEffect::EnhanceSuccessEffect()
+LightEffect::LightEffect()
 {
 	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
 	for (int i = 0; i < 5; i++)
@@ -14,11 +14,11 @@ EnhanceSuccessEffect::EnhanceSuccessEffect()
 	}
 }
 
-EnhanceSuccessEffect::~EnhanceSuccessEffect()
+LightEffect::~LightEffect()
 {
 }
 
-void EnhanceSuccessEffect::Update()
+void LightEffect::Update()
 {
 	if (!is_active)return;
 
@@ -38,7 +38,7 @@ void EnhanceSuccessEffect::Update()
 		c->Update();
 }
 
-void EnhanceSuccessEffect::Render()
+void LightEffect::Render()
 {
 	if (!is_active)return;
 
@@ -46,24 +46,24 @@ void EnhanceSuccessEffect::Render()
 		c->Render();
 }
 
-void EnhanceSuccessEffect::PostRender()
+void LightEffect::PostRender()
 {
 	ImGui::SliderFloat("Dist", &dist, 0.0f, 150.0f);
 }
 
-void EnhanceSuccessEffect::SetState(UI::UI_STATE state)
+void LightEffect::SetState(UI::UI_STATE state)
 {
 	this->state = state;
 	for (auto c : child_list)
 		c->SetState(state);
 }
 
-void EnhanceSuccessEffect::SetID(UI::UI_ID id)
+void LightEffect::SetID(UI::UI_ID id)
 {
 	this->id = id;
 }
 
-void EnhanceSuccessEffect::SetScale(Vector2 _scale)
+void LightEffect::SetScale(Vector2 _scale)
 {
 	this->ui_scale = _scale;
 	for (auto i : lightEffect)

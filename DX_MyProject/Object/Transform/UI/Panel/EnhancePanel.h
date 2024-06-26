@@ -35,7 +35,7 @@ protected:
 	SkillIcon* icon;
 	TextPrinter* enhanceResultText;
 	ChargeEffect* cEffect;
-	EnhanceSuccessEffect* sEffect;
+	LightEffect* sEffect;
 
 	Vector2 iconOffset;
 	float iconMoveSpd;

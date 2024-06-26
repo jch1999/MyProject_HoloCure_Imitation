@@ -76,7 +76,6 @@ void RewardBoxAnim::Update()
 		break;
 	}
 	clips[clip_idx]->Update();
-	ui_size = clips[clip_idx]->GetFrameSize();
 	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
 	for (auto c : child_list)
 		c->Update();
@@ -85,6 +84,12 @@ void RewardBoxAnim::Update()
 void RewardBoxAnim::Render()
 {
 	if (!is_active)return;
+	
+	VS->Set();
+	PS->Set();
+
+	WB->SetVS(0);
+	CB->SetPS(0);
 
 	clips[clip_idx]->Render();
 	for (auto c : child_list)

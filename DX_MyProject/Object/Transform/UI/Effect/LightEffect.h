@@ -1,12 +1,12 @@
 #pragma once
-class EnhanceSuccessEffect :public UI
+class LightEffect :public UI
 {
 protected:
 	vector<ImageArea*> lightEffect;
 	float dist;
 public:
-	EnhanceSuccessEffect();
-	~EnhanceSuccessEffect();
+	LightEffect();
+	~LightEffect();
 
 	// UI을(를) 통해 상속됨
 	virtual void Update() override;

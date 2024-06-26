@@ -95,7 +95,7 @@ EnhancePanel::EnhancePanel()
 	cEffect->SetState(UI_STATE::IDLE);
 	child_list.push_back(cEffect);
 
-	sEffect = new EnhanceSuccessEffect();
+	sEffect = new LightEffect();
 	sEffect->SetTarget(icon);
 	sEffect->SetOffset(Vector2(0.0f, 0.0f));
 	sEffect->SetActive(false);

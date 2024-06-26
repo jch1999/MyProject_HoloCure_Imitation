@@ -4,11 +4,22 @@ class RewardPanel :public Panel
 protected:
 	ImageArea* popUp;
 	ImageArea* spotLight;
+	// 획득 코인량 표시
 	ImageArea* coinImg;
 	TextPrinter* coinText;
+	float coinValue, targetCoinValue,increaseSpd;
+
 	RewardBoxAnim* anim;
 	RewardBox* nowBox;
-
+	TextPrinter* openText;
+	// 선택된 스킬 표시
+	SkillSelector* selector;
+	SkillIcon* icon;
+	LightEffect* lEffect;
+	// 스킬 획득 여부 선택지
+	int seletIdx;
+	Button* getBtn, dropBtn;
+	
 public:
 	RewardPanel();
 	~RewardPanel();

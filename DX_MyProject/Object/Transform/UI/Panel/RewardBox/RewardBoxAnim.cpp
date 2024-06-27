@@ -59,24 +59,34 @@ void RewardBoxAnim::Update()
 	switch (boxState)
 	{
 	case RewardBoxAnim::BOX_STATE::FALL:
+		ui_size = Vector2(640.0f, 360.0f);
 		if (clips[clip_idx]->GetFrameNum() == 3)
 		{
 			SetAnimState(BOX_STATE::CLOSED);
 		}
 		break;
 	case RewardBoxAnim::BOX_STATE::CLOSED:
+		ui_size = Vector2(186.0f, 131.0f);
 		break;
 	case RewardBoxAnim::BOX_STATE::BOUNCING:
+		ui_size = Vector2(186.0f, 131.0f);
 		break;
 	case RewardBoxAnim::BOX_STATE::OPENING:
+		ui_size = Vector2(240.0f, 248.0f);
 		break;
 	case RewardBoxAnim::BOX_STATE::OPEN:
+		ui_size = Vector2(240.0f, 248.0f);
 		break;
 	default:
 		break;
 	}
 	clips[clip_idx]->Update();
 	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
+
+	if (target != nullptr)
+		pos = target->pos + offset;
+
+	WorldUpdate();
 	for (auto c : child_list)
 		c->Update();
 }

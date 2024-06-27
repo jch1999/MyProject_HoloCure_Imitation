@@ -15,8 +15,8 @@ RewardPanel::RewardPanel()
 	// box 
 	anim = new RewardBoxAnim();
 	anim->SetTarget(popUp);
-	anim->SetOffset(Vector2());
-	anim->SetScale(Vector2(1.5f, 1.5f));
+	anim->SetOffset(Vector2(0.0f, 25.0f));
+	anim->SetScale(Vector2(1.3f, 1.3f));
 	anim->SetAnimState(RewardBoxAnim::BOX_STATE::FALL);
 	child_list.push_back(anim);
 
@@ -33,7 +33,7 @@ RewardPanel::RewardPanel()
 	coinImg = new ImageArea(new Frame(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
 		, 200.0f, 322.0f, 15.0f, 15.0f));
 	coinImg->SetTarget(popUp);
-	coinImg->SetOffset(Vector2(0.0f, -150.0f));
+	coinImg->SetOffset(Vector2(-20.0f, -150.0f));
 	coinImg->SetScale(Vector2(0.7f, 0.7f));
 	coinImg->SetState(UI::UI_STATE::ACTIVE);
 	child_list.push_back(coinImg);
@@ -82,12 +82,10 @@ void RewardPanel::Update()
 	{
 	case RewardBoxAnim::BOX_STATE::FALL:
 	{
-		anim->SetSize(Vector2(160.0f, 90.0f));
 	}
 		break;
 	case RewardBoxAnim::BOX_STATE::CLOSED:
 	{
-		anim->SetSize(Vector2(160.0f, 90.0f));
 		if (KEY_CON->Down(VK_RETURN))
 		{
 			anim->SetAnimState(RewardBoxAnim::BOX_STATE::BOUNCING);
@@ -99,7 +97,6 @@ void RewardPanel::Update()
 	case RewardBoxAnim::BOX_STATE::BOUNCING:
 	case RewardBoxAnim::BOX_STATE::OPENING:
 	{
-		anim->SetSize(Vector2(160.0f, 90.0f));
 		if (coinValue < targetCoinValue)
 			coinValue += increaseSpd * DELTA;
 		else

@@ -60,10 +60,6 @@ void RewardBoxAnim::Update()
 	{
 	case RewardBoxAnim::BOX_STATE::FALL:
 		ui_size = Vector2(640.0f, 360.0f);
-		if (clips[clip_idx]->GetFrameNum() == 3)
-		{
-			SetAnimState(BOX_STATE::CLOSED);
-		}
 		break;
 	case RewardBoxAnim::BOX_STATE::CLOSED:
 		ui_size = Vector2(186.0f, 131.0f);
@@ -137,8 +133,11 @@ void RewardBoxAnim::SetAnimState(BOX_STATE bState)
 	default:
 		break;
 	}
+	// 처음부터 다시 재생하도록 지정
+	clips[clip_idx]->Play();
 }
 
 void RewardBoxAnim::SetID(UI::UI_ID id)
 {
+	this->id = id;
 }

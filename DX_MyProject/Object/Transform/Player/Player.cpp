@@ -135,7 +135,7 @@ void Player::ChangeHP(float amount, Vector2 dir)
 		while (damage / 10 > 0)
 		{
 			ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::PLAYER_DMG_TEXT));
-			ui->SetPos(initPos - Vector2(6, 0) * idx++);
+			ui->SetPos(initPos - Vector2(12.0f, 0.0f) * idx++);
 			ui->SetMoveDir(dir);
 			ui->SetScale(Vector2(1.0f, 1.0f));
 			ui->SetClipIdx(damage % 10);
@@ -144,7 +144,7 @@ void Player::ChangeHP(float amount, Vector2 dir)
 		}
 		
 		ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::PLAYER_DMG_TEXT));
-		ui->SetPos(initPos - Vector2(6, 0) * idx++);
+		ui->SetPos(initPos - Vector2(12, 0) * idx++);
 		ui->SetMoveDir(dir);
 		ui->SetScale(Vector2(1.0f, 1.0f));
 		ui->SetClipIdx(damage % 10);

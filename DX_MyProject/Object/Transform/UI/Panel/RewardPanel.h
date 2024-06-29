@@ -10,6 +10,8 @@ protected:
 	float coinValue, targetCoinValue,increaseSpd;
 
 	RewardBoxAnim* anim;
+	float playTime;
+
 	RewardBox* nowBox;
 	TextPrinter* openText;
 	// 선택된 스킬 표시

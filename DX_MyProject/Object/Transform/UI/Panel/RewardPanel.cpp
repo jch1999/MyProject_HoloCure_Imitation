@@ -1,7 +1,7 @@
 #include "framework.h"
 
 RewardPanel::RewardPanel()
-	:increaseSpd(100.0f)
+	:increaseSpd(100.0f),playTime(0.0f)
 {
 	popUp = new ImageArea(new Frame(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
 		, 4.0f, 790.0f, 208.0f, 240.0f));
@@ -28,6 +28,14 @@ RewardPanel::RewardPanel()
 	spotLight->SetOffset(Vector2(0.0f, -20.0f));
 	spotLight->SetColor(Float4(1.0f, 1.0f, 1.0f, 0.8f));
 	child_list.push_back(spotLight);
+	
+	openText = new TextPrinter();
+	openText->SetTarget(popUp);
+	openText->SetOffset(Vector2(-80.0f, 150.0f));
+	openText->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(12.0f, 20.0f));
+	openText->SetText("Enter to Open!");
+	openText->SetActive(false);
+	child_list.push_back(openText);
 
 	// coin
 	coinImg = new ImageArea(new Frame(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
@@ -82,6 +90,11 @@ void RewardPanel::Update()
 	{
 	case RewardBoxAnim::BOX_STATE::FALL:
 	{
+		if (anim->isAnimEnd())
+		{
+			anim->SetAnimState(RewardBoxAnim::BOX_STATE::CLOSED);
+			openText->SetActive(true);
+		}
 	}
 		break;
 	case RewardBoxAnim::BOX_STATE::CLOSED:
@@ -91,13 +104,35 @@ void RewardPanel::Update()
 			anim->SetAnimState(RewardBoxAnim::BOX_STATE::BOUNCING);
 			ItemSpawner::Get()->nowCoinValue += targetCoinValue;
 			spotLight->SetActive(false);
+			openText->SetActive(false);
 		}
 	}
 		break;
 	case RewardBoxAnim::BOX_STATE::BOUNCING:
+	{
+		playTime += DELTA;
+		if (playTime >= 2.0f && anim->isAnimEnd())
+		{
+			anim->SetAnimState(RewardBoxAnim::BOX_STATE::OPENING);
+			anim->SetOffset(Vector2(0.0f, -50.0f));
+		}
+
+		if (coinValue < targetCoinValue)
+			coinValue += increaseSpd * DELTA;
+		else
+			coinValue = targetCoinValue;
+
+		coinText->SetText(to_string((int)coinValue));
+	}
+		break;
 	case RewardBoxAnim::BOX_STATE::OPENING:
 	{
-		if (coinValue < targetCoinValue)
+		if (anim->isAnimEnd())
+		{
+			anim->SetAnimState(RewardBoxAnim::BOX_STATE::OPEN);
+		}
+
+		if(coinValue < targetCoinValue)
 			coinValue += increaseSpd * DELTA;
 		else
 			coinValue = targetCoinValue;
@@ -110,6 +145,17 @@ void RewardPanel::Update()
 		anim->SetSize(Vector2(160.0f, 90.0f));
 		coinValue = targetCoinValue;
 		coinText->SetText(to_string((int)coinValue));
+		
+		// Ã¢´Ý±â
+		if (KEY_CON->Down(VK_RETURN))
+		{
+			UIManager::Get()->isReward = false;
+			UIManager::Get()->nowPanel = nullptr;
+			nowBox->SetState(Item::ITEM_STATE::USED);
+			nowBox = nullptr;
+			isPause = false;
+			SetActive(false);
+		}
 	}
 		break;
 	default:
@@ -156,8 +202,11 @@ void RewardPanel::SetActive(bool active)
 	coinText->SetText("0");
 
 	anim->SetAnimState(RewardBoxAnim::BOX_STATE::FALL);
+	anim->SetOffset(Vector2(0.0f, 25.0f));
 	for (auto c : child_list)
 		c->SetActive(active);
 
+	openText->SetActive(false);
 	selector->SetActive(false);
+	playTime = 0.0f;
 }

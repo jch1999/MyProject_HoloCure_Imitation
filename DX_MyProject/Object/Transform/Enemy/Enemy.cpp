@@ -47,7 +47,7 @@ void Enemy::ChangeHP(float amount,bool isCrt)
 				ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::CRT_DMG_TEXT));
 			else
 				ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::DMG_TEXT));
-			ui->SetPos(initPos - Vector2(6, 0) * idx++);
+			ui->SetPos(initPos - Vector2(12.f, 0.0f) * idx++);
 			ui->SetMoveDir(initPos.Normalized()*Vector2(1.0f,-1.0f));
 			ui->SetScale(Vector2(1.0f, 1.0f));
 			ui->SetClipIdx(damage % 10);
@@ -58,7 +58,7 @@ void Enemy::ChangeHP(float amount,bool isCrt)
 			ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::CRT_DMG_TEXT));
 		else
 			ui = (DmgText*)(UIManager::Get()->GetUI(UI::UI_ID::DMG_TEXT));
-		ui->SetPos(initPos - Vector2(6, 0) * idx++);
+		ui->SetPos(initPos - Vector2(12, 0) * idx++);
 		ui->SetMoveDir(initPos.Normalized() * Vector2(1.0f, -1.0f));
 		ui->SetScale(Vector2(1.0f, 1.0f));
 		ui->SetClipIdx(damage % 10);

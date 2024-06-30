@@ -9,7 +9,7 @@ RewardBoxAnim::RewardBoxAnim()
 	{
 		frames.push_back(new Frame(file, 4.0f, 487.0f + 362.0f * i, 640.0f, 360.0f));
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1.0f / 4.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1.0f / 8.0f));
 	frames.clear();
 	// Closed clip
 	frames.push_back(new Frame(file, 4.0f, 328.0f, 186.0f, 131.0f));

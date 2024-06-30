@@ -20,7 +20,7 @@ protected:
 	LightEffect* lEffect;
 	// 스킬 획득 여부 선택지
 	int seletIdx;
-	Button* getBtn, dropBtn;
+	Button* getBtn, *dropBtn;
 	
 public:
 	RewardPanel();

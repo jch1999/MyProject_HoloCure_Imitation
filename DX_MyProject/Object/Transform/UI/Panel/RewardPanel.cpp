@@ -8,7 +8,7 @@ RewardPanel::RewardPanel()
 	popUp->SetSize(Vector2(208.0f, 240.0f));
 	popUp->SetScale(Vector2(1.7f, 1.7f));
 	popUp->SetTarget(this);
-	popUp->SetOffset(Vector2(0.0f, -WIN_CENTER_Y * 0.2f));
+	popUp->SetOffset(Vector2(0.0f, -WIN_CENTER_Y * 0.1f));
 	popUp->SetState(UI_STATE::ACTIVE);
 	child_list.push_back(popUp);
 
@@ -31,7 +31,7 @@ RewardPanel::RewardPanel()
 	
 	openText = new TextPrinter();
 	openText->SetTarget(popUp);
-	openText->SetOffset(Vector2(-80.0f, 150.0f));
+	openText->SetOffset(Vector2(-80.0f, 175.0f));
 	openText->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(12.0f, 20.0f));
 	openText->SetText("Enter to Open!");
 	openText->SetActive(false);
@@ -54,20 +54,50 @@ RewardPanel::RewardPanel()
 
 	// Skill
 	icon = new SkillIcon();
-	icon->SetScale(Vector2(1.5f, 1.5f));
+	icon->SetTarget(popUp);
+	icon->SetOffset(Vector2(0.0f, -15.0f));
+	icon->SetScale(Vector2(1.3f, 1.3f));
 	icon->SetID(UI_ID::SKILL_ICON);
 	icon->SetActive(false);
 	child_list.push_back(icon);
 
 	selector = new SkillSelector();
-	selector->SetTarget(this);
-	selector->SetOffset(Vector2(WIN_CENTER_X * 0.35f, WIN_CENTER_Y * 0.25f));
+	selector->SetTarget(popUp);
+	selector->SetOffset(Vector2(0.0f, popUp->GetSize().y*popUp->GetScale().y*0.75f));
 	selector->SetScale(Vector2(1.5f, 1.5f));
 	selector->SetIconOffset(Vector2(-245.0f, 5.0f));
 	selector->SetNameTOffset(Vector2(-260.0f, -40.0f));
 	selector->SetScriptTOffset(Vector2(-210.0f, -10.0f));
+	selector->SetClipIdx(1);
 	selector->SetActive(false);
 	child_list.push_back(selector);
+	
+	// select btn
+	getBtn = new Button();
+	getBtn->SetTarget(this);
+	getBtn->SetOffset(Vector2(WIN_CENTER_X * 0.5f, -WIN_START_Y * 0.35f));
+	getBtn->SetSize(Vector2(110.0f,50.0f));
+	getBtn->SetScale(Vector2(1.3f, 1.3f));
+	getBtn->SetClipIdx(0);
+	getBtn->SetState(UI_STATE::IDLE);
+	getBtn->GetBtnText()->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(12.0f, 20.0f));
+	getBtn->GetBtnText()->SetText("Get");
+	getBtn->GetBtnText()->AddOffset(Vector2(-15.0f, 0.0f));
+	getBtn->SetActive(false);
+	child_list.push_back(getBtn);
+
+	dropBtn = new Button();
+	dropBtn->SetTarget(this);
+	dropBtn->SetOffset(Vector2(WIN_CENTER_X * 0.5f, WIN_START_Y * 0.35f));
+	dropBtn->SetSize(Vector2(110.0f, 50.0f));
+	dropBtn->SetScale(Vector2(1.3f, 1.3f));
+	dropBtn->SetClipIdx(0);
+	dropBtn->SetState(UI_STATE::IDLE);
+	dropBtn->GetBtnText()->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(12.0f, 20.0f));
+	dropBtn->GetBtnText()->AddOffset(Vector2(-15.0f, 0.0f));
+	dropBtn->GetBtnText()->SetText("Drop");
+	dropBtn->SetActive(false);
+	child_list.push_back(dropBtn);
 
 	id = UI_ID::REWARD_PANEL;
 	type = UI_TYPE::PANEL;
@@ -115,6 +145,9 @@ void RewardPanel::Update()
 		{
 			anim->SetAnimState(RewardBoxAnim::BOX_STATE::OPENING);
 			anim->SetOffset(Vector2(0.0f, -50.0f));
+			selector->SetSkillID(SkillManager::Get()->GetLevelUpSkillID());
+			icon->SetSkillID(selector->GetSkillID());
+			playTime = 0.0f;
 		}
 
 		if (coinValue < targetCoinValue)
@@ -130,6 +163,17 @@ void RewardPanel::Update()
 		if (anim->isAnimEnd())
 		{
 			anim->SetAnimState(RewardBoxAnim::BOX_STATE::OPEN);
+		}
+		else if(playTime<0.65f)
+		{
+			playTime += DELTA;
+			if (playTime >= 0.65f)
+			{
+				selector->SetActive(true);
+				icon->SetActive(true);
+				getBtn->SetActive(true);
+				dropBtn->SetActive(true);
+			}
 		}
 
 		if(coinValue < targetCoinValue)
@@ -149,6 +193,14 @@ void RewardPanel::Update()
 		// Ã¢´Ý±â
 		if (KEY_CON->Down(VK_RETURN))
 		{
+			switch (selectIdx)
+			{
+			case 0:
+				SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)selector->GetSkillID())->LevelUp();
+				break;
+			default:
+				break;
+			}
 			UIManager::Get()->isReward = false;
 			UIManager::Get()->nowPanel = nullptr;
 			nowBox->SetState(Item::ITEM_STATE::USED);
@@ -156,6 +208,35 @@ void RewardPanel::Update()
 			isPause = false;
 			SetActive(false);
 		}
+		else if (KEY_CON->Down(VK_UP))
+		{
+			selectIdx++;
+			selectIdx %= 2;
+		}
+		else if (KEY_CON->Down(VK_DOWN))
+		{
+			selectIdx--;
+			if (selectIdx < 0)selectIdx = 1;
+		}
+
+		switch (selectIdx)
+		{
+			case 0:
+			{
+				getBtn->SetState(UI_STATE::ACTIVE);
+				dropBtn->SetState(UI_STATE::IDLE);
+			}
+				break;
+			case 1:
+			{
+				getBtn->SetState(UI_STATE::IDLE);
+				dropBtn->SetState(UI_STATE::ACTIVE);
+			}
+				break;
+			default:
+				break;
+		}
+
 	}
 		break;
 	default:
@@ -208,5 +289,8 @@ void RewardPanel::SetActive(bool active)
 
 	openText->SetActive(false);
 	selector->SetActive(false);
+	icon->SetActive(false);
+	getBtn->SetActive(false);
+	dropBtn->SetActive(false);
 	playTime = 0.0f;
 }

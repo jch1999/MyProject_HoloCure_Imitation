@@ -7,7 +7,7 @@ ExitPanel::ExitPanel()
 	popUp->SetSize(Vector2(240.0f, 285.0f));
 	popUp->SetScale(Vector2(1.5f, 1.5f));
 	popUp->SetTarget(this);
-	popUp->SetOffset(Vector2(0.0f, -WIN_CENTER_Y * 0.2f));
+	popUp->SetOffset(Vector2(0.0f, -WIN_CENTER_Y * 0.1f));
 	popUp->SetState(UI_STATE::ACTIVE);
 	child_list.push_back(popUp);
 

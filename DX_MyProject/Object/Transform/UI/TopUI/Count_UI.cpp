@@ -1,7 +1,7 @@
 #include "framework.h"
 
 Count_UI::Count_UI()
-	:up_speed(10.0f)
+	:up_speed(100.0f)
 	, now_coinCnt(0.0f), target_coinCnt(0.0f)
 	,now_defeatCnt(0.0f),target_defeatCnt(0.0f)
 {

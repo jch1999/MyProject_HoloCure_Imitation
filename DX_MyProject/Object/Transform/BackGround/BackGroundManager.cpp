@@ -1,7 +1,7 @@
 #include "framework.h"
 
 BackGroundManager::BackGroundManager()
-	:player(nullptr),now_time(0.0f)
+	:player(nullptr),now_time(0.35f)
 {
 	// 이 방식은 tile이 900개다...256,256으로 크기를 변경하면 225개이긴 한데 랜더해야 할 사이즈가 커지니 부하 자체는 비슷한가?
 	// 크기를 늘려?

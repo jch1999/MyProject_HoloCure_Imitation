@@ -4,3 +4,7 @@
 #include "KiaraSlash.h"
 #include "Blaze.h"
 #include "BaelzDice.h"
+#include "PoisonArea.h"
+#include "Tear.h"
+#include "Bomb.h"
+#include "Ball.h"

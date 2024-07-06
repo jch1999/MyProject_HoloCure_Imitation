@@ -37,6 +37,15 @@ RewardPanel::RewardPanel()
 	openText->SetActive(false);
 	child_list.push_back(openText);
 
+	lEffect = new LightEffect();
+	lEffect->SetTarget(anim);
+	lEffect->SetOffset(Vector2(0.0f, 10.0f));
+	lEffect->SetActive(false);
+	lEffect->SetScale(Vector2(2.0f, 2.0f));
+	lEffect->SetState(UI_STATE::IDLE);
+	lEffect->SetDist(70.0f);
+	child_list.push_back(lEffect);
+
 	// coin
 	coinImg = new ImageArea(new Frame(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
 		, 200.0f, 322.0f, 15.0f, 15.0f));
@@ -173,6 +182,7 @@ void RewardPanel::Update()
 				icon->SetActive(true);
 				getBtn->SetActive(true);
 				dropBtn->SetActive(true);
+				lEffect->SetState(UI_STATE::ACTIVE);
 			}
 		}
 
@@ -189,7 +199,6 @@ void RewardPanel::Update()
 		anim->SetSize(Vector2(160.0f, 90.0f));
 		coinValue = targetCoinValue;
 		coinText->SetText(to_string((int)coinValue));
-		
 		// Ã¢´Ý±â
 		if (KEY_CON->Down(VK_RETURN))
 		{
@@ -288,6 +297,7 @@ void RewardPanel::SetActive(bool active)
 		c->SetActive(active);
 
 	openText->SetActive(false);
+	lEffect->SetState(UI_STATE::IDLE);
 	selector->SetActive(false);
 	icon->SetActive(false);
 	getBtn->SetActive(false);

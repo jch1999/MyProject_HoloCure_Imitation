@@ -14,10 +14,11 @@ protected:
 
 	RewardBox* nowBox;
 	TextPrinter* openText;
+	LightEffect* lEffect;
+
 	// 선택된 스킬 표시
 	SkillSelector* selector;
 	SkillIcon* icon;
-	LightEffect* lEffect;
 	// 스킬 획득 여부 선택지
 	int seletIdx;
 	Button* getBtn, *dropBtn;

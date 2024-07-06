@@ -2,7 +2,7 @@
 class SpiderCooking :public Weapon
 {
 private:
-	Projectile* poision;
+	Projectile* poison;
 
 	vector<float> hitCooldown_table;
 	vector<int> hiLimit_table;
@@ -14,6 +14,7 @@ private:
 	vector<Enemy*> removeList;
 	// 충돌한 Enemy의 피격 횟수
 	map<Enemy*, int> enemyHitCount;
+
 public:
 	SpiderCooking();
 	~SpiderCooking();

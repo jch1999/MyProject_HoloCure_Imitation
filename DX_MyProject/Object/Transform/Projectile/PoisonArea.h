@@ -2,10 +2,10 @@
 class PoisonArea :public Projectile
 {
 protected:
-
+	Vector2 defaultSize;
 
 public:
-	PoisonArea();
+	PoisonArea(Vector2 size = Vector2(107.0f, 107.0f));
 	~PoisonArea();
 
 	// Projectile을(를) 통해 상속됨

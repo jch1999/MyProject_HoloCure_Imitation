@@ -34,5 +34,6 @@ void Projectile::SetColliderIdx(int idx)
 {
 	colliders[idx_collider]->SetActive(false);
 	collider = colliders[idx];
+	colliders[idx_collider]->SetActive(true);
 	idx_collider = idx;
 }

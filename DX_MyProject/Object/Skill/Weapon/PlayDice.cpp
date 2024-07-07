@@ -22,7 +22,7 @@ PlayDice::PlayDice()
 	projCnt_talbe = { 0, 1, 1, 2, 2, 2, 2, 3 };
 	projSPD_table = { 0,16,16,16,19,19,19,19 };
 	hitLimt_table = { 0, 4, 4, 4, 4, 4, 4, 4 };	// Ã¹ Ãæµ¹ 1, µµÅº 3
-	colliderIdx_table = { 0,0,0,0,2,2,2,2 };
+	colliderIdx_table = { 0,0,0,0,1,1,1,1 };
 	ricochet_table = { 0,3,3,3,3,3,3,3 };
 	knockbackSpeed_table = { 0,0,0,0,0,5,5,5 };
 	targetDist_table = { 0,200.0f,200.0f,200.0f,250.0f,250.0f,250.0f,250.0f };

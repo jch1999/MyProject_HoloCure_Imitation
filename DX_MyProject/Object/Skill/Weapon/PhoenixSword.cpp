@@ -15,7 +15,7 @@ PhoenixSword::PhoenixSword()
 	
 	minDamage_table = { 0,11.0f, 14.0f,14.0f, 14.0f, 14.0f, 17.0f,5.0f };
 	maxDamage_table = { 0,15.0f, 18.0f,18.0f, 18.0f, 18.0f, 21.0f,9.0f };
-	colliderIdx_table = { 0,0,0,1,1,1,1,3 };
+	colliderIdx_table = { 0,0,0,1,1,1,1,1 };
 	hitCooldown_table = { 0,0.33f,0.33f,0.33f,0.33f,0.08f,0.08f,0.07f };
 	hiLimit_table = { 0,1,1,1,1,2,2,2 };
 	skillDelay_table = { 0, 1.17f, 1.17f, 1.17f, 1.0f, 1.0f, 1.0f, 1.0f };

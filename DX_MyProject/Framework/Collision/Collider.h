@@ -69,7 +69,7 @@ public:
     {
         CB->data.colour = Float4(r, g, b, 1);
     }
-
+    virtual Vector2 Size() = 0;
 protected:
     virtual void CreateLine() = 0;
 

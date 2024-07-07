@@ -59,7 +59,10 @@ bool SpiderCooking::LevelUp()
 	if (now_level == 1)
 	{
 		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
+		poison->SetActive(true);
+		poison->GetCollider()->SetActive(true);
 	}
+	poison->SetColliderIdx(colliderIdx_table[now_level]);
 	return true;
 }
 

@@ -3,7 +3,6 @@ class TestScene :public Scene
 {
 private:
 	Player* player;
-
 public:
 	TestScene();
 	~TestScene();

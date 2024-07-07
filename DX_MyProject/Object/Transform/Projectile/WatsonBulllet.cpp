@@ -14,12 +14,8 @@ WatsonBullet::WatsonBullet(Vector2 size)
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::PINGPONG, 1.0f / 8.0f));
 	clip_idx = 0;
 
-	for (int i = 0; i < 5; i++)
-	{
-		RectCollider* collider = new RectCollider(size * (1.0f + i * 0.15f));
-		colliders.push_back(collider);
-		colliders[i]->SetActive(false);
-	}
+	colliders.push_back(new RectCollider(size));
+	colliders[0]->SetActive(false);
 	collider = colliders[0];
 	collider->pos = pos;
 	

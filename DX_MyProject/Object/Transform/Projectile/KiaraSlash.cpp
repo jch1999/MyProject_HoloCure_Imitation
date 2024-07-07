@@ -32,11 +32,8 @@ KiaraSlash::KiaraSlash(Vector2 size)
 	frames.clear();
 
 	// 0~2 : PhoenixSword스킬의 기본 collider 설정,
-	// 3~7 : 외부 스킬(Buff)로 인한 범위 증가량
-	for (int i = 0; i < 8; i++)
-	{
-		colliders.push_back(new RectCollider(size * (1.0f + i * 0.2f)));
-	}
+	colliders.push_back(new RectCollider(size));
+	colliders.push_back(new RectCollider(size * 1.25f));
 
 	idx_collider;
 	collider = colliders[idx_collider];

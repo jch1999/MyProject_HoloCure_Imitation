@@ -21,9 +21,9 @@ protected:
 	float moveDist;
 	float targetDist;
 
-	RectCollider* collider;
+	Collider* collider;
 
-	vector<RectCollider*> colliders;// 단계별 충돌범위 크기
+	vector<Collider*> colliders;// 단계별 충돌범위 크기
 	int idx_collider;
 	vector<Clip*> clips;// 일반 & Awaken(각성)
 	// 일반 or Awaken에서도 애니메이션이 갈릴 경우 사용
@@ -43,7 +43,7 @@ public:
 	virtual void SetDirection(Vector2 dir) { move_dir = dir; }
 	virtual void respwan() = 0;
 
-	RectCollider* GetCollider() { return collider; }
+	Collider* GetCollider() { return collider; }
 
 	virtual float  GetDamage() { return damage; }
 

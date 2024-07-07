@@ -27,10 +27,9 @@ BaelzDice::BaelzDice(Vector2 size)
 		frames.clear();
 	}
 
-	// idx ´ç 15% ¾¿ Ä¿Áü
-	for (int i = 0; i <= 7; i++)
+	for (int i = 0; i < 2; i++)
 	{
-		RectCollider* collider = new RectCollider(size * (1.0f + i * 0.15f));
+		RectCollider* collider = new RectCollider(size * (1.0f + i * 0.3f));
 		colliders.push_back(collider);
 	}
 

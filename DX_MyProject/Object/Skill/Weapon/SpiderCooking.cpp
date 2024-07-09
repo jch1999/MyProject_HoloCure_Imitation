@@ -18,7 +18,6 @@ SpiderCooking::SpiderCooking()
 	maxDamage_table = { 0, 11.0f, 11.0f,14.0f, 14.0f, 14.0f, 16.0f,16.0f };
 	colliderIdx_table = { 0, 0, 1, 1, 2, 2, 2, 2 };
 	hitCooldown_table = { 0, 0.75f, 0.75f, 0.75f, 0.75f, 0.6f, 0.6f, 0.6f };
-	hiLimit_table = { 0,1,1,1,1,1,1 };
 
 	poison = new PoisonArea();
 
@@ -75,4 +74,72 @@ void SpiderCooking::UpdatePoision()
 {
 	poison->pos = player->pos;
 	poison->Update();
+
+	// 충돌 중인 Enemey 검출
+	enemyNowFrame.clear();
+	removeList.clear();
+	//const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
+	// Slash의 pos의 CELL 위치를 중앙으로 3x3 영역을 검사
+	pair<int, int> sPos = make_pair(poison->pos.x / CELL_X, poison->pos.y / CELL_Y);
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <= 1; j++)
+		{
+			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(make_pair(sPos.first + i, sPos.second + j));
+			for (auto e : enemyList)
+			{
+				if (!e->is_active)continue;
+				if (poison->GetCollider()->isCollision(e->GetDamageCollider()))
+					enemyNowFrame.push_back(e);
+			}
+		}
+	}
+
+	// 리스트 갱신
+	for (auto e : enemyNowFrame)
+	{
+		auto found = enemyCooltimes.find(e);
+		// 기존에 존재하지 않음 - 추가 및 바로 공격하게 설정
+		if (found == enemyCooltimes.end())
+		{
+			enemyCooltimes[e] = 0.0f;
+		}
+		// 기존에 존재 - 시간 감소
+		else
+		{
+			enemyCooltimes[e] = found->second - DELTA;
+		}
+	}
+
+	// 시간 경과 체크, coolTime이 지났으면 damage주기
+	for (auto m : enemyCooltimes)
+	{
+		//m.second -= DELTA;
+		if (m.second <= 0.0f)
+		{
+			enemyCooltimes[m.first] = hitCooldown_table[now_level];
+			float nowCoolTime = enemyCooltimes[m.first];
+			if (player->isCritical())
+				{
+				m.first->ChangeHP(-(poison->GetDamage()) * 1.5f, true);
+			}
+			else
+			{
+				m.first->ChangeHP(-(poison->GetDamage()), false);
+			}
+			// 이미 죽은 Enemy를 제거 리스트에 추가
+			if (!m.first->is_active)
+			{
+				removeList.push_back(m.first);
+			}
+
+		}
+	}
+
+	// 제거
+	for (auto e : removeList)
+	{
+		enemyCooltimes.erase(enemyCooltimes.find(e));
+	}
 }
+

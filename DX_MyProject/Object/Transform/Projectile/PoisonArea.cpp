@@ -15,7 +15,6 @@ PoisonArea::PoisonArea(Vector2 size)
 	frames.clear();
 
 	// 0~2 : SpiderCooking스킬의 기본 collider 설정,
-	// 3~7 : 외부 스킬(Buff)로 인한 범위 증가량
 	colliders.push_back(new CircleCollider(defaultSize.x));
 	colliders.push_back(new CircleCollider(defaultSize.x*1.15f)); // SpiderCooking LV 2
 	colliders.push_back(new CircleCollider(defaultSize.x*1.25f)); // SpiderCooking LV 4
@@ -37,7 +36,7 @@ void PoisonArea::Update()
 	WorldUpdate();
 
 	collider->pos = pos;
-	collider->rot.z = this->rot.z;
+	// collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /

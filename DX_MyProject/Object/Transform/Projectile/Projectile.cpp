@@ -33,7 +33,7 @@ void Projectile::SetStatus(float damage, float speed, int hitCount, float lifeTi
 void Projectile::SetColliderIdx(int idx)
 {
 	colliders[idx_collider]->SetActive(false);
-	collider = colliders[idx];
-	colliders[idx_collider]->SetActive(true);
+	collider = colliders[idx];	
 	idx_collider = idx;
+	colliders[idx_collider]->SetActive(true);
 }

@@ -5,7 +5,6 @@ private:
 	Projectile* poison;
 
 	vector<float> hitCooldown_table;
-	vector<int> hiLimit_table;
 	// 기존에 충돌한 Enemy 리스트
 	map<Enemy*, float> enemyCooltimes;
 	// 이번 프레임에 충돌한 Enemy 리스트

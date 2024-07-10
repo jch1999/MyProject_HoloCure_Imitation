@@ -35,5 +35,5 @@ public:
 
 	// Collider을(를) 통해 상속됨
 	virtual bool isLineCollision(Vector2 line_start, Vector2 line_end) override;
-	virtual Vector2 Size() override { return Vector2(radius,radius) * GlobalScale(); }
+	virtual Vector2 Size() override { return Vector2(radius * 2.0f, radius * 2.0f) * GlobalScale(); }
 };

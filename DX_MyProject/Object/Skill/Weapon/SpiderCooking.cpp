@@ -89,8 +89,14 @@ void SpiderCooking::UpdatePoision()
 			for (auto e : enemyList)
 			{
 				if (!e->is_active)continue;
-				if (poison->GetCollider()->isCollision(e->GetDamageCollider()))
-					enemyNowFrame.push_back(e);
+				// 콜라이더 중점 사이의 거리 < 콜라이더 길이의 합 일 때만 충돌 검사
+				float sumLength = poison->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength();
+				float dist = (poison->GetCollider()->pos - e->GetDamageCollider()->pos).GetLength();
+				if (sumLength >= dist)
+				{
+					if (poison->GetCollider()->isCollision(e->GetDamageCollider()))
+						enemyNowFrame.push_back(e);
+				}
 			}
 		}
 	}
@@ -98,16 +104,15 @@ void SpiderCooking::UpdatePoision()
 	// 리스트 갱신
 	for (auto e : enemyNowFrame)
 	{
-		auto found = enemyCooltimes.find(e);
 		// 기존에 존재하지 않음 - 추가 및 바로 공격하게 설정
-		if (found == enemyCooltimes.end())
+		if (enemyCooltimes.find(e) == enemyCooltimes.end())
 		{
 			enemyCooltimes[e] = 0.0f;
 		}
 		// 기존에 존재 - 시간 감소
 		else
 		{
-			enemyCooltimes[e] = found->second - DELTA;
+			enemyCooltimes[e]-= DELTA;
 		}
 	}
 
@@ -117,15 +122,16 @@ void SpiderCooking::UpdatePoision()
 		//m.second -= DELTA;
 		if (m.second <= 0.0f)
 		{
-			enemyCooltimes[m.first] = hitCooldown_table[now_level];
+			enemyCooltimes[m.first] = hitCooldown_table[now_level] * 3.0f;
 			float nowCoolTime = enemyCooltimes[m.first];
+			float damage = Random::Get()->GetRandomFloat(minDamage_table[now_level], maxDamage_table[now_level]);
 			if (player->isCritical())
-				{
-				m.first->ChangeHP(-(poison->GetDamage()) * 1.5f, true);
+			{
+				m.first->ChangeHP(-damage * 1.5f, true);
 			}
 			else
 			{
-				m.first->ChangeHP(-(poison->GetDamage()), false);
+				m.first->ChangeHP(-damage, false);
 			}
 			// 이미 죽은 Enemy를 제거 리스트에 추가
 			if (!m.first->is_active)

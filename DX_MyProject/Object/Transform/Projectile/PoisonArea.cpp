@@ -15,9 +15,9 @@ PoisonArea::PoisonArea(Vector2 size)
 	frames.clear();
 
 	// 0~2 : SpiderCooking스킬의 기본 collider 설정,
-	colliders.push_back(new CircleCollider(defaultSize.x));
-	colliders.push_back(new CircleCollider(defaultSize.x*1.15f)); // SpiderCooking LV 2
-	colliders.push_back(new CircleCollider(defaultSize.x*1.25f)); // SpiderCooking LV 4
+	colliders.push_back(new CircleCollider(defaultSize.x * 0.5f));
+	colliders.push_back(new CircleCollider(defaultSize.x * 0.5f * 1.15f)); // SpiderCooking LV 2
+	colliders.push_back(new CircleCollider(defaultSize.x * 0.5f * 1.25f)); // SpiderCooking LV 4
 
 	idx_collider=0;
 	collider = colliders[idx_collider];
@@ -36,7 +36,6 @@ void PoisonArea::Update()
 	WorldUpdate();
 
 	collider->pos = pos;
-	// collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /

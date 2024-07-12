@@ -80,24 +80,20 @@ void SpiderCooking::UpdatePoision()
 	removeList.clear();
 	//const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
 	// Slash의 pos의 CELL 위치를 중앙으로 3x3 영역을 검사
+	// EnemySpawner에서 가운데 cell을 기준으로 3x3 크기에 포함되는 적들 정보를 저장했는데 여기서
+	// 또 3x3으로 검사하면 9번 들어가려나?
 	pair<int, int> sPos = make_pair(poison->pos.x / CELL_X, poison->pos.y / CELL_Y);
-	for (int i = -1; i <= 1; i++)
+	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(make_pair(sPos.first, sPos.second));
+	for (auto e : enemyList)
 	{
-		for (int j = -1; j <= 1; j++)
+		if (!e->is_active)continue;
+		// 콜라이더 중점 사이의 거리 < 콜라이더 길이의 합 일 때만 충돌 검사
+		float sumLength = poison->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength();
+		float dist = (poison->GetCollider()->pos - e->GetDamageCollider()->pos).GetLength();
+		if (sumLength >= dist)
 		{
-			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(make_pair(sPos.first + i, sPos.second + j));
-			for (auto e : enemyList)
-			{
-				if (!e->is_active)continue;
-				// 콜라이더 중점 사이의 거리 < 콜라이더 길이의 합 일 때만 충돌 검사
-				float sumLength = poison->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength();
-				float dist = (poison->GetCollider()->pos - e->GetDamageCollider()->pos).GetLength();
-				if (sumLength >= dist)
-				{
-					if (poison->GetCollider()->isCollision(e->GetDamageCollider()))
-						enemyNowFrame.push_back(e);
-				}
-			}
+			if (poison->GetCollider()->isCollision(e->GetDamageCollider()))
+				enemyNowFrame.push_back(e);
 		}
 	}
 
@@ -122,7 +118,7 @@ void SpiderCooking::UpdatePoision()
 		//m.second -= DELTA;
 		if (m.second <= 0.0f)
 		{
-			enemyCooltimes[m.first] = hitCooldown_table[now_level] * 3.0f;
+			enemyCooltimes[m.first] = hitCooldown_table[now_level];
 			float nowCoolTime = enemyCooltimes[m.first];
 			float damage = Random::Get()->GetRandomFloat(minDamage_table[now_level], maxDamage_table[now_level]);
 			if (player->isCritical())

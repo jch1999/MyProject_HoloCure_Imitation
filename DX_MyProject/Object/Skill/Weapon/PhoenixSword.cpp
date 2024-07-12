@@ -156,18 +156,12 @@ void PhoenixSword::UpdateSlash()
 	//const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
 	// Slash의 pos의 CELL 위치를 중앙으로 3x3 영역을 검사
 	pair<int, int> sPos = make_pair(slash->pos.x / CELL_X, slash->pos.y / CELL_Y);
-	for (int i = -1; i <= 1; i++)
+	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(make_pair(sPos.first, sPos.second));
+	for (auto e : enemyList)
 	{
-		for (int j = -1; j <= 1; j++)
-		{
-			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(make_pair(sPos.first + i, sPos.second + j));
-			for (auto e : enemyList)
-			{
-				if (!e->is_active)continue;
-				if (slash->GetCollider()->isCollision(e->GetDamageCollider()))
-					enemyNowFrame_s.push_back(e);
-			}
-		}
+		if (!e->is_active)continue;
+		if (slash->GetCollider()->isCollision(e->GetDamageCollider()))
+			enemyNowFrame_s.push_back(e);
 	}
 	
 	// 리스트 갱신

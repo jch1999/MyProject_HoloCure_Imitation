@@ -2,7 +2,7 @@
 
 TestScene::TestScene()
 {
-	player = new Baelz();
+	player = new Kiara();
 	player->pos = WIN_CENTER;
 	CAM->SetTarget(player);
 

@@ -7,4 +7,5 @@
 #include "PoisonArea.h"
 #include "Tear.h"
 #include "Bomb.h"
+#include "ExplosionSmoke.h"
 #include "Ball.h"

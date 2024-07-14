@@ -199,6 +199,7 @@ void RewardPanel::Update()
 		anim->SetSize(Vector2(160.0f, 90.0f));
 		coinValue = targetCoinValue;
 		coinText->SetText(to_string((int)coinValue));
+		lEffect->rot.z += 60.0f * M_PI / 180.0f * DELTA;
 		// Ã¢´Ý±â
 		if (KEY_CON->Down(VK_RETURN))
 		{
@@ -272,6 +273,7 @@ void RewardPanel::Render()
 void RewardPanel::PostRender()
 {
 	if (!is_active)return;
+	lEffect->PostRender();
 }
 
 void RewardPanel::SetState(UI::UI_STATE state)

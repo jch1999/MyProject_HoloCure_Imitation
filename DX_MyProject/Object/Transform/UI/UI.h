@@ -114,7 +114,7 @@ public:
 	void SetAddtionalScale(Vector2 scale) { this->additional_scale = scale; }
 	const Vector2& GetAdditionalScale() { return additional_scale; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }
-	const Vector2& GetOffset() { return offset; }
+	const Vector2& GetOffset() { return this->offset; }
 	void AddOffset(Vector2 offset) { this->offset = this->offset + offset; }
 	virtual void SetState(UI::UI_STATE state) = 0;
 	virtual void SetID(UI::UI_ID id) = 0;

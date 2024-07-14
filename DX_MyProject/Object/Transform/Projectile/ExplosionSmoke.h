@@ -1,23 +1,16 @@
 #pragma once
-class Bomb :public Projectile
+class ExplosionSmoke :public Projectile
 {
 private:
 	Vector2 size;
-	float thorwDist;
 public:
-	Bomb(Vector2 size = Vector2(38.0f, 38.0f), float targetDist = 100.0f, Vector2 move_dir = Vector2(0, 0));
-	~Bomb();
-
+	ExplosionSmoke(Vector2 size = Vector2(38.0f, 38.0f));
+	~ExplosionSmoke();
 
 	// Projectile을(를) 통해 상속됨
 	virtual void Update() override;
-
 	virtual void Render() override;
-
 	virtual void PostRender() override;
-
 	virtual void respwan() override;
-
 	virtual void Hit() override;
-
 };

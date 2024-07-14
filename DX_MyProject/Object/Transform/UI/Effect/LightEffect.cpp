@@ -24,15 +24,22 @@ void LightEffect::Update()
 
 	if (target != nullptr)
 		pos = target->pos + offset;
+
+	for (int i = 0; i < lightEffect.size(); i++)
+	{
+		lightEffect[i]->SetAngle(72.0f * M_PI / 180.0f * i + this->rot.z);
+	}
+
 	for (auto c : child_list)
 	{
-		c->SetOffset(Vector2(round(cosf(90.0f * M_PI / 180.0f + c->GetAngle())), round(sinf(90.0f * M_PI / 180.0f + c->GetAngle()))) * dist * -1.0f
-			+ Vector2(0.0f, -10.0f));
+		c->SetOffset(Vector2((cosf(90.0f * M_PI / 180.0f + c->GetAngle())), (sinf(90.0f * M_PI / 180.0f + c->GetAngle()))) * dist * -1.0f
+			+ Vector2(0.0f, 15.0f));
 	}
-	lightEffect[1]->SetOffset(lightEffect[1]->GetOffset() + Vector2(10.0f, -15.0f));
-	lightEffect[4]->SetOffset(lightEffect[4]->GetOffset() + Vector2(-10.0f, -15.0f));
-	lightEffect[2]->SetOffset(lightEffect[2]->GetOffset() + Vector2(-15.0f, 10.0f));
-	lightEffect[3]->SetOffset(lightEffect[3]->GetOffset() + Vector2(15.0f, 10.0f));
+	//lightEffect[1]->SetOffset(lightEffect[1]->GetOffset() + Vector2(10.0f, -15.0f));
+	//lightEffect[4]->SetOffset(lightEffect[4]->GetOffset() + Vector2(-10.0f, -15.0f));
+	//lightEffect[2]->SetOffset(lightEffect[2]->GetOffset() + Vector2(-15.0f, 10.0f));
+	//lightEffect[3]->SetOffset(lightEffect[3]->GetOffset() + Vector2(15.0f, 10.0f));
+
 	WorldUpdate();
 	for (auto c : child_list)
 		c->Update();
@@ -48,7 +55,7 @@ void LightEffect::Render()
 
 void LightEffect::PostRender()
 {
-	ImGui::SliderFloat("Dist", &dist, 0.0f, 150.0f);
+	//ImGui::SliderFloat("Dist", &dist, 0.0f, 150.0f);
 }
 
 void LightEffect::SetState(UI::UI_STATE state)

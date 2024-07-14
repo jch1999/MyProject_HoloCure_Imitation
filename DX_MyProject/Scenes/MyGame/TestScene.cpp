@@ -94,9 +94,9 @@ void TestScene::PostRender()
 	ImGui::Text("Sources1 : https://www.spriters-resource.com/search/?q=holocure");
 	ImGui::Text("Sources2 : https://holocure.fandom.com/wiki/HoloCure_Wiki");
 	ImGui::Text("Cam's pos : %f %f", CAM->pos.x, CAM->pos.y);
-	player->PostRender();
+	//player->PostRender();
 
-	SkillManager::Get()->PostRneder();
-	ItemSpawner::Get()->PostRneder();
+	//SkillManager::Get()->PostRneder();
+	//ItemSpawner::Get()->PostRneder();
 	UIManager::Get()->PostRneder();
 }

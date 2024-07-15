@@ -21,4 +21,6 @@ public:
 
 	void UpdateBomb();
 	void UpdateBombEffect();
+	Projectile* GetBomb();
+	Projectile* GetExplosionSmoke();
 };

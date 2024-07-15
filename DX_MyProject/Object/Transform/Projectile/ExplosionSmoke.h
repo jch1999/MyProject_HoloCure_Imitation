@@ -13,4 +13,6 @@ public:
 	virtual void PostRender() override;
 	virtual void respwan() override;
 	virtual void Hit() override;
+
+	bool isDamageAble();
 };

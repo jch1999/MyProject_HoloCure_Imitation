@@ -32,7 +32,7 @@ PlayDice::PlayDice()
 	{
 		projectiles.push_back(new BaelzDice(Vector2(36.0f, 36.0f)));
 		ricochetCnt.push_back(0);
-		vector<Enemy*> v;
+		set<Enemy*> v;
 		hitEnemies.push_back(v);
 	}
 	enhanceDamage = 0.0f;
@@ -120,17 +120,10 @@ void PlayDice::Update()
 			{
 				if (p->GetCollider()->isCollision(e->GetDamageCollider()))
 				{
-					bool exist = false;
-					for (auto e2 : hitEnemies[i])
-					{
-						if (e == e2)
-						{
-							exist = true;
-							break;
-						}
-					}
 					// 이미 충돌한 적이 있다면 넘어가고
-					if (exist)continue;
+					if (hitEnemies[i].find(e) != hitEnemies[i].end())
+						continue;
+
 					// 더 이상 부딪힐 횟수가 없다면 이 탄환의 충돌처리 종료
 					if (!p->is_active)break;
 
@@ -141,7 +134,7 @@ void PlayDice::Update()
 					p->Hit();
 					if(isKnockBack)
 						e->SetKnockBack(p->move_dir, 0.2f);
-					hitEnemies[i].push_back(e);
+					hitEnemies[i].insert(e);
 
 					if (ricochet_table[now_level] > 0) // 도탄 생성
 					{
@@ -255,7 +248,7 @@ Projectile* PlayDice::GetTargetProj()
 		proj = new BaelzDice(Vector2(36.0f, 36.0f));
 		projectiles.push_back(proj);
 		ricochetCnt.push_back(0);
-		vector<Enemy*> v;
+		set<Enemy*> v;
 		hitEnemies.push_back(v);
 	}
 	return proj;

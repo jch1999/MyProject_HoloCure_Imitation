@@ -84,3 +84,8 @@ void ExplosionSmoke::respwan()
 void ExplosionSmoke::Hit()
 {
 }
+
+bool ExplosionSmoke::isDamageAble()
+{
+	return is_active&&(clips[clip_idx]->GetFrameNum()<clips[clip_idx]->GetFrameCnt()/5);
+}

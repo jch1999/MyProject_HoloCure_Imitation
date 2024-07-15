@@ -6,8 +6,7 @@ private:
 	float now_proj_delay;
 	int projCnt;
 
-	vector<Projectile*> bombs;
-	vector<Projectile*> bombEffects;
+	vector<Projectile*> explosions;
 
 public:
 	HoloBomb();

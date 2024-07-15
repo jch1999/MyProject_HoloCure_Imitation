@@ -2,8 +2,6 @@
 
 PlayDice::PlayDice()
 	:Weapon(SKILL_ID::PLAY_DICE)
-	, proj_delay(0.2f), now_proj_delay(0.0f)
-	, projCnt(0)
 	,isKnockBack(false)
 {
 	weight = 3;
@@ -21,7 +19,7 @@ PlayDice::PlayDice()
 	maxDamage_table = { 0,6,7,7,7,7,4,8 };
 	projCnt_talbe = { 0, 1, 1, 2, 2, 2, 2, 3 };
 	projSPD_table = { 0,16,16,16,19,19,19,19 };
-	hitLimt_table = { 0, 4, 4, 4, 4, 4, 4, 4 };	// Ã¹ Ãæµ¹ 1, µµÅº 3
+	hitLimit_table = { 0, 4, 4, 4, 4, 4, 4, 4 };	// Ã¹ Ãæµ¹ 1, µµÅº 3
 	colliderIdx_table = { 0,0,0,0,1,1,1,1 };
 	ricochet_table = { 0,3,3,3,3,3,3,3 };
 	knockbackSpeed_table = { 0,0,0,0,0,5,5,5 };
@@ -80,7 +78,7 @@ void PlayDice::Update()
 					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, 100.0f * projSPD_table[now_level], hitLimt_table[now_level], 2.0f);
+				proj->SetStatus(damage, 100.0f * projSPD_table[now_level], hitLimit_table[now_level], 2.0f);
 				proj->SetDirection(player->GetAttackDir());
 				int clip_idx = max_level == now_level ? 6 + diceEye-1 : diceEye-1;
 				proj->SetClipIdx(clip_idx);

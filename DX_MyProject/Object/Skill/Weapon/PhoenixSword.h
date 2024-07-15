@@ -2,12 +2,7 @@
 class PhoenixSword :public Weapon
 {
 private:
-	float proj_delay;
-	float now_proj_delay;
-	int projCnt;
-
 	vector<float> hitCooldown_table;
-	vector<int> hiLimit_table;
 	float blaze_hitCool;
 
 	Projectile* slash;

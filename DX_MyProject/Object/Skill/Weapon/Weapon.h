@@ -8,12 +8,27 @@ public:
 		RANGE,			// 단순 발사형
 		MELEE			// 근접 공격형
 	}type;
+
 protected:
+	float proj_delay;
+	float now_proj_delay;
+	int projCnt;
+
 	// level 당 데미지, 콜라이더 index
 	vector<float> minDamage_table;
 	vector<float> maxDamage_table;
 	vector<int> colliderIdx_table;
-	
+
+	// level 당 투사체 수, 투사체의 hit 제한수, 공격 딜레이
+	vector<float> projCnt_talbe;
+	vector<int> hitLimit_table;
+	vector<float> delay_table;
+	vector<int> ricochet_table;
+
+	// 무기에서 사용하는 projectile
+	vector<Projectile*> projectiles;
+	vector<int> ricochetCnt; // 각 탄환의 도탄횟수
+	vector<vector<Enemy*>> hitEnemies; // 중복 충돌을 막기 위해 충도한 에너미의 정보를 저장
 
 public:
 	Weapon(SKILL_ID id,int maxLevel=7);

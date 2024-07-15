@@ -8,12 +8,17 @@ ExplosionSmoke::ExplosionSmoke(Vector2 size)
 	Texture* t = Texture::Add(file);
 
 	vector<Frame*> frames;
-	Vector2 initPos(7.0f, 3736.0f);
-	Vector2 frameSize(38.0f, 38.0f);
-	for (int i = 0; i < 4; i++)
+	Vector2 initPos(4.0f, 1194.0f);
+	Vector2 frameSize(128.0f, 128.0f);
+	for (int i = 0; i < 3; i++)
 	{
-		frames.push_back(new Frame(file, initPos.x + i * 39.0f, initPos.y
-			, frameSize.x, frameSize.y));
+		for (int j = 0; j < 4; j++)
+		{
+			frames.push_back(new Frame(file, initPos.x + j * 130.0f, initPos.y + i * 130.0f
+				, frameSize.x, frameSize.y));
+			if (i == 2 && j == 2)
+				break;
+		}
 	}
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::PINGPONG, 1 / 4.0f));
 	clip_idx = 0;

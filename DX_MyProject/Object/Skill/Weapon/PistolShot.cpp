@@ -2,9 +2,11 @@
 
 PistolShot::PistolShot()
 	:Weapon(SKILL_ID::PISTOL_SHOT)
-	,proj_delay(0.2f),now_proj_delay(0.0f)
-	,projCnt(0)
 {
+	proj_delay = 0.2f;
+	now_proj_delay = 0.0f;
+	projCnt = 0;
+
 	weight = 3;
 	skill_name = "PISTOL SHOT";
 	level_scripts.push_back("Shoots 3 Projectiles forward.");
@@ -19,7 +21,7 @@ PistolShot::PistolShot()
 	minDamage_table = { 0,8,8,10,10,10,12,12 };
 	maxDamage_table = { 0,12,12,14,14,14,16,16 };
 	projCnt_talbe = { 0,3,5,5,5,5,5,5 };
-	hitLimt_table = { 0,1,2,2,2,3,3,3 };
+	hitLimit_table = { 0,1,2,2,2,3,3,3 };
 	colliderIdx_table = { 0,0,0,0,0,0,0,0 };
 	ricochet_table = { 0,0,0,0,1,1,1,1 };
 
@@ -99,7 +101,7 @@ void PistolShot::Update()
 					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, 250.0f, hitLimt_table[now_level], 2.0f);
+				proj->SetStatus(damage, 250.0f, hitLimit_table[now_level], 2.0f);
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxShot());
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
@@ -206,7 +208,7 @@ void PistolShot::Update()
 								* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 								+ player->GetATK()
 								+ enhanceDamage;
-							p->SetStatus(damage, 250.0f, hitLimt_table[now_level], 2.0f);
+							p->SetStatus(damage, 250.0f, hitLimit_table[now_level], 2.0f);
 							ricochetCnt[i]++;
 							p->respwan();
 							break;

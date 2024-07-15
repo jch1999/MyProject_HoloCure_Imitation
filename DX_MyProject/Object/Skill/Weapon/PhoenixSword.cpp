@@ -17,7 +17,7 @@ PhoenixSword::PhoenixSword()
 	maxDamage_table = { 0,15.0f, 18.0f,18.0f, 18.0f, 18.0f, 21.0f,9.0f };
 	colliderIdx_table = { 0,0,0,1,1,1,1,1 };
 	hitCooldown_table = { 0,0.33f,0.33f,0.33f,0.33f,0.08f,0.08f,0.07f };
-	hiLimit_table = { 0,1,1,1,1,2,2,2 };
+	hitLimit_table = { 0,1,1,1,1,2,2,2 };
 	skillDelay_table = { 0, 1.17f, 1.17f, 1.17f, 1.0f, 1.0f, 1.0f, 1.0f };
 	blaze_hitCool = 1.0f;
 
@@ -187,7 +187,7 @@ void PhoenixSword::UpdateSlash()
 		//m.second -= DELTA;
 		if (m.second <= 0.0f)
 		{
-			if (enemyHitCount[m.first] < hiLimit_table[now_level])
+			if (enemyHitCount[m.first] < hitLimit_table[now_level])
 			{
 				enemyCooltimes_s[m.first] = hitCooldown_table[now_level];
 				if (player->isCritical())

@@ -7,6 +7,8 @@ Weapon::Weapon(SKILL_ID id, int maxLevel)
 
 Weapon::~Weapon()
 {
+	for (auto p : projectiles)
+		delete p;
 }
 
 bool Weapon::Enhance()

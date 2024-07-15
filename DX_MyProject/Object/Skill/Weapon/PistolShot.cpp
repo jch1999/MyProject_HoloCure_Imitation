@@ -44,8 +44,7 @@ PistolShot::PistolShot()
 
 PistolShot::~PistolShot()
 {
-	for (auto p : projectiles)
-		delete p;
+	
 }
 
 void PistolShot::Update()

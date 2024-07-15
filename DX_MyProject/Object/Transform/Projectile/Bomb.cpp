@@ -42,8 +42,8 @@ void Bomb::Update()
 	collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * size /
-		clips[clip_idx]->GetFrameOriginSize() * 1.5f;
+	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
+		clips[clip_idx]->GetFrameOriginSize();
 
 	clips[clip_idx]->Update();
 }
@@ -68,7 +68,12 @@ void Bomb::PostRender()
 
 void Bomb::respwan()
 {
-	moveDist = 0.0f;
+	WorldUpdate();
+	collider->pos = pos;
+	collider->WorldUpdate();
+	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
+		clips[clip_idx]->GetFrameOriginSize();
+
 	SetActive(true);
 	collider->SetActive(true);
 }

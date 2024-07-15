@@ -24,6 +24,8 @@ ExplosionSmoke::ExplosionSmoke(Vector2 size)
 	clip_idx = 0;
 
 	colliders.push_back(new RectCollider(size));
+	colliders.push_back(new RectCollider(size*1.15f));
+	colliders.push_back(new RectCollider(size*1.2f));
 	collider = colliders[0];
 
 	is_active = false;
@@ -44,8 +46,8 @@ void ExplosionSmoke::Update()
 	collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * size /
-		clips[clip_idx]->GetFrameOriginSize() * 1.5f;
+	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
+		clips[clip_idx]->GetFrameOriginSize();
 
 	clips[clip_idx]->Update();
 }

@@ -40,8 +40,7 @@ PlayDice::PlayDice()
 
 PlayDice::~PlayDice()
 {
-	for (auto p : projectiles)
-		delete p;
+	
 }
 
 void PlayDice::Update()

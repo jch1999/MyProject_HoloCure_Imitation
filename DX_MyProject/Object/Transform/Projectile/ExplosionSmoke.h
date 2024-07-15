@@ -4,7 +4,7 @@ class ExplosionSmoke :public Projectile
 private:
 	Vector2 size;
 public:
-	ExplosionSmoke(Vector2 size = Vector2(38.0f, 38.0f));
+	ExplosionSmoke(Vector2 size = Vector2(128.0f, 128.0f));
 	~ExplosionSmoke();
 
 	// Projectile을(를) 통해 상속됨

@@ -22,8 +22,10 @@ HoloBomb::HoloBomb()
 	colliderIdx_table = { 0,0,1,1,1,1,2,2 };
 
 	type = WEAPON_TYPE::MULTI_SHOT;
+	id = Skill::SKILL_ID::HOLO_BOMB;
+	action_status = Skill::SKILL_STATUS::COOLDOWN;
 
-	// 기본적으로 폭탄과 폭발 효과를 20개 씩 생성시켜 놓고 재활용
+	// 기본적으로 폭탄과 폭발 효과를 10개 씩 생성시켜 놓고 재활용
 	for (int i = 0; i < 10; i++)
 	{
 		Projectile* bomb = new Bomb();
@@ -85,7 +87,7 @@ void HoloBomb::Update()
 					+ enhanceDamage;
 				proj->SetStatus(damage, 250.0f, hitLimit_table[now_level], -1.0f);
 				proj->SetDirection(player->GetAttackDir());
-				proj->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxShot());
+				proj->SetColliderIdx(0);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
 				proj->rot.z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
 				proj->respwan();

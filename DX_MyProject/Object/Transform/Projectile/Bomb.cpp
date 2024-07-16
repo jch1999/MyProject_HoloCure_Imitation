@@ -14,7 +14,7 @@ Bomb::Bomb(Vector2 size, float targetDist, Vector2 move_dir)
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1));
 	clip_idx = 0;
 
-	colliders.push_back(new RectCollider(size * Vector2(1.5f, 1.2f)));
+	colliders.push_back(new RectCollider(size * Vector2(1.2f, 1.2f)));
 	collider = colliders[0];
 
 	is_active = false;

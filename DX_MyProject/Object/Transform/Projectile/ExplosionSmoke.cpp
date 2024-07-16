@@ -20,7 +20,7 @@ ExplosionSmoke::ExplosionSmoke(Vector2 size)
 				break;
 		}
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 10.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 12.0f));
 	clip_idx = 0;
 
 	colliders.push_back(new RectCollider(size));
@@ -50,6 +50,11 @@ void ExplosionSmoke::Update()
 		clips[clip_idx]->GetFrameOriginSize();
 
 	clips[clip_idx]->Update();
+	if (clips[clip_idx]->GetFrameNum() == (clips[clip_idx]->GetFrameCnt() - 1))
+	{
+		is_active = false;
+		collider->SetActive(false);
+	}
 }
 
 void ExplosionSmoke::Render()

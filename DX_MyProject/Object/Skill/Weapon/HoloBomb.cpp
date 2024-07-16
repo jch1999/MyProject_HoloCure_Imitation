@@ -13,6 +13,8 @@ HoloBomb::HoloBomb()
 	level_scripts.push_back("Increase explosion size by 20%.");
 	level_scripts.push_back("Throw 3 bombs.");
 
+	proj_delay = 0.08f;
+
 	skillDelay_table = { 0,2.0f, 2.0f, 2.0f, 2.0f, 1.6f,1.6f,1.6f };
 	minDamage_table = { 0,15.0f,15.0f,15.0f,15.0f,15.0f,18.0f,18.0f };
 	maxDamage_table = { 0,19.0f,19.0f,19.0f,19.0f,19.0f,22.0f,22.0f };
@@ -80,7 +82,7 @@ void HoloBomb::Update()
 					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, 250.0f, hitLimit_table[now_level], -1.0f);
+				proj->SetStatus(damage, 50.0f, hitLimit_table[now_level], -1.0f);
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(0);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;

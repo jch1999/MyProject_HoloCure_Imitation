@@ -55,4 +55,5 @@ public:
 	int GetRemainHitCnt() { return (maxHitCount - nowHitCount); }
 
 	void SetTargetDist(float dist) { targetDist = dist; }
+	float GetTargetDist() { return targetDist; }
 };

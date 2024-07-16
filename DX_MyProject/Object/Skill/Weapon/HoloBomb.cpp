@@ -29,14 +29,9 @@ HoloBomb::HoloBomb()
 	for (int i = 0; i < 10; i++)
 	{
 		Projectile* bomb = new Bomb();
-		bomb->SetActive(false);
-		bomb->GetCollider()->SetActive(false);
-
 		projectiles.push_back(bomb);
 
 		Projectile* explosion = new ExplosionSmoke();
-		explosion->SetActive(false);
-		explosion->GetCollider()->SetActive(false);
 		explosions.push_back(explosion);
 
 		set<Enemy*> v;
@@ -78,7 +73,7 @@ void HoloBomb::Update()
 			now_proj_delay = 0.0f;
 			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
 			{
-				Projectile* proj = GetBomb();
+				Bomb* proj = GetBomb();
 				
 
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
@@ -89,7 +84,7 @@ void HoloBomb::Update()
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(0);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
-				proj->rot.z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
+				proj->SetTargetPos(proj->pos + player->GetAttackDir() * proj->GetTargetDist());
 				proj->respwan();
 				projCnt++;
 			}
@@ -149,6 +144,7 @@ void HoloBomb::UpdateBomb()
 	{
 		if (b->is_active)
 		{
+			b->Update();
 			pair<int, int> pPos = make_pair((int)(b->pos.x) / CELL_X, (int)(b->pos.y) / CELL_Y);
 			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
 			for (auto e : enemyList)
@@ -167,6 +163,8 @@ void HoloBomb::UpdateBomb()
 							// explosion 활성화
 							Projectile* proj = GetExplosionSmoke();
 							proj->SetStatus(b->GetDamage(), 250.0f, hitLimit_table[now_level], -1.0f);
+							proj->pos = b->pos;
+							proj->respwan();
 							break;
 						}
 					}
@@ -181,6 +179,8 @@ void HoloBomb::UpdateBombEffect()
 	for (int i = 0; i < explosions.size(); i++)
 	{
 		ExplosionSmoke* e = dynamic_cast<ExplosionSmoke*>(explosions[i]);
+		e->Update();
+
 		if (e->isDamageAble())
 		{
 			pair<int, int> pPos = make_pair((int)(e->pos.x) / CELL_X, (int)(e->pos.y) / CELL_Y);
@@ -215,26 +215,25 @@ void HoloBomb::UpdateBombEffect()
 
 }
 
-Projectile* HoloBomb::GetBomb()
+Bomb* HoloBomb::GetBomb()
 {
-	Projectile* proj = nullptr;
+	Bomb* bomb = nullptr;
 	for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 폭탄 하나를 찾아 사용
 	{
 		if (projectiles[i]->is_active == false)
 		{
-			proj = projectiles[i];
-			hitEnemies[i].clear();
+			bomb = dynamic_cast<Bomb*>(projectiles[i]);
 			break;
 		}
 	}
 
 	// 비활성 상태 폭탄 없음 == 폭탄이 부족함 -> 새로 생성
-	if (proj == nullptr)
+	if (bomb == nullptr)
 	{
-		proj = new Bomb();
-		projectiles.push_back(proj);
+		bomb = new Bomb();
+		projectiles.push_back(bomb);
 	}
-	return proj;
+	return bomb;
 }
 
 Projectile* HoloBomb::GetExplosionSmoke()

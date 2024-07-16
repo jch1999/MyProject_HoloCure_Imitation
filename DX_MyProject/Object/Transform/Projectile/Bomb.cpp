@@ -14,7 +14,7 @@ Bomb::Bomb(Vector2 size, float targetDist, Vector2 move_dir)
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1));
 	clip_idx = 0;
 
-	colliders.push_back(new RectCollider(size));
+	colliders.push_back(new RectCollider(size * Vector2(1.5f, 1.2f)));
 	collider = colliders[0];
 
 	is_active = false;
@@ -29,17 +29,15 @@ void Bomb::Update()
 {
 	if (!is_active)return;
 
-	pos += move_dir * speed * DELTA;
-	moveDist += (move_dir * speed * DELTA).GetLength();
-	if (moveDist >= targetDist)
+	pos = LERP(pos, targetPos, speed * DELTA);
+	if ((pos-targetPos).GetLength()<0.1f)
 	{
-		move_dir = Vector2(0, 0);
+		pos = targetPos;
 	}
 
 	WorldUpdate();
 
 	collider->pos = pos;
-	collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
@@ -74,6 +72,7 @@ void Bomb::respwan()
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
 		clips[clip_idx]->GetFrameOriginSize();
 
+	moveDist = 0.0f;
 	SetActive(true);
 	collider->SetActive(true);
 }

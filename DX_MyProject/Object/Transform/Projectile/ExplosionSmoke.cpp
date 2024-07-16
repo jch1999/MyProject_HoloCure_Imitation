@@ -20,7 +20,7 @@ ExplosionSmoke::ExplosionSmoke(Vector2 size)
 				break;
 		}
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::PINGPONG, 1 / 4.0f));
+	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 10.0f));
 	clip_idx = 0;
 
 	colliders.push_back(new RectCollider(size));

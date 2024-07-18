@@ -2,7 +2,7 @@
 class Blaze :public Projectile
 {
 private:
-	Vector2 size;
+	
 public:
 	Blaze(Vector2 size = Vector2(38.0f, 38.0f));
 	~Blaze();

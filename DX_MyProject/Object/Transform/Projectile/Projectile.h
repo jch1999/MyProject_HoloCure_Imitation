@@ -22,6 +22,7 @@ protected:
 	float targetDist;
 
 	Collider* collider;
+	Vector2 size;
 
 	vector<Collider*> colliders;// 단계별 충돌범위 크기
 	int idx_collider;

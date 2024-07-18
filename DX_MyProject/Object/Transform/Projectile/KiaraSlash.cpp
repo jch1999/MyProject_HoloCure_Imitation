@@ -2,11 +2,11 @@
 
 KiaraSlash::KiaraSlash(Vector2 size)
 	:Projectile(20.0f, 200.0f, 1, 2.0f)
-	, size(size)
 {
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
+	this->size = size;
 	vector<Frame*> frames;
 
 	// PROJ_STATE::NORMAL

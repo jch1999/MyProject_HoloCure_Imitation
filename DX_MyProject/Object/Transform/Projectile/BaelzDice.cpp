@@ -1,10 +1,12 @@
 #include "framework.h"
 
 BaelzDice::BaelzDice(Vector2 size)
+	:Projectile()
 {
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
+	this->size = size;
 	vector<Frame*> frames;
 	// Normal Dice
 	Vector2 initPos(32.0f, 582.0f);

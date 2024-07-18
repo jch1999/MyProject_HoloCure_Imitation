@@ -2,11 +2,11 @@
 
 PoisonArea::PoisonArea(Vector2 size)
 	:Projectile(20.0f, 200.0f, 1, 2.0f)
-	,defaultSize(size)
 {
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
+	this->size = size;
 	vector<Frame*> frames;
 
 	// PROJ_STATE::NORMAL
@@ -15,9 +15,9 @@ PoisonArea::PoisonArea(Vector2 size)
 	frames.clear();
 
 	// 0~2 : SpiderCooking스킬의 기본 collider 설정,
-	colliders.push_back(new CircleCollider(defaultSize.x * 0.5f));
-	colliders.push_back(new CircleCollider(defaultSize.x * 0.5f * 1.15f)); // SpiderCooking LV 2
-	colliders.push_back(new CircleCollider(defaultSize.x * 0.5f * 1.25f)); // SpiderCooking LV 4
+	colliders.push_back(new CircleCollider(size.x * 0.5f));
+	colliders.push_back(new CircleCollider(size.x * 0.5f * 1.15f)); // SpiderCooking LV 2
+	colliders.push_back(new CircleCollider(size.x * 0.5f * 1.25f)); // SpiderCooking LV 4
 
 	idx_collider=0;
 	collider = colliders[idx_collider];

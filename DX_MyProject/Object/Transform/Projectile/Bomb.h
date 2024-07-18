@@ -2,7 +2,6 @@
 class Bomb :public Projectile
 {
 private:
-	Vector2 size;
 	float thorwDist;
 	Vector2 targetPos;
 public:

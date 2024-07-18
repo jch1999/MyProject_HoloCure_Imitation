@@ -2,7 +2,6 @@
 class KiaraSlash :public Projectile
 {
 private:
-	Vector2 size;
 
 public:
 	KiaraSlash(Vector2 size = Vector2(162.5f, 160.0f));

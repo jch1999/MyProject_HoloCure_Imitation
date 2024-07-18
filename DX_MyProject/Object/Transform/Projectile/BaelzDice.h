@@ -2,7 +2,7 @@
 class BaelzDice :public Projectile
 {
 private:
-	Vector2 size;
+	
 public:
 	BaelzDice(Vector2 size=Vector2(36.0f,36.0f));
 	~BaelzDice();

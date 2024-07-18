@@ -2,11 +2,11 @@
 
 WatsonBullet::WatsonBullet(Vector2 size)
 	:Projectile(20.0f,200.0f,1,2.0f)
-	,size(size)
 {
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png";
 	Texture* t = Texture::Add(file);
 	
+	this->size = size;
 	vector<Frame*> frames;
 	frames.push_back(new Frame(file, 18, 1047, 10, 8));
 	frames.push_back(new Frame(file, 51, 1047, 10, 8));

@@ -2,13 +2,13 @@
 
 Bomb::Bomb(Vector2 size, float targetDist, Vector2 move_dir)
 	:Projectile(20.0f, 200.0f, 1, 2.0f)
-	, size(size)
 {
 	this->targetDist = targetDist;
 	this->move_dir = move_dir;
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
+	this->size = size;
 	vector<Frame*> frames;
 	frames.push_back(new Frame(file, 416.0f, 1508.0f, 23.0f, 29.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1));

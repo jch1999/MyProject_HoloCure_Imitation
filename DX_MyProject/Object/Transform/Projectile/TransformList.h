@@ -9,3 +9,5 @@
 #include "Bomb.h"
 #include "ExplosionSmoke.h"
 #include "Ball.h"
+#include "Axe.h"
+#include "LavaBucket.h"

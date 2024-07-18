@@ -1,11 +1,11 @@
 #pragma once
-class PoisonArea :public Projectile
+class LavaBucket :public Projectile
 {
-protected:
+private:
 
 public:
-	PoisonArea(Vector2 size = Vector2(107.0f, 107.0f));
-	~PoisonArea();
+	LavaBucket(Vector2 size=Vector2();
+	~LavaBucket();
 
 	// Projectile을(를) 통해 상속됨
 	virtual void Update() override;

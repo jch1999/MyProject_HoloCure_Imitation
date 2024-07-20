@@ -12,6 +12,27 @@ CEOTear::CEOTear()
 	level_scripts.push_back("Tears are 25% faster and increase damage by 20%.");
 	level_scripts.push_back("Reduce the time between attacks by 50%.");
 	level_scripts.push_back("Shoot 4 tears.");
+	
+	skillDelay_table = { 0.0f,0.5f,0.5f,0.5f,0.33f,0.33f,0.17f,0.17f };
+	minDamage_table = { 0.0f,8.0f,10.0f,10.0f,10.0f,12.0f,12.0f,12.0f };
+	maxDamage_table = { 0.0f,12.0f,14.0f,14.0f,14.0f,16.0f,16.0f,16.0f };
+	projCnt_talbe = { 0,1,1,2,2,2,2,4 };
+	proj_delay = 0.08f;
+	projSpd_table = { 0.0f,200.0f,200.0f,200.0f,200.0f,250.0f,250.0f,250.0f };
+	hitLimit_table = { 0,1,1,1,1,1,1,1 };
+
+	weapon_type = WEAPON_TYPE::MULTI_SHOT;
+
+	// 기본적으로 눈물을 10개 생성시켜 놓고 재활용
+	for (int i = 0; i < 8; i++)
+	{
+		Projectile* tear = new Tear();
+		tear->SetActive(false);
+		tear->GetCollider()->SetActive(false);
+
+		projectiles.push_back(tear);
+	}
+	enhanceDamage = 0.0f;
 }
 
 CEOTear::~CEOTear()
@@ -22,6 +43,33 @@ CEOTear::~CEOTear()
 
 void CEOTear::UpdateTears()
 {
+	for (auto t : projectiles)
+	{
+		if (t->is_active)
+		{
+			t->Update();
+			pair<int, int> tPos = make_pair((int)(t->pos.x) / CELL_X, (int)(t->pos.y) / CELL_Y);
+			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(tPos);
+			for (auto e : enemyList)
+			{
+				if (e->is_active)
+				{
+					float minDist = (t->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength()) / 2.0f;
+					float dist = (t->pos - e->pos).GetLength();
+					if (minDist >= dist)
+					{
+						if (t->GetCollider()->isCollision(e->GetDamageCollider()))
+						{
+							t->Hit();
+							bool isCrt = player->isCritical();
+							e->ChangeHP(-t->GetDamage(), isCrt);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 bool CEOTear::LevelDown()
@@ -31,10 +79,80 @@ bool CEOTear::LevelDown()
 
 void CEOTear::Update()
 {
+	if (now_level == 0)return;
+
+	switch (action_status)
+	{
+	case Skill::SKILL_STATUS::COOLDOWN:
+	{
+		now_skill_delay += DELTA;
+		if (now_skill_delay >= skillDelay_table[now_level])
+		{
+			action_status = SKILL_STATUS::PLAY;
+			now_skill_delay = 0.0f;
+		}
+	}
+		break;
+	case Skill::SKILL_STATUS::PLAY:
+	{
+		if (now_proj_delay < proj_delay)
+		{
+			now_proj_delay += DELTA;
+		}
+		else
+		{
+			now_proj_delay = 0.0f;
+			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
+			{
+				Projectile* proj = nullptr;
+				for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 총알 하나를 찾아 사용
+				{
+					if (projectiles[i]->is_active == false)
+					{
+						proj = projectiles[i];
+						break;
+					}
+				}
+
+				// 비활성 상태 총알 없음 == 총알이 부족함 -> 새로 생성
+				if (proj == nullptr)
+				{
+					proj = new Tear();
+					projectiles.push_back(proj);
+				}
+
+				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
+					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
+					+ player->GetATK()
+					+ enhanceDamage;
+				proj->SetStatus(damage, projSpd_table[now_level], hitLimit_table[now_level], 5.0f);
+				proj->SetDirection(player->GetAttackDir());
+				proj->SetColliderIdx(0);
+				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
+				proj->rot.z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
+				proj->respwan();
+
+				projCnt++;
+			}
+			else // 투사체 발사가 끝났으니 스킬은 재사용 대기 상태로
+			{
+				projCnt = 0;
+				action_status = SKILL_STATUS::COOLDOWN;
+			}
+		}
+	}
+		break;
+	default:
+		break;
+	}
+	UpdateTears();
 }
 
 void CEOTear::Render()
 {
+	if (now_level == 0)return;
+	for (auto t : projectiles)
+		t->Render();
 }
 
 void CEOTear::PostRender()

@@ -3,7 +3,7 @@ class PlayDice :public Weapon
 {
 private:
 	bool isKnockBack;
-	vector<float> projSPD_table, knockbackSpeed_table, targetDist_table;
+	vector<float> knockbackSpeed_table, targetDist_table;
 public:
 	PlayDice();
 	~PlayDice();

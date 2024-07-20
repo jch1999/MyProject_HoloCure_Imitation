@@ -63,6 +63,7 @@ LavaBucket::~LavaBucket()
 
 void LavaBucket::Update()
 {
+	if (!is_active)return;
 }
 
 void LavaBucket::Render()
@@ -85,6 +86,9 @@ void LavaBucket::PostRender()
 
 void LavaBucket::respwan()
 {
+	nowTime = 0.0f;
+	nowHitCount = 0;
+
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
@@ -100,4 +104,13 @@ void LavaBucket::respwan()
 
 void LavaBucket::Hit()
 {
+	nowHitCount++;
+
+	if (nowHitCount == maxHitCount)
+	{
+		is_active = false;
+		nowHitCount = 0;
+		return;
+	}
+
 }

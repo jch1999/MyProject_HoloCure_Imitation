@@ -18,5 +18,4 @@ public:
 	virtual void respwan() override;
 
 	virtual void Hit() override;
-
 };

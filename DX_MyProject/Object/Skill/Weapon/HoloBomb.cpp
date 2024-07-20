@@ -15,16 +15,18 @@ HoloBomb::HoloBomb()
 
 	proj_delay = 0.08f;
 
+	weapon_type = WEAPON_TYPE::MULTI_SHOT;
+
 	skillDelay_table = { 0,2.0f, 2.0f, 2.0f, 2.0f, 1.6f,1.6f,1.6f };
 	minDamage_table = { 0,15.0f,15.0f,15.0f,15.0f,15.0f,18.0f,18.0f };
 	maxDamage_table = { 0,19.0f,19.0f,19.0f,19.0f,19.0f,22.0f,22.0f };
 	projCnt_talbe = { 0,1,1,1,2, 2,2,3 };
+	proj_spd = 70.0f;
 	hitLimit_table = { 0,1,1,1,1,1,1,1 };
 	// explosionCollider size table
 	colliderIdx_table = { 0,0,1,1,1,1,2,2 };
 
-	type = WEAPON_TYPE::MULTI_SHOT;
-	id = Skill::SKILL_ID::HOLO_BOMB;
+	weapon_type = WEAPON_TYPE::MULTI_SHOT;
 	action_status = Skill::SKILL_STATUS::COOLDOWN;
 
 	// 기본적으로 폭탄과 폭발 효과를 10개 씩 생성시켜 놓고 재활용
@@ -82,7 +84,7 @@ void HoloBomb::Update()
 					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, 50.0f, hitLimit_table[now_level], -1.0f);
+				proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], -1.0f);
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(0);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;

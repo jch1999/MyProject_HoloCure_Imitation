@@ -18,14 +18,14 @@ PlayDice::PlayDice()
 	minDamage_table = { 0,2,3,3,3,3,4,8 };
 	maxDamage_table = { 0,6,7,7,7,7,4,8 };
 	projCnt_talbe = { 0, 1, 1, 2, 2, 2, 2, 3 };
-	projSPD_table = { 0,16,16,16,19,19,19,19 };
+	projSpd_table = { 0,1600,1600,1600,1900,1900,1900,1900 };
 	hitLimit_table = { 0, 4, 4, 4, 4, 4, 4, 4 };	// 첫 충돌 1, 도탄 3
 	colliderIdx_table = { 0,0,0,0,1,1,1,1 };
 	ricochet_table = { 0,3,3,3,3,3,3,3 };
 	knockbackSpeed_table = { 0,0,0,0,0,5,5,5 };
 	targetDist_table = { 0,200.0f,200.0f,200.0f,250.0f,250.0f,250.0f,250.0f };
 
-	type = WEAPON_TYPE::MULTI_SHOT;
+	weapon_type = WEAPON_TYPE::MULTI_SHOT;
 
 	// 기본적으로 총알을 10개 생성시켜 놓고 재활용
 	for (int i = 0; i < 10; i++)
@@ -77,7 +77,7 @@ void PlayDice::Update()
 					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, 100.0f * projSPD_table[now_level], hitLimit_table[now_level], 2.0f);
+				proj->SetStatus(damage, projSpd_table[now_level], hitLimit_table[now_level], 2.0f);
 				proj->SetDirection(player->GetAttackDir());
 				int clip_idx = max_level == now_level ? 6 + diceEye-1 : diceEye-1;
 				proj->SetClipIdx(clip_idx);

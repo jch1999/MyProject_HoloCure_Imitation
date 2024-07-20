@@ -47,9 +47,13 @@ void Ball::PostRender()
 
 void Ball::respwan()
 {
+	nowTime = 0.0f;
+	nowHitCount = 0;
+
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
+
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
 		clips[clip_idx]->GetFrameOriginSize();
 
@@ -59,4 +63,13 @@ void Ball::respwan()
 
 void Ball::Hit()
 {
+	nowHitCount++;
+
+	if (nowHitCount == maxHitCount)
+	{
+		is_active = false;
+		nowHitCount = 0;
+		return;
+	}
+
 }

@@ -7,11 +7,13 @@ public:
 		MULTI_SHOT,		// 다중 발사형 - 갯수 증가에 영향을 받음
 		RANGE,			// 단순 발사형
 		MELEE			// 근접 공격형
-	}type;
+	}weapon_type;
 
 protected:
+	// 투사체의 설정값이 레벨에 상관없이 일정할 때 사용.
 	float proj_delay;
 	float now_proj_delay;
+	float proj_spd;
 	int projCnt;
 
 	// level 당 데미지, 콜라이더 index
@@ -21,6 +23,8 @@ protected:
 
 	// level 당 투사체 수, 투사체의 hit 제한수, 공격 딜레이
 	vector<float> projCnt_talbe;
+	vector<float> projDelay_table;
+	vector<float> projSpd_table;
 	vector<int> hitLimit_table;
 	vector<float> delay_table;
 	vector<int> ricochet_table;

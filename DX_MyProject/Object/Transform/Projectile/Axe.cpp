@@ -53,13 +53,29 @@ void Axe::PostRender()
 
 void Axe::respwan()
 {
+	nowTime = 0.0f;
+	nowHitCount = 0;
+
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
+
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
 		clips[clip_idx]->GetFrameOriginSize();
+
+	is_active = true;
+	collider->SetActive(true);
 }
 
 void Axe::Hit()
 {
+	nowHitCount++;
+
+	if (nowHitCount == maxHitCount)
+	{
+		is_active = false;
+		nowHitCount = 0;
+		return;
+	}
+
 }

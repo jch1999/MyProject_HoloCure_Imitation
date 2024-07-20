@@ -3,6 +3,7 @@
 Weapon::Weapon(SKILL_ID id, int maxLevel)
 	:Skill(id, SKILL_TYPE::WEAPON, maxLevel)
 {
+	type = SKILL_TYPE::WEAPON;
 }
 
 Weapon::~Weapon()

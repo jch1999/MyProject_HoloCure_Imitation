@@ -13,6 +13,8 @@ PhoenixSword::PhoenixSword()
 	level_scripts.push_back("Increase damage by 20%.");
 	level_scripts.push_back("Sword is engulfed in flames, and can hit many times. Also leave a burning fire under hit targets.");
 	
+	weapon_type = WEAPON_TYPE::MELEE;
+
 	minDamage_table = { 0,11.0f, 14.0f,14.0f, 14.0f, 14.0f, 17.0f,5.0f };
 	maxDamage_table = { 0,15.0f, 18.0f,18.0f, 18.0f, 18.0f, 21.0f,9.0f };
 	colliderIdx_table = { 0,0,0,1,1,1,1,1 };

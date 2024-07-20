@@ -21,11 +21,12 @@ PistolShot::PistolShot()
 	minDamage_table = { 0,8,8,10,10,10,12,12 };
 	maxDamage_table = { 0,12,12,14,14,14,16,16 };
 	projCnt_talbe = { 0,3,5,5,5,5,5,5 };
+	proj_spd = 250.0f;
 	hitLimit_table = { 0,1,2,2,2,3,3,3 };
 	colliderIdx_table = { 0,0,0,0,0,0,0,0 };
 	ricochet_table = { 0,0,0,0,1,1,1,1 };
 
-	type = WEAPON_TYPE::MULTI_SHOT;
+	weapon_type = WEAPON_TYPE::MULTI_SHOT;
 	
 	// 기본적으로 총알을 10개 생성시켜 놓고 재활용
 	for (int i = 0; i < 10; i++)
@@ -100,7 +101,7 @@ void PistolShot::Update()
 					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, 250.0f, hitLimit_table[now_level], 2.0f);
+				proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], 2.0f);
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxShot());
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;

@@ -4,7 +4,7 @@ class LavaBucket :public Projectile
 private:
 
 public:
-	LavaBucket(Vector2 size=Vector2();
+	LavaBucket(Vector2 size=Vector2());
 	~LavaBucket();
 
 	// Projectile을(를) 통해 상속됨

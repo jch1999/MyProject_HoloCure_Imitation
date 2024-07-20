@@ -101,6 +101,9 @@ void Program::Delete()
 	Device::Delete();
 	Control::Delete();
 	Timer::Delete();
+	Texture::Delete();
+	VertexShader::Delete();
+	PixelShader::Delete();
 }
 
 

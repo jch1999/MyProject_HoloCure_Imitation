@@ -4,7 +4,7 @@ class Tear :public Projectile
 private:
 
 public:
-	Tear(Vector2 size = Vector2());
+	Tear(Vector2 size = Vector2(10.0f, 8.0f));
 	~Tear();
 
 

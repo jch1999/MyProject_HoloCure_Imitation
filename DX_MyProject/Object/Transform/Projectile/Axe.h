@@ -4,7 +4,7 @@ class Axe :public Projectile
 private:
 
 public:
-	Axe(Vector2 size=Vector2());
+	Axe(Vector2 size = Vector2(46.0f, 46.0f));
 	~Axe();
 
 

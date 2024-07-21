@@ -12,7 +12,7 @@ Ball::Ball(Vector2 size)
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 4.0f));
 	clip_idx = 0;
 
-	colliders.push_back(new RectCollider(size));
+	colliders.push_back(new CircleCollider(size.x));
 	collider = colliders[0];
 
 	is_active = false;

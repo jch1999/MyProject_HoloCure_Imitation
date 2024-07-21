@@ -12,7 +12,7 @@ Tear::Tear(Vector2 size)
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 1.0f));
 	clip_idx = 0;
 
-	colliders.push_back(new RectCollider(size));
+	colliders.push_back(new RectCollider(size * 1.5f));
 	collider = colliders[0];
 
 	is_active = false;
@@ -37,6 +37,7 @@ void Tear::Update()
 	WorldUpdate();
 	
 	collider->pos = pos;
+	collider->rot = this->rot;
 	collider->WorldUpdate();
 
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /

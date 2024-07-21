@@ -21,7 +21,7 @@ HoloBomb::HoloBomb()
 	minDamage_table = { 0,15.0f,15.0f,15.0f,15.0f,15.0f,18.0f,18.0f };
 	maxDamage_table = { 0,19.0f,19.0f,19.0f,19.0f,19.0f,22.0f,22.0f };
 	projCnt_talbe = { 0,1,1,1,2, 2,2,3 };
-	proj_spd = 70.0f;
+	proj_spd = 7.0f;
 	hitLimit_table = { 0,1,1,1,1,1,1,1 };
 	// explosionCollider size table
 	colliderIdx_table = { 0,0,1,1,1,1,2,2 };

@@ -4,7 +4,7 @@ class Ball :public Projectile
 private:
 
 public:
-	Ball(Vector2 size = Vector2());
+	Ball(Vector2 size = Vector2(41.0f, 41.0f));
 	~Ball();
 
 	// Projectile을(를) 통해 상속됨

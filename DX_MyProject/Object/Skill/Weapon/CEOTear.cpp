@@ -17,7 +17,7 @@ CEOTear::CEOTear()
 	minDamage_table = { 0.0f,8.0f,10.0f,10.0f,10.0f,12.0f,12.0f,12.0f };
 	maxDamage_table = { 0.0f,12.0f,14.0f,14.0f,14.0f,16.0f,16.0f,16.0f };
 	projCnt_talbe = { 0,1,1,2,2,2,2,4 };
-	proj_delay = 0.08f;
+	proj_delay = 0.15f;
 	projSpd_table = { 0.0f,200.0f,200.0f,200.0f,200.0f,250.0f,250.0f,250.0f };
 	hitLimit_table = { 0,1,1,1,1,1,1,1 };
 
@@ -114,7 +114,7 @@ void CEOTear::Update()
 					}
 				}
 
-				// 비활성 상태 총알 없음 == 총알이 부족함 -> 새로 생성
+				// 비활성 상태 Tear 없음 == Tear가 부족함 -> 새로 생성
 				if (proj == nullptr)
 				{
 					proj = new Tear();

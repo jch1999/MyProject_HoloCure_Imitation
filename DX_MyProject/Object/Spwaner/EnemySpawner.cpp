@@ -456,13 +456,25 @@ void EnemySpawner::EnemyDead()
 	}
 }
 
+const vector<Enemy*> EnemySpawner::GetActiveEnemies()
+{
+	vector<Enemy*> activeList;
+	for (auto e : enemy_list)
+	{
+		if (e->is_active)
+			activeList.push_back(e);
+	}
+	return activeList;
+}
+
 void EnemySpawner::FixedUpdate()
 {
 	// 기존 정보 제거
 	partition.clear();
 
-	// 모든 Enemy를 각 칸에 맞게 
-	for (auto e : enemy_list)
+	// 모든 활성 Enemy를 각 칸에 맞게 
+	const vector<Enemy*>& activeList = GetActiveEnemies();
+	for (auto e : activeList)
 	{
 		if (!e->is_active)continue;
 		int cell_x = (int)(e->pos.x) / CELL_X;

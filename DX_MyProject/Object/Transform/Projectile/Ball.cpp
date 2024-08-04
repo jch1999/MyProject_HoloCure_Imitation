@@ -25,6 +25,18 @@ Ball::~Ball()
 
 void Ball::Update()
 {
+	if (lifeTime > 0.0f)
+	{
+		lifeTime -= DELTA;
+	}
+	else
+		is_active = false;
+	velocity += Vector2(0, GRAVITY) * DELTA;
+	pos = pos + velocity * speed * DELTA;
+	WorldUpdate();
+
+	collider->pos = pos;
+	collider->WorldUpdate();
 }
 
 void Ball::Render()
@@ -72,4 +84,8 @@ void Ball::Hit()
 		return;
 	}
 
+}
+
+void Ball::AddVelocity(Vector2 newVel)
+{
 }

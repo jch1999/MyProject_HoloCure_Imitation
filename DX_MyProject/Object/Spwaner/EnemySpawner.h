@@ -75,4 +75,5 @@ public:
 	const map<pair<int, int>, list<Enemy*>>& GetPartition() { return partition; }
 	const list<Enemy*>& GetPartition(pair<int,int> pos) { return partition[pos]; }
 	Player* GetPlayer() { return player; }
+	const vector<Enemy*> GetActiveEnemies();
 };

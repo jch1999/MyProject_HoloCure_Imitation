@@ -2,7 +2,7 @@
 class Ball :public Projectile
 {
 private:
-
+	Vector2 velocity;
 public:
 	Ball(Vector2 size = Vector2(41.0f, 41.0f));
 	~Ball();
@@ -13,4 +13,7 @@ public:
 	virtual void PostRender() override;
 	virtual void respwan() override;
 	virtual void Hit() override;
+	void AddVelocity(Vector2 newVel);
+	void SetVelocity(Vector2 vel) { velocity = vel; }
+	Vector2 GetVelocity() { return velocity; }
 };

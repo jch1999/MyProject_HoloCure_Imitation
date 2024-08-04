@@ -116,12 +116,12 @@ void Enemy::Move()
 	else if (badStatus_table[(UINT)Enemy::BAD_STATUS::FROZEN] > 0.0f)
 		moveSPD *= 0.7f;
 
-	for (auto knockback:knockback_map)
+	for (auto knockback=knockback_map.begin();knockback!=knockback_map.end();knockback++)
 	{
-		if (knockback.second>0.f)
+		if (knockback->second>0.f)
 		{
-			knockback_map[knockback.first] -= DELTA;
-			addtional_dir += Vector2(knockback.first.first, knockback.first.second);
+			knockback_map[knockback->first] -= DELTA;
+			addtional_dir += Vector2(knockback->first.first, knockback->first.second);
 		}
 	}
 

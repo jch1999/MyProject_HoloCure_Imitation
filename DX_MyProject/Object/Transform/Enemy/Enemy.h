@@ -64,6 +64,13 @@ public:
 		HOT,
 		END
 	};
+
+	struct KnockBackData
+	{
+		Vector2 knockBackDir;
+		float spd;
+		float remainTime;
+	};
 protected:
 	VertexShader* VS;
 	PixelShader* PS;
@@ -101,7 +108,8 @@ protected:
 	Vector2 move_dir; // 이동 방향
 	Vector2 addtional_dir; // 외부 영향으로 이동 방향의 변경 정도
 	
-	map<pair<int, int>, float> knockback_map;
+	//map<pair<int, int>, float> knockback_map;
+	list<KnockBackData> knockback_list;
 
 	Vector2 dest; // 목적지 - MOVE_TYPE::CHASE가 아닐 경우 사용
 	Player* player; // 공격 & 추적 대상
@@ -138,5 +146,5 @@ public:
 	void Respawn();
 	void SetAdditionalDirection(Vector2 dir) { addtional_dir = dir; }
 	Vector2 GetAddtionalDirection() { return addtional_dir; }
-	void SetKnockBack(Vector2 dir, float time);
+	void SetKnockBack(Vector2 dir, float spd, float time);
 };

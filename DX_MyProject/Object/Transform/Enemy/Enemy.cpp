@@ -180,6 +180,7 @@ void Enemy::Respawn()
 {
 	HP = MaxHP;
 	atk_nowTime = atk_delay;
+	knockback_list.clear();
 
 	is_active = true;
 	damageCollider->SetActive(true);
@@ -193,8 +194,13 @@ void Enemy::Respawn()
 	attackCollider->WorldUpdate();
 }
 
-void Enemy::SetKnockBack(Vector2 dir, float time)
+void Enemy::SetKnockBack(Vector2 dir, float spd, float time)
 {
-	pair<int, int> key = make_pair(round(dir.x), round(dir.y));
-	knockback_map[key] += time;
+	//pair<int, int> key = make_pair(round(dir.x), round(dir.y));
+	//knockback_map[key] += time;
+	KnockBackData data;
+	data.knockBackDir = dir;
+	data.spd = spd;
+	data.remainTime = time;
+	knockback_list.push_back(data);
 }

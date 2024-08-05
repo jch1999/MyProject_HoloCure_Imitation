@@ -71,6 +71,8 @@ void BounceBall::UpdateBalls()
 								e->ChangeHP(-(projectiles[i]->GetDamage()), false);
 							projectiles[i]->Hit();
 							nowCoolDown[i] = hitCooldown;
+
+							// ≥ÀπÈ ¡÷±‚
 						}
 					}
 				}

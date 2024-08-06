@@ -2,6 +2,9 @@
 
 PistolShot::PistolShot()
 	:Weapon(SKILL_ID::PISTOL_SHOT)
+	, watson(nullptr)
+	, revengeRate(0.15f)
+	,revengeTime(2.0f),nowTime(0.0f)
 {
 	proj_delay = 0.2f;
 	now_proj_delay = 0.0f;
@@ -15,7 +18,7 @@ PistolShot::PistolShot()
 	level_scripts.push_back("Bullets ricochet if hit limit is reached.");
 	level_scripts.push_back("Each bullet can pierce +1 times. Reduce the time between attacks by 25%.");
 	level_scripts.push_back("Increase damage by 20%.");
-	level_scripts.push_back("For the next 2 seconds, 15% of all damage taken by target is stored in time. Then target takes total of stored damage.(Not implemented)");
+	level_scripts.push_back("For the next 2 seconds, 15% of all damage taken by target is stored in time. Then target takes total of stored damage.");
 
 	skillDelay_table = { 0,1.33f, 1.33f, 1.33f, 1.33f, 1.0f,1.0f,1.0f };
 	minDamage_table = { 0,8,8,10,10,10,12,12 };
@@ -45,12 +48,17 @@ PistolShot::PistolShot()
 
 PistolShot::~PistolShot()
 {
-	
+	watson = nullptr;
 }
 
 void PistolShot::Update()
 {
 	if (now_level == 0)return;
+
+	if (watson == nullptr)
+	{
+		watson = dynamic_cast<Watson*>(player);
+	}
 
 	switch (action_status)
 	{
@@ -209,6 +217,26 @@ void PistolShot::Update()
 			}
 		}
 	}
+
+	// ¹Ý°Ý
+	if (now_level == 7)
+	{
+		if (nowTime < revengeTime)
+			nowTime += DELTA;
+		else
+		{
+			nowTime = 0.0f;
+			const list<pair<Enemy*, float>>& revengeList = watson->GetRevnegeList();
+			for (auto r : revengeList)
+			{
+				if (r.first->is_active)
+				{
+					r.first->ChangeHP(r.second* revengeRate, player->isCritical());
+				}
+			}
+			watson->ClearRevengeList();
+		}
+	}
 }
 
 void PistolShot::Render()
@@ -239,6 +267,10 @@ bool PistolShot::LevelUp()
 	if (now_level == 1)
 	{
 		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
+	}
+	else if (now_level == 7)
+	{
+		watson->SetRevenge(true);
 	}
 	return true;
 }

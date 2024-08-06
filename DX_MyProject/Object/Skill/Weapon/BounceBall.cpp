@@ -8,7 +8,7 @@ BounceBall::BounceBall()
 	level_scripts.push_back("Drops a falling bounce ball on a random target.");
 	level_scripts.push_back("Increase damage by 20%.");
 	level_scripts.push_back("Drop 2 balls.");
-	level_scripts.push_back("Gain knockback effect.(Not Implemented)");
+	level_scripts.push_back("Gain knockback effect.");
 	level_scripts.push_back("Drop 3 balls.");
 	level_scripts.push_back("Reduce the time between attacks by 15%.");
 	level_scripts.push_back("Increase damage by 30% and drop 4 balls.");
@@ -73,6 +73,11 @@ void BounceBall::UpdateBalls()
 							nowCoolDown[i] = hitCooldown;
 
 							// ³Ë¹é ÁÖ±â
+							if (now_level >= 4)
+							{
+								Vector2 dir = (dynamic_cast<Ball*>(projectiles[i])->GetVelocity().Normalized());
+								e->SetKnockBack(dir, 300.0f, 0.08f);
+							}
 						}
 					}
 				}

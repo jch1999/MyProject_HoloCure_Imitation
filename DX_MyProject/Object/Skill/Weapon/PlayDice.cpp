@@ -131,8 +131,8 @@ void PlayDice::Update()
 					else
 						e->ChangeHP(-(p->GetDamage()), false);
 					p->Hit();
-					if(isKnockBack)
-						e->SetKnockBack(p->move_dir, 0.2f);
+					if (isKnockBack)
+						e->SetKnockBack(p->move_dir, 20.0f, 0.2f);
 					hitEnemies[i].insert(e);
 
 					if (ricochet_table[now_level] > 0) // µµÅº »ý¼º

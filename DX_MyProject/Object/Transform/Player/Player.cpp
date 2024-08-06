@@ -114,7 +114,7 @@ void Player::CheckMoveDir()
 	}
 }
 
-void Player::ChangeHP(float amount, Vector2 dir)
+void Player::ChangeHP(float amount, Vector2 dir, Enemy* causer)
 {
 	if (amount > 0 && SkillManager::Get()->isHealDoubled)
 	{

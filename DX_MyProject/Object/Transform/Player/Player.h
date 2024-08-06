@@ -3,6 +3,8 @@ class Skill;
 class HPBar;
 class ExpBar;
 class Arrow;
+class Enemy;
+
 class Player :public Transform
 {
 public:
@@ -66,16 +68,12 @@ protected:
 	Vector2 move_dir; // 이동 방향
 	Vector2 attack_dir; // 투사체 발사 방향
 
-	// 음.. Player가 직접 스킬을 관리 or SKillManger가 관리.. 
-	// 일단 SkillManager를 만들어보고 생각해보자
-	//vector<Skill*> weapon_skills;
-	//vector<Skill*> buff_skills;
-
 	//UI
 	HPBar* hp_bar;
 	HPBar* hp_back;
 	ExpBar* exp_bar;
 	Arrow* atk_arrow;
+	
 public:
 	Player(float MaxHP = 100.0f, float atk = 10.0f, float speed = 100.0f, float crt = 10.0f, float pickupRange = 40.0f, float damage_delay = 0.33f, int idx_pickUpRange = 0,Vector2 size=Vector2(48.0f,60.0f));
 	virtual ~Player();
@@ -93,7 +91,7 @@ public:
 	Vector2 GetAttackDir() { return attack_dir; }
 	
 	// 받은 데미지 처리
-	virtual void ChangeHP(float amount, Vector2 dir = Vector2(0, 0));
+	virtual void ChangeHP(float amount, Vector2 dir = Vector2(0, 0), Enemy* causer = nullptr);
 	// 공격은 투사체에서 처리하도록 할 예정- 플레이어는 공격력을 전달할 뿐
 	//virtual float GetAttack() { return attack; }
 

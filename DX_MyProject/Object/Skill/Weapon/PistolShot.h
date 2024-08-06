@@ -2,7 +2,9 @@
 class PistolShot :public Weapon
 {
 private:
-
+	Watson* watson;
+	float revengeRate;
+	float revengeTime, nowTime;
 public:
 	PistolShot();
 	~PistolShot();

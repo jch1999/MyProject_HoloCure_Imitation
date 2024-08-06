@@ -132,6 +132,9 @@ void SpiderCooking::UpdatePoision()
 			{
 				m.first->ChangeHP(-damage, false);
 			}
+			if (now_level == 7)
+				m.first->SetKnockBack(m.first->GetMoveDir() * -1.0f,300.0f,0.13f);
+			
 			// 이미 죽은 Enemy를 제거 리스트에 추가
 			if (!m.first->is_active)
 			{

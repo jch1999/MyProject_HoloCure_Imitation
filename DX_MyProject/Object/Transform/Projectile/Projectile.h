@@ -17,6 +17,7 @@ protected:
 	// 시간으로 생존 체크
 	float lifeTime;
 	float nowTime;
+
 	// 이동거리로 생존 체크
 	float moveDist;
 	float targetDist;

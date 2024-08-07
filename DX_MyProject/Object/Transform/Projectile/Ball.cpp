@@ -31,6 +31,7 @@ void Ball::Update()
 	}
 	else
 		is_active = false;
+
 	velocity += Vector2(0, GRAVITY) * DELTA;
 	pos = pos + velocity * speed * DELTA;
 	WorldUpdate();
@@ -75,14 +76,14 @@ void Ball::respwan()
 
 void Ball::Hit()
 {
-	nowHitCount++;
+	/*nowHitCount++;
 
 	if (nowHitCount == maxHitCount)
 	{
 		is_active = false;
 		nowHitCount = 0;
 		return;
-	}
+	}*/
 
 }
 

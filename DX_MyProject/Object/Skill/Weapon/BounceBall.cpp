@@ -60,8 +60,8 @@ void BounceBall::UpdateBalls()
 				const list<Enemy*>& enemyList = EnemySpawner::Get()->GetPartition(bPos);
 				for (auto e : enemyList)
 				{
-					float eColLen = e->GetDamageCollider()->Size().GetLength();
-					if (eColLen + projectiles[i]->GetCollider()->Size().x >= (projectiles[i]->pos - e->pos).GetLength())
+					float colDist = e->GetDamageCollider()->Size().GetLength() + projectiles[i]->GetCollider()->Size().x;
+					if (colDist >= (projectiles[i]->pos - e->pos).GetLength())
 					{
 						if (projectiles[i]->GetCollider()->isCollision(e->GetDamageCollider()))
 						{
@@ -78,6 +78,26 @@ void BounceBall::UpdateBalls()
 								Vector2 dir = (dynamic_cast<Ball*>(projectiles[i])->GetVelocity().Normalized());
 								e->SetKnockBack(dir, 300.0f, 0.08f);
 							}
+
+							// 튕겨내기
+							Vector2 vel = (dynamic_cast<Ball*>(projectiles[i]))->GetVelocity();
+							Vector2 colPos = e->GetDamageCollider()->pos;
+							Vector2 colSize = e->GetDamageCollider()->Size();
+							if (projectiles[i]->pos.x < e->pos.x && vel.x > 0.0f)
+								vel.x *= -1.0f;
+							else if (projectiles[i]->pos.x > e->pos.x && vel.x < 0.0f)
+								vel.x *= -1.0f;
+							else if (vel.x == 0.0f)
+								vel.x += e->GetMoveDir().x;
+							
+							if (projectiles[i]->pos.y < e->pos.y && vel.y>0.0f)
+								vel.y *= -1.0f;
+							else if (projectiles[i]->pos.y > e->pos.y && vel.y < 0.0f)
+								vel.y *= -1.0f;
+							(dynamic_cast<Ball*>(projectiles[i]))->SetVelocity(vel);
+
+							// 충돌에서 벗어나게 밀어내기
+							projectiles[i]->pos += (projectiles[i]->pos - e->GetDamageCollider()->pos).Normalized() * (colDist - (projectiles[i]->pos - e->pos).GetLength());
 						}
 					}
 				}

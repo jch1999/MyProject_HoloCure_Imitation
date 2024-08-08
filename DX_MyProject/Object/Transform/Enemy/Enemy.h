@@ -147,4 +147,5 @@ public:
 	void SetAdditionalDirection(Vector2 dir) { addtional_dir = dir; }
 	Vector2 GetAddtionalDirection() { return addtional_dir; }
 	void SetKnockBack(Vector2 dir, float spd, float time);
+	float GetSpd() { return defaultSPD * spdRate; }
 };

@@ -15,8 +15,6 @@ BounceBall::BounceBall()
 
 	proj_delay = 0.08f;
 
-	weapon_type = WEAPON_TYPE::MULTI_SHOT;
-
 	skillDelay_table = { 0,2.0f, 2.0f, 2.0f, 2.0f, 1.6f,1.6f,1.6f };
 	minDamage_table = { 0,12.0f,14.0f,14.0f,14.0f,14.0f,14.0f,18.0f };
 	maxDamage_table = { 0,16.0f,18.0f,18.0f,18.0f,18.0f,18.0f,22.0f };
@@ -88,16 +86,17 @@ void BounceBall::UpdateBalls()
 							else if (projectiles[i]->pos.x > e->pos.x && vel.x < 0.0f)
 								vel.x *= -1.0f;
 							else if (vel.x == 0.0f)
-								vel.x += e->GetMoveDir().x;
+								vel.x += e->GetMoveDir().x*e->GetSpd();
 							
 							if (projectiles[i]->pos.y < e->pos.y && vel.y>0.0f)
 								vel.y *= -1.0f;
 							else if (projectiles[i]->pos.y > e->pos.y && vel.y < 0.0f)
 								vel.y *= -1.0f;
+							vel.y *= 0.6f;
 							(dynamic_cast<Ball*>(projectiles[i]))->SetVelocity(vel);
 
 							// 충돌에서 벗어나게 밀어내기
-							projectiles[i]->pos += (projectiles[i]->pos - e->GetDamageCollider()->pos).Normalized() * (colDist - (projectiles[i]->pos - e->pos).GetLength());
+							//projectiles[i]->pos += (projectiles[i]->pos - e->GetDamageCollider()->pos).Normalized() * (colDist - (projectiles[i]->pos - e->pos).GetLength());
 						}
 					}
 				}

@@ -2,10 +2,6 @@
 class BounceBall :public Weapon
 {
 private:
-	float proj_delay;
-	float now_proj_delay;
-	float hitCooldown;
-	int projCnt;
 	vector<float> nowCoolDown;
 	vector<Projectile*> balls;
 

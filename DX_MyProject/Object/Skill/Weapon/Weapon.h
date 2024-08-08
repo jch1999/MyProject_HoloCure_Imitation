@@ -15,19 +15,21 @@ protected:
 	float now_proj_delay;
 	float proj_spd;
 	int projCnt;
+	float hitCooldown;
 
 	// level 당 데미지, 콜라이더 index
 	vector<float> minDamage_table;
 	vector<float> maxDamage_table;
 	vector<int> colliderIdx_table;
 
-	// level 당 투사체 수, 투사체의 hit 제한수, 공격 딜레이
+	// level 당 투사체 수, 투사체의 hit 제한수, 공격 딜레이, 생존시간
 	vector<float> projCnt_talbe;
 	vector<float> projDelay_table;
 	vector<float> projSpd_table;
 	vector<int> hitLimit_table;
 	vector<float> delay_table;
 	vector<int> ricochet_table;
+	vector<int> projLifetime_table;
 
 	// 무기에서 사용하는 projectile
 	vector<Projectile*> projectiles;

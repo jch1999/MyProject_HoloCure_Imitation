@@ -19,6 +19,9 @@ Axe::Axe(Vector2 size)
 	clip_idx = 0;
 
 	colliders.push_back(new CircleCollider(size.x * 0.5f));
+	colliders.push_back(new CircleCollider(size.x * 0.6f));
+	colliders.push_back(new CircleCollider(size.x * 0.72f));
+	colliders.push_back(new CircleCollider(size.x * 1.08f));
 	collider = colliders[0];
 
 	is_active = false;

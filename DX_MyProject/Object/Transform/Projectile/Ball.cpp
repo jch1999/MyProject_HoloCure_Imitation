@@ -44,6 +44,7 @@ void Ball::Render()
 {
 	if (!is_active)return;
 
+	rot.z += velocity.x * DELTA;
 	VS->Set();
 	PS->Set();
 

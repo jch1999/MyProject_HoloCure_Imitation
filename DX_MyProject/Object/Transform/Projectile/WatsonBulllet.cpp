@@ -25,7 +25,6 @@ WatsonBullet::WatsonBullet(Vector2 size)
 
 WatsonBullet::~WatsonBullet()
 {
-
 }
 
 void WatsonBullet::Update()

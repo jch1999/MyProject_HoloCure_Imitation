@@ -72,7 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         // 따라서 사실상 프로젝트의 wWinMain이 있는 파일에서는
         // 창의 크기 같은 것이나 나중에 쓸 마우스 위치 입력 등의 자잘한 작업 외엔 수정할 부분이 많지 않음
     }
-
+    program.Delete();
     return (int) msg.wParam;
 }
 

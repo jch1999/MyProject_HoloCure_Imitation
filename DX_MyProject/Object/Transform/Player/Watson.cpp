@@ -63,6 +63,7 @@ Watson::Watson(float MaxHP,float atk, float speed,float crt,float pickUpRange,fl
 
 Watson::~Watson()
 {
+	Player::~Player();
 	/*delete VS;
 	delete PS;
 	delete CB;

@@ -42,7 +42,6 @@ KiaraSlash::KiaraSlash(Vector2 size)
 
 KiaraSlash::~KiaraSlash()
 {
-
 }
 
 void KiaraSlash::Update()

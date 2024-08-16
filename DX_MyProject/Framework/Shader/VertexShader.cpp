@@ -253,4 +253,8 @@ void VertexShader::Delete()
     // 셰이더들의 사용이 전부 끝났다면 모든 셰이더들을 할당 해제할 때 사용할 함수지만,
     // 그럴 상황이면 아예 프로그램 자체가 종료되는 상황이므로 굳이 처리할 이유가 없음
     // 따라서 여기선 작성하지 않음, 본래는 작성하는 것이 권장된다고만 정리
+    for (auto shader : shader_data)
+    {
+        delete shader.second;
+    }
 }

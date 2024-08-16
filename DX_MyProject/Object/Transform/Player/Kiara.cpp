@@ -66,17 +66,6 @@ Kiara::Kiara(float MaxHP, float atk, float speed, float crt, float pickUpRange, 
 
 Kiara::~Kiara()
 {
-	/*delete VS;
-	delete PS;
-	delete CB;
-
-	for (Clip* c : clips)
-		delete c;
-
-	if (damageCollider != nullptr)
-		delete damageCollider;
-	if (pickUpCollider != nullptr)
-		delete pickUpCollider;*/
 }
 
 void Kiara::Update()

@@ -40,7 +40,6 @@ PlayDice::PlayDice()
 
 PlayDice::~PlayDice()
 {
-	
 }
 
 void PlayDice::Update()

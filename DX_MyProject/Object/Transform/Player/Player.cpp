@@ -24,8 +24,6 @@ Player::Player(float MaxHP, float atk, float speed, float crt, float pickupRange
 
 Player::~Player()
 {
-	delete VS;
-	delete PS;
 	delete CB;
 
 	for (Clip* c : clips)

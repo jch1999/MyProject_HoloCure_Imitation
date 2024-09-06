@@ -24,6 +24,13 @@ PsychoAxe::PsychoAxe()
 
 	weapon_type = WEAPON_TYPE::MULTI_SHOT;
 	action_status = Skill::SKILL_STATUS::COOLDOWN;
+
+	for (int i = 0; i < 10; i++)
+	{
+		Projectile* axe = new Axe();
+		projectiles.push_back(axe);
+	}
+	enhanceDamage = 0.0f;
 }
 
 PsychoAxe::~PsychoAxe()
@@ -33,12 +40,63 @@ PsychoAxe::~PsychoAxe()
 void PsychoAxe::Update()
 {
 	if (now_level == 0)return;
+	switch (action_status)
+	{
+	case Skill::SKILL_STATUS::COOLDOWN:
+	{
+		now_skill_delay += DELTA;
+		if (now_skill_delay >= skillDelay_table[now_level])
+		{
+			action_status = SKILL_STATUS::PLAY;
+			now_skill_delay = 0.0f;
+		}
+	}
+	break;
+	case Skill::SKILL_STATUS::PLAY:
+	{
+		if (now_proj_delay < proj_delay)
+		{
+			now_proj_delay += DELTA;
+		}
+		else
+		{
+			now_proj_delay = 0.0f;
+			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
+			{
+				Axe* proj = GetAxe();
+
+
+				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
+					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
+					+ player->GetATK()
+					+ enhanceDamage;
+				proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], -1.0f);
+				proj->SetDirection(player->GetAttackDir());
+				proj->SetColliderIdx(0);
+				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
+				proj->SetRotSpeed(50.0f);
+				proj->respwan();
+				projCnt++;
+			}
+			else // 투사체 발사가 끝났으니 스킬은 재사용 대기 상태로
+			{
+				projCnt = 0;
+				action_status = SKILL_STATUS::COOLDOWN;
+			}
+		}
+	}
+	break;
+	default:
+		break;
+	}
 
 	UpdateAxes();
 }
 
 void PsychoAxe::Render()
 {
+	for (auto a : projectiles)
+		a->Render();
 }
 
 void PsychoAxe::PostRender()
@@ -68,4 +126,25 @@ void PsychoAxe::UpdateAxes()
 	{
 		axe->Update();
 	}
+}
+
+Axe* PsychoAxe::GetAxe()
+{
+	Axe* axe = nullptr;
+	for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 폭탄 하나를 찾아 사용
+	{
+		if (projectiles[i]->is_active == false)
+		{
+			axe = dynamic_cast<Axe*>(projectiles[i]);
+			break;
+		}
+	}
+
+	// 비활성 상태 폭탄 없음 == 폭탄이 부족함 -> 새로 생성
+	if (axe == nullptr)
+	{
+		axe = new Axe();
+		projectiles.push_back(axe);
+	}
+	return axe;
 }

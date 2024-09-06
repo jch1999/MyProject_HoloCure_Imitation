@@ -20,4 +20,5 @@ public:
 	virtual bool LevelDown() override;
 
 	void UpdateAxes();
+	Axe* GetAxe();
 };

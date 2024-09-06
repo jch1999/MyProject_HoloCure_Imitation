@@ -48,6 +48,7 @@ void Axe::Update()
 	collider->WorldUpdate();
 	
 	nowTime += DELTA;
+	speed += DELTA;
 }
 
 void Axe::Render()

@@ -29,7 +29,7 @@ protected:
 	vector<int> hitLimit_table;
 	vector<float> delay_table;
 	vector<int> ricochet_table;
-	vector<int> projLifetime_table;
+	vector<float> projLifetime_table;
 
 	// 무기에서 사용하는 projectile
 	vector<Projectile*> projectiles;

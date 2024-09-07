@@ -6,8 +6,6 @@ private:
 	float now_proj_delay;
 	int projCnt;
 
-	vector<Projectile*> axes;
-
 public:
 	PsychoAxe();
 	~PsychoAxe();

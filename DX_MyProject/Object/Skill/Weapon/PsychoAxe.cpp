@@ -18,6 +18,7 @@ PsychoAxe::PsychoAxe()
 	maxDamage_table = { 0,14.0f,18.0f,18.0f,23.0f,23.0f,23.0f,34.0f };
 	colliderIdx_table = { 0, 0, 1, 1, 2, 2, 3, 3 };
 	projCnt_talbe = { 0,1,1,2,2,3,3,4 };
+	projLifetime_table = { 0,3.0f,3.0f,3.0f,3.0f,4.0f,4.0f,4.0f };
 	proj_spd = 10.0f;
 	hitLimit_table = { 0,1,1,1,1,1,1,1 };
 	hitCooldown = 0.83f;
@@ -65,13 +66,11 @@ void PsychoAxe::Update()
 			{
 				Axe* proj = GetAxe();
 
-
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
 					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], -1.0f);
-				proj->SetDirection(player->GetAttackDir());
+				proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], projLifetime_table[now_level]);
 				proj->SetColliderIdx(0);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
 				proj->SetRotSpeed(50.0f);
@@ -140,7 +139,7 @@ Axe* PsychoAxe::GetAxe()
 		}
 	}
 
-	// 비활성 상태 폭탄 없음 == 폭탄이 부족함 -> 새로 생성
+	// 비활성 상태 도끼 없음 -> 새로 생성
 	if (axe == nullptr)
 	{
 		axe = new Axe();

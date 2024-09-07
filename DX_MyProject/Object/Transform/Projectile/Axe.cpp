@@ -41,14 +41,17 @@ void Axe::Update()
 		SetActive(false);
 		collider->SetActive(false);
 	}
-	rot.z += rotSpeed;
-	pos += up * speed * DELTA;
-	collider->rot.z = rot.z;
-	collider->pos = pos;
-	collider->WorldUpdate();
-	
-	nowTime += DELTA;
-	speed += DELTA;
+	else
+	{
+		rot.z += rotSpeed;
+		pos += up * speed * DELTA;
+		collider->rot.z = rot.z;
+		collider->pos = pos;
+		collider->WorldUpdate();
+
+		nowTime += DELTA;
+		speed += DELTA;
+	}
 }
 
 void Axe::Render()

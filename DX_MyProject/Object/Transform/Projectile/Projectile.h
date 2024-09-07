@@ -58,4 +58,6 @@ public:
 
 	void SetTargetDist(float dist) { targetDist = dist; }
 	float GetTargetDist() { return targetDist; }
+
+	void SetLifeTime(float time) { lifeTime = time; }
 };

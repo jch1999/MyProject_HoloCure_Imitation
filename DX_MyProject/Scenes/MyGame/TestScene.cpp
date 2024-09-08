@@ -96,7 +96,7 @@ void TestScene::PostRender()
 	ImGui::Text("Cam's pos : %f %f", CAM->pos.x, CAM->pos.y);
 	//player->PostRender();
 
-	//SkillManager::Get()->PostRneder();
+	SkillManager::Get()->PostRneder();
 	//ItemSpawner::Get()->PostRneder();
 	UIManager::Get()->PostRneder();
 }

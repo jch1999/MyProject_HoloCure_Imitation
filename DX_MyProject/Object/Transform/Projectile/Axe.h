@@ -4,7 +4,7 @@ class Axe :public Projectile
 private:
 	float rotSpeed;
 public:
-	Axe(Vector2 size = Vector2(46.0f, 46.0f));
+	Axe(Vector2 size = Vector2(64.0f, 64.0f));
 	~Axe();
 
 

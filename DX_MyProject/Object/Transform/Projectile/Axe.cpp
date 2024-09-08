@@ -43,14 +43,16 @@ void Axe::Update()
 	}
 	else
 	{
-		rot.z += rotSpeed;
-		pos += up * speed * DELTA;
+		rot.z += rotSpeed * DELTA;
+		pos += Up() * speed * DELTA + move_dir * speed * 0.5f * DELTA;
+		WorldUpdate();
+
 		collider->rot.z = rot.z;
 		collider->pos = pos;
 		collider->WorldUpdate();
 
 		nowTime += DELTA;
-		speed += DELTA;
+		rotSpeed -= rotSpeed * 0.3f * DELTA;
 	}
 }
 

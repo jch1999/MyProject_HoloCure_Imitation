@@ -5,6 +5,15 @@ private:
 	float proj_delay;
 	float now_proj_delay;
 	int projCnt;
+	// 기존에 충돌한 Enemy 리스트
+	vector<list<pair<Enemy*, float>>> enemyCooltimes;
+	// 이번 프레임에 충돌한 Enemy 리스트
+	vector<Enemy*> enemyNowFrame;
+	// 이번 프레임에 충돌하지 않아 제거할 Enemy 리스트
+	vector<pair<Enemy*, float>> removeList;
+
+	float rotSpeed;
+	float speed;
 
 public:
 	PsychoAxe();

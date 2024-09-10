@@ -17,8 +17,11 @@ Bomb::Bomb(Vector2 size, float targetDist, Vector2 move_dir)
 	colliders.push_back(new RectCollider(size * Vector2(1.2f, 1.2f)));
 	collider = colliders[0];
 
+	explosion = new ExplosionSmoke();
+
 	is_active = false;
 	collider->SetActive(false);
+	
 }
 
 Bomb::~Bomb()
@@ -27,37 +30,47 @@ Bomb::~Bomb()
 
 void Bomb::Update()
 {
-	if (!is_active)return;
-
-	pos = LERP(pos, targetPos, speed * DELTA);
-	if ((pos-targetPos).GetLength()<0.1f)
+	if (is_active)
 	{
-		pos = targetPos;
+		pos = LERP(pos, targetPos, speed * DELTA);
+		if ((pos - targetPos).GetLength() < 0.1f)
+		{
+			pos = targetPos;
+		}
+
+		WorldUpdate();
+
+		collider->pos = pos;
+		collider->WorldUpdate();
+
+		scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
+			clips[clip_idx]->GetFrameOriginSize();
+
+		clips[clip_idx]->Update();
+
+		OnCollision();
 	}
-
-	WorldUpdate();
-
-	collider->pos = pos;
-	collider->WorldUpdate();
-
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
-
-	clips[clip_idx]->Update();
+	if (explosion->is_active)
+		explosion->Update();
 }
 
 void Bomb::Render()
 {
-	if (!is_active)return;
+	if (is_active)
+	{
+		VS->Set();
+		PS->Set();
 
-	VS->Set();
-	PS->Set();
+		WB->SetVS(0);
+		CB->SetPS(0);
 
-	WB->SetVS(0);
-	CB->SetPS(0);
-
-	clips[clip_idx]->Render();
-	collider->Render();
+		clips[clip_idx]->Render();
+		collider->Render();
+	}
+	if (explosion->is_active)
+	{
+		explosion->Render();
+	}
 }
 
 void Bomb::PostRender()
@@ -77,8 +90,42 @@ void Bomb::respwan()
 	collider->SetActive(true);
 }
 
+void Bomb::OnCollision()
+{
+	pair<int, int> pPos = make_pair((int)(pos.x) / CELL_X, (int)(pos.y) / CELL_Y);
+	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
+	for (auto e : enemyList)
+	{
+		if (e->is_active)
+		{
+			// 面倒 贸府
+			float minDist = GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength();
+			float differDist = (e->pos - pos).GetLength();
+			if (minDist > differDist)
+			{
+				if (GetCollider()->isCollision(e->GetDamageCollider()))
+				{
+					Hit();
+
+					// explosion 劝己拳
+					//explosion->SetStatus(GetDamage(), 250.0f, hitCount, -1.0f);
+					explosion->pos = pos;
+					explosion->respwan();
+					break;
+				}
+			}
+		}
+	}
+}
+
 void Bomb::Hit()
 {
 	SetActive(false);
 	collider->SetActive(false);
+}
+
+void Bomb::SetExplosionStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown, bool crt)
+{
+	explosion->SetStatus(damage, speed, hitCount, lifeTime, hitCoolDown);
+	explosion->SetCrt(crt);
 }

@@ -34,12 +34,6 @@ HoloBomb::HoloBomb()
 	{
 		Projectile* bomb = new Bomb();
 		projectiles.push_back(bomb);
-
-		Projectile* explosion = new ExplosionSmoke();
-		explosions.push_back(explosion);
-
-		set<Enemy*> v;
-		hitEnemies.push_back(v);
 	}
 	enhanceDamage = 0.0f;
 }
@@ -79,12 +73,17 @@ void HoloBomb::Update()
 			{
 				Bomb* proj = GetBomb();
 				
-
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
 					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], -1.0f);
+				bool isCrt = player->isCritical();
+				proj->SetStatus(0.0f, proj_spd, 1, -1.0f,0.0f);
+				if (isCrt)
+					proj->SetExplosionStatus(damage * 1.5f, 0.0f, hitLimit_table[now_level], -1.0f, 0.0f, isCrt);
+				else
+					proj->SetExplosionStatus(damage * 1.5f, 0.0f, hitLimit_table[now_level], -1.0f, 0.0f, isCrt);
+
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(0);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
@@ -149,72 +148,15 @@ void HoloBomb::UpdateBomb()
 		if (b->is_active)
 		{
 			b->Update();
-			pair<int, int> pPos = make_pair((int)(b->pos.x) / CELL_X, (int)(b->pos.y) / CELL_Y);
-			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
-			for (auto e : enemyList)
-			{
-				if (e->is_active)
-				{
-					// 충돌 처리
-					float minDist = b->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength();
-					float differDist = (e->pos - b->pos).GetLength();
-					if (minDist > differDist)
-					{
-						if (b->GetCollider()->isCollision(e->GetDamageCollider()))
-						{
-							b->Hit();
-
-							// explosion 활성화
-							Projectile* proj = GetExplosionSmoke();
-							proj->SetStatus(b->GetDamage(), 250.0f, hitLimit_table[now_level], -1.0f);
-							proj->pos = b->pos;
-							proj->respwan();
-							break;
-						}
-					}
-				}
-			}
 		}
 	}
 }
 
 void HoloBomb::UpdateBombEffect()
 {
-	for (int i = 0; i < explosions.size(); i++)
+	for (auto e : explosions)
 	{
-		ExplosionSmoke* e = dynamic_cast<ExplosionSmoke*>(explosions[i]);
 		e->Update();
-
-		if (e->isDamageAble())
-		{
-			pair<int, int> pPos = make_pair((int)(e->pos.x) / CELL_X, (int)(e->pos.y) / CELL_Y);
-			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
-			for (auto enemy : enemyList)
-			{
-				if (enemy->is_active)
-				{
-					// 충돌 처리
-					float minDist = e->GetCollider()->Size().GetLength() + enemy->GetDamageCollider()->Size().GetLength();
-					float differDist = (enemy->pos - e->pos).GetLength();
-					if (minDist > differDist)
-					{
-						if (e->GetCollider()->isCollision(enemy->GetDamageCollider()))
-						{
-							// 데미지 주기
-							if (hitEnemies[i].find(enemy) == hitEnemies[i].end())
-							{
-								hitEnemies[i].insert(enemy);
-								bool isCrt = player->isCritical();
-								if (isCrt)
-									enemy->ChangeHP(-(e->GetDamage()) * 1.5f, true);
-								else
-									enemy->ChangeHP(-(e->GetDamage()), false);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 }
@@ -238,29 +180,4 @@ Bomb* HoloBomb::GetBomb()
 		projectiles.push_back(bomb);
 	}
 	return bomb;
-}
-
-Projectile* HoloBomb::GetExplosionSmoke()
-{
-	Projectile* proj = nullptr;
-	for (int i = 0; i < explosions.size(); i++)// 비활성화 상태인 폭탄효과 하나를 찾아 사용
-	{
-		if (explosions[i]->is_active == false)
-		{
-			proj = explosions[i];
-			hitEnemies[i].clear();
-			break;
-		}
-	}
-
-	// 비활성 상태 폭탄 효과 없음 == 폭탄 효과가 부족함 -> 새로 생성
-	if (proj == nullptr)
-	{
-		proj = new ExplosionSmoke();
-		explosions.push_back(proj);
-		set<Enemy*> v;
-		hitEnemies.push_back(v);
-	}
-
-	return proj;
 }

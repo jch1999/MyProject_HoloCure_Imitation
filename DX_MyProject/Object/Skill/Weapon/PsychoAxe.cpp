@@ -23,6 +23,7 @@ PsychoAxe::PsychoAxe()
 	proj_delay = 0.83f;
 	hitLimit_table = { 0,1,1,1,1,-1,-1,-1 };
 	hitCooldown = 0.83f;
+	
 
 	weapon_type = WEAPON_TYPE::MULTI_SHOT;
 	action_status = Skill::SKILL_STATUS::COOLDOWN;
@@ -32,10 +33,6 @@ PsychoAxe::PsychoAxe()
 		Projectile* axe = new Axe();
 		projectiles.push_back(axe);
 
-		set<Enemy*> v;
-		hitEnemies.push_back(v);
-		list<pair<Enemy*, float>> cooltimeList;
-		enemyCooltimes.push_back(cooltimeList);
 	}
 	enhanceDamage = 0.0f;
 
@@ -79,11 +76,16 @@ void PsychoAxe::Update()
 					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, speed, hitLimit_table[now_level], projLifetime_table[now_level]);
+				bool isCrt = player->isCritical();
+				if (isCrt)
+					proj->SetStatus(damage * 1.5f, speed, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
+				else
+					proj->SetStatus(damage, speed, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(0);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
 				proj->SetRotSpeed(rotSpeed);
+				proj->SetCrt(isCrt);
 				proj->respwan();
 				projCnt++;
 			}
@@ -133,70 +135,12 @@ bool PsychoAxe::LevelDown()
 
 void PsychoAxe::UpdateAxes()
 {
-	int idx = 0;
 	for (auto axe : projectiles)
 	{
 		if (axe->is_active)
 		{
 			axe->Update();
-			pair<int, int> pPos = make_pair((int)(axe->pos.x) / CELL_X, (int)(axe->pos.y) / CELL_Y);
-			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
-			enemyNowFrame.clear();
-			removeList.clear();
-
-			for (auto e :enemyList)
-			{
-				if (e->is_active)
-				{
-					// 面倒 贸府
-					float minDist = axe->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength();
-					float differDist = (e->pos - axe->pos).GetLength();
-					if (minDist > differDist)
-					{
-						if (axe->GetCollider()->isCollision(e->GetDamageCollider()))
-						{
-							enemyNowFrame.push_back(e);
-							if (hitEnemies[idx].find(e) == hitEnemies[idx].end())
-							{
-								enemyCooltimes[idx].push_back(make_pair(e, 0.0f));
-								axe->Hit();
-								if (now_level < 5)
-									break;
-							}
-						}
-					}
-				}
-			}
-			list<pair<Enemy*, float>>::iterator iter = enemyCooltimes[idx].begin();
-			for (; iter != enemyCooltimes[idx].end();iter++)
-			{
-				(*iter).second -= DELTA;
-				if ((*iter).second <= 0.0f)
-				{
-					// 单固瘤 林扁
-					if (find(enemyNowFrame.begin(), enemyNowFrame.end(), (*iter).first) == enemyNowFrame.end())
-					{
-						removeList.push_back((*iter));
-					}
-					else
-					{
-						bool isCrt = player->isCritical();
-						if (isCrt)
-							(*iter).first->ChangeHP(-(axe->GetDamage()) * 1.5f, true);
-						else
-							(*iter).first->ChangeHP(-(axe->GetDamage()), false);
-
-						(*iter).second = hitCooldown;
-					}
-				}
-			}
-
-			for (int i = 0; i < removeList.size(); i++)
-			{
-				enemyCooltimes[idx].remove(removeList[i]);
-			}
 		}
-		idx++;
 	}
 }
 
@@ -208,8 +152,6 @@ Axe* PsychoAxe::GetAxe()
 		if (projectiles[i]->is_active == false)
 		{
 			axe = dynamic_cast<Axe*>(projectiles[i]);
-			enemyCooltimes[i].clear();
-			hitEnemies[i].clear();
 			break;
 		}
 	}
@@ -219,11 +161,6 @@ Axe* PsychoAxe::GetAxe()
 	{
 		axe = new Axe();
 		projectiles.push_back(axe);
-
-		set<Enemy*> v;
-		hitEnemies.push_back(v);
-		list<pair<Enemy*, float>> cooltimeList;
-		enemyCooltimes.push_back(cooltimeList);
 	}
 	return axe;
 }

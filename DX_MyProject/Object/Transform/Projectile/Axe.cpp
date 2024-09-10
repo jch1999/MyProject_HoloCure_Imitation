@@ -36,6 +36,8 @@ Axe::~Axe()
 
 void Axe::Update()
 {
+	if (!is_active)return;;
+
 	if (nowTime >= lifeTime)
 	{
 		SetActive(false);
@@ -54,6 +56,7 @@ void Axe::Update()
 		nowTime += DELTA;
 		rotSpeed -= rotSpeed * 0.3f * DELTA;
 	}
+	OnCollision();
 }
 
 void Axe::Render()
@@ -74,6 +77,61 @@ void Axe::PostRender()
 {
 }
 
+void Axe::OnCollision()
+{
+	pair<int, int> pPos = make_pair((int)(pos.x) / CELL_X, (int)(pos.y) / CELL_Y);
+	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
+	enemyNowFrame.clear();
+	removeList.clear();
+
+	for (auto e : enemyList)
+	{
+		if (e->is_active)
+		{
+			// 面倒 贸府
+			float minDist = GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength();
+			float differDist = (e->pos - pos).GetLength();
+			if (minDist > differDist)
+			{
+				if (GetCollider()->isCollision(e->GetDamageCollider()))
+				{
+					enemyNowFrame.push_back(e);
+					if (hitEnemies.find(e) == hitEnemies.end())
+					{
+						cooltimeList.push_back(make_pair(e, 0.0f));
+						Hit();
+					}
+				}
+			}
+		}
+	}
+
+	list<pair<Enemy*, float>>::iterator iter = cooltimeList.begin();
+	for (; iter != cooltimeList.end(); iter++)
+	{
+		(*iter).second -= DELTA;
+		if ((*iter).second <= 0.0f)
+		{
+			// 单固瘤 林扁
+			if (find(enemyNowFrame.begin(), enemyNowFrame.end(), (*iter).first) == enemyNowFrame.end())
+			{
+				removeCooltimeList.push_back((*iter));
+			}
+			else
+			{
+				(*iter).first->ChangeHP(-(GetDamage()), isCrt);
+
+				(*iter).second = hitCoolDown;
+			}
+		}
+	}
+
+	for (int i = 0; i < removeCooltimeList.size(); i++)
+	{
+		cooltimeList.remove(removeCooltimeList[i]);
+	}
+}
+
 void Axe::respwan()
 {
 	nowTime = 0.0f;
@@ -89,6 +147,8 @@ void Axe::respwan()
 	is_active = true;
 	collider->SetActive(true);
 	rot.z = 0.0f;
+
+	cooltimeList.clear();
 }
 
 void Axe::Hit()

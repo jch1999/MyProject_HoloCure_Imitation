@@ -1,7 +1,7 @@
 #include "framework.h"
 
-Projectile::Projectile(float damage, float speed, int maxHitCount, float lifeTime)
-	:damage(damage),speed(speed), maxHitCount(maxHitCount),lifeTime(lifeTime),nowTime(0.0f)
+Projectile::Projectile(float damage, float speed, int maxHitCount, float lifeTime,float hitCooldown)
+	:damage(damage),speed(speed), maxHitCount(maxHitCount),lifeTime(lifeTime),nowTime(0.0f),hitCoolDown(hitCoolDown)
 {
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
@@ -19,7 +19,7 @@ Projectile::~Projectile()
 		delete c;
 }
 
-void Projectile::SetStatus(float damage, float speed, int hitCount, float lifeTime)
+void Projectile::SetStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown)
 {
 	this->damage = damage;
 	this->speed = speed;
@@ -27,6 +27,7 @@ void Projectile::SetStatus(float damage, float speed, int hitCount, float lifeTi
 	this->nowHitCount = 0;
 	this->lifeTime = lifeTime;
 	this->nowTime = 0.0f;
+	this->hitCoolDown = hitCoolDown;
 }
 
 

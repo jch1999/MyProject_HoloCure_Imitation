@@ -88,6 +88,33 @@ void ExplosionSmoke::respwan()
 	clips[clip_idx]->Play();
 }
 
+void ExplosionSmoke::OnCollision()
+{
+	pair<int, int> pPos = make_pair((int)(pos.x) / CELL_X, (int)(pos.y) / CELL_Y);
+	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
+	for (auto enemy : enemyList)
+	{
+		if (enemy->is_active)
+		{
+			// 面倒 贸府
+			float minDist = GetCollider()->Size().GetLength() + enemy->GetDamageCollider()->Size().GetLength();
+			float differDist = (enemy->pos - pos).GetLength();
+			if (minDist > differDist)
+			{
+				if (GetCollider()->isCollision(enemy->GetDamageCollider()))
+				{
+					// 单固瘤 林扁
+					if (hitEnemies.find(enemy) == hitEnemies.end())
+					{
+						hitEnemies.insert(enemy);
+						enemy->ChangeHP(-(GetDamage()), isCrt);
+					}
+				}
+			}
+		}
+	}
+}
+
 void ExplosionSmoke::Hit()
 {
 }

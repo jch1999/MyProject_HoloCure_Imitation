@@ -12,6 +12,7 @@ public:
 	virtual void Render() override;
 	virtual void PostRender() override;
 	virtual void respwan() override;
+	virtual void OnCollision() override;
 	virtual void Hit() override;
 
 	bool isDamageAble();

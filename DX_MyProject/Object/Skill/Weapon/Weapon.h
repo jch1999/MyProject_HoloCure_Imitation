@@ -35,9 +35,6 @@ protected:
 	vector<Projectile*> projectiles;
 	vector<int> ricochetCnt; // 각 탄환의 도탄횟수
 
-	// 1회 타격 고정 시 중복 충돌을 막기 위해 충도한 에너미의 정보를 저장
-	vector<set<Enemy*>> hitEnemies; 
-
 public:
 	Weapon(SKILL_ID id,int maxLevel=7);
 	virtual ~Weapon();

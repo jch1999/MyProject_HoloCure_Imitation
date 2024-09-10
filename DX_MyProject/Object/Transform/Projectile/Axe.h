@@ -15,6 +15,8 @@ public:
 
 	virtual void PostRender() override;
 
+	virtual void OnCollision() override;
+
 	virtual void respwan() override;
 
 	virtual void Hit() override;

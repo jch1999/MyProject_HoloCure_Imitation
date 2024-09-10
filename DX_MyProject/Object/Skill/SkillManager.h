@@ -46,6 +46,7 @@ public:
 	Skill* GetSkillByID(Skill::SKILL_ID id);
 
 	void SetPlayer(Player* p);
+	Player* GetPlayer() { return player; }
 	void Update_LevelUpAlbeList();
 	int GetLevelUpSkillID();
 	int GetLevelUpSkillID_W();

@@ -83,6 +83,9 @@ void ExplosionSmoke::respwan()
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
 		clips[clip_idx]->GetFrameOriginSize();
 
+	hitEnemies.clear();
+	enemyNowFrame.clear();
+
 	SetActive(true);
 	collider->SetActive(true);
 	clips[clip_idx]->Play();
@@ -92,6 +95,9 @@ void ExplosionSmoke::OnCollision()
 {
 	pair<int, int> pPos = make_pair((int)(pos.x) / CELL_X, (int)(pos.y) / CELL_Y);
 	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
+
+	enemyNowFrame.clear();
+
 	for (auto enemy : enemyList)
 	{
 		if (enemy->is_active)

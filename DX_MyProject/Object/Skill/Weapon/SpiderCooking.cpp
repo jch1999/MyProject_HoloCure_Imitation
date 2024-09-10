@@ -64,6 +64,8 @@ bool SpiderCooking::LevelUp()
 		poison->SetActive(true);
 		poison->GetCollider()->SetActive(true);
 	}
+	else if (now_level == 7)
+		poison->SetKnockBack(true);
 	poison->SetColliderIdx(colliderIdx_table[now_level]);
 	return true;
 }
@@ -75,79 +77,22 @@ bool SpiderCooking::LevelDown()
 
 void SpiderCooking::UpdatePoision()
 {
+	poison->SetCoolDown(hitCooldown_table[now_level]);
 	poison->pos = player->pos;
 	poison->Update();
-
-	// 충돌 중인 Enemey 검출
-	enemyNowFrame.clear();
-	removeList.clear();
 	//const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
 	// Slash의 pos의 CELL 위치를 중앙으로 3x3 영역을 검사
 	// EnemySpawner에서 가운데 cell을 기준으로 3x3 크기에 포함되는 적들 정보를 저장했는데 여기서
 	// 또 3x3으로 검사하면 9번 들어가려나?
-	pair<int, int> sPos = make_pair(poison->pos.x / CELL_X, poison->pos.y / CELL_Y);
-	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(make_pair(sPos.first, sPos.second));
-	for (auto e : enemyList)
-	{
-		if (!e->is_active)continue;
-		// 콜라이더 중점 사이의 거리 < 콜라이더 길이의 합 일 때만 충돌 검사
-		float sumLength = poison->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength();
-		float dist = (poison->GetCollider()->pos - e->GetDamageCollider()->pos).GetLength();
-		if (sumLength >= dist)
-		{
-			if (poison->GetCollider()->isCollision(e->GetDamageCollider()))
-				enemyNowFrame.push_back(e);
-		}
-	}
+	
+}
 
-	// 리스트 갱신
-	for (auto e : enemyNowFrame)
-	{
-		// 기존에 존재하지 않음 - 추가 및 바로 공격하게 설정
-		if (enemyCooltimes.find(e) == enemyCooltimes.end())
-		{
-			enemyCooltimes[e] = 0.0f;
-		}
-		// 기존에 존재 - 시간 감소
-		else
-		{
-			enemyCooltimes[e]-= DELTA;
-		}
-	}
-
-	// 시간 경과 체크, coolTime이 지났으면 damage주기
-	for (auto m : enemyCooltimes)
-	{
-		//m.second -= DELTA;
-		if (m.second <= 0.0f)
-		{
-			enemyCooltimes[m.first] = hitCooldown_table[now_level];
-			float nowCoolTime = enemyCooltimes[m.first];
-			float damage = Random::Get()->GetRandomFloat(minDamage_table[now_level], maxDamage_table[now_level]);
-			if (player->isCritical())
-			{
-				m.first->ChangeHP(-damage * 1.5f, true);
-			}
-			else
-			{
-				m.first->ChangeHP(-damage, false);
-			}
-			if (now_level == 7)
-				m.first->SetKnockBack(m.first->GetMoveDir() * -1.0f,300.0f,0.13f);
-			
-			// 이미 죽은 Enemy를 제거 리스트에 추가
-			if (!m.first->is_active)
-			{
-				removeList.push_back(m.first);
-			}
-
-		}
-	}
-
-	// 제거
-	for (auto e : removeList)
-	{
-		enemyCooltimes.erase(enemyCooltimes.find(e));
-	}
+float SpiderCooking::GetDamage()
+{
+	float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
+				* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Melee)
+				+ player->GetATK()
+				+ enhanceDamage;
+	return damage;
 }
 

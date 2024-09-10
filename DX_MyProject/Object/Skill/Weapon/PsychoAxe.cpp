@@ -82,7 +82,7 @@ void PsychoAxe::Update()
 				else
 					proj->SetStatus(damage, speed, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
 				proj->SetDirection(player->GetAttackDir());
-				proj->SetColliderIdx(0);
+				proj->SetColliderIdx(colliderIdx_table[now_level]);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
 				proj->SetRotSpeed(rotSpeed);
 				proj->SetCrt(isCrt);

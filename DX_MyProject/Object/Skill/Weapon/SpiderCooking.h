@@ -2,7 +2,7 @@
 class SpiderCooking :public Weapon
 {
 private:
-	Projectile* poison;
+	PoisonArea* poison;
 
 	vector<float> hitCooldown_table;
 	// 기존에 충돌한 Enemy 리스트
@@ -26,4 +26,5 @@ public:
 	virtual bool LevelDown() override;
 
 	void UpdatePoision();
+	float GetDamage();
 };

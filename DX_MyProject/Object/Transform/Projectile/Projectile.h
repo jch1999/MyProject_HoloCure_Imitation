@@ -72,4 +72,5 @@ public:
 
 	void SetLifeTime(float time) { lifeTime = time; }
 	void SetCrt(bool crt) { isCrt = crt; }
+	void SetCoolDown(float time)[hitCoolDown = time; ]
 };

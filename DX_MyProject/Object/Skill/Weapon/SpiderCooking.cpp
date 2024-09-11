@@ -80,6 +80,7 @@ void SpiderCooking::UpdatePoision()
 	poison->SetCoolDown(hitCooldown_table[now_level]);
 	poison->pos = player->pos;
 	poison->Update();
+	poison->OnCollision();
 	//const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
 	// Slash의 pos의 CELL 위치를 중앙으로 3x3 영역을 검사
 	// EnemySpawner에서 가운데 cell을 기준으로 3x3 크기에 포함되는 적들 정보를 저장했는데 여기서

@@ -99,3 +99,7 @@ void WatsonBullet::Hit()
 		return;
 	}
 }
+
+void WatsonBullet::OnCollision()
+{
+}

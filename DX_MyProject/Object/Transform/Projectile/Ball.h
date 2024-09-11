@@ -16,4 +16,7 @@ public:
 	void AddVelocity(Vector2 newVel);
 	void SetVelocity(Vector2 vel) { velocity = vel; }
 	Vector2 GetVelocity() { return velocity; }
+
+	// Projectile을(를) 통해 상속됨
+	virtual void OnCollision() override;
 };

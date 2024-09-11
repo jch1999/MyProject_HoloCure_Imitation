@@ -82,7 +82,7 @@ void Axe::OnCollision()
 	pair<int, int> pPos = make_pair((int)(pos.x) / CELL_X, (int)(pos.y) / CELL_Y);
 	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
 	enemyNowFrame.clear();
-	removeList.clear();
+	removeCooltimeList.clear();
 
 	for (auto e : enemyList)
 	{
@@ -109,19 +109,20 @@ void Axe::OnCollision()
 	list<pair<Enemy*, float>>::iterator iter = cooltimeList.begin();
 	for (; iter != cooltimeList.end(); iter++)
 	{
-		(*iter).second -= DELTA;
-		if ((*iter).second <= 0.0f)
+		iter->second -= DELTA;
+		if (iter->second <= 0.0f)
 		{
 			// 데미지 주기
-			if (find(enemyNowFrame.begin(), enemyNowFrame.end(), (*iter).first) == enemyNowFrame.end())
+			// 없으면 리스트에서 제거
+			if (find(enemyNowFrame.begin(), enemyNowFrame.end(), iter->first) == enemyNowFrame.end())
 			{
 				removeCooltimeList.push_back((*iter));
 			}
 			else
 			{
-				(*iter).first->ChangeHP(-(GetDamage()), isCrt);
+				iter->first->ChangeHP(-(1.0f), isCrt);
 
-				(*iter).second = hitCoolDown;
+				iter->second = hitCoolDown;
 			}
 		}
 	}
@@ -129,6 +130,7 @@ void Axe::OnCollision()
 	for (int i = 0; i < removeCooltimeList.size(); i++)
 	{
 		cooltimeList.remove(removeCooltimeList[i]);
+		hitEnemies.erase(removeCooltimeList[i].first);
 	}
 }
 

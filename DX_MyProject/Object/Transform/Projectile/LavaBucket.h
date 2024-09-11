@@ -13,4 +13,7 @@ public:
 	virtual void PostRender() override;
 	virtual void respwan() override;
 	virtual void Hit() override;
+
+	// Projectile을(를) 통해 상속됨
+	virtual void OnCollision() override;
 };

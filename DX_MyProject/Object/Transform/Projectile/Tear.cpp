@@ -91,3 +91,7 @@ void Tear::Hit()
 		return;
 	}
 }
+
+void Tear::OnCollision()
+{
+}

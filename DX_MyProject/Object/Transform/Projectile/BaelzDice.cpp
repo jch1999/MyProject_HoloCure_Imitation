@@ -136,3 +136,7 @@ void BaelzDice::Hit()
 		return;
 	}
 }
+
+void BaelzDice::OnCollision()
+{
+}

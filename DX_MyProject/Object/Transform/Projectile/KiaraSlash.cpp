@@ -123,3 +123,7 @@ void KiaraSlash::Hit()
 		return;
 	}
 }
+
+void KiaraSlash::OnCollision()
+{
+}

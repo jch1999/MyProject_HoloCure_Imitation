@@ -52,7 +52,7 @@ public:
 	virtual void PostRender() = 0;
 	virtual void OnCollision() = 0;
 
-	virtual void SetStatus(float damage, float speed, int hitCount, float lifeTime,float hitCoolDown);
+	virtual void SetStatus(float damage, float speed, int hitCount, float lifeTime,float hitCoolDown=0.83f);
 	virtual void SetDirection(Vector2 dir) { move_dir = dir; }
 	virtual void respwan() = 0;
 
@@ -72,5 +72,5 @@ public:
 
 	void SetLifeTime(float time) { lifeTime = time; }
 	void SetCrt(bool crt) { isCrt = crt; }
-	void SetCoolDown(float time)[hitCoolDown = time; ]
+	void SetCoolDown(float time) { hitCoolDown = time; }
 };

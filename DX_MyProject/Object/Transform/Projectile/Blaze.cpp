@@ -98,3 +98,7 @@ void Blaze::Hit()
 		return;
 	}
 }
+
+void Blaze::OnCollision()
+{
+}

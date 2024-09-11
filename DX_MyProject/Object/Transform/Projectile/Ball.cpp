@@ -91,3 +91,7 @@ void Ball::Hit()
 void Ball::AddVelocity(Vector2 newVel)
 {
 }
+
+void Ball::OnCollision()
+{
+}

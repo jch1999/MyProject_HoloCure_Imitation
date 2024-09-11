@@ -191,6 +191,7 @@ UI* UIManager::GenerateUI(UI::UI_ID id, Transform* t, Vector2 size, Vector2 offs
 		UI* dmgText = new DmgText();
 		dmgText->SetID(id);
 		ui_list[0].push_back(dmgText);
+		return dmgText;
 	}
 		break;
 	case UI::UI_ID::HP_BAR:

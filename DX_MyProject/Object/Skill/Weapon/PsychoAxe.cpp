@@ -37,7 +37,6 @@ PsychoAxe::PsychoAxe()
 	enhanceDamage = 0.0f;
 
 	rotSpeed = 5.0f;
-	speed = 300.0f;
 }
 
 PsychoAxe::~PsychoAxe()
@@ -78,9 +77,9 @@ void PsychoAxe::Update()
 					+ enhanceDamage;
 				bool isCrt = player->isCritical();
 				if (isCrt)
-					proj->SetStatus(damage * 1.5f, speed, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
+					proj->SetStatus(damage * 1.5f, proj_spd, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
 				else
-					proj->SetStatus(damage, speed, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
+					proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(colliderIdx_table[now_level]);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;

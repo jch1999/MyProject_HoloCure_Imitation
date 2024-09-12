@@ -98,6 +98,7 @@ void Axe::OnCollision()
 					enemyNowFrame.push_back(e);
 					if (hitEnemies.find(e) == hitEnemies.end())
 					{
+						hitEnemies.insert(e);
 						cooltimeList.push_back(make_pair(e, 0.0f));
 						Hit();
 					}
@@ -120,7 +121,7 @@ void Axe::OnCollision()
 			}
 			else
 			{
-				iter->first->ChangeHP(-(1.0f), isCrt);
+				iter->first->ChangeHP(-damage, isCrt);
 
 				iter->second = hitCoolDown;
 			}

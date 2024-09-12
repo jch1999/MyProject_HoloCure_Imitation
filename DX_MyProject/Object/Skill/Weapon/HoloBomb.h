@@ -6,8 +6,6 @@ private:
 	float now_proj_delay;
 	int projCnt;
 
-	vector<Projectile*> explosions;
-
 public:
 	HoloBomb();
 	~HoloBomb();
@@ -20,6 +18,5 @@ public:
 	virtual bool LevelDown() override;
 
 	void UpdateBomb();
-	void UpdateBombEffect();
 	Bomb* GetBomb();
 };

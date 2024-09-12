@@ -40,8 +40,7 @@ HoloBomb::HoloBomb()
 
 HoloBomb::~HoloBomb()
 {
-	for (auto e : explosions)
-		delete e;
+
 }
 
 void HoloBomb::Update()
@@ -104,7 +103,6 @@ void HoloBomb::Update()
 	}
 
 	UpdateBomb();
-	UpdateBombEffect();
 }
 
 void HoloBomb::Render()
@@ -113,10 +111,6 @@ void HoloBomb::Render()
 	for (auto p : projectiles)
 	{
 		p->Render();
-	}
-	for (auto e : explosions)
-	{
-		e->Render();
 	}
 }
 
@@ -145,20 +139,8 @@ void HoloBomb::UpdateBomb()
 {
 	for (auto b : projectiles)
 	{
-		if (b->is_active)
-		{
-			b->Update();
-		}
+		b->Update();
 	}
-}
-
-void HoloBomb::UpdateBombEffect()
-{
-	for (auto e : explosions)
-	{
-		e->Update();
-	}
-
 }
 
 Bomb* HoloBomb::GetBomb()

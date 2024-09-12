@@ -55,6 +55,10 @@ void ExplosionSmoke::Update()
 		is_active = false;
 		collider->SetActive(false);
 	}
+	else
+	{
+		OnCollision();
+	}
 }
 
 void ExplosionSmoke::Render()

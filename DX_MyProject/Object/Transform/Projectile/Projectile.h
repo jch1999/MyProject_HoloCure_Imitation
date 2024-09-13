@@ -34,11 +34,13 @@ protected:
 	// 적 피격 관련
 	set<Enemy*> hitEnemies;
 	list<pair<Enemy*, float>> cooltimeList;
+	float hitCoolDown;
+	float nowCoolDown;
 	vector<Enemy*> enemyNowFrame;
 	vector<pair<Enemy*,float>> removeCooltimeList;
 	vector<Enemy*> removeList;
-	float hitCoolDown;
 	bool isCrt;
+	bool isKnockback;
 
 public:
 	Vector2 move_dir;
@@ -73,4 +75,5 @@ public:
 	void SetLifeTime(float time) { lifeTime = time; }
 	void SetCrt(bool crt) { isCrt = crt; }
 	void SetCoolDown(float time) { hitCoolDown = time; }
+	void SetKnockBack(bool knockBack) { isKnockback = knockBack; }
 };

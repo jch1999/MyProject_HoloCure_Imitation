@@ -3,7 +3,6 @@ class BounceBall :public Weapon
 {
 private:
 	vector<float> nowCoolDown;
-	vector<Projectile*> balls;
 
 public:
 	BounceBall();

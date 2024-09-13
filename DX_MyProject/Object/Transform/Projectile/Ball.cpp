@@ -38,6 +38,15 @@ void Ball::Update()
 
 	collider->pos = pos;
 	collider->WorldUpdate();
+
+	if (nowCoolDown <= 0.0f)
+	{
+		OnCollision();
+	}
+	else
+	{
+		nowCoolDown -= DELTA;
+	}
 }
 
 void Ball::Render()
@@ -63,6 +72,7 @@ void Ball::respwan()
 {
 	nowTime = 0.0f;
 	nowHitCount = 0;
+	nowCoolDown = 0.0f;
 
 	WorldUpdate();
 	collider->pos = pos;
@@ -94,4 +104,51 @@ void Ball::AddVelocity(Vector2 newVel)
 
 void Ball::OnCollision()
 {
+	// 충돌 검사
+	pair<int, int> bPos = make_pair(pos.x / CELL_X, pos.y / CELL_Y);
+	const list<Enemy*>& enemyList = EnemySpawner::Get()->GetPartition(bPos);
+	for (auto e : enemyList)
+	{
+		float colDist = e->GetDamageCollider()->Size().GetLength() + GetCollider()->Size().x;
+		if (colDist >= (pos - e->pos).GetLength())
+		{
+			if (GetCollider()->isCollision(e->GetDamageCollider()))
+			{
+				if (SkillManager::Get()->GetPlayer()->isCritical())
+					e->ChangeHP(-(GetDamage() * 1.5f), true);
+				else
+					e->ChangeHP(-(GetDamage()), false);
+				Hit();
+				nowCoolDown = hitCoolDown;;
+
+				// 넉백 주기
+				if (isKnockback)
+				{
+					Vector2 dir = (GetVelocity().Normalized());
+					e->SetKnockBack(dir, 300.0f, 0.08f);
+				}
+
+				// 튕겨내기
+				Vector2 vel = GetVelocity();
+				Vector2 colPos = e->GetDamageCollider()->pos;
+				Vector2 colSize = e->GetDamageCollider()->Size();
+				if (pos.x < e->pos.x && vel.x > 0.0f)
+					vel.x *= -1.0f;
+				else if (pos.x > e->pos.x && vel.x < 0.0f)
+					vel.x *= -1.0f;
+				else if (vel.x == 0.0f)
+					vel.x += e->GetMoveDir().x * e->GetSpd();
+
+				if (pos.y < e->pos.y && vel.y>0.0f)
+					vel.y *= -1.0f;
+				else if (pos.y > e->pos.y && vel.y < 0.0f)
+					vel.y *= -1.0f;
+				vel.y *= 0.6f;
+				SetVelocity(vel);
+
+				// 충돌에서 벗어나게 밀어내기
+				//projectiles[i]->pos += (projectiles[i]->pos - e->GetDamageCollider()->pos).Normalized() * (colDist - (projectiles[i]->pos - e->pos).GetLength());
+			}
+		}
+	}
 }

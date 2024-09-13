@@ -40,8 +40,7 @@ BounceBall::BounceBall()
 
 BounceBall::~BounceBall()
 {
-	for (auto p : balls)
-		delete p;
+	
 }
 
 void BounceBall::UpdateBalls()
@@ -51,58 +50,6 @@ void BounceBall::UpdateBalls()
 		if (projectiles[i]->is_active)
 		{
 			projectiles[i]->Update();
-			if (nowCoolDown[i] <= 0.0f)
-			{
-				// 충돌 검사
-				pair<int, int> bPos = make_pair(projectiles[i]->pos.x / CELL_X, projectiles[i]->pos.y / CELL_Y);
-				const list<Enemy*>& enemyList = EnemySpawner::Get()->GetPartition(bPos);
-				for (auto e : enemyList)
-				{
-					float colDist = e->GetDamageCollider()->Size().GetLength() + projectiles[i]->GetCollider()->Size().x;
-					if (colDist >= (projectiles[i]->pos - e->pos).GetLength())
-					{
-						if (projectiles[i]->GetCollider()->isCollision(e->GetDamageCollider()))
-						{
-							if (player->isCritical())
-								e->ChangeHP(-(projectiles[i]->GetDamage() * 1.5f), true);
-							else
-								e->ChangeHP(-(projectiles[i]->GetDamage()), false);
-							projectiles[i]->Hit();
-							nowCoolDown[i] = hitCooldown;
-
-							// 넉백 주기
-							if (now_level >= 4)
-							{
-								Vector2 dir = (dynamic_cast<Ball*>(projectiles[i])->GetVelocity().Normalized());
-								e->SetKnockBack(dir, 300.0f, 0.08f);
-							}
-
-							// 튕겨내기
-							Vector2 vel = (dynamic_cast<Ball*>(projectiles[i]))->GetVelocity();
-							Vector2 colPos = e->GetDamageCollider()->pos;
-							Vector2 colSize = e->GetDamageCollider()->Size();
-							if (projectiles[i]->pos.x < e->pos.x && vel.x > 0.0f)
-								vel.x *= -1.0f;
-							else if (projectiles[i]->pos.x > e->pos.x && vel.x < 0.0f)
-								vel.x *= -1.0f;
-							else if (vel.x == 0.0f)
-								vel.x += e->GetMoveDir().x*e->GetSpd();
-							
-							if (projectiles[i]->pos.y < e->pos.y && vel.y>0.0f)
-								vel.y *= -1.0f;
-							else if (projectiles[i]->pos.y > e->pos.y && vel.y < 0.0f)
-								vel.y *= -1.0f;
-							vel.y *= 0.6f;
-							(dynamic_cast<Ball*>(projectiles[i]))->SetVelocity(vel);
-
-							// 충돌에서 벗어나게 밀어내기
-							//projectiles[i]->pos += (projectiles[i]->pos - e->GetDamageCollider()->pos).Normalized() * (colDist - (projectiles[i]->pos - e->pos).GetLength());
-						}
-					}
-				}
-			}
-			else
-				nowCoolDown[i] -= DELTA;
 		}
 	}
 }
@@ -145,6 +92,10 @@ void BounceBall::Update()
 						+ player->GetATK()
 						+ enhanceDamage;
 					proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], 3.0f);
+					proj->SetCoolDown(0.5f);
+					if (now_level >= 4)
+						proj->SetKnockBack(true);
+
 					proj->SetColliderIdx(0);
 					const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetActiveEnemies();
 					int targetEnemyIdx = Random::Get()->GetRandomInt(0, enemyList.size()-1);

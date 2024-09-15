@@ -3,6 +3,8 @@ class WatsonBullet :public Projectile
 {
 private:
 	Vector2 size;
+	bool isRicochet;
+	int ricochetCnt;
 public:
 	WatsonBullet(Vector2 size);
 	~WatsonBullet();
@@ -22,5 +24,6 @@ public:
 
 	// Projectile을(를) 통해 상속됨
 	virtual void OnCollision() override;
+	void SetRicochet(bool isRicochet, int cnt) { this->isRicochet = isRicochet; ricochetCnt = cnt; }
 
 };

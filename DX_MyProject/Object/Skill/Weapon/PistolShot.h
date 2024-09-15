@@ -17,4 +17,7 @@ public:
 	// Weapon을(를) 통해 상속됨
 	virtual bool LevelUp() override;
 	virtual bool LevelDown() override;
+
+	void UpdateBullet();
+	WatsonBullet* GetBullet();
 };

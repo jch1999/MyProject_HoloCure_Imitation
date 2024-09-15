@@ -34,14 +34,11 @@ PistolShot::PistolShot()
 	// 기본적으로 총알을 10개 생성시켜 놓고 재활용
 	for (int i = 0; i < 10; i++)
 	{
-		Projectile* bullet = new WatsonBullet(Vector2(20.0f, 16.0f));
+		Projectile* bullet = new WatsonBullet(Vector2(30.0f, 24.0f));
 		bullet->SetActive(false);
 		bullet->GetCollider()->SetActive(false);
 
 		projectiles.push_back(bullet);
-		ricochetCnt.push_back(0);
-		set<Enemy*> v;
-		hitEnemies.push_back(v);
 	}
 	enhanceDamage = 0.0f;
 }
@@ -83,28 +80,8 @@ void PistolShot::Update()
 			now_proj_delay = 0.0f;
 			if (projCnt < projCnt_talbe[now_level]+player->GetProjCnt()) // 투사체를 덜 발사함
 			{
-				Projectile* proj = nullptr;
-				for (int i = 0; i < projectiles.size();i++)// 비활성화 상태인 총알 하나를 찾아 사용
-				{
-					if (projectiles[i]->is_active == false)
-					{
-						proj = projectiles[i];
-						ricochetCnt[i] = 0;
-						hitEnemies[i].clear();
-						break;
-					}
-				}
-
-				// 비활성 상태 총알 없음 == 총알이 부족함 -> 새로 생성
-				if (proj == nullptr)
-				{
-					proj = new WatsonBullet(Vector2(30.0f, 24.0f));
-					projectiles.push_back(proj);
-					ricochetCnt.push_back(0);
-					set<Enemy*> v;
-					hitEnemies.push_back(v);
-				}
-
+				WatsonBullet* proj = GetBullet();
+				
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
 					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
@@ -114,6 +91,8 @@ void PistolShot::Update()
 				proj->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxShot());
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
 				proj->rot.z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
+				bool isRicochet = ricochet_table[now_level] > 0;
+				proj->SetRicochet(isRicochet, ricochet_table[now_level]);
 				proj->respwan();
 				
 				projCnt++;
@@ -130,93 +109,6 @@ void PistolShot::Update()
 		break;
 	}
 
-	// 충돌 처리
-	for (int i=0;i< projectiles.size();i++)
-	{
-		Projectile* p = projectiles[i];
-		if (!p->is_active)continue;
-
-		p->Update();
-		// 충돌 처리
-		pair<int, int> pPos = make_pair((int)(p->pos.x) / CELL_X, (int)(p->pos.y) / CELL_Y);
-		list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
-		for (auto e : enemyList)
-		{
-			if (!e->is_active)continue;
-			
-			if ((e->pos - p->pos).GetLength() < (p->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength()) / 2.0f)
-			{
-				if (p->GetCollider()->isCollision(e->GetDamageCollider()))
-				{
-					// 이미 충돌한 적이 있다면 넘어가고
-					if (hitEnemies[i].find(e)!=hitEnemies[i].end())continue;
-					// 더 이상 부딪힐 횟수가 없다면 이 탄환의 충돌처리 종료
-					if (!p->is_active)break;
-
-					bool isCrt = player->isCritical();
-					if (isCrt)
-						e->ChangeHP(-(p->GetDamage()) * 1.5f, true);
-					else
-						e->ChangeHP(-(p->GetDamage()), false);
-					p->Hit();
-					hitEnemies[i].insert(e);
-
-					if (ricochet_table[now_level] > 0 && !p->is_active) // 도탄 생성
-					{
-						int cnt = p->GetRemainHitCnt();
-						int cnt2 = ricochetCnt[i];
-						if (ricochetCnt[i] == 0)
-						{
-							int rand = Random::Get()->GetRandomInt(0, 4);
-							switch (rand)
-							{
-							case 0:
-							{
-								Vector2 dir = Vector2(-1, -1) * p->move_dir;
-								float newRot = atan(dir.y / dir.x) + 45;
-								p->rot.z = newRot;
-								p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-							}
-							break;
-							case 1:
-							{
-								Vector2 dir = Vector2(-1, -1) * p->move_dir;
-								float newRot = atan(dir.y / dir.x) + 90;
-								p->rot.z = newRot;
-								p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-							}
-							break;
-							case 2:
-							{
-								Vector2 dir = Vector2(-1, -1) * p->move_dir;
-								float newRot = atan(dir.y / dir.x) - 45;
-								p->rot.z = newRot;
-								p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-							}
-							break;
-							case 3:
-							{
-								Vector2 dir = Vector2(-1, -1) * p->move_dir;
-								float newRot = atan(dir.y / dir.x) - 90;
-								p->rot.z = newRot;
-								p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-							}
-							break;
-							}
-							float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
-								* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
-								+ player->GetATK()
-								+ enhanceDamage;
-							p->SetStatus(damage, 250.0f, hitLimit_table[now_level], 2.0f);
-							ricochetCnt[i]++;
-							p->respwan();
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
 
 	// 반격
 	if (now_level == 7)
@@ -283,4 +175,32 @@ bool PistolShot::LevelDown()
 		return true;
 	}
 	return false;
+}
+
+void PistolShot::UpdateBullet()
+{
+	for (auto p : projectiles)
+		p->Update();
+}
+
+WatsonBullet* PistolShot::GetBullet()
+{
+	WatsonBullet* proj = nullptr;
+
+	for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 총알 하나를 찾아 사용
+	{
+		if (projectiles[i]->is_active == false)
+		{
+			proj = dynamic_cast<WatsonBullet*>(projectiles[i]);
+			break;
+		}
+	}
+
+	// 비활성 상태 총알 없음 == 총알이 부족함 -> 새로 생성
+	if (proj == nullptr)
+	{
+		proj = new WatsonBullet(Vector2(30.0f, 24.0f));
+		projectiles.push_back(proj);
+	}
+	return proj;
 }

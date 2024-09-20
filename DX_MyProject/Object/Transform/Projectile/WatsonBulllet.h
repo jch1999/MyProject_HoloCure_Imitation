@@ -6,7 +6,7 @@ private:
 	bool isRicochet;
 	int ricochetCnt;
 public:
-	WatsonBullet(Vector2 size);
+	WatsonBullet(Vector2 size = Vector2(30.0f, 24.0f));
 	~WatsonBullet();
 
 

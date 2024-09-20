@@ -185,6 +185,10 @@
     <ClInclude Include="Framework\Utility\Timer.h" />
     <ClInclude Include="Library\라이브러리 추가법.h" />
     <ClInclude Include="Library\외부 라이브러리 추가방법.h" />
+    <ClInclude Include="Object\Interface\IAttack.h" />
+    <ClInclude Include="Object\Interface\IHealth.h" />
+    <ClInclude Include="Object\Interface\IMovable.h" />
+    <ClInclude Include="Object\Interface\InterfaceList.h" />
     <ClInclude Include="Object\Shape\Circle.h" />
     <ClInclude Include="Object\Shape\Missile.h" />
     <ClInclude Include="Object\Shape\PO.h" />

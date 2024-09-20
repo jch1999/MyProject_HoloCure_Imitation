@@ -188,6 +188,9 @@ typedef XMMATRIX Matrix;
 #include "Framework/Shader/PixelShader.h"
 
 
+// Interface Header
+
+#include "Object/Interface/InterfaceList.h"
 
 // Object Header - 프로그램에서 이용될 오브젝트들과 관련된 헤더들
 #include "Object/Shape/Vertex.h" // 정점이 여기에 정의되어있으므로, 앞으로 정점과 관련된 헤더가 만들어질 경우

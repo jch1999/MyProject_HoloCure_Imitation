@@ -34,7 +34,7 @@ PistolShot::PistolShot()
 	// 기본적으로 총알을 10개 생성시켜 놓고 재활용
 	for (int i = 0; i < 10; i++)
 	{
-		Projectile* bullet = new WatsonBullet(Vector2(30.0f, 24.0f));
+		Projectile* bullet = new WatsonBullet();
 		bullet->SetActive(false);
 		bullet->GetCollider()->SetActive(false);
 
@@ -109,6 +109,7 @@ void PistolShot::Update()
 		break;
 	}
 
+	UpdateBullet();
 
 	// 반격
 	if (now_level == 7)
@@ -121,6 +122,8 @@ void PistolShot::Update()
 			const list<pair<Enemy*, float>>& revengeList = watson->GetRevnegeList();
 			for (auto r : revengeList)
 			{
+				// if (r.first == nullptr)continue;
+
 				if (r.first->is_active)
 				{
 					r.first->ChangeHP(r.second* revengeRate, player->isCritical());
@@ -199,7 +202,7 @@ WatsonBullet* PistolShot::GetBullet()
 	// 비활성 상태 총알 없음 == 총알이 부족함 -> 새로 생성
 	if (proj == nullptr)
 	{
-		proj = new WatsonBullet(Vector2(30.0f, 24.0f));
+		proj = new WatsonBullet();
 		projectiles.push_back(proj);
 	}
 	return proj;

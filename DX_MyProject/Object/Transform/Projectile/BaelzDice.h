@@ -2,6 +2,8 @@
 class BaelzDice :public Projectile
 {
 private:
+	bool isRicochet;
+	int ricochetCnt;
 	
 public:
 	BaelzDice(Vector2 size=Vector2(36.0f,36.0f));
@@ -22,4 +24,5 @@ public:
 
 	// Projectile을(를) 통해 상속됨
 	virtual void OnCollision() override;
+	void SetRicochetInfo(bool isRicochet, int cnt) { this->isRicochet = isRicochet; ricochetCnt = cnt; }
 };

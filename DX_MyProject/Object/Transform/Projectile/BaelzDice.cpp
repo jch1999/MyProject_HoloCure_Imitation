@@ -2,6 +2,7 @@
 
 BaelzDice::BaelzDice(Vector2 size)
 	:Projectile()
+	, isRicochet(false),ricochetCnt(0)
 {
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png";
 	Texture* t = Texture::Add(file);
@@ -65,12 +66,17 @@ void BaelzDice::Update()
 		// 다 이동하고 나면 시간 체크를 시작
 		nowTime += DELTA;
 	}
+	else
+	{
+		OnCollision();
+	}
 
 	if (nowTime >= lifeTime)
 	{
 		is_active = false;
 		moveDist = 0.0f;
 		nowTime = 0.0f;
+		hitEnemies.clear();
 		return;
 	}
 
@@ -133,10 +139,57 @@ void BaelzDice::Hit()
 		nowHitCount = 0;
 		move_dir = Vector2(0.0f, 0.0f);
 		moveDist = 0.0f;
+		hitEnemies.clear();
 		return;
 	}
 }
 
 void BaelzDice::OnCollision()
 {
+	// 충돌 처리
+	pair<int, int> pPos = make_pair((int)(pos.x) / CELL_X, (int)(pos.y) / CELL_Y);
+	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
+	for (auto e : enemyList)
+	{
+		if (!e->is_active)continue;
+
+		if ((e->pos - pos).GetLength() < (GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength()) / 2.0f)
+		{
+			if (GetCollider()->isCollision(e->GetDamageCollider()))
+			{
+				// 이미 충돌한 적이 있다면 넘어가고
+				if (hitEnemies.find(e) != hitEnemies.end())
+					continue;
+
+				bool isCrt = SkillManager::Get()->GetPlayer()->isCritical();
+				if (isCrt)
+					e->ChangeHP(-(GetDamage()) * 1.5f, true);
+				else
+					e->ChangeHP(-(GetDamage()), false);
+
+				Hit();
+				
+				if (isKnockback)
+					e->SetKnockBack(move_dir, 200.0f, 0.2f);
+				hitEnemies.insert(e);
+
+				if (isRicochet) // 도탄 생성
+				{
+					if (ricochetCnt>0)
+					{
+						float newRot = Random::Get()->GetRandomFloat(0, 360.0f);
+						SetDirection(Vector2(cosf(newRot), sinf(newRot)));
+						rot.z = newRot;
+						ricochetCnt--;
+						respwan();
+						break;
+					}
+					else
+					{
+						isRicochet = false;
+					}
+				}
+			}
+		}
+	}
 }

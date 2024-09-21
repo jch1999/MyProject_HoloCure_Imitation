@@ -2,7 +2,6 @@
 class BounceBall :public Weapon
 {
 private:
-	vector<float> nowCoolDown;
 
 public:
 	BounceBall();

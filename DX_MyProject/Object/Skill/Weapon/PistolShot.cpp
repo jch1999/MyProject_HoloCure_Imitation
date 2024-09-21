@@ -119,17 +119,18 @@ void PistolShot::Update()
 		else
 		{
 			nowTime = 0.0f;
-			const list<pair<Enemy*, float>>& revengeList = watson->GetRevnegeList();
+			const list<Enemy*>& revengeList = watson->GetRevnegeList();
 			for (auto r : revengeList)
 			{
 				// if (r.first == nullptr)continue;
 
-				if (r.first->is_active)
+				if (r->is_active)
 				{
-					r.first->ChangeHP(r.second* revengeRate, player->isCritical());
+					float rDamage = watson->GetRevengeDamage() * revengeRate;
+					r->ChangeHP(rDamage, false);
 				}
 			}
-			watson->ClearRevengeList();
+			watson->ClearRevenge();
 		}
 	}
 }

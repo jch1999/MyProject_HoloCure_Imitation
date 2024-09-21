@@ -99,7 +99,7 @@ void Enemy::Attack()
 
 	atk_nowTime = 0.0f;
 	Vector2 dir = Vector2(-move_dir.x, abs(move_dir.y));
-	player->ChangeHP(-attack, dir);
+	player->ChangeHP(-attack, dir, this);
 }
 
 void Enemy::SetBadStatus(Enemy::BAD_STATUS bad, float time)

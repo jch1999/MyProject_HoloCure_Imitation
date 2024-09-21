@@ -31,9 +31,6 @@ BounceBall::BounceBall()
 	{
 		Projectile* ball = new Ball();
 		projectiles.push_back(ball);
-		nowCoolDown.push_back(0.0f);
-		set<Enemy*> v;
-		hitEnemies.push_back(v);
 	}
 	enhanceDamage = 0.0f;
 }

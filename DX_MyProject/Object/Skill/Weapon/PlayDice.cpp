@@ -19,10 +19,10 @@ PlayDice::PlayDice()
 	maxDamage_table = { 0,6,7,7,7,7,4,8 };
 	projCnt_talbe = { 0, 1, 1, 2, 2, 2, 2, 3 };
 	projSpd_table = { 0,1600,1600,1600,1900,1900,1900,1900 };
+	proj_delay = 0.5f;
 	hitLimit_table = { 0, 4, 4, 4, 4, 4, 4, 4 };	// 첫 충돌 1, 도탄 3
 	colliderIdx_table = { 0,0,0,0,1,1,1,1 };
 	ricochet_table = { 0,3,3,3,3,3,3,3 };
-	knockbackSpeed_table = { 0,0,0,0,0,5,5,5 };
 	targetDist_table = { 0,200.0f,200.0f,200.0f,250.0f,250.0f,250.0f,250.0f };
 
 	weapon_type = WEAPON_TYPE::MULTI_SHOT;
@@ -31,9 +31,6 @@ PlayDice::PlayDice()
 	for (int i = 0; i < 10; i++)
 	{
 		projectiles.push_back(new BaelzDice(Vector2(36.0f, 36.0f)));
-		ricochetCnt.push_back(0);
-		set<Enemy*> v;
-		hitEnemies.push_back(v);
 	}
 	enhanceDamage = 0.0f;
 }
@@ -67,32 +64,27 @@ void PlayDice::Update()
 		else
 		{
 			now_proj_delay = 0.0f;
-			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
+			switch ((int)(projCnt_talbe[now_level]))
 			{
-				Projectile* proj = GetTargetProj();
-				int diceEye = GetDiceEye();
-				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
-					* diceEye // 주사위 눈 만큼을 기본 데미지에 곱한다
-					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
-					+ player->GetATK()
-					+ enhanceDamage;
-				proj->SetStatus(damage, projSpd_table[now_level], hitLimit_table[now_level], 2.0f);
-				proj->SetDirection(player->GetAttackDir());
-				int clip_idx = max_level == now_level ? 6 + diceEye-1 : diceEye-1;
-				proj->SetClipIdx(clip_idx);
-				proj->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxShot());
-				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
-				proj->rot.z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
-				proj->SetTargetDist(targetDist_table[now_level]);
-				proj->respwan();
+			case 1:
+				SpawnProjectile(player->GetAttackDir());
+				break;
+			case 2:
+				SpawnProjectile(player->GetAttackDir() + Vector2(cosf(45.0f * M_PI / 180.0f), sinf(45.0f * M_PI / 180.0f)));
+				SpawnProjectile(player->GetAttackDir() + Vector2(cosf(-45.0f * M_PI / 180.0f), sinf(-45.0f * M_PI / 180.0f)));
+				break;
+			case 3:
+				SpawnProjectile(player->GetAttackDir() + Vector2(cos(45.0f * M_PI / 180.0f), sin(45.0f * M_PI / 180.0f)));
+				SpawnProjectile(player->GetAttackDir());
+				SpawnProjectile(player->GetAttackDir() + Vector2(cos(-45.0f * M_PI / 180.0f), sin(-45.0f * M_PI / 180.0f)));
+				break;
+			default:
+				break;
+			}
 
-				projCnt++;
-			}
-			else // 투사체 발사가 끝났으니 스킬은 재사용 대기 상태로
-			{
-				projCnt = 0;
-				action_status = SKILL_STATUS::COOLDOWN;
-			}
+			// 투사체 발사가 끝났으니 스킬은 재사용 대기 상태로
+			projCnt = 0;
+			action_status = SKILL_STATUS::COOLDOWN;
 		}
 	}
 	break;
@@ -100,57 +92,9 @@ void PlayDice::Update()
 		break;
 	}
 
-	// 충돌 처리
-	for (int i = 0; i < projectiles.size(); i++)
+	for (auto d:projectiles)
 	{
-		Projectile* p = projectiles[i];
-		if (!p->is_active)continue;
-
-		p->Update();
-		// 충돌 처리
-		pair<int, int> pPos = make_pair((int)(p->pos.x) / CELL_X, (int)(p->pos.y) / CELL_Y);
-		list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(pPos);
-		for (auto e : enemyList)
-		{
-			if (!e->is_active)continue;
-
-			if ((e->pos - p->pos).GetLength() < (p->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength())/2.0f)
-			{
-				if (p->GetCollider()->isCollision(e->GetDamageCollider()))
-				{
-					// 이미 충돌한 적이 있다면 넘어가고
-					if (hitEnemies[i].find(e) != hitEnemies[i].end())
-						continue;
-
-					// 더 이상 부딪힐 횟수가 없다면 이 탄환의 충돌처리 종료
-					if (!p->is_active)break;
-
-					if (player->isCritical())
-						e->ChangeHP(-(p->GetDamage()) * 1.5f, true);
-					else
-						e->ChangeHP(-(p->GetDamage()), false);
-					p->Hit();
-					if (isKnockBack)
-						e->SetKnockBack(p->move_dir, 20.0f, 0.2f);
-					hitEnemies[i].insert(e);
-
-					if (ricochet_table[now_level] > 0) // 도탄 생성
-					{
-						int cnt = p->GetRemainHitCnt();
-						int cnt2 = ricochetCnt[i];
-						if (ricochetCnt[i] < ricochet_table[now_level])
-						{
-							float newRot = Random::Get()->GetRandomFloat(0, 360.0f);
-							p->SetDirection(Vector2(cosf(newRot), sinf(newRot)));
-							p->rot.z = newRot;
-							ricochetCnt[i]++;
-							p->respwan();
-							break;
-						}
-					}
-				}
-			}
-		}
+		d->Update();
 	}
 }
 
@@ -226,16 +170,14 @@ int PlayDice::GetDiceEye()
 		return 1;
 }
 
-Projectile* PlayDice::GetTargetProj()
+BaelzDice* PlayDice::GetDice()
 {
-	Projectile* proj = nullptr;
+	BaelzDice* proj = nullptr;
 	for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 주사위 하나를 찾아 사용
 	{
 		if (projectiles[i]->is_active == false)
 		{
-			proj = projectiles[i];
-			ricochetCnt[i] = 0;
-			hitEnemies[i].clear();
+			proj = dynamic_cast<BaelzDice*>(projectiles[i]);
 			break;
 		}
 	}
@@ -245,9 +187,28 @@ Projectile* PlayDice::GetTargetProj()
 	{
 		proj = new BaelzDice(Vector2(36.0f, 36.0f));
 		projectiles.push_back(proj);
-		ricochetCnt.push_back(0);
-		set<Enemy*> v;
-		hitEnemies.push_back(v);
 	}
 	return proj;
+}
+
+void PlayDice::SpawnProjectile(Vector2 dir)
+{
+	BaelzDice* proj = GetDice();
+	int diceEye = GetDiceEye();
+	float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
+		* diceEye // 주사위 눈 만큼을 기본 데미지에 곱한다
+		* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
+		+ player->GetATK()
+		+ enhanceDamage;
+	proj->SetStatus(damage, projSpd_table[now_level], hitLimit_table[now_level], 2.0f);
+	proj->SetDirection(dir);
+	int clip_idx = max_level == now_level ? 6 + diceEye - 1 : diceEye - 1;
+	proj->SetClipIdx(clip_idx);
+	proj->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxShot());
+	proj->SetRicochetInfo(true, ricochet_table[now_level]);
+	proj->SetKnockBack(isKnockBack);
+	proj->pos = player->pos + dir * 50.0f;
+	proj->rot.z = atan(dir.y / dir.x);
+	proj->SetTargetDist(targetDist_table[now_level]);
+	proj->respwan();
 }

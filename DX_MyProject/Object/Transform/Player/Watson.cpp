@@ -3,7 +3,7 @@
 
 Watson::Watson(float MaxHP,float atk, float speed,float crt,float pickUpRange,float delay,Vector2 size)
 	:Player(MaxHP,atk,speed,crt,pickUpRange,delay,0,size)
-	, isRevenge(false)
+	, isRevenge(false), revengeDmg(0.0f)
 {
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png";
 	Texture* t = Texture::Add(file);
@@ -161,6 +161,7 @@ void Watson::PostRender()
 	ImGui::Text("Watson's moveSpeed : %f", speed);
 	ImGui::Text("Watson's ATK : %f", attack);
 	ImGui::Text("Watson's CRT : %f", crt);
+	ImGui::Text("Watson's RevengeDamage : %f", revengeDmg);
 	//ImGui::EndChild();
 	//ImGui::End();
 }
@@ -168,7 +169,7 @@ void Watson::PostRender()
 void Watson::ChangeHP(float amount, Vector2 dir, Enemy* causer)
 {
 	Player::ChangeHP(amount, dir, causer);
-	if(isRevenge)
+	if (isRevenge == true && causer != nullptr)
 		AddRevenge(causer, amount);
 }
 

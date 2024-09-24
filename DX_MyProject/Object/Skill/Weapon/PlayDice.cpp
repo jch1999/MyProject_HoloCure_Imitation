@@ -67,16 +67,44 @@ void PlayDice::Update()
 			switch ((int)(projCnt_talbe[now_level]))
 			{
 			case 1:
+			{
 				SpawnProjectile(player->GetAttackDir());
+			}
 				break;
 			case 2:
-				SpawnProjectile(player->GetAttackDir() + Vector2(cosf(45.0f * M_PI / 180.0f), sinf(45.0f * M_PI / 180.0f)));
-				SpawnProjectile(player->GetAttackDir() + Vector2(cosf(-45.0f * M_PI / 180.0f), sinf(-45.0f * M_PI / 180.0f)));
+			{
+				float z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
+				float z1 = z - 30.0f * M_PI / 180.0f;
+				float z2 = z + 30.0f * M_PI / 180.0f;
+				if (player->GetAttackDir().x < 0.0f)
+				{
+					SpawnProjectile(Vector2(-cosf(z1), -sinf(z1)));
+					SpawnProjectile(Vector2(-cosf(z2), -sinf(z2)));
+				}
+				else
+				{
+					SpawnProjectile(Vector2(cosf(z1), sinf(z1)));
+					SpawnProjectile(Vector2(cosf(z2), sinf(z2)));
+				}
+			}
 				break;
 			case 3:
-				SpawnProjectile(player->GetAttackDir() + Vector2(cos(45.0f * M_PI / 180.0f), sin(45.0f * M_PI / 180.0f)));
+			{
+				float z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
+				float z1 = z - 30.0f * M_PI / 180.0f;
+				float z2 = z + 30.0f * M_PI / 180.0f;
+				if (player->GetAttackDir().x < 0.0f)
+				{
+					SpawnProjectile(Vector2(-cosf(z1), -sinf(z1)));
+					SpawnProjectile(Vector2(-cosf(z2), -sinf(z2)));
+				}
+				else
+				{
+					SpawnProjectile(Vector2(cosf(z1), sinf(z1)));
+					SpawnProjectile(Vector2(cosf(z2), sinf(z2)));
+				}
 				SpawnProjectile(player->GetAttackDir());
-				SpawnProjectile(player->GetAttackDir() + Vector2(cos(-45.0f * M_PI / 180.0f), sin(-45.0f * M_PI / 180.0f)));
+			}
 				break;
 			default:
 				break;

@@ -23,6 +23,7 @@ SpiderCooking::SpiderCooking()
 	hitCooldown_table = { 0, 0.75f, 0.75f, 0.75f, 0.75f, 0.6f, 0.6f, 0.6f };
 
 	poison = new PoisonArea();
+	poison->SetOwner(this);
 
 	now_skill_delay = 0.0f;
 	playTime_table.push_back(1.0f);

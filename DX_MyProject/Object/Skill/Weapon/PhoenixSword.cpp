@@ -24,9 +24,11 @@ PhoenixSword::PhoenixSword()
 	blaze_hitCool = 1.0f;
 
 	slash = new KiaraSlash();
+	slash->SetOwner(this);
 	for (int i = 0; i < 10; i++)
 	{
 		blazes.push_back(new Blaze());
+		blazes[i]->SetOwner(this);
 	}
 
 	now_skill_delay = 0.0f;
@@ -223,6 +225,7 @@ void PhoenixSword::UpdateSlash()
 						{
 							blaze = new Blaze();
 							blazes.push_back(blaze);
+							blaze->SetOwner(this);
 						}
 						blaze->pos = m.first->pos;
 						float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)

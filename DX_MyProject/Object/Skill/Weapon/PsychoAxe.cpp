@@ -32,7 +32,7 @@ PsychoAxe::PsychoAxe()
 	{
 		Projectile* axe = new Axe();
 		projectiles.push_back(axe);
-
+		axe->SetOwner(this);
 	}
 	enhanceDamage = 0.0f;
 
@@ -160,6 +160,7 @@ Axe* PsychoAxe::GetAxe()
 	{
 		axe = new Axe();
 		projectiles.push_back(axe);
+		axe->SetOwner(this);
 	}
 	return axe;
 }

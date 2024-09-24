@@ -117,4 +117,5 @@ void LavaBucket::Hit()
 
 void LavaBucket::OnCollision()
 {
+	
 }

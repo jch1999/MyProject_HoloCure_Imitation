@@ -9,6 +9,9 @@ protected:
 	PixelShader* PS;
 	ColourBuffer* CB;
 
+	// Owner Skill
+	Skill* Owner;
+
 	// status
 	float damage;
 	float speed;
@@ -76,4 +79,6 @@ public:
 	void SetCrt(bool crt) { isCrt = crt; }
 	void SetCoolDown(float time) { hitCoolDown = time; }
 	void SetKnockBack(bool knockBack) { isKnockback = knockBack; }
+	void SetOwner(Skill* skill) { Owner = skill; }
+	Skill* GetOwner() { return Owner; }
 };

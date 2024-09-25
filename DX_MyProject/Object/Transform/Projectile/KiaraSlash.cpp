@@ -2,6 +2,7 @@
 
 KiaraSlash::KiaraSlash(Vector2 size)
 	:Projectile(20.0f, 200.0f, 1, 2.0f)
+	, isAwaken(false)
 {
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
 	Texture* t = Texture::Add(file);
@@ -38,6 +39,8 @@ KiaraSlash::KiaraSlash(Vector2 size)
 	idx_collider;
 	collider = colliders[idx_collider];
 	collider->pos = pos + move_dir * 50.0f;
+
+	hitLimitCnt = 0;
 }
 
 KiaraSlash::~KiaraSlash()
@@ -71,6 +74,8 @@ void KiaraSlash::Update()
 		scale = scale * Vector2(-1.0f, 1.0f);
 
 	clips[clip_idx]->Update();
+
+	OnCollision();
 }
 
 void KiaraSlash::Render()
@@ -108,6 +113,11 @@ void KiaraSlash::respwan()
 	is_active = true;
 	collider->SetActive(true);
 	clips[clip_idx]->Play();
+	hitEnemies.clear();
+	enemyNowFrame.clear();
+	cooltimeList.clear();
+	enemyHitCount.clear();
+	removeList.clear();
 }
 void KiaraSlash::Hit()
 {
@@ -158,54 +168,37 @@ void KiaraSlash::OnCollision()
 		iter->second -= DELTA;
 		if (iter->second <= 0.0f)
 		{
-			if (enemyHitCount[m.first] < hitLimit_table[now_level])
+			if (enemyHitCount[iter->first] < hitLimitCnt)
 			{
-				enemyCooltimes_s[m.first] = hitCooldown_table[now_level];
-				if (player->isCritical())
+				iter->second = hitCoolDown;
+				if (Owner->GetPlayer()->isCritical())
 				{
-					m.first->ChangeHP(-(slash->GetDamage()) * 1.5f, true);
+					iter->first->ChangeHP(-(GetDamage()) * 1.5f, true);
 				}
 				else
 				{
-					m.first->ChangeHP(-(slash->GetDamage()), false);
+					iter->first->ChangeHP(-(GetDamage()), false);
 				}
-				enemyHitCount[m.first]++;
+				enemyHitCount[iter->first]++;
 
 				// 각성 상태 + 25% 확률이면
 				// enemy를 따라다니며 지속데미지를 주는 불 생성
-				if (now_level == max_level)
+				if (isAwaken)
 				{
 					int rand = Random::Get()->GetRandomInt(0, 4);
 					if (rand == 0)
 					{
 						// enemy 위치에 blaze 생성
-						Projectile* blaze = nullptr;
-						for (auto b : blazes)
-						{
-							if (!b->is_active)
-							{
-								blaze = b;
-								break;
-							}
-						}
-						if (blaze == nullptr)
-						{
-							blaze = new Blaze();
-							blazes.push_back(blaze);
-						}
-						blaze->pos = m.first->pos;
-						float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
-							+ player->GetATK()
-							+ enhanceDamage;
-						blaze->SetStatus(damage * 0.2f, 0.0f, -1, 5.0f);
+						Projectile* blaze = dynamic_cast<PhoenixSword*>(Owner)->GetBlaze();
+						blaze->pos = iter->first->pos;
 						blaze->respwan();
 					}
 				}
 			}
 			// 이미 죽은 Enemy를 제거 리스트에 추가
-			if (!m.first->is_active)
+			if (!iter->first->is_active)
 			{
-				removeList_s.push_back(m.first);
+				removeList.push_back(iter->first);
 			}
 
 
@@ -213,8 +206,8 @@ void KiaraSlash::OnCollision()
 	}
 
 	// 제거
-	for (auto e : removeList_s)
+	for (auto e : removeList)
 	{
-		enemyCooltimes_s.erase(enemyCooltimes_s.find(e));
+		hitEnemies.erase(e);
 	}
 }

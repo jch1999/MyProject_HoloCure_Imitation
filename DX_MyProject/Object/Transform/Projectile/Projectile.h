@@ -39,6 +39,7 @@ protected:
 	list<pair<Enemy*, float>> cooltimeList;
 	float hitCoolDown;
 	float nowCoolDown;
+	int hitLimitCnt;
 	vector<Enemy*> enemyNowFrame;
 	vector<pair<Enemy*,float>> removeCooltimeList;
 	vector<Enemy*> removeList;
@@ -78,6 +79,7 @@ public:
 	void SetLifeTime(float time) { lifeTime = time; }
 	void SetCrt(bool crt) { isCrt = crt; }
 	void SetCoolDown(float time) { hitCoolDown = time; }
+	void SetHitLimit(int cnt) { hitLimitCnt = cnt; }
 	void SetKnockBack(bool knockBack) { isKnockback = knockBack; }
 	void SetOwner(Skill* skill) { Owner = skill; }
 	Skill* GetOwner() { return Owner; }

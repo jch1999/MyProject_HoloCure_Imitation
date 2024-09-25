@@ -84,10 +84,6 @@ void PhoenixSword::Update()
 		if (play_time > playTime_table[0])
 		{
 			play_time = 0.0f;
-			enemyCooltimes_s.clear();
-			enemyHitCount.clear();
-			enemyNowFrame_s.clear();
-			removeList_s.clear();
 			action_status = Skill::SKILL_STATUS::COOLDOWN;
 			slash->is_active = false;
 			return;
@@ -102,6 +98,7 @@ void PhoenixSword::Update()
 		break;
 	}
 
+	UpdateSlash();
 	UpdateBlaze();
 }
 
@@ -145,6 +142,8 @@ bool PhoenixSword::LevelUp()
 	{
 		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
 	}
+	slash->SetHitLimit(hitLimit_table[now_level]);
+	slash->SetCoolDown(hitCooldown_table[now_level]);
 	return true;
 	
 }
@@ -153,104 +152,6 @@ void PhoenixSword::UpdateSlash()
 {
 	slash->pos = player->pos + slash->move_dir * 60.0f;
 	slash->Update();
-
-	// 충돌 중인 Enemey 검출
-	enemyNowFrame_s.clear();
-	removeList_s.clear();
-	//const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
-	// Slash의 pos의 CELL 위치를 중앙으로 3x3 영역을 검사
-	pair<int, int> sPos = make_pair(slash->pos.x / CELL_X, slash->pos.y / CELL_Y);
-	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(make_pair(sPos.first, sPos.second));
-	for (auto e : enemyList)
-	{
-		if (!e->is_active)continue;
-		if (slash->GetCollider()->isCollision(e->GetDamageCollider()))
-			enemyNowFrame_s.push_back(e);
-	}
-	
-	// 리스트 갱신
-	for (auto e : enemyNowFrame_s)
-	{
-		auto found = enemyCooltimes_s.find(e);
-		// 기존에 존재하지 않음 - 추가 및 바로 공격하게 설정
-		if (found == enemyCooltimes_s.end())
-		{
-			enemyCooltimes_s[e] = 0.0f;
-			enemyHitCount[e] = 0;
-		}
-		// 기존에 존재 - 시간 감소
-		else
-		{
-			enemyCooltimes_s[e] = found->second - DELTA;
-		}
-	}
-
-	// 시간 경과 체크, coolTime이 지났으면 damage주기
-	for (auto m : enemyCooltimes_s)
-	{
-		//m.second -= DELTA;
-		if (m.second <= 0.0f)
-		{
-			if (enemyHitCount[m.first] < hitLimit_table[now_level])
-			{
-				enemyCooltimes_s[m.first] = hitCooldown_table[now_level];
-				if (player->isCritical())
-				{
-					m.first->ChangeHP(-(slash->GetDamage()) * 1.5f, true);
-				}
-				else
-				{
-					m.first->ChangeHP(-(slash->GetDamage()), false);
-				}
-				enemyHitCount[m.first]++;
-
-				// 각성 상태 + 25% 확률이면
-				// enemy를 따라다니며 지속데미지를 주는 불 생성
-				if (now_level == max_level)
-				{
-					int rand = Random::Get()->GetRandomInt(0, 4);
-					if (rand == 0)
-					{
-						// enemy 위치에 blaze 생성
-						Projectile* blaze = nullptr;
-						for (auto b : blazes)
-						{
-							if (!b->is_active)
-							{
-								blaze = b;
-								break;
-							}
-						}
-						if (blaze == nullptr)
-						{
-							blaze = new Blaze();
-							blazes.push_back(blaze);
-							blaze->SetOwner(this);
-						}
-						blaze->pos = m.first->pos;
-						float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
-							+ player->GetATK()
-							+ enhanceDamage;
-						blaze->SetStatus(damage * 0.2f, 0.0f, -1, 5.0f);
-						blaze->respwan();
-					}
-				}
-			}
-			// 이미 죽은 Enemy를 제거 리스트에 추가
-			if (!m.first->is_active)
-			{
-				removeList_s.push_back(m.first);
-			}
-
-			
-		}
-	}
-
-	// 제거
-	for (auto e : removeList_s)
-	{
-		enemyCooltimes_s.erase(enemyCooltimes_s.find(e));
-	}
 }
 
 void PhoenixSword::UpdateBlaze()
@@ -315,6 +216,33 @@ void PhoenixSword::UpdateBlaze()
 			enemyCooltimes_b.erase(enemyCooltimes_b.find(e));
 		}
 	}
+}
+
+Blaze* PhoenixSword::GetBlaze()
+{
+	Blaze* blaze = nullptr;
+
+	for (auto b : blazes)
+	{
+		if (!(b->is_active))
+		{
+			blaze = dynamic_cast<Blaze*>(b);
+			break;
+		}
+	}
+	if (blaze == nullptr)
+	{
+		blaze = new Blaze();
+		blazes.push_back(blaze);
+		blaze->SetOwner(this);
+	}
+	
+	float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
+		+ player->GetATK()
+		+ enhanceDamage;
+	blaze->SetStatus(damage * 0.2f, 0.0f, -1, 5.0f);
+
+	return blaze;
 }
 
 bool PhoenixSword::LevelDown()

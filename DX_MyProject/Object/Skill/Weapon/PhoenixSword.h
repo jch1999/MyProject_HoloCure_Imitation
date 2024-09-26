@@ -6,7 +6,6 @@ private:
 	float blaze_hitCool;
 
 	Projectile* slash;
-	vector<Projectile*> blazes;
 
 	// 기존에 충돌한 Enemy 리스트
 	map<Enemy*, float> enemyCooltimes_b;

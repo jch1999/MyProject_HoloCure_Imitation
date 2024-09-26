@@ -27,8 +27,8 @@ PhoenixSword::PhoenixSword()
 	slash->SetOwner(this);
 	for (int i = 0; i < 10; i++)
 	{
-		blazes.push_back(new Blaze());
-		blazes[i]->SetOwner(this);
+		projectiles.push_back(new Blaze());
+		projectiles[i]->SetOwner(this);
 	}
 
 	now_skill_delay = 0.0f;
@@ -40,8 +40,8 @@ PhoenixSword::PhoenixSword()
 PhoenixSword::~PhoenixSword()
 {
 	delete slash;
-	for (auto b : blazes)
-		delete b;
+	/*for (auto b : projectiles)
+		delete b;*/
 }
 
 void PhoenixSword::Update()
@@ -107,7 +107,7 @@ void PhoenixSword::Render()
 	if (now_level == 0)return;
 
 	slash->Render();
-	for (auto b : blazes)
+	for (auto b : projectiles)
 		b->Render();
 }
 
@@ -129,7 +129,7 @@ void PhoenixSword::PostRender()
 	}
 	slash->PostRender();
 	
-	for (auto b : blazes)
+	for (auto b : projectiles)
 		b->PostRender();
 }
 
@@ -142,6 +142,8 @@ bool PhoenixSword::LevelUp()
 	{
 		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
 	}
+	else if (now_level == 7)
+		dynamic_cast<KiaraSlash*>(slash)->SetAwaken(true);
 	slash->SetHitLimit(hitLimit_table[now_level]);
 	slash->SetCoolDown(hitCooldown_table[now_level]);
 	return true;
@@ -156,65 +158,9 @@ void PhoenixSword::UpdateSlash()
 
 void PhoenixSword::UpdateBlaze()
 {
-	for (auto b : blazes)
+	for (auto b : projectiles)
 	{
-		if (!b->is_active)continue;
 		b->Update();
-		if (!b->is_active) // 시간이 지나 비활성화
-		{
-			enemyCooltimes_b.clear();
-			enemyNowFrame_b.clear();
-			removeList_b.clear();
-			continue;
-		}
-		enemyNowFrame_b.clear();
-		removeList_b.clear();
-
-		const vector<Enemy*>& enemyList = EnemySpawner::Get()->GetEnemyList();
-		for (auto e : enemyList)
-		{
-			if (!e->is_active)continue;
-			if (b->GetCollider()->isCollision(e->GetDamageCollider()))
-				enemyNowFrame_b.push_back(e);
-		}
-
-		// 기존에 존재하지 않으면 추가, 존재하면 시간 경과
-		for (auto e : enemyNowFrame_b)
-		{
-			auto found = enemyCooltimes_b.find(e);
-			if (found == enemyCooltimes_b.end())
-			{
-				enemyCooltimes_b[e] = 0.0f;
-			}
-			else
-			{
-				enemyCooltimes_b[found->first] = found->second - DELTA;
-			}
-		}
-
-		// 시간 경과 체크, coolTime이 지났으면 damage주기
-		for (auto m : enemyCooltimes_b)
-		{
-			
-			//m.second -= DELTA;
-			if (m.second <= 0.0f)
-			{
-				enemyCooltimes_b[m.first] = blaze_hitCool;
-				// blaze.. 크리티컬 적용 o x? 일단 x로
-				m.first->ChangeHP(-(b->GetDamage()), false);
-				
-				if (!m.first->is_active)
-				{
-					removeList_b.push_back(m.first);
-				}
-			}
-		}
-
-		// 제거
-		for (auto e : removeList_b)
-		{
-			enemyCooltimes_b.erase(enemyCooltimes_b.find(e));
-		}
 	}
 }
 
@@ -222,7 +168,7 @@ Blaze* PhoenixSword::GetBlaze()
 {
 	Blaze* blaze = nullptr;
 
-	for (auto b : blazes)
+	for (auto b : projectiles)
 	{
 		if (!(b->is_active))
 		{
@@ -233,7 +179,7 @@ Blaze* PhoenixSword::GetBlaze()
 	if (blaze == nullptr)
 	{
 		blaze = new Blaze();
-		blazes.push_back(blaze);
+		projectiles.push_back(blaze);
 		blaze->SetOwner(this);
 	}
 	

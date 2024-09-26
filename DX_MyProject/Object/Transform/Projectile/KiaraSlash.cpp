@@ -113,11 +113,12 @@ void KiaraSlash::respwan()
 	is_active = true;
 	collider->SetActive(true);
 	clips[clip_idx]->Play();
+
 	hitEnemies.clear();
 	enemyNowFrame.clear();
 	cooltimeList.clear();
 	enemyHitCount.clear();
-	removeList.clear();
+	removeCooltimeList.clear();
 }
 void KiaraSlash::Hit()
 {
@@ -198,7 +199,7 @@ void KiaraSlash::OnCollision()
 			// 이미 죽은 Enemy를 제거 리스트에 추가
 			if (!iter->first->is_active)
 			{
-				removeList.push_back(iter->first);
+				removeCooltimeList.push_back(*iter);
 			}
 
 
@@ -206,8 +207,9 @@ void KiaraSlash::OnCollision()
 	}
 
 	// 제거
-	for (auto e : removeList)
+	for (auto r : removeCooltimeList)
 	{
-		hitEnemies.erase(e);
+		hitEnemies.erase(r.first);
+		cooltimeList.remove(r);
 	}
 }

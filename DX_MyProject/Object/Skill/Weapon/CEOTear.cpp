@@ -29,6 +29,7 @@ CEOTear::CEOTear()
 		Projectile* tear = new Tear();
 		tear->SetActive(false);
 		tear->GetCollider()->SetActive(false);
+		tear->SetOwner(this);
 
 		projectiles.push_back(tear);
 	}
@@ -48,26 +49,6 @@ void CEOTear::UpdateTears()
 		if (t->is_active)
 		{
 			t->Update();
-			pair<int, int> tPos = make_pair((int)(t->pos.x) / CELL_X, (int)(t->pos.y) / CELL_Y);
-			list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(tPos);
-			for (auto e : enemyList)
-			{
-				if (e->is_active)
-				{
-					float minDist = (t->GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength()) / 2.0f;
-					float dist = (t->pos - e->pos).GetLength();
-					if (minDist >= dist)
-					{
-						if (t->GetCollider()->isCollision(e->GetDamageCollider()))
-						{
-							t->Hit();
-							bool isCrt = player->isCritical();
-							e->ChangeHP(-t->GetDamage(), isCrt);
-							break;
-						}
-					}
-				}
-			}
 		}
 	}
 }
@@ -104,22 +85,7 @@ void CEOTear::Update()
 			now_proj_delay = 0.0f;
 			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
 			{
-				Projectile* proj = nullptr;
-				for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 총알 하나를 찾아 사용
-				{
-					if (projectiles[i]->is_active == false)
-					{
-						proj = projectiles[i];
-						break;
-					}
-				}
-
-				// 비활성 상태 Tear 없음 == Tear가 부족함 -> 새로 생성
-				if (proj == nullptr)
-				{
-					proj = new Tear();
-					projectiles.push_back(proj);
-				}
+				Tear* proj = GetProjectTile<Tear>();
 
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
 					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)

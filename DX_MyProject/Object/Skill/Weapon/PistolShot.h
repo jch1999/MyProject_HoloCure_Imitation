@@ -19,5 +19,4 @@ public:
 	virtual bool LevelDown() override;
 
 	void UpdateBullet();
-	WatsonBullet* GetBullet();
 };

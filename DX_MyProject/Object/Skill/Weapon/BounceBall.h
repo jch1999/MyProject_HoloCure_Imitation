@@ -16,5 +16,4 @@ public:
 	virtual void Render() override;
 	virtual void PostRender() override;
 	virtual bool LevelUp() override;
-	Ball* GetBall();
 };

@@ -18,5 +18,4 @@ public:
 	virtual bool LevelDown() override;
 
 	void UpdateBomb();
-	Bomb* GetBomb();
 };

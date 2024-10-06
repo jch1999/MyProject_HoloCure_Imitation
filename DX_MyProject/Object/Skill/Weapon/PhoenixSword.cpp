@@ -166,22 +166,7 @@ void PhoenixSword::UpdateBlaze()
 
 Blaze* PhoenixSword::GetBlaze()
 {
-	Blaze* blaze = nullptr;
-
-	for (auto b : projectiles)
-	{
-		if (!(b->is_active))
-		{
-			blaze = dynamic_cast<Blaze*>(b);
-			break;
-		}
-	}
-	if (blaze == nullptr)
-	{
-		blaze = new Blaze();
-		projectiles.push_back(blaze);
-		blaze->SetOwner(this);
-	}
+	Blaze* blaze = GetProjectTile<Blaze>();
 	
 	float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
 		+ player->GetATK()

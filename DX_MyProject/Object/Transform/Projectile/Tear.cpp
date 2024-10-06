@@ -25,6 +25,8 @@ Tear::~Tear()
 
 void Tear::Update()
 {
+	if (!is_active)return;
+
 	nowTime += DELTA;
 	if (nowTime >= lifeTime)
 	{
@@ -44,6 +46,8 @@ void Tear::Update()
 		clips[clip_idx]->GetFrameOriginSize();
 
 	clips[clip_idx]->Update();
+
+	OnCollision();
 }
 
 void Tear::Render()
@@ -94,4 +98,24 @@ void Tear::Hit()
 
 void Tear::OnCollision()
 {
+	pair<int, int> tPos = make_pair((int)(pos.x) / CELL_X, (int)(pos.y) / CELL_Y);
+	list<Enemy*> enemyList = EnemySpawner::Get()->GetPartition(tPos);
+	for (auto e : enemyList)
+	{
+		if (e->is_active)
+		{
+			float minDist = (GetCollider()->Size().GetLength() + e->GetDamageCollider()->Size().GetLength()) / 2.0f;
+			float dist = (pos - e->pos).GetLength();
+			if (minDist >= dist)
+			{
+				if (GetCollider()->isCollision(e->GetDamageCollider()))
+				{
+					Hit();
+					bool isCrt = Owner->GetPlayer()->isCritical();
+					e->ChangeHP(-GetDamage(), isCrt);
+					break;
+				}
+			}
+		}
+	}
 }

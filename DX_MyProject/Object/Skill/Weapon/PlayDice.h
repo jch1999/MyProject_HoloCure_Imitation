@@ -18,6 +18,5 @@ public:
 	virtual bool LevelDown() override;
 
 	int GetDiceEye();
-	BaelzDice* GetDice();
 	void SpawnProjectile(Vector2 dir);
 };

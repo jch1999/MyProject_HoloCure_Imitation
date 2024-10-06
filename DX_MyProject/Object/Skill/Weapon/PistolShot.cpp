@@ -80,7 +80,7 @@ void PistolShot::Update()
 			now_proj_delay = 0.0f;
 			if (projCnt < projCnt_talbe[now_level]+player->GetProjCnt()) // 투사체를 덜 발사함
 			{
-				WatsonBullet* proj = GetBullet();
+				WatsonBullet* proj = GetProjectTile<WatsonBullet>();
 				
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
 					* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Shot)
@@ -187,24 +187,3 @@ void PistolShot::UpdateBullet()
 		p->Update();
 }
 
-WatsonBullet* PistolShot::GetBullet()
-{
-	WatsonBullet* proj = nullptr;
-
-	for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 총알 하나를 찾아 사용
-	{
-		if (projectiles[i]->is_active == false)
-		{
-			proj = dynamic_cast<WatsonBullet*>(projectiles[i]);
-			break;
-		}
-	}
-
-	// 비활성 상태 총알 없음 == 총알이 부족함 -> 새로 생성
-	if (proj == nullptr)
-	{
-		proj = new WatsonBullet();
-		projectiles.push_back(proj);
-	}
-	return proj;
-}

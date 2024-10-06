@@ -69,7 +69,7 @@ void PsychoAxe::Update()
 			now_proj_delay = 0.0f;
 			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
 			{
-				Axe* proj = GetAxe();
+				Axe* proj = GetProjectTile<Axe>();
 
 				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
 					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
@@ -141,26 +141,4 @@ void PsychoAxe::UpdateAxes()
 			axe->Update();
 		}
 	}
-}
-
-Axe* PsychoAxe::GetAxe()
-{
-	Axe* axe = nullptr;
-	for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 폭탄 하나를 찾아 사용
-	{
-		if (projectiles[i]->is_active == false)
-		{
-			axe = dynamic_cast<Axe*>(projectiles[i]);
-			break;
-		}
-	}
-
-	// 비활성 상태 도끼 없음 -> 새로 생성
-	if (axe == nullptr)
-	{
-		axe = new Axe();
-		projectiles.push_back(axe);
-		axe->SetOwner(this);
-	}
-	return axe;
 }

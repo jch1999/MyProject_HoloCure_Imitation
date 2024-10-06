@@ -198,30 +198,9 @@ int PlayDice::GetDiceEye()
 		return 1;
 }
 
-BaelzDice* PlayDice::GetDice()
-{
-	BaelzDice* proj = nullptr;
-	for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 주사위 하나를 찾아 사용
-	{
-		if (projectiles[i]->is_active == false)
-		{
-			proj = dynamic_cast<BaelzDice*>(projectiles[i]);
-			break;
-		}
-	}
-
-	// 비활성 상태 주사위 없음 -> 새로 생성
-	if (proj == nullptr)
-	{
-		proj = new BaelzDice(Vector2(36.0f, 36.0f));
-		projectiles.push_back(proj);
-	}
-	return proj;
-}
-
 void PlayDice::SpawnProjectile(Vector2 dir)
 {
-	BaelzDice* proj = GetDice();
+	BaelzDice* proj = GetProjectTile<BaelzDice>();
 	int diceEye = GetDiceEye();
 	float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
 		* diceEye // 주사위 눈 만큼을 기본 데미지에 곱한다

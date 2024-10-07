@@ -76,12 +76,8 @@ void HoloBomb::Update()
 					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				bool isCrt = player->isCritical();
 				proj->SetStatus(0.0f, proj_spd, 1, -1.0f,0.0f);
-				if (isCrt)
-					proj->SetExplosionStatus(damage * 1.5f, 0.0f, hitLimit_table[now_level], -1.0f, 0.0f, isCrt);
-				else
-					proj->SetExplosionStatus(damage * 1.5f, 0.0f, hitLimit_table[now_level], -1.0f, 0.0f, isCrt);
+				proj->SetExplosionStatus(damage * 1.5f, 0.0f, hitLimit_table[now_level], -1.0f, 0.0f);
 
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(0);

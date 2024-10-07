@@ -121,7 +121,11 @@ void Axe::OnCollision()
 			}
 			else
 			{
-				iter->first->ChangeHP(-damage, isCrt);
+				bool isCrt = SkillManager::Get()->GetPlayer()->isCritical();
+				if (isCrt)
+					iter->first->ChangeHP(-(GetDamage()) * 1.5f, true);
+				else
+					iter->first->ChangeHP(-(GetDamage()), false);
 
 				iter->second = hitCoolDown;
 			}

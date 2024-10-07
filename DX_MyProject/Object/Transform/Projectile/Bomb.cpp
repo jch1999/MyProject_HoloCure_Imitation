@@ -18,7 +18,6 @@ Bomb::Bomb(Vector2 size, float targetDist, Vector2 move_dir)
 	collider = colliders[0];
 
 	explosion = new ExplosionSmoke();
-
 	is_active = false;
 	collider->SetActive(false);
 	
@@ -30,7 +29,7 @@ Bomb::~Bomb()
 
 void Bomb::Update()
 {
-	if (is_active)
+	if (is_active|| explosion->is_active)
 	{
 		pos = LERP(pos, targetPos, speed * DELTA);
 		if ((pos - targetPos).GetLength() < 0.1f)
@@ -48,10 +47,12 @@ void Bomb::Update()
 
 		clips[clip_idx]->Update();
 
-		OnCollision();
+		if(is_active)
+			OnCollision();
+		if(explosion->is_active)
+			explosion->Update();
 	}
-	if (explosion->is_active)
-		explosion->Update();
+		
 }
 
 void Bomb::Render()
@@ -108,8 +109,10 @@ void Bomb::OnCollision()
 					Hit();
 
 					// explosion 활성화
+					// status는 HoloBomb에서 설정 중
 					//explosion->SetStatus(GetDamage(), 250.0f, hitCount, -1.0f);
 					explosion->pos = pos;
+					explosion->SetOwner(GetOwner());
 					explosion->respwan();
 					break;
 				}
@@ -124,8 +127,7 @@ void Bomb::Hit()
 	collider->SetActive(false);
 }
 
-void Bomb::SetExplosionStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown, bool crt)
+void Bomb::SetExplosionStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown)
 {
 	explosion->SetStatus(damage, speed, hitCount, lifeTime, hitCoolDown);
-	explosion->SetCrt(crt);
 }

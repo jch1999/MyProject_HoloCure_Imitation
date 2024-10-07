@@ -117,7 +117,12 @@ void ExplosionSmoke::OnCollision()
 					if (hitEnemies.find(enemy) == hitEnemies.end())
 					{
 						hitEnemies.insert(enemy);
-						enemy->ChangeHP(-(GetDamage()), isCrt);
+						bool isCrt = Owner->GetPlayer()->isCritical();
+						if (isCrt)
+							enemy->ChangeHP(-(GetDamage()*1.5f), isCrt);
+						else
+							enemy->ChangeHP(-(GetDamage()), isCrt);
+						
 					}
 				}
 			}

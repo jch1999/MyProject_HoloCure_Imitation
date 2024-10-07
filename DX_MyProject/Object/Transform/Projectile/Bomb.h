@@ -27,5 +27,5 @@ public:
 	virtual void Hit() override;
 
 	void SetTargetPos(Vector2 tPos) { targetPos = tPos; }
-	void SetExplosionStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown, bool crt);
+	void SetExplosionStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown);
 };

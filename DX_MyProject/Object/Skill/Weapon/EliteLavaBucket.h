@@ -26,4 +26,5 @@ public:
 	virtual bool LevelDown() override;
 
 	void UpdateBuckets();
+	void SpawnBucket();
 };

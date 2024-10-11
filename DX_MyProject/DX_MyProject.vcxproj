@@ -183,6 +183,7 @@
     <ClInclude Include="Framework\Utility\Control.h" />
     <ClInclude Include="Framework\Utility\Singleton.h" />
     <ClInclude Include="Framework\Utility\Timer.h" />
+    <ClInclude Include="Object\Transform\Projectile\LavaArea.h" />
     <ClInclude Include="Library\라이브러리 추가법.h" />
     <ClInclude Include="Library\외부 라이브러리 추가방법.h" />
     <ClInclude Include="Object\Interface\IAttack.h" />
@@ -358,6 +359,7 @@
     <ClCompile Include="Framework\Utility\Control.cpp" />
     <ClCompile Include="Framework\Utility\Random.cpp" />
     <ClCompile Include="Framework\Utility\Timer.cpp" />
+    <ClCompile Include="Object\Transform\Projectile\LavaArea.cpp" />
     <ClCompile Include="Object\Shape\Circle.cpp" />
     <ClCompile Include="Object\Shape\Missile.cpp" />
     <ClCompile Include="Object\Shape\PO.cpp" />

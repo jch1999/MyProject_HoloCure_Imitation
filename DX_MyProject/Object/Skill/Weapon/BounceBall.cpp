@@ -15,7 +15,7 @@ BounceBall::BounceBall()
 
 	proj_delay = 0.08f;
 
-	skillDelay_table = { 0,2.0f, 2.0f, 2.0f, 2.0f, 1.6f,1.6f,1.6f };
+	skillDelay_table = { 0,2.0f, 2.0f, 2.0f, 2.0f, 2.0f,1.7f,1.7f };
 	minDamage_table = { 0,12.0f,14.0f,14.0f,14.0f,14.0f,14.0f,18.0f };
 	maxDamage_table = { 0,16.0f,18.0f,18.0f,18.0f,18.0f,18.0f,22.0f };
 	projCnt_talbe = { 0,1,1,2,2,3,3,4 };

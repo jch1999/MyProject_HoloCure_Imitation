@@ -13,7 +13,7 @@ EliteLavaBucket::EliteLavaBucket()
 	level_scripts.push_back("Throw 3 lava buckets");
 	level_scripts.push_back("Throw 4 lava buckets and increase lava size by 20%");
 
-	skillDelay_table = { 0,2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f };
+	skillDelay_table = { 0, 5.0f, 5.0f, 5.0f, 5.0f, 5.0f, 5.0f, 5.0f };
 	minDamage_table = { 0.0f, 6.0f, 6.0f, 6.0f, 10.0f, 14.0f, 14.0f, 14.0f };
 	maxDamage_table = { 0.0f, 10.0f, 10.0f, 10.0f, 14.0f, 18.0f, 18.0f, 18.0f };
 	colliderIdx_table = { 0, 1, 2, 2, 2, 2, 2, 3 };
@@ -65,18 +65,10 @@ void EliteLavaBucket::Update()
 			now_proj_delay = 0.0f;
 			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
 			{
-				LavaBucket* proj = GetProjectTile<LavaBucket>();
-
-				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
-					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
-					+ player->GetATK()
-					+ enhanceDamage;
-				proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
-				proj->SetDirection(player->GetAttackDir());
-				proj->SetColliderIdx(colliderIdx_table[now_level]);
-				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
-				proj->respwan();
-				projCnt++;
+				for (int i = 0; i < projCnt_talbe[now_level]; i++)
+				{
+					SpawnBucket();
+				}
 			}
 			else // 투사체 발사가 끝났으니 스킬은 재사용 대기 상태로
 			{
@@ -126,4 +118,30 @@ void EliteLavaBucket::UpdateBuckets()
 {
 	for (auto bucket : projectiles)
 		bucket->Update();
+}
+
+void EliteLavaBucket::SpawnBucket()
+{
+	LavaBucket* proj = GetProjectTile<LavaBucket>();
+
+	float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
+		* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
+		+ player->GetATK()
+		+ enhanceDamage;
+	proj->SetStatus(damage, proj_spd, hitLimit_table[now_level], projLifetime_table[now_level], hitCooldown);
+	float randomRot = Random::Get()->GetRandomFloat(0.0f, 360.0f);
+	float dir = randomRot * M_PI / 180.0f;
+	proj->rot.z = dir;
+	if (randomRot >= 90.0f && randomRot <= 270.0f)
+	{
+		proj->SetDirection(Vector2(-cosf(dir), -sinf(dir)));
+	}
+	else
+	{
+		proj->SetDirection(Vector2(cosf(dir), sinf(dir)));
+	}
+	proj->SetColliderIdx(colliderIdx_table[now_level]);
+	proj->pos = player->pos + player->GetAttackDir() * 50.0f;
+	proj->respwan();
+	projCnt++;
 }

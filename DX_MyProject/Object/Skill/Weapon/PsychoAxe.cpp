@@ -13,7 +13,7 @@ PsychoAxe::PsychoAxe()
 	level_scripts.push_back("Increase attack size by 50%.");
 	level_scripts.push_back("Increase damage by 50%.");
 
-	skillDelay_table = { 0,2.0f, 2.0f, 2.0f, 2.0f, 1.6f,1.6f,1.6f };
+	skillDelay_table = { 0, 4.0f, 4.0f, 3.2f, 3.2f, 3.2f, 3.2f, 3.2f };
 	minDamage_table = { 0,10.0f,14.0f,14.0f,19.0f,19.0f,19.0f,28.0f };
 	maxDamage_table = { 0,14.0f,18.0f,18.0f,23.0f,23.0f,23.0f,34.0f };
 	colliderIdx_table = { 0, 0, 1, 1, 2, 2, 3, 3 };

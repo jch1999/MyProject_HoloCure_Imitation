@@ -10,4 +10,5 @@
 #include "ExplosionSmoke.h"
 #include "Ball.h"
 #include "Axe.h"
+#include "LavaArea.h"
 #include "LavaBucket.h"

@@ -1,7 +1,7 @@
 #include "framework.h"
 
-ExplosionSmoke::ExplosionSmoke(Vector2 size)
-	:Projectile(20.0f, 200.0f, 1, 2.0f)
+ExplosionSmoke::ExplosionSmoke(ProjectileSize projSize)
+	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 	, size(size)
 {
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";

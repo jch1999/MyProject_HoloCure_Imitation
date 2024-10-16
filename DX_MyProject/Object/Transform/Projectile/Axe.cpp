@@ -1,12 +1,11 @@
 #include "framework.h"
 
-Axe::Axe(Vector2 size)
-	:Projectile()
+Axe::Axe(ProjectileSize projSize)
+	:Projectile(projSize)
 {
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
-	this->size = size;
 	vector<Frame*> frames;
 	Vector2 initPos(4.0f, 1616.0f);
 	Vector2 frameSize(46.0f, 46.0f);

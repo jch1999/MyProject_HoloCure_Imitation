@@ -31,6 +31,7 @@ PlayDice::PlayDice()
 	for (int i = 0; i < 10; i++)
 	{
 		projectiles.push_back(new BaelzDice(Vector2(36.0f, 36.0f)));
+		projectiles[i]->SetOwner(this);
 	}
 	enhanceDamage = 0.0f;
 }

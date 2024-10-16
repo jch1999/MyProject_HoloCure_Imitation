@@ -1,12 +1,11 @@
 #include "framework.h"
 
-LavaArea::LavaArea(Vector2 size)
-	:Projectile()
+LavaArea::LavaArea(ProjectileSize projSize)
+	:Projectile(projSize)
 {
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
-	this->size = size;
 	vector<Frame*> frames;
 	// Lava Start
 	Vector2 initPos(4.0f, 243.0f);

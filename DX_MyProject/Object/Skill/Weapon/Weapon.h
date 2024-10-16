@@ -71,6 +71,7 @@ inline T* Weapon::GetProjectTile()
 	{
 		proj = new T();
 		projectiles.push_back(proj);
+		dynamic_cast<Projectile*>(proj)->SetOwner(this);
 	}
 
 	return proj;

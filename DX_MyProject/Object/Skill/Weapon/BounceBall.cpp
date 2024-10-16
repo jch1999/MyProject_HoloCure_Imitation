@@ -30,6 +30,7 @@ BounceBall::BounceBall()
 	for (int i = 0; i < 10; i++)
 	{
 		Projectile* ball = new Ball();
+		ball->SetOwner(this);
 		projectiles.push_back(ball);
 	}
 	enhanceDamage = 0.0f;

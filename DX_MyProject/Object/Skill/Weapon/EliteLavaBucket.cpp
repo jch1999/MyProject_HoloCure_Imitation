@@ -18,6 +18,7 @@ EliteLavaBucket::EliteLavaBucket()
 	maxDamage_table = { 0.0f, 10.0f, 10.0f, 10.0f, 14.0f, 18.0f, 18.0f, 18.0f };
 	colliderIdx_table = { 0, 1, 2, 2, 2, 2, 2, 3 };
 	projLifetime_table = { 0.0f, 3.0f, 3.0f, 3.0f, 4.5f, 4.5f, 4.5f, 4.5f };
+	projCnt_talbe = { 0, 1, 1, 2, 2, 2, 3, 4 };
 	hitCooldown = 0.75f;
 	proj_delay = 0.08f;
 

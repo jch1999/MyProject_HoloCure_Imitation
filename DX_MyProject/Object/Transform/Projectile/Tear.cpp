@@ -1,12 +1,11 @@
 #include "framework.h"
 
-Tear::Tear(Vector2 size)
-	:Projectile()
+Tear::Tear(ProjectileSize projSize)
+	:Projectile(projSize)
 {
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
-	this->size = size;
 	vector<Frame*> frames;
 	frames.push_back(new Frame(file, 4.0f, 946.0f, 10.0f, 8.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 1.0f));

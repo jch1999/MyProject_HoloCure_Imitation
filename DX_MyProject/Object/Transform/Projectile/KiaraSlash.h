@@ -7,7 +7,7 @@ private:
 	// 충돌한 Enemy의 피격 횟수
 	map<Enemy*, int> enemyHitCount;
 public:
-	KiaraSlash(Vector2 size = Vector2(162.5f, 160.0f));
+	KiaraSlash(ProjectileSize projSize = ProjectileSize(Vector2(162.5f, 160.0f)));
 	~KiaraSlash();
 
 

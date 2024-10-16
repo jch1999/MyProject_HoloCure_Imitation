@@ -1,8 +1,11 @@
 #include "framework.h"
 
-Projectile::Projectile(float damage, float speed, int maxHitCount, float lifeTime,float hitCooldown)
-	:damage(damage),speed(speed), maxHitCount(maxHitCount),lifeTime(lifeTime),nowTime(0.0f),hitCoolDown(hitCoolDown)
+Projectile::Projectile(ProjectileSize projSize, float damage, float speed, int maxHitCount, float lifeTime,float hitCooldown)
+	:damage(damage),speed(speed), maxHitCount(maxHitCount),lifeTime(lifeTime),nowTime(0.0f),hitCoolDown(hitCooldown)
+	,Owner(nullptr),collider(nullptr)
 {
+	this->size = projSize.GetSize();
+
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
 	CB = new ColourBuffer();

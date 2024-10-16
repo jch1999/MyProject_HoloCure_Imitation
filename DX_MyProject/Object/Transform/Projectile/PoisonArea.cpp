@@ -1,12 +1,11 @@
 #include "framework.h"
 
-PoisonArea::PoisonArea(Vector2 size)
-	:Projectile(20.0f, 200.0f, 1, 2.0f)
+PoisonArea::PoisonArea(ProjectileSize projSize)
+	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 {
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
-	this->size = size;
 	vector<Frame*> frames;
 
 	// PROJ_STATE::NORMAL

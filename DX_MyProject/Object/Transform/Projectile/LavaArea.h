@@ -2,7 +2,7 @@
 class LavaArea : public Projectile
 {
 public:
-	LavaArea(Vector2 size = Vector2());
+	LavaArea(ProjectileSize projSize = ProjectileSize(Vector2()));
 	~LavaArea();
 protected:
 	// Projectile을(를) 통해 상속됨

@@ -6,7 +6,7 @@ private:
 	int ricochetCnt;
 	
 public:
-	BaelzDice(Vector2 size=Vector2(36.0f,36.0f));
+	BaelzDice(ProjectileSize projSize=ProjectileSize(Vector2(36.0f,36.0f)));
 	~BaelzDice();
 
 

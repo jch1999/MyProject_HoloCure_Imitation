@@ -33,6 +33,7 @@ HoloBomb::HoloBomb()
 	for (int i = 0; i < 10; i++)
 	{
 		Projectile* bomb = new Bomb();
+		bomb->SetOwner(this);
 		projectiles.push_back(bomb);
 	}
 	enhanceDamage = 0.0f;

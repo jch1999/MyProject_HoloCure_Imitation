@@ -4,7 +4,7 @@ class PoisonArea :public Projectile
 protected:
 	
 public:
-	PoisonArea(Vector2 size = Vector2(107.0f, 107.0f));
+	PoisonArea(ProjectileSize projSize= ProjectileSize(Vector2(107.0f, 107.0f)));
 	~PoisonArea();
 
 	// Projectile을(를) 통해 상속됨

@@ -9,7 +9,7 @@ private:
 	int explosionColiderIdx;
 
 public:
-	Bomb(Vector2 size = Vector2(23.0f, 29.0f), float targetDist = 100.0f, Vector2 move_dir = Vector2(0, 0));
+	Bomb(ProjectileSize projSize = ProjectileSize(Vector2(23.0f, 29.0f)), float targetDist = 100.0f, Vector2 move_dir = Vector2(0, 0));
 	~Bomb();
 
 

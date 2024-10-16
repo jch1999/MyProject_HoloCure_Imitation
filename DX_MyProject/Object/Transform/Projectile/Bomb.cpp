@@ -1,14 +1,13 @@
 #include "framework.h"
 
-Bomb::Bomb(Vector2 size, float targetDist, Vector2 move_dir)
-	:Projectile(20.0f, 200.0f, 1, 2.0f)
+Bomb::Bomb(ProjectileSize projSize, float targetDist, Vector2 move_dir)
+	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 {
 	this->targetDist = targetDist;
 	this->move_dir = move_dir;
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
-	this->size = size;
 	vector<Frame*> frames;
 	frames.push_back(new Frame(file, 416.0f, 1508.0f, 23.0f, 29.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1));
@@ -31,24 +30,27 @@ void Bomb::Update()
 {
 	if (is_active|| explosion->is_active)
 	{
-		pos = LERP(pos, targetPos, speed * DELTA);
-		if ((pos - targetPos).GetLength() < 0.1f)
+		if (is_active)
 		{
-			pos = targetPos;
-		}
+			pos = LERP(pos, targetPos, speed * DELTA);
+			if ((pos - targetPos).GetLength() < 0.1f)
+			{
+				pos = targetPos;
+			}
 
-		WorldUpdate();
+			WorldUpdate();
 
-		collider->pos = pos;
-		collider->WorldUpdate();
+			collider->pos = pos;
+			collider->WorldUpdate();
 
-		scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-			clips[clip_idx]->GetFrameOriginSize();
+			scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
+				clips[clip_idx]->GetFrameOriginSize();
 
-		clips[clip_idx]->Update();
+			clips[clip_idx]->Update();
 
-		if(is_active)
+
 			OnCollision();
+		}
 		if(explosion->is_active)
 			explosion->Update();
 	}

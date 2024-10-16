@@ -35,9 +35,7 @@ PistolShot::PistolShot()
 	for (int i = 0; i < 10; i++)
 	{
 		Projectile* bullet = new WatsonBullet();
-		bullet->SetActive(false);
-		bullet->GetCollider()->SetActive(false);
-
+		bullet->SetOwner(this);
 		projectiles.push_back(bullet);
 	}
 	enhanceDamage = 0.0f;

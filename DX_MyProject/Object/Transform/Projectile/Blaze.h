@@ -4,7 +4,7 @@ class Blaze :public Projectile
 private:
 	
 public:
-	Blaze(Vector2 size = Vector2(38.0f, 38.0f));
+	Blaze(ProjectileSize projSize = ProjectileSize(Vector2(38.0f, 38.0f)));
 	~Blaze();
 
 

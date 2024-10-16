@@ -2,6 +2,14 @@
 class Projectile :public Transform
 {
 public:
+	class ProjectileSize
+	{
+	public:
+		ProjectileSize(Vector2 size) :size(size) {};
+		Vector2 GetSize() const { return size; }
+	private:
+		Vector2 size;
+	};
 
 protected:
 	// for drawing
@@ -50,7 +58,7 @@ public:
 	Vector2 move_dir;
 
 public:
-	Projectile(float damage = 20.0f, float speed = 120.0f, int maxHitCout = 1.0f, float lifeTime = 2.0f,float hitCoolDown=0.83f);
+	Projectile(ProjectileSize projSize = ProjectileSize(Vector2()), float damage = 20.0f, float speed = 120.0f, int maxHitCout = 1.0f, float lifeTime = 2.0f, float hitCoolDown = 0.83f);
 	virtual ~Projectile();
 
 	virtual void Update() = 0;

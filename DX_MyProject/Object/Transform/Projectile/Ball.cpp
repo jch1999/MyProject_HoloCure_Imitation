@@ -1,12 +1,11 @@
 #include "framework.h"
 
-Ball::Ball(Vector2 size)
-	:Projectile()
+Ball::Ball(ProjectileSize projSize)
+	:Projectile(projSize)
 {
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	Texture* t = Texture::Add(file);
 
-	this->size = size;
 	vector<Frame*> frames;
 	frames.push_back(new Frame(file, 4.0f, 3425.0f, 41.0f, 41.0f));
 	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 4.0f));
@@ -80,6 +79,8 @@ void Ball::respwan()
 
 	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
 		clips[clip_idx]->GetFrameOriginSize();
+
+	SetVelocity(Vector2(0.0f, 0.0f));
 
 	is_active = true;
 	collider->SetActive(true);

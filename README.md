@@ -7,7 +7,7 @@ HoloCure는 일정의 뱀서라이크 게임입니다.
 
 작업 중 참조 : https://holocure.fandom.com/wiki/HoloCure_Wiki
 
-### 1. 플레이 화면
+### 1. 플레이 화면(테스트)
 
 ![bandicam2024-06-0520-26-59-556-ezgif com-video-to-gif-converter_(1) (1)](https://github.com/user-attachments/assets/1f8402db-ddc5-476c-a870-31552405b0b7)
 

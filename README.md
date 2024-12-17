@@ -2,7 +2,9 @@
 
 이 프로젝트는 HoloLive의 팬게임인 HoloCure를 참고해서 만든 게임입니다.
 HoloCure는 일정의 뱀서라이크 게임입니다.
+
 이미지 출처 : https://www.spriters-resource.com/search/?q=holocure
+
 작업 중 참조 : https://holocure.fandom.com/wiki/HoloCure_Wiki
 
 ### 1. 플레이 화면

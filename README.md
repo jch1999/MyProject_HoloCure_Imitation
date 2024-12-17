@@ -6,17 +6,21 @@ HoloCure는 일정의 뱀서라이크 게임입니다.
 작업 중 참조 : https://holocure.fandom.com/wiki/HoloCure_Wiki
 
 ### 1. 플레이 화면
+
 ![bandicam2024-06-0520-26-59-556-ezgif com-video-to-gif-converter_(1) (1)](https://github.com/user-attachments/assets/1f8402db-ddc5-476c-a870-31552405b0b7)
 
 
 ### 2. 구현된 플레이어블 케릭터
 - Watson
-  ![bandicam2024-05-1616-18-28-984-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/5133edda-cc02-464b-9a84-4ba8672c6108)
+
+![bandicam2024-05-1616-18-28-984-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/5133edda-cc02-464b-9a84-4ba8672c6108)
 
 - Kiara
+
 ![bandicam2024-05-1616-22-42-145-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/05786ab3-7ccc-4900-9e4a-7067d6449eb6)
 
 - Baelz
+
 ![bandicam2024-05-1616-20-40-959-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/65f13093-c179-462d-b4ef-ba374f84c36b)
 
 
@@ -34,6 +38,7 @@ HoloCure는 일정의 뱀서라이크 게임입니다.
 ![bandicam2024-06-0313-38-11-475-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/aa2ace44-9991-4102-a1c6-28fee235a864)
 
 - 반투명 처리
+
 ![bandicam2024-06-0520-26-59-556-ezgif com-video-to-gif-converter_(1) (1)](https://github.com/user-attachments/assets/bf04cf80-d330-4e5b-9c91-1bf32ba50ef4)
 
 - BackGroundManager 클래스에서 관리

@@ -40,6 +40,6 @@ public:
 	void Stop();
 	
 	UINT GetFrameNum() { return cur_frame_num; }
-	UINT GetFrameCnt() { return frames.size(); }
+	size_t GetFrameCnt() { return frames.size(); }
 	void SetFrameNum(UINT num) { cur_frame_num = num; }
 };

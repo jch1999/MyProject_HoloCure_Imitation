@@ -32,7 +32,7 @@ public:
 	~Shape();
 
 	VertexBuffer** const GetBuffer() { return &VB; }
-	int GetVertexSize() { return verticies.size(); }
+	size_t GetVertexSize() { return verticies.size(); }
 
 	virtual void Render() = 0;
 	// 자기 자신을 출력하는 기능, 앞으로 모든 오브젝트는 자기 자신을 출력하는 기능을 가질 것

@@ -96,6 +96,7 @@ protected:
 	Vector2 additional_scale;
 	vector<Clip*> clips; // 애니메이션 클립들
 	int clip_idx;
+	const Frame* frame; // 애니메이션이 필요없을 경우 Frame만 사용
 
 public:
 	UI();

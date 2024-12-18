@@ -24,10 +24,10 @@ public:
 	void Render();
 
 	// 이 프레임이 사용하는 스프라이트의 원본 파일이 담당하는 크기
-	Vector2 Size() { return texture->GetSize(); }
+	const Vector2 Size() { return texture->GetSize(); }
 	// 이 프레임이 실제로 출력할 사이즈를 담당하는 함수
-	Vector2 GetFrameSize() { return frame_size; }
+	const Vector2 GetFrameSize() const  { return frame_size; }
 	// 이 프레임이 사용하는 스프라이트의 원본 파일과 실제로 출력할 사이즈를 확정짓기 위한 비용을 이용,
 	// 이 프레임이 담당하는 스프라이트 자체의 본래 크기를 계산해 반환하는 함수
-	Vector2 GetFrameOriginSize() { return frame_size * texture->GetSize(); }
+	const Vector2 GetFrameOriginSize() const { return frame_size * texture->GetSize(); }
 };

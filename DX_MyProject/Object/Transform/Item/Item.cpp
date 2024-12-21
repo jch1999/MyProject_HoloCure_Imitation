@@ -13,9 +13,20 @@ Item::~Item()
 	//delete PS;
 	//delete CB;
 
-	for (Clip* c : clips)
+	for (auto& clip : clips)
 	{
-		if (c != nullptr)
-			delete c;
+		clip.reset();
 	}
+	clips.clear();
+	frame.reset();
+}
+
+void Item::SetState(ITEM_STATE inState)
+{
+	this->state = state;
+}
+
+void Item::SetAddtionalDir(Vector2 inDir)
+{
+	addtionalDir = inDir;
 }

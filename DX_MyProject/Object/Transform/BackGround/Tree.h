@@ -1,28 +1,34 @@
 #pragma once
 class Tree :public Transform
 {
+protected:
+	static vector<shared_ptr<const Frame>> treeFrames;
+	static int TreeUseCnt;
+
 private:
-	float spawn_rate;
+	float spawnRate;
 
 	Transform* target;
 	Vector2 offset;
-	vector<Clip*> clips;
-	int clip_idx;
-	Vector2 render_size;
+	
+	shared_ptr<const Frame> frame;
+	int frameIdx;
+	Vector2 renderSize;
 
 	VertexShader* VS;
 	PixelShader* PS;
 	ColourBuffer* CB;
 
 	RectCollider* collider;
-	Vector2 collider_offset;
+	Vector2 colliderOffset;
 
-	map<pair<int, int>, bool> active_record;
-	map<pair<int, int>, int> clip_record;
+	map<pair<int, int>, bool> activeRecord;
+	map<pair<int, int>, int> frameRecord;
 public:
 	Tree();
 	~Tree();
 
+	void Init();
 	void Update();
 	void Render();
 	void PostRender();

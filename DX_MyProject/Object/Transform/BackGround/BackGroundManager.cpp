@@ -60,7 +60,8 @@ BackGroundManager::BackGroundManager()
 			}
 		}
 	}
-	
+
+	// SunLight
 	for (int i = 0; i < 2; i++)
 	{
 		SunLight* light = new SunLight();

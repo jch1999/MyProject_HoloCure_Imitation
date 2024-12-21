@@ -1,10 +1,10 @@
 #pragma once
 class MiniBoss :public Enemy
 {
-public:
+protected:
+	static vector<vector<shared_ptr<const Frame>>> miniBossFrames;
+	static int miniBossSpawnCnt;
 
-private:
-	
 public:
 	MiniBoss(ENEMY_NAME name = ENEMY_NAME::DEADBEAT, MOVE_TYPE type = MOVE_TYPE::CHASE);
 	~MiniBoss();
@@ -13,5 +13,8 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void PostRender() override;
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
+
 	virtual void SetEnemyName(ENEMY_NAME name) override;
 };

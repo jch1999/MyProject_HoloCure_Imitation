@@ -18,26 +18,70 @@ Projectile::~Projectile()
 	for (auto c : colliders)
 		delete c;
 
-	for (auto c : clips)
-		delete c;
+	clips.clear();
 }
 
-void Projectile::SetStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown)
+void Projectile::SetStatus(float inDamage, float inSpeed, int inHitCount, float inLifeTime, float inHitCoolDown)
 {
-	this->damage = damage;
-	this->speed = speed;
-	this->maxHitCount = hitCount;
+	this->damage = inDamage;
+	this->speed = inSpeed;
+	this->maxHitCount = inHitCount;
 	this->nowHitCount = 0;
-	this->lifeTime = lifeTime;
+	this->lifeTime = inLifeTime;
 	this->nowTime = 0.0f;
-	this->hitCoolDown = hitCoolDown;
+	this->hitCoolDown = inHitCoolDown;
+}
+
+void Projectile::SetDirection(Vector2 inDir)
+{
+	moveDir = inDir;
 }
 
 
-void Projectile::SetColliderIdx(int idx)
+void Projectile::SetColliderIdx(int inIdx)
 {
-	colliders[idx_collider]->SetActive(false);
-	collider = colliders[idx];	
-	idx_collider = idx;
-	colliders[idx_collider]->SetActive(true);
+	colliders[colliderIdx]->SetActive(false);
+	collider = colliders[inIdx];
+	colliderIdx = inIdx;
+	colliders[colliderIdx]->SetActive(true);
+}
+
+void Projectile::SetClipIdx(int inIdx)
+{
+	clipIdx = inIdx;
+}
+
+void Projectile::SetTargetDist(float inDist)
+{
+	targetDist = inDist;
+}
+
+void Projectile::SetLifeTime(float inTime)
+{
+	lifeTime = inTime;
+}
+
+void Projectile::SetCrt(bool inCrt)
+{
+	isCrt = inCrt;
+}
+
+void Projectile::SetCoolDown(float inTime)
+{
+	hitCoolDown = inTime;
+}
+
+void Projectile::SetHitLimit(int inCnt)
+{
+	hitLimitCnt = inCnt;
+}
+
+void Projectile::SetKnockBack(bool inKnockBack)
+{
+	isKnockback = inKnockBack;
+}
+
+void Projectile::SetOwner(Skill* inSkill)
+{
+	Owner = inSkill;
 }

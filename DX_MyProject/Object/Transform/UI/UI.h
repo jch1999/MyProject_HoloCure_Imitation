@@ -89,37 +89,43 @@ protected:
 	Transform* target;
 	Vector2 offset;
 
-	vector<UI*> child_list;
+	vector<UI*> childList;
 
-	Vector2 ui_size;
-	Vector2 ui_scale;
-	Vector2 additional_scale;
-	vector<Clip*> clips; // 애니메이션 클립들
-	int clip_idx;
-	const Frame* frame; // 애니메이션이 필요없을 경우 Frame만 사용
+	Vector2 uiSize;
+	Vector2 uiScale;
+	Vector2 additionalScale;
+	vector<shared_ptr<const Clip>> clips; // 애니메이션 클립들
+	int clipIdx;
+	shared_ptr<const Frame> frame; // 애니메이션이 필요없을 경우 Frame만 사용
 
 public:
 	UI();
 	virtual ~UI();
 
+	virtual void Init() = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	virtual void PostRender() = 0;
-
-	void SetTarget(Transform* target) { this->target = target; }
-	const Transform* GetTarget() { return target; }
-	void SetSize(Vector2 size) { this->ui_size = size; }
-	const Vector2& GetSize() { return ui_size; }
-	void SetScale(Vector2 scale) { this->ui_scale = scale; }
-	const Vector2& GetScale() { return ui_scale; }
-	void SetAddtionalScale(Vector2 scale) { this->additional_scale = scale; }
-	const Vector2& GetAdditionalScale() { return additional_scale; }
-	void SetOffset(Vector2 offset) { this->offset = offset; }
-	const Vector2& GetOffset() { return this->offset; }
-	void AddOffset(Vector2 offset) { this->offset = this->offset + offset; }
 	virtual void SetState(UI::UI_STATE state) = 0;
 	virtual void SetID(UI::UI_ID id) = 0;
-	virtual void SetActive(bool active) { is_active = active; }
-	void SetClipIdx(int idx) { clip_idx = idx; }
-	void SetColor(Float4 color) { CB->data.colour = color; }
+
+	void SetTarget(Transform* target);
+	FORCEINLINE const Transform* GetTarget() { return target; }
+
+	void SetSize(Vector2 inSize);
+	FORCEINLINE const Vector2& GetSize() { return uiSize; }
+	
+	void SetScale(Vector2 inScale);
+	FORCEINLINE const Vector2& GetScale() { return uiScale; }
+	
+	void SetAddtionalScale(Vector2 inScale);
+	FORCEINLINE const Vector2& GetAdditionalScale() { return additionalScale; }
+	
+	void SetOffset(Vector2 inOffset);
+	void AddOffset(Vector2 inOffset);
+	FORCEINLINE const Vector2& GetOffset() { return this->offset; }
+	
+	virtual void SetActive(bool inActive);
+	virtual void SetClipIdx(int inIdx);
+	virtual void SetColor(Float4 inColor);
 };

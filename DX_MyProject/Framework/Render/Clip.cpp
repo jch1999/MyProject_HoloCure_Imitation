@@ -1,6 +1,6 @@
 #include "framework.h"
 
-Clip::Clip(vector<Frame*> frames, CLIP_TYPE t, float fps)
+Clip::Clip(vector< shared_ptr<const Frame>>& frames, CLIP_TYPE t, float fps)
 	:frames(frames),repeat_type(t),fps(fps),
 	cur_frame_num(0),is_play(true),is_reverse(false),time(0.0f)
 {
@@ -8,17 +8,20 @@ Clip::Clip(vector<Frame*> frames, CLIP_TYPE t, float fps)
 
 Clip::~Clip()
 {
-	for (auto frame : frames)
+	// 스마트 포인터라 자동으로 카운트 감소
+	/*for (const Frame* frame : frames)
 	{
-		if(frame!=nullptr)
-			delete frame;
-	}
+		if (frame != nullptr)
+		{
+			frame->DecreaseCnt();
+		}
+	}*/
 	// 클립에 프레임을 등록한 뒤로는 클립 외에서는 이 프레임들에 접근할 방법이 없으며,
 	// 기본적으로 프레임을 동적 할당으로 생성한 것이므로
 	// 이 클립이 할당 해제될 때 이 프레임들 역시 할당 해제를 해줘야 함
 }
 
-void Clip::Update()
+void Clip::Update() const
 {
 	if (!is_play)return;
 	// 현재 재생중인 클립이 아니라면 재생 상황 관련 업데이트를 할 필요가 없으니 그대로 종료
@@ -108,12 +111,12 @@ void Clip::Update()
 	time -= fps;// 현재 애니메이션 프레임 처리가 끝났으니, 그만큼 경과시간을 제거
 }
 
-void Clip::Render()
+void Clip::Render() const
 {
 	frames[cur_frame_num]->Render();
 }
 
-void Clip::Play(UINT type)
+void Clip::Play(UINT type) const
 {
 	is_play = true;
 	is_reverse = false;
@@ -134,7 +137,7 @@ void Clip::Play(UINT type)
 	}
 }
 
-void Clip::Pause() // 현재 애니메이션의 재생을 일시적으로 중단하는 코드
+void Clip::Pause() const// 현재 애니메이션의 재생을 일시적으로 중단하는 코드
 // Stop과  Pause, 그러니까 완전 중지와 일시정지를 따로 구현할 필요가 있다면
 // 그 차이를 살려서 이 Pause를 구현하면 됨
 
@@ -145,7 +148,7 @@ void Clip::Pause() // 현재 애니메이션의 재생을 일시적으로 중단하는 코드
 
 }
 
-void Clip::Stop() // 현재 애니메이션의 재생을 완전히 중단하는 코드
+void Clip::Stop() const// 현재 애니메이션의 재생을 완전히 중단하는 코드
 {
 	is_play = false;
 	//cur_frame_num = 0;

@@ -16,30 +16,30 @@ public:
 	//				처음 프레임까지 재생이 끝나면 다시 처음부터 재재생하는 것을 반복
 
 private:
-	vector<Frame*> frames; // 이 클릭에서 재생할 프레임들이 저장된 백터
+	vector<shared_ptr<const Frame>>& frames; // 이 클릭에서 재생할 프레임들이 저장된 백터
 	CLIP_TYPE repeat_type;
-	bool is_play;	// 애니메이션이 현재 재생중인지 아닌지를 기록해두는 변수
+	mutable bool is_play;	// 애니메이션이 현재 재생중인지 아닌지를 기록해두는 변수
 
-	UINT cur_frame_num;	// 전체 프레임 중 몇번째 프레임을 현재 재생 중인지 저장하는 변수
-	float time;		// fps를 계산하기 위해 시간경과를 저장해두는 변수
+	mutable UINT cur_frame_num;	// 전체 프레임 중 몇번째 프레임을 현재 재생 중인지 저장하는 변수
+	mutable float time;		// fps를 계산하기 위해 시간경과를 저장해두는 변수
 	float fps;	// 초당 몇 장의 프레임을 재생할 것이지 결정하는 변수
 
-	bool is_reverse;	// PINGPONG 타입에만 존재하는 역재생상황 여부를 저장하는 맴버
+	mutable bool is_reverse;	// PINGPONG 타입에만 존재하는 역재생상황 여부를 저장하는 맴버
 
 public:
-	Clip(vector<Frame*> frames, CLIP_TYPE t = CLIP_TYPE::LOOP, float fps = 1.0f / 8.0f);
+	Clip(vector<shared_ptr<const Frame>>& frames, CLIP_TYPE t = CLIP_TYPE::LOOP, float fps = 1.0f / 8.0f);
 	~Clip();
 
-	bool isPlaying() { return is_play; }
-	Vector2 GetFrameSize() { return frames[cur_frame_num]->GetFrameSize(); }
-	Vector2 GetFrameOriginSize() { return frames[cur_frame_num]->GetFrameOriginSize(); }
-	void Update();
-	void Render();
-	void Play(UINT type = 0);
-	void Pause();
-	void Stop();
+	const bool isPlaying() const { return is_play; }
+	const Vector2 GetFrameSize() const { return frames[cur_frame_num]->GetFrameSize(); }
+	const Vector2 GetFrameOriginSize() const { return frames[cur_frame_num]->GetFrameOriginSize(); }
+	void Update() const;
+	void Render() const;
+	void Play(UINT type = 0) const;
+	void Pause() const;
+	void Stop()const;
 	
-	UINT GetFrameNum() { return cur_frame_num; }
-	size_t GetFrameCnt() { return frames.size(); }
-	void SetFrameNum(UINT num) { cur_frame_num = num; }
+	const UINT GetFrameNum() const { return cur_frame_num; }
+	const size_t GetFrameCnt() const { return frames.size(); }
+	void SetFrameNum(UINT num) const { cur_frame_num = num; }
 };

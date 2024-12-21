@@ -1,23 +1,17 @@
 #include "framework.h"
 
+shared_ptr<const Frame> Axe::axeFrame;
+int Axe::axeUseCnt = 0;
+
 Axe::Axe(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-	Texture* t = Texture::Add(file);
-
-	vector<Frame*> frames;
-	Vector2 initPos(4.0f, 1616.0f);
-	Vector2 frameSize(46.0f, 46.0f);
-	/*for (int i = 0; i < 8; i++)
+	if (axeFrame = nullptr)
 	{
-		frames.push_back(new Frame(file, initPos.x + i * 48.0f, initPos.y
-			, frameSize.x, frameSize.y));
+		Init();
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1 / 8.0f));*/
-	frames.push_back(new Frame(file, initPos.x, initPos.y, frameSize.x, frameSize.y));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1.0f));
-	clip_idx = 0;
+	
+	frame = axeFrame;
 
 	colliders.push_back(new CircleCollider(size.x * 0.5f));
 	colliders.push_back(new CircleCollider(size.x * 0.6f));
@@ -27,10 +21,28 @@ Axe::Axe(ProjectileSize projSize)
 
 	is_active = false;
 	collider->SetActive(false);
+
+	++axeUseCnt;
 }
 
 Axe::~Axe()
 {
+	if ((--axeUseCnt) == 0)
+	{
+		axeFrame.reset();
+	}
+}
+
+void Axe::Init()
+{
+	if (axeFrame) return;
+
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+	
+	Vector2 initPos(4.0f, 1616.0f);
+	Vector2 frameSize(46.0f, 46.0f);
+	
+	axeFrame=make_shared<const Frame>(file, initPos.x, initPos.y, frameSize.x, frameSize.y);
 }
 
 void Axe::Update()
@@ -45,7 +57,7 @@ void Axe::Update()
 	else
 	{
 		rot.z += rotSpeed * DELTA;
-		pos += Up() * speed * DELTA + move_dir * speed * 0.5f * DELTA;
+		pos += Up() * speed * DELTA + moveDir * speed * 0.5f * DELTA;
 		WorldUpdate();
 
 		collider->rot.z = rot.z;
@@ -68,7 +80,7 @@ void Axe::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 	collider->Render();
 }
 
@@ -147,8 +159,8 @@ void Axe::respwan()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = clips[clipIdx]->GetFrameSize() * collider->Size() /
+		clips[clipIdx]->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);

@@ -1,25 +1,44 @@
 #include "framework.h"
 
+shared_ptr<const Frame> Tear::tearFrame;
+int Tear::tearUseCnt = 0;  
+
+
 Tear::Tear(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-	Texture* t = Texture::Add(file);
-
-	vector<Frame*> frames;
-	frames.push_back(new Frame(file, 4.0f, 946.0f, 10.0f, 8.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 1.0f));
-	clip_idx = 0;
+	if (tearFrame == nullptr)
+	{
+		Init();
+	}
+	
+	frame = tearFrame;
 
 	colliders.push_back(new RectCollider(size * 1.5f));
 	collider = colliders[0];
 
 	is_active = false;
 	collider->SetActive(false);
+
+	++tearUseCnt;
 }
 
 Tear::~Tear()
 {
+	if ((--tearUseCnt) == 0)
+	{
+		tearFrame.reset();
+	}
+}
+
+void Tear::Init()
+{
+	if (tearFrame) return;
+
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+	
+	tearFrame = make_shared<const Frame>(file, 4.0f, 946.0f, 10.0f, 8.0f);
+
 }
 
 void Tear::Update()
@@ -34,17 +53,15 @@ void Tear::Update()
 		collider->SetActive(false);
 		return;
 	}
-	pos = pos + move_dir * speed * DELTA;
+	pos = pos + moveDir * speed * DELTA;
 	WorldUpdate();
 	
 	collider->pos = pos;
 	collider->rot = this->rot;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
-
-	clips[clip_idx]->Update();
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 
 	OnCollision();
 }
@@ -59,7 +76,7 @@ void Tear::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 	collider->Render();
 }
 
@@ -76,8 +93,8 @@ void Tear::respwan()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);

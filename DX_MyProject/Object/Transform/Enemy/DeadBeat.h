@@ -1,7 +1,9 @@
 #pragma once
 class DeadBeat :public Enemy
 {
-public:
+protected:
+	static vector<vector<shared_ptr<const Frame>>> DeadBeatFrames;
+	static int DeadBestSpawnCnt;
 
 private:
 	Vector2 damageSize, attackSize;
@@ -13,5 +15,8 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void PostRender() override;
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
+
 	virtual void SetEnemyName(ENEMY_NAME name) override;
 };

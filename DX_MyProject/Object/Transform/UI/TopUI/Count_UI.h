@@ -3,12 +3,12 @@ class Count_UI :public UI
 {
 protected:
 	vector<CounterIcon*> counterIcons;
-	vector<Text*> coinCnt_text;
-	vector<Text*> defeatCnt_text;
+	vector<Text*> coinCntText;
+	vector<Text*> defeatCntText;
 
-	float now_coinCnt, target_coinCnt;
-	float now_defeatCnt, target_defeatCnt;
-	float up_speed;
+	float nowCoinCnt, targetCoinCnt;
+	float nowDefeatCnt, targetDefeatCnt;
+	float upSpeed;
 
 public:
 	Count_UI();
@@ -16,6 +16,8 @@ public:
 
 
 	// UI을(를) 통해 상속됨
+	virtual void Init() override;
+
 	virtual void Update() override;
 
 	virtual void Render() override;
@@ -26,7 +28,7 @@ public:
 
 	virtual void SetID(UI::UI_ID id);
 
-	void SetClipIdx(int idx) { this->clip_idx = idx; }
+	void SetClipIdx(int idx);
 
 	void UpdateCoinCnt();
 	void UpdateDefeatCnt();

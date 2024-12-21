@@ -1,8 +1,6 @@
 #pragma once
-class LevelText :public UI
+class LevelText :public SpecialText
 {
-protected:
-
 public:
 	LevelText();
 	~LevelText();
@@ -14,7 +12,6 @@ public:
 	virtual void Render() override;
 
 	virtual void PostRender() override;
-	virtual void SetState(UI::UI_STATE state) override { this->state = state; }
 	virtual void SetID(UI::UI_ID id) override;
-	void SetClipIdx(int idx);
+	virtual void SetClipIdx(int idx) override;
 };

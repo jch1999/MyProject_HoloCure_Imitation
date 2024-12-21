@@ -1,26 +1,22 @@
 #include "framework.h"
 
-Enemy::Enemy(float MaxHP, float attack, float spdRate, float atk_delay,int drop_exp)
-	:MaxHP(MaxHP),HP(MaxHP),attack(attack), spdRate(spdRate)
-	,atk_delay(atk_delay),atk_nowTime(atk_delay),drop_exp(drop_exp)
+Enemy::Enemy(float inMaxHP, float inAttack, float inSpdRate, float inAtkDelay,int inDropExp)
+	:MaxHP(inMaxHP),HP(inMaxHP),attack(inAttack), spdRate(inSpdRate)
+	,atkDelay(inAtkDelay),atkNowTime(inAtkDelay),dropExp(inDropExp)
 {
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
 	CB = new ColourBuffer();
 
 	for (UINT i = 0; i < (UINT)Enemy::BAD_STATUS::END; i++)
-		badStatus_table.push_back(0.0f);
+		badStatusTable.push_back(0.0f);
 }
 
 Enemy::~Enemy()
 {
 	delete CB;
 
-	for (Clip* c : clips)
-	{
-		if (c != nullptr)
-			delete c;
-	}
+	clips.clear();
 
 	for (auto c : damageColliders)
 		delete c;
@@ -37,7 +33,7 @@ void Enemy::ChangeHP(float amount,bool isCrt)
 	{
 		int idx = 0;
 		DmgText* ui = nullptr;
-		Vector2 initPos(pos.x + ((is_looking_right) ? (-damageCollider->Size().x / 4.0f) : (damageCollider->Size().x / 4.0f))
+		Vector2 initPos(pos.x + ((isLookingRight) ? (-damageCollider->Size().x / 4.0f) : (damageCollider->Size().x / 4.0f))
 			, pos.y - damageCollider->Size().y / 4.0f);
 		int damage = (int)abs(amount);
 
@@ -76,7 +72,7 @@ void Enemy::ChangeHP(float amount,bool isCrt)
 			for (int i = 0; i < 10; i++)
 			{
 				float rot = i * 36.0f;
-				ItemSpawner::Get()->GenerateItem(pos + Vector2(cosf(rot), sinf(rot)) * 30.0f, Item::ITEM_ID::EXP, drop_exp / 10.0f);
+				ItemSpawner::Get()->GenerateItem(pos + Vector2(cosf(rot), sinf(rot)) * 30.0f, Item::ITEM_ID::EXP, dropExp / 10.0f);
 			}
 			ItemSpawner::Get()->GenerateItem(pos, Item::ITEM_ID::REWORD_BOX, ItemSpawner::Get()->coinValue);
 
@@ -84,7 +80,7 @@ void Enemy::ChangeHP(float amount,bool isCrt)
 		}
 		break;
 		default:
-			ItemSpawner::Get()->GenerateItem(pos, drop_exp);
+			ItemSpawner::Get()->GenerateItem(pos, dropExp);
 			break;
 		}
 
@@ -97,26 +93,36 @@ void Enemy::Attack()
 {
 	if (!is_active)return;
 
-	atk_nowTime = 0.0f;
-	Vector2 dir = Vector2(-move_dir.x, abs(move_dir.y));
+	atkNowTime = 0.0f;
+	Vector2 dir = Vector2(-moveDir.x, abs(moveDir.y));
 	player->ChangeHP(-attack, dir, this);
+}
+
+void Enemy::SetColor(Float4 inColor)
+{
+	CB->data.colour = inColor;
+}
+
+void Enemy::SetMoveDir(Vector2 inDir)
+{
+	moveDir = inDir;
 }
 
 void Enemy::SetBadStatus(Enemy::BAD_STATUS bad, float time)
 {
-	if (badStatus_table[(UINT)bad] < time)
-		badStatus_table[(UINT)bad] = time;
+	if (badStatusTable[(UINT)bad] < time)
+		badStatusTable[(UINT)bad] = time;
 }
 
 void Enemy::Move()
 {
 	float moveSPD = defaultSPD * spdRate;
-	if (badStatus_table[(UINT)Enemy::BAD_STATUS::UPSIDE_DOWN] > 0.0f)
+	if (badStatusTable[(UINT)Enemy::BAD_STATUS::UPSIDE_DOWN] > 0.0f)
 		moveSPD *= 0.0f;
-	else if (badStatus_table[(UINT)Enemy::BAD_STATUS::FROZEN] > 0.0f)
+	else if (badStatusTable[(UINT)Enemy::BAD_STATUS::FROZEN] > 0.0f)
 		moveSPD *= 0.7f;
 
-	for (list<KnockBackData>::iterator iter = knockback_list.begin(); iter != knockback_list.end(); iter++)
+	for (list<KnockBackData>::iterator iter = knockbackList.begin(); iter != knockbackList.end(); iter++)
 	{
 		if (iter->remainTime > 0.f)
 		{
@@ -129,21 +135,21 @@ void Enemy::Move()
 	{
 	case Enemy::MOVE_TYPE::CHASE:
 	{
-		if (dir_set_delay >= 0.33f)
+		if (dirSetDelay >= 0.33f)
 		{
 			Vector2 dir = player->pos - pos;
 			dir.Normalize();
-			move_dir = dir;
-			dir_set_delay = 0.0f;
+			moveDir = dir;
+			dirSetDelay = 0.0f;
 		}
 		else
 		{
-			dir_set_delay += DELTA;
+			dirSetDelay += DELTA;
 		}
 
-		if (addtional_dir.GetLength() > 0.1f)
-			move_dir = (move_dir + addtional_dir).Normalized();
-		pos += move_dir * moveSPD * DELTA;
+		if (addtionalDir.GetLength() > 0.1f)
+			moveDir = (moveDir + addtionalDir).Normalized();
+		pos += moveDir * moveSPD * DELTA;
 	}
 		break;
 	case Enemy::MOVE_TYPE::WAVE:
@@ -153,18 +159,28 @@ void Enemy::Move()
 		break;
 	case Enemy::MOVE_TYPE::STRAIGHT:
 	{
-		Vector2 dir = dest - pos;
-		move_dir = dir.Normalized();
+		Vector2 dir = destination - pos;
+		moveDir = dir.Normalized();
 
-		if (addtional_dir.GetLength() > 0.1f)
-			move_dir = (move_dir + addtional_dir).Normalized();
-		pos += move_dir * moveSPD * DELTA;
+		if (addtionalDir.GetLength() > 0.1f)
+			moveDir = (moveDir + addtionalDir).Normalized();
+		pos += moveDir * moveSPD * DELTA;
 	}
 		break;
 	default:
 		break;
 	}
-	is_looking_right = (player->pos - pos).x > 0.0f;
+	isLookingRight = (player->pos - pos).x > 0.0f;
+}
+
+void Enemy::SetDest(Vector2 inDestination)
+{
+	destination = inDestination;
+}
+
+void Enemy::SetPlayer(Player* target)
+{
+	player = target;
 }
 
 void Enemy::SetStatus(float MaxHP, float atk, float spdRate, float atk_delay,int drop_exp)
@@ -172,26 +188,31 @@ void Enemy::SetStatus(float MaxHP, float atk, float spdRate, float atk_delay,int
 	this->MaxHP = MaxHP;
 	this->attack = atk;
 	this->spdRate = spdRate;
-	this->atk_delay = atk_delay;
-	this->drop_exp = drop_exp;
+	this->atkDelay = atk_delay;
+	this->dropExp = drop_exp;
 }
 
 void Enemy::Respawn()
 {
 	HP = MaxHP;
-	atk_nowTime = atk_delay;
-	knockback_list.clear();
+	atkNowTime = atkDelay;
+	knockbackList.clear();
 
 	is_active = true;
 	damageCollider->SetActive(true);
 	attackCollider->SetActive(true);
-	dir_set_delay = 0.33f;
+	dirSetDelay = 0.33f;
 
 	WorldUpdate();
 	damageCollider->pos = pos;
 	damageCollider->WorldUpdate();
 	attackCollider->pos = pos;
 	attackCollider->WorldUpdate();
+}
+
+void Enemy::SetAdditionalDirection(Vector2 inDir)
+{
+	addtionalDir = inDir;
 }
 
 void Enemy::SetKnockBack(Vector2 dir, float spd, float time)
@@ -202,5 +223,5 @@ void Enemy::SetKnockBack(Vector2 dir, float spd, float time)
 	data.knockBackDir = dir;
 	data.spd = spd;
 	data.remainTime = time;
-	knockback_list.push_back(data);
+	knockbackList.push_back(data);
 }

@@ -210,8 +210,11 @@ void PlayDice::SpawnProjectile(Vector2 dir)
 		+ enhanceDamage;
 	proj->SetStatus(damage, projSpd_table[now_level], hitLimit_table[now_level], 2.0f);
 	proj->SetDirection(dir);
-	int clip_idx = max_level == now_level ? 6 + diceEye - 1 : diceEye - 1;
-	proj->SetClipIdx(clip_idx);
+	if (now_level == max_level)
+	{
+		proj->ActiveAwaken();
+	}
+	proj->SetClipIdx(diceEye - 1);
 	proj->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxShot());
 	proj->SetRicochetInfo(true, ricochet_table[now_level]);
 	proj->SetKnockBack(isKnockBack);

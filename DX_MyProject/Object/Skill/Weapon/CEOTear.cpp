@@ -17,7 +17,7 @@ CEOTear::CEOTear()
 	minDamage_table = { 0.0f,8.0f,10.0f,10.0f,10.0f,12.0f,12.0f,12.0f };
 	maxDamage_table = { 0.0f,12.0f,14.0f,14.0f,14.0f,16.0f,16.0f,16.0f };
 	projCnt_talbe = { 0,1,1,2,2,2,2,4 };
-	proj_delay = 0.15f;
+	projDelay = 0.15f;
 	projSpd_table = { 0.0f,200.0f,200.0f,200.0f,200.0f,250.0f,250.0f,250.0f };
 	hitLimit_table = { 0,1,1,1,1,1,1,1 };
 
@@ -38,17 +38,20 @@ CEOTear::CEOTear()
 
 CEOTear::~CEOTear()
 {
-	for (auto p : tears)
-		delete p;
+	for (auto proj : projectiles)
+	{
+		delete proj;
+	}
+	projectiles.clear();
 }
 
 void CEOTear::UpdateTears()
 {
-	for (auto t : projectiles)
+	for (auto proj : projectiles)
 	{
-		if (t->is_active)
+		if (proj->is_active)
 		{
-			t->Update();
+			proj->Update();
 		}
 	}
 }
@@ -76,13 +79,13 @@ void CEOTear::Update()
 		break;
 	case Skill::SKILL_STATUS::PLAY:
 	{
-		if (now_proj_delay < proj_delay)
+		if (nowProjDelay < projDelay)
 		{
-			now_proj_delay += DELTA;
+			nowProjDelay += DELTA;
 		}
 		else
 		{
-			now_proj_delay = 0.0f;
+			nowProjDelay = 0.0f;
 			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
 			{
 				Tear* proj = GetProjectTile<Tear>();
@@ -117,8 +120,10 @@ void CEOTear::Update()
 void CEOTear::Render()
 {
 	if (now_level == 0)return;
-	for (auto t : projectiles)
-		t->Render();
+	for (auto proj : projectiles)
+	{
+		proj->Render();
+	}
 }
 
 void CEOTear::PostRender()

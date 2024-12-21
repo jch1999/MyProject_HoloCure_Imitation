@@ -1,30 +1,22 @@
 #include "framework.h"
 
+vector<vector<shared_ptr<const Frame>>> KFP::kfpFrames;
+int KFP::kfpSpawnCnt = 0;
+
 KFP::KFP(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(20.0f, 2.0f, 1.0f, 0.33f, 3)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (kfpFrames.empty())
+	{
+		InitFrame();
+	}
 
 	// clips
-	vector<Frame*> frames;
-
-	// Takodachi clip
-	frames.push_back(new Frame(file, 418.0f, 606.0f, 25.0f, 23.0f));
-	frames.push_back(new Frame(file, 485.0f, 606.0f, 25.0f, 23.0f));
-	frames.push_back(new Frame(file, 551.0f, 606.0f, 25.0f, 23.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Hungry Takodachi Clip
-	frames.push_back(new Frame(file, 418.0f, 672.0f, 25.0f, 23.0f));
-	frames.push_back(new Frame(file, 485.0f, 672.0f, 25.0f, 23.0f));
-	frames.push_back(new Frame(file, 551.0f, 672.0f, 25.0f, 23.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
+	for (auto& frames : kfpFrames)
+	{
+		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	}
 
 	// collider
 	damageColliders.push_back(new RectCollider(Vector2(50.0f, 46.0f)));
@@ -33,10 +25,10 @@ KFP::KFP(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffset_table.push_back(Vector2(0.0f, 11.0f));
+	colliderOffsetTable.push_back(Vector2(0.0f, 11.0f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
-	colliderOffset_idx = 0;
+	colliderOffsetIdx = 0;
 
 	id = ENEMY_ID::KFP;
 
@@ -48,10 +40,16 @@ KFP::KFP(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 
 	SetEnemyName(name);
 	// Respawn();
+
+	++kfpSpawnCnt;
 }
 
 KFP::~KFP()
 {
+	if ((--kfpSpawnCnt) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void KFP::Update()
@@ -60,21 +58,21 @@ void KFP::Update()
 
 	Move();
 
-	if (atk_nowTime < atk_delay)
-		atk_nowTime += DELTA;
+	if (atkNowTime < atkDelay)
+		atkNowTime += DELTA;
 
 	UINT idx = (UINT)name - (UINT)ENEMY_NAME::KFP_EMPLOYEE;
 	clips[idx]->Update();
 	scale = clips[idx]->GetFrameSize() * attackCollider->Size() /
 		clips[idx]->GetFrameOriginSize() * Vector2(2.0f, 2.0f);
 
-	if (!is_looking_right)
+	if (!isLookingRight)
 	{
 		scale = scale * Vector2(-1.0f, 1.0f);
 	}
-	if (badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
+	if (badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
 	{
-		badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
+		badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
 		scale = scale * Vector2(1.0f, -1.0f);
 	}
 
@@ -82,7 +80,7 @@ void KFP::Update()
 
 	damageCollider->pos = pos;
 	damageCollider->WorldUpdate();
-	attackCollider->pos = pos + colliderOffset_table[colliderOffset_idx];
+	attackCollider->pos = pos + colliderOffsetTable[colliderOffsetIdx];
 	attackCollider->WorldUpdate();
 
 }
@@ -122,7 +120,40 @@ void KFP::PostRender()
 	ImGui::Text("pos : %f , %f", pos.x, pos.y);
 }
 
-void KFP::SetEnemyName(ENEMY_NAME name) // type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
+void KFP::InitFrame()
+{
+	ClearFrame();
+
+	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
+
+	// KFP clip
+	{
+		vector<shared_ptr<const Frame>> normalKFPFrames;
+		normalKFPFrames.push_back(make_shared<const Frame>(file, 418.0f, 606.0f, 25.0f, 23.0f));
+		normalKFPFrames.push_back(make_shared<const Frame>(file, 485.0f, 606.0f, 25.0f, 23.0f));
+		normalKFPFrames.push_back(make_shared<const Frame>(file, 551.0f, 606.0f, 25.0f, 23.0f));
+		kfpFrames.push_back(normalKFPFrames);
+	}
+	// Angry KFP Clip
+	{
+		vector<shared_ptr<const Frame>> angryKFPFrames;
+		angryKFPFrames.push_back(make_shared<const Frame>(file, 418.0f, 672.0f, 25.0f, 23.0f));
+		angryKFPFrames.push_back(make_shared<const Frame>(file, 485.0f, 672.0f, 25.0f, 23.0f));
+		angryKFPFrames.push_back(make_shared<const Frame>(file, 551.0f, 672.0f, 25.0f, 23.0f));
+		kfpFrames.push_back(angryKFPFrames);
+	}
+}
+
+void KFP::ClearFrame()
+{
+	for (auto& frames : kfpFrames)
+	{
+		frames.clear();
+	}
+	kfpFrames.clear();
+}
+
+void KFP::SetEnemyName(ENEMY_NAME name) // type과 moveDir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
 {
 	this->name = name;
 	switch (name)

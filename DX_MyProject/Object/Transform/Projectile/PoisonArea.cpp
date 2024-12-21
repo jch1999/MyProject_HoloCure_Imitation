@@ -1,31 +1,41 @@
 #include "framework.h"
 
+shared_ptr<const Frame> PoisonArea::poisonFrame;
+
 PoisonArea::PoisonArea(ProjectileSize projSize)
 	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 {
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (poisonFrame == nullptr)
+	{
+		Init();
+	}
 
-	vector<Frame*> frames;
-
-	// PROJ_STATE::NORMAL
-	frames.push_back(new Frame(file, 4.0f, 80.0f, 107.0f, 107.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1.0f));
-	frames.clear();
+	frame = poisonFrame;
 
 	// 0~2 : SpiderCooking스킬의 기본 collider 설정,
 	colliders.push_back(new CircleCollider(size.x * 0.5f));
 	colliders.push_back(new CircleCollider(size.x * 0.5f * 1.15f)); // SpiderCooking LV 2
 	colliders.push_back(new CircleCollider(size.x * 0.5f * 1.25f)); // SpiderCooking LV 4
 
-	idx_collider=0;
-	collider = colliders[idx_collider];
+	colliderIdx=0;
+	collider = colliders[colliderIdx];
 	collider->pos = pos;
 	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.5f);
 }
 
 PoisonArea::~PoisonArea()
 {
+	poisonFrame.reset();
+}
+
+void PoisonArea::Init()
+{
+	if (poisonFrame) return;
+
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+
+	// PROJ_STATE::NORMAL
+	poisonFrame = make_shared<const Frame>(file, 4.0f, 80.0f, 107.0f, 107.0f);
 }
 
 void PoisonArea::Update()
@@ -37,10 +47,8 @@ void PoisonArea::Update()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
-
-	clips[clip_idx]->Update();
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 
 	OnCollision();
 }
@@ -55,7 +63,7 @@ void PoisonArea::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 	collider->Render();
 }
 

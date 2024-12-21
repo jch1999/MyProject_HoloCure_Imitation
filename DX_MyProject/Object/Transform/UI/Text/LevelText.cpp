@@ -1,40 +1,13 @@
 #include "framework.h"
 
 LevelText::LevelText()
+	:SpecialText()
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
-	// level up clip
-	frames.push_back(new Frame(file, 4, 534, 94, 20));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
-	// white number clip
-	for (int i = 0; i <= 9; i++)
-	{
-		frames.push_back(new Frame(file, 139 + i * 7, 484, 5, 7));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
-	}
-	// Yellow number clip
-	for (int i = 0; i <= 9; i++)
-	{
-		frames.push_back(new Frame(file, 139 + i * 7, 493, 5, 7));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
-	}
-	// Red number clip
-	for (int i = 0; i <= 9; i++)
-	{
-		frames.push_back(new Frame(file, 139 + i * 7, 502, 5, 7));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
-	}
-
 	id = UI_ID::LEVEL_TEXT;
 	type = UI_TYPE::TEXT;
-	ui_size = Vector2(10.0f, 14.0f);
-	ui_scale = Vector2(1, 1);
-	additional_scale = Vector2(1, 1);
+	uiSize = Vector2(10.0f, 14.0f);
+	uiScale = Vector2(1, 1);
+	additionalScale = Vector2(1, 1);
 	offset = Vector2(0, 0);
 	is_active = false;
 }
@@ -47,8 +20,7 @@ void LevelText::Update()
 {
 	if (!is_active)return;
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
-	clips[clip_idx]->Update();
+	scale = frame->GetFrameSize() * uiSize / frame->GetFrameOriginSize() * uiScale;
 
 	pos = target->pos + offset;
 	WorldUpdate();
@@ -63,7 +35,7 @@ void LevelText::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 }
 
 void LevelText::PostRender()
@@ -77,5 +49,57 @@ void LevelText::SetID(UI::UI_ID id)
 
 void LevelText::SetClipIdx(int idx)
 {
-	clip_idx = idx;
+	clipIdx = idx;
+	switch (clipIdx)
+	{
+	case 0:
+	{
+		frame = LevelUpFrame;
+	}
+		break;
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+	case 10:
+	{
+		frame = WhiteNumberFrames[clipIdx-1];
+	}
+		break;
+	case 11:
+	case 12:
+	case 13:
+	case 14:
+	case 15:
+	case 16:
+	case 17:
+	case 18:
+	case 19:
+	case 20:
+	{
+		frame = YellowNumberFrames[clipIdx - 1];
+	}
+		break;
+	case 21:
+	case 22:
+	case 23:
+	case 24:
+	case 25:
+	case 26:
+	case 27:
+	case 28:
+	case 29:
+	case 30:
+	{
+		frame = RedNumberFrames[clipIdx - 1];
+	}
+		break;
+	default:
+		break;
+	}
 }

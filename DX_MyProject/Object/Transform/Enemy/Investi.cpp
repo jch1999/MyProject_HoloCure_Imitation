@@ -1,30 +1,22 @@
 #include "framework.h"
 
+vector<vector<shared_ptr<const Frame>>> Investi::investiFrames;
+int Investi::investiSpawnCnt = 0;
+
 Investi::Investi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(20.0f, 2.0f, 1.0f, 0.33f, 3)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (investiFrames.empty())
+	{
+		InitFrame();
+	}
 
 	// clips
-	vector<Frame*> frames;
-
-	// Investi Gator clip
-	frames.push_back(new Frame(file, 607.0f, 81.0f, 45.0f, 32.0f));
-	frames.push_back(new Frame(file, 673.0f, 81.0f, 45.0f, 32.0f));
-	frames.push_back(new Frame(file, 739.0f, 81.0f, 45.0f, 32.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Thicc Bubba Clip
-	frames.push_back(new Frame(file, 617.0f, 203.0f, 33.0f, 43.0f));
-	frames.push_back(new Frame(file, 684.0f, 203.0f, 33.0f, 43.0f));
-	frames.push_back(new Frame(file, 746.0f, 203.0f, 33.0f, 43.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
+	for (auto& frames : investiFrames)
+	{
+		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	}
 
 	// collider
 	damageColliders.push_back(new RectCollider(Vector2(66.0f, 86.0f)));
@@ -33,10 +25,10 @@ Investi::Investi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 att
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffset_table.push_back(Vector2(0.0f, 11.0f));
+	colliderOffsetTable.push_back(Vector2(0.0f, 11.0f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
-	colliderOffset_idx = 0;
+	colliderOffsetIdx = 0;
 
 	id = ENEMY_ID::INVESTI;
 
@@ -48,10 +40,16 @@ Investi::Investi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 att
 
 	SetEnemyName(name);
 	// Respawn();
+
+	++investiSpawnCnt;
 }
 
 Investi::~Investi()
 {
+	if ((--investiSpawnCnt) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void Investi::Update()
@@ -60,21 +58,21 @@ void Investi::Update()
 
 	Move();
 
-	if (atk_nowTime < atk_delay)
-		atk_nowTime += DELTA;
+	if (atkNowTime < atkDelay)
+		atkNowTime += DELTA;
 
 	UINT idx = (UINT)name - (UINT)ENEMY_NAME::INVESTI_GATOR;
 	clips[idx]->Update();
 	scale = clips[idx]->GetFrameSize() * attackCollider->Size() /
 		clips[idx]->GetFrameOriginSize() * Vector2(2.0f, 2.0f);
 
-	if (!is_looking_right)
+	if (!isLookingRight)
 	{
 		scale = scale * Vector2(-1.0f, 1.0f);
 	}
-	if (badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
+	if (badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
 	{
-		badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
+		badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
 		scale = scale * Vector2(1.0f, -1.0f);
 	}
 
@@ -82,7 +80,7 @@ void Investi::Update()
 
 	damageCollider->pos = pos;
 	damageCollider->WorldUpdate();
-	attackCollider->pos = pos + colliderOffset_table[colliderOffset_idx];
+	attackCollider->pos = pos + colliderOffsetTable[colliderOffsetIdx];
 	attackCollider->WorldUpdate();
 
 }
@@ -122,7 +120,40 @@ void Investi::PostRender()
 	ImGui::Text("pos : %f , %f", pos.x, pos.y);
 }
 
-void Investi::SetEnemyName(ENEMY_NAME name) // type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
+void Investi::InitFrame()
+{
+	ClearFrame();
+
+	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
+
+	// Investi Gator clip
+	{
+		vector<shared_ptr<const Frame>> investiGatorFrames;
+		investiGatorFrames.push_back(make_shared<const Frame>(file, 607.0f, 81.0f, 45.0f, 32.0f));
+		investiGatorFrames.push_back(make_shared<const Frame>(file, 673.0f, 81.0f, 45.0f, 32.0f));
+		investiGatorFrames.push_back(make_shared<const Frame>(file, 739.0f, 81.0f, 45.0f, 32.0f));
+		investiFrames.push_back(investiGatorFrames);
+	}
+	// Thicc Bubba Clip
+	{
+		vector<shared_ptr<const Frame>> thiccBubbaFrames;
+		thiccBubbaFrames.push_back(make_shared<const Frame>(file, 617.0f, 203.0f, 33.0f, 43.0f));
+		thiccBubbaFrames.push_back(make_shared<const Frame>(file, 684.0f, 203.0f, 33.0f, 43.0f));
+		thiccBubbaFrames.push_back(make_shared<const Frame>(file, 746.0f, 203.0f, 33.0f, 43.0f));
+		investiFrames.push_back(thiccBubbaFrames);
+	}
+}
+
+void Investi::ClearFrame()
+{
+	for (auto& frames : investiFrames)
+	{
+		frames.clear();
+	}
+	investiFrames.clear();
+}
+
+void Investi::SetEnemyName(ENEMY_NAME name) // type과 moveDir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
 {
 	this->name = name;
 	switch (name)

@@ -1,6 +1,10 @@
 #pragma once
 class KiaraSlash :public Projectile
 {
+protected:
+	static vector<vector<shared_ptr<const Frame>>> slashFrmaes;
+	static int slashUseCnt;
+
 private:
 	bool isAwaken;
 
@@ -10,9 +14,10 @@ public:
 	KiaraSlash(ProjectileSize projSize = ProjectileSize(Vector2(162.5f, 160.0f)));
 	~KiaraSlash();
 
-
-
+public:
 	// Projectile을(를) 통해 상속됨
+	virtual void Init() override;
+
 	virtual void Update() override;
 
 	virtual void Render() override;
@@ -25,5 +30,8 @@ public:
 
 	// Projectile을(를) 통해 상속됨
 	virtual void OnCollision() override;
-	void SetAwaken(bool awake) { isAwaken = awake; }
+
+public:
+	void ActiveAwaken();
+	void DeactiveAwaken();
 };

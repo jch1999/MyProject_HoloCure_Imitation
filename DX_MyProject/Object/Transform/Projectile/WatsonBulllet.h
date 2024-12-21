@@ -1,6 +1,10 @@
 #pragma once
 class WatsonBullet :public Projectile
 {
+protected:
+	static vector<shared_ptr<const Frame>> bulletFrames;
+	static int bulletUseCnt;
+
 private:
 	Vector2 size;
 	bool isRicochet;
@@ -12,6 +16,8 @@ public:
 
 
 	// Projectile을(를) 통해 상속됨
+	virtual void Init() override;
+
 	virtual void Update() override;
 
 	virtual void Render() override;

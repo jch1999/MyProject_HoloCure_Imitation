@@ -1,5 +1,8 @@
 #include "framework.h"
 
+vector<shared_ptr<const Frame>> Flower::flowerFrames;
+int Flower::flowerUseCnt = 0;
+
 Flower::Flower()
 	:spawn_rate(0.35f)
 {
@@ -7,30 +10,46 @@ Flower::Flower()
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
 	CB = new ColourBuffer();
 
-	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
-	vector<Frame*> frames;
-	for (int i = 0; i < 6; i++)
+	if (flowerFrames.empty())
 	{
-		frames.push_back(new Frame(file, 4.0f + 31.0f * i, 74.0f, 29.0f, 38.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
+		Init();
 	}
-	render_size = Vector2(29.0f, 38.0f)*1.2f;
+
+	clips.push_back(make_shared<const Clip>(flowerFrames, Clip::CLIP_TYPE::END, 1 / 4.0f));
+	renderSize = Vector2(29.0f, 38.0f)*1.2f;
 	
 	ChangePos();
+
+	++flowerUseCnt;
 }
 
 Flower::~Flower()
 {
-	for (auto c : clips)
-		delete c;
+	clips.clear();
 	delete CB;
+
+	if ((--flowerUseCnt) == 0)
+	{
+		flowerFrames.clear();
+	}
+}
+
+void Flower::Init()
+{
+	flowerFrames.clear();
+
+	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
+
+	for (int i = 0; i < 6; i++)
+	{
+		flowerFrames.push_back(make_shared<const Frame>(file, 4.0f + 31.0f * i, 74.0f, 29.0f, 38.0f));
+	}
 }
 
 void Flower::Update()
 {
-	clips[clip_idx]->Update();
-	scale = clips[clip_idx]->GetFrameSize() * render_size / clips[clip_idx]->GetFrameOriginSize();
+	clips[clipIdx]->Update();
+	scale = clips[clipIdx]->GetFrameSize() * renderSize / clips[clipIdx]->GetFrameOriginSize();
 	
 	Vector2 before_pos = pos;
 	pos = target->pos + offset;
@@ -50,7 +69,7 @@ void Flower::Render()
 
 	WB->SetVS(0);
 	CB->SetPS(0);
-	clips[clip_idx]->Render();
+	clips[clipIdx]->Render();
 }
 
 void Flower::PostRender()
@@ -59,31 +78,31 @@ void Flower::PostRender()
 
 void Flower::SetIndex(int idx)
 {
-	clip_idx = idx;
+	clipIdx = idx;
 }
 
 void Flower::ChangePos()
 {
-	pair<int, int> now_pos = make_pair((int)pos.x, (int)pos.y);
-	if (active_record.find(now_pos) == active_record.end())
+	pair<int, int> nowPos = make_pair((int)pos.x, (int)pos.y);
+	if (activeRecord.find(nowPos) == activeRecord.end())
 	{
 		float rand = Random::Get()->GetRandomFloat(0.0f, 1.0f);
 		if (rand < spawn_rate)
 		{
 			is_active = true;
 			SetIndex(Random::Get()->GetRandomInt(0, 5));
-			active_record[now_pos] = true;
-			clip_record[now_pos] = clip_idx;
+			activeRecord[nowPos] = true;
+			clipRecord[nowPos] = clipIdx;
 		}
 		else
 		{
 			is_active = false;
-			active_record[now_pos] = false;
+			activeRecord[nowPos] = false;
 		}
 	}
 	else
 	{
-		is_active = active_record[now_pos];
-		SetIndex(clip_record[now_pos]);
+		is_active = activeRecord[nowPos];
+		SetIndex(clipRecord[nowPos]);
 	}
 }

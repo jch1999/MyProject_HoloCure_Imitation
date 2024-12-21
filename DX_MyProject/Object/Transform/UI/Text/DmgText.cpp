@@ -1,39 +1,16 @@
 #include "framework.h"
 
 DmgText::DmgText()
-	:speed(20.0f)
-	,move_dir(Vector2(0,0))
+	:SpecialText()
+	,speed(20.0f)
+	,moveDir(Vector2(0,0))
 	,lifeTime(1.5f)
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
-	// normal dmg clip
-	for (int i = 0; i <= 9; i++)
-	{
-		frames.push_back(new Frame(file, 139 + i * 7, 484, 5, 7));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
-	}
-	// crt dmg clip
-	for (int i = 0; i <= 9; i++)
-	{
-		frames.push_back(new Frame(file, 139 + i * 7, 493, 5, 7));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
-	}
-	// player dmg clip
-	for (int i = 0; i <= 9; i++)
-	{
-		frames.push_back(new Frame(file, 139 + i * 7, 502, 5, 7));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
-	}
-
 	id = UI_ID::DMG_TEXT;
 	type = UI_TYPE::DMG_TEXT; 
-	ui_size = Vector2(10.0f, 14.0f);
-	ui_scale = Vector2(1, 1);
-	additional_scale = Vector2(1, 1);
+	uiSize = Vector2(10.0f, 14.0f);
+	uiScale = Vector2(1, 1);
+	additionalScale = Vector2(1, 1);
 	offset = Vector2(0, 0);
 	is_active = false;
 }
@@ -46,15 +23,16 @@ void DmgText::Update()
 {
 	if (!is_active)return;
 
-	leftTime -= DELTA;
-	if (leftTime < 0.0f)
+	nowTime += DELTA;
+	if (nowTime >= lifeTime)
+	{
 		is_active = false;
+	}
 
-	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, leftTime / 1.5f);
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
-	clips[clip_idx]->Update();
+	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, nowTime / 1.5f);
+	scale = frame->GetFrameSize() * uiSize / frame->GetFrameOriginSize() * uiScale;
 	
-	pos = pos + move_dir * speed * DELTA;
+	pos = pos + moveDir * speed * DELTA;
 	WorldUpdate();
 }
 
@@ -67,11 +45,17 @@ void DmgText::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 }
 
 void DmgText::PostRender()
 {
+}
+
+
+void DmgText::SetID(UI::UI_ID id)
+{
+	this->id = id;
 }
 
 void DmgText::SetClipIdx(int idx)
@@ -80,18 +64,18 @@ void DmgText::SetClipIdx(int idx)
 	{
 	case UI::UI_ID::DMG_TEXT:
 	{
-		clip_idx = idx;
+		frame = WhiteNumberFrames[idx];
 	}
 		break;
 	case UI::UI_ID::CRT_DMG_TEXT:
 	{
-		clip_idx = idx + 10;
+		frame = YellowNumberFrames[idx];
 	}
 		break;
 	default:
 	case UI::UI_ID::PLAYER_DMG_TEXT:
 	{
-		clip_idx = idx + 20;
+		frame = RedNumberFrames[idx];
 	}
 	break;
 		break;
@@ -101,6 +85,6 @@ void DmgText::SetClipIdx(int idx)
 void DmgText::SetActive(bool active)
 {
 	UI::SetActive(active);
-	leftTime = lifeTime;
+	nowTime = 0.0f;
 }
 

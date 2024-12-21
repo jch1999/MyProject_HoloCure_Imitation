@@ -2,7 +2,9 @@
 class Blaze :public Projectile
 {
 private:
-	
+	static vector<shared_ptr<const Frame>> blazeFrames;
+	static int blazeUseCnt;
+
 public:
 	Blaze(ProjectileSize projSize = ProjectileSize(Vector2(38.0f, 38.0f)));
 	~Blaze();
@@ -10,6 +12,8 @@ public:
 
 
 	// Projectile을(를) 통해 상속됨
+	virtual void Init() override;
+
 	virtual void Update() override;
 
 	virtual void Render() override;

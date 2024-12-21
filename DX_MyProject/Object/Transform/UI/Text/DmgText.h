@@ -1,10 +1,10 @@
 #pragma once
-class DmgText :public UI
+class DmgText :public SpecialText
 {
 protected:
-	Vector2 move_dir;
+	Vector2 moveDir;
 
-	float leftTime;
+	float nowTime;
 	float lifeTime;
 	float speed;
 
@@ -19,11 +19,10 @@ public:
 	virtual void Render() override;
 
 	virtual void PostRender() override;
-	virtual void SetState(UI::UI_STATE state) override { this->state = state; }
-	virtual void SetID(UI::UI_ID id) override { this->id = id; }
+	virtual void SetID(UI::UI_ID id) override;
 
-	void SetLifeTime(float time) { lifeTime = time; }
-	void SetMoveDir(Vector2 dir) { move_dir = dir; }
+	void SetLifeTime(float inTime) { lifeTime = inTime; }
+	void SetMoveDir(Vector2 dir) { moveDir = dir; }
 	void SetPos(Vector2 spawnPos) { pos = spawnPos; }
 	void SetClipIdx(int idx);
 	virtual void SetActive(bool active);

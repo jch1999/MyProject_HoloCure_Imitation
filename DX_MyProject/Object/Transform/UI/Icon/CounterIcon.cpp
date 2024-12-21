@@ -1,37 +1,56 @@
 #include "framework.h"
 
+vector<shared_ptr<Frame>> CounterIcon::counterIconFrmaes;
+bool CounterIcon::bInited=false;
+int CounterIcon::CounterIconCnt=0;
+
 CounterIcon::CounterIcon()
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
-	for (int i = 0; i < 2; i++)
+	if (!bInited)
 	{
-		frames.push_back(new Frame(file, 167.0f + 17.0f * i, 567.0f, 15.0f, 16.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1));
-		frames.clear();
+		Init();
 	}
 
 	id = UI::UI_ID::COUNTER_ICON;
 	type = UI::UI_TYPE::ICON;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(15.0f, 15.0f);
-	ui_scale = Vector2(1.5f, 1.5f);
-	additional_scale = Vector2(1.0f, 1.0f);
+	uiSize = Vector2(15.0f, 15.0f);
+	uiScale = Vector2(1.5f, 1.5f);
+	additionalScale = Vector2(1.0f, 1.0f);
 	offset = Vector2(0, 0);
 	is_active = true;
+
+	++CounterIconCnt;
 }
 
 CounterIcon::~CounterIcon()
 {
-	
+	if ((--CounterIconCnt) == 0)
+	{
+		counterIconFrmaes.clear();
+		bInited = false;
+	}
+}
+
+void CounterIcon::Init()
+{
+	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
+
+	for (int i = 0; i < 2; i++)
+	{
+		counterIconFrmaes.push_back(make_shared<Frame>(file, 167.0f + 17.0f * i, 567.0f, 15.0f, 16.0f));
+		clips.push_back(make_shared<Clip>(counterIconFrmaes, Clip::CLIP_TYPE::END, 1));
+	}
+
+	bInited = true;
 }
 
 void CounterIcon::Update()
 {
 	if (!is_active)return;
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale * additional_scale;
-	clips[clip_idx]->Update();
+	scale = clips[clipIdx]->GetFrameSize() * uiSize / clips[clipIdx]->GetFrameOriginSize() * uiScale * additionalScale;
+	clips[clipIdx]->Update();
 
 	pos = target->pos + offset;
 	WorldUpdate();
@@ -46,7 +65,7 @@ void CounterIcon::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	clips[clipIdx]->Render();
 }
 
 void CounterIcon::PostRender()

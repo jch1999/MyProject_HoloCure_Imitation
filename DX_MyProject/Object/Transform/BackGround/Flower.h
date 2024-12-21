@@ -1,25 +1,30 @@
 #pragma once
 class Flower :public Transform
 {
+protected:
+	static vector<shared_ptr<const Frame>> flowerFrames;
+	static int flowerUseCnt;
+
 private:
 	float spawn_rate;
 
 	Transform* target;
 	Vector2 offset;
-	vector<Clip*> clips;
-	int clip_idx;
-	Vector2 render_size;
+	vector<shared_ptr<const Clip>> clips;
+	int clipIdx;
+	Vector2 renderSize;
 
 	VertexShader* VS;
 	PixelShader* PS;
 	ColourBuffer* CB;
 
-	map<pair<int, int>, bool> active_record;
-	map<pair<int, int>, int> clip_record;
+	map<pair<int, int>, bool> activeRecord;
+	map<pair<int, int>, int> clipRecord;
 public:
 	Flower();
 	~Flower();
 
+	void Init();
 	void Update();
 	void Render();
 	void PostRender();

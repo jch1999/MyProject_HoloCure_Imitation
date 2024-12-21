@@ -1,31 +1,23 @@
 #include "framework.h"
 
+vector<vector<shared_ptr<const Frame>>> BloomGloom::bloomGloomFrames;
+int BloomGloom::bloomGloomSpawnCnt = 0;
+
 BloomGloom::BloomGloom(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(8.0f, 2.0f, 0.35f, 0.33f, 7)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - CouncilRyS Enemies EN Gen2 Hope_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (bloomGloomFrames.empty())
+	{
+		InitFrame();
+	}
 
 	// clips
-	vector<Frame*> frames;
-
-	// Bloom clip
-	frames.push_back(new Frame(file, 18.0f, 288.0f, 28.0f, 25.0f));
-	frames.push_back(new Frame(file, 84.0f, 288.0f, 28.0f, 25.0f));
-	frames.push_back(new Frame(file, 151.0f, 288.0f, 28.0f, 25.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Gloom Clip
-	frames.push_back(new Frame(file, 18.0f, 354.0f, 28.0f, 25.0f));
-	frames.push_back(new Frame(file, 84.0f, 354.0f, 28.0f, 25.0f));
-	frames.push_back(new Frame(file, 151.0f, 354.0f, 28.0f, 25.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
+	for (auto& frames : bloomGloomFrames)
+	{
+		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	}
+	
 	// collider
 	damageColliders.push_back(new RectCollider(Vector2(50.0f, 46.0f)));
 	damageCollider = damageColliders[0];
@@ -33,10 +25,10 @@ BloomGloom::BloomGloom(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vecto
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffset_table.push_back(Vector2(0.0f, 11.0f));
+	colliderOffsetTable.push_back(Vector2(0.0f, 11.0f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
-	colliderOffset_idx = 0;
+	colliderOffsetIdx = 0;
 
 	id = ENEMY_ID::BLOOM_GLOOM;
 
@@ -48,10 +40,16 @@ BloomGloom::BloomGloom(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vecto
 
 	SetEnemyName(name);
 	// Respawn();
+
+	++bloomGloomSpawnCnt;
 }
 
 BloomGloom::~BloomGloom()
 {
+	if ((--bloomGloomSpawnCnt) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void BloomGloom::Update()
@@ -60,21 +58,21 @@ void BloomGloom::Update()
 
 	Move();
 
-	if (atk_nowTime < atk_delay)
-		atk_nowTime += DELTA;
+	if (atkNowTime < atkDelay)
+		atkNowTime += DELTA;
 
 	UINT idx = (UINT)name - (UINT)ENEMY_NAME::BLOOM;
 	clips[idx]->Update();
 	scale = clips[idx]->GetFrameSize() * attackCollider->Size() /
 		clips[idx]->GetFrameOriginSize() * Vector2(2.0f, 2.0f);
 
-	if (!is_looking_right)
+	if (!isLookingRight)
 	{
 		scale = scale * Vector2(-1.0f, 1.0f);
 	}
-	if (badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
+	if (badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
 	{
-		badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
+		badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
 		scale = scale * Vector2(1.0f, -1.0f);
 	}
 
@@ -82,7 +80,7 @@ void BloomGloom::Update()
 
 	damageCollider->pos = pos;
 	damageCollider->WorldUpdate();
-	attackCollider->pos = pos + colliderOffset_table[colliderOffset_idx];
+	attackCollider->pos = pos + colliderOffsetTable[colliderOffsetIdx];
 	attackCollider->WorldUpdate();
 
 }
@@ -122,7 +120,40 @@ void BloomGloom::PostRender()
 	ImGui::Text("pos : %f , %f", pos.x, pos.y);
 }
 
-void BloomGloom::SetEnemyName(ENEMY_NAME name) // type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
+void BloomGloom::InitFrame()
+{
+	ClearFrame();
+
+	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - CouncilRyS Enemies EN Gen2 Hope_rm_bg.png";
+
+	// Bloom clip
+	{
+		vector<shared_ptr<const Frame>> bloomFrames;
+		bloomFrames.push_back(make_shared<const Frame>(file, 18.0f, 288.0f, 28.0f, 25.0f));
+		bloomFrames.push_back(make_shared<const Frame>(file, 84.0f, 288.0f, 28.0f, 25.0f));
+		bloomFrames.push_back(make_shared<const Frame>(file, 151.0f, 288.0f, 28.0f, 25.0f));
+		bloomGloomFrames.push_back(bloomFrames);
+	}
+	// Gloom Clip
+	{
+		vector<shared_ptr<const Frame>> gloomFrames;
+		gloomFrames.push_back(make_shared<const Frame>(file, 18.0f, 354.0f, 28.0f, 25.0f));
+		gloomFrames.push_back(make_shared<const Frame>(file, 84.0f, 354.0f, 28.0f, 25.0f));
+		gloomFrames.push_back(make_shared<const Frame>(file, 151.0f, 354.0f, 28.0f, 25.0f));
+		bloomGloomFrames.push_back(gloomFrames);
+	}
+}
+
+void BloomGloom::ClearFrame()
+{
+	for (auto& frames : bloomGloomFrames)
+	{
+		frames.clear();
+	}
+	bloomGloomFrames.clear();
+}
+
+void BloomGloom::SetEnemyName(ENEMY_NAME name) // type과 moveDir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
 {
 	this->name = name;
 	/*

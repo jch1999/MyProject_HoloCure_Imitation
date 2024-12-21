@@ -82,7 +82,7 @@ Frame::~Frame()
 	delete IB;
 }
 
-void Frame::Render()
+void Frame::Render() const
 {
 	VB->Set();
 	IB->Set();

@@ -38,3 +38,27 @@ bool Weapon::Enhance()
 	}
 	return false;
 }
+
+template<typename T>
+T* Weapon::GetProjectTile()
+{
+	T* proj = nullptr;
+	for (int i = 0; i < projectiles.size(); i++)// 비활성화 상태인 총알 하나를 찾아 사용
+	{
+		if (projectiles[i]->is_active == false)
+		{
+			proj = dynamic_cast<T*>(projectiles[i]);
+			break;
+		}
+	}
+
+	// 비활성 상태 Tear 없음 == Tear가 부족함 -> 새로 생성
+	if (proj == nullptr)
+	{
+		proj = new T();
+		projectiles.push_back(proj);
+		dynamic_cast<Projectile*>(proj)->SetOwner(this);
+	}
+
+	return proj;
+}

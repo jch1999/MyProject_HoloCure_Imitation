@@ -21,10 +21,11 @@ public:
 	Frame(wstring file, float x, float y, float w, float h);
 	~Frame();
 
-	void Render();
+public:
+	void Render() const;
 
 	// 이 프레임이 사용하는 스프라이트의 원본 파일이 담당하는 크기
-	const Vector2 Size() { return texture->GetSize(); }
+	const Vector2 Size() const { return texture->GetSize(); }
 	// 이 프레임이 실제로 출력할 사이즈를 담당하는 함수
 	const Vector2 GetFrameSize() const  { return frame_size; }
 	// 이 프레임이 사용하는 스프라이트의 원본 파일과 실제로 출력할 사이즈를 확정짓기 위한 비용을 이용,

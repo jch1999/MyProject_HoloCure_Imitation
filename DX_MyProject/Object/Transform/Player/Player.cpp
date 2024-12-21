@@ -2,16 +2,16 @@
 #include "Player.h"
 
 
-Player::Player(float MaxHP, float atk, float speed, float crt, float pickupRange, float damage_delay,int idx_pickUpRange,Vector2 size)
-	:default_maxHp(MaxHP),MaxHP(default_maxHp),HP(default_maxHp)
-	,default_atk(atk),attack(default_atk),default_spd(speed),speed(default_spd)
-	,default_crt(crt),crt(default_crt),default_pickUpRange(pickupRange)
-	,damage_delay(damage_delay),now_damage_delay(damage_delay)
-	,idx_pickUpRange(idx_pickUpRange)
+Player::Player(float inMaxHP, float inAtk, float inSpeed, float inCrtRate, float inPickupRange, float inDamageDelay,int inPickUpRangeIdx,Vector2 inSize)
+	:defaultMaxHp(inMaxHP),MaxHP(inMaxHP),HP(inMaxHP)
+	,defaultAtk(inAtk),attack(inAtk),defaultSpd(inSpeed),speed(inSpeed)
+	,defaultCrt(inCrtRate),crt(inCrtRate),defaultPickUpRange(inPickupRange)
+	,damageDelay(inDamageDelay),nowDamageDelay(inDamageDelay)
+	,pickUpRangeIdx(inPickUpRangeIdx)
 	,nowExp(0.0f),level(1)
 	,size(size)
 	,projCnt(0)
-	,colIdx_Melee(0),colIdx_Range(0),colIdx_Shot(0)
+	,colIdxMelee(0),colIdxRange(0),colIdxShot(0)
 	,hp_bar(nullptr)
 	,hp_back(nullptr)
 {
@@ -26,11 +26,8 @@ Player::~Player()
 {
 	delete CB;
 
-	for (Clip* c : clips)
-	{
-		if (c != nullptr)
-			delete c;
-	}
+	clips.clear();
+
 	if (damageCollider != nullptr)
 		delete damageCollider;
 
@@ -67,48 +64,48 @@ void Player::CheckMoveDir()
 	// 대각이동
 	if (KEY_CON->Press(VK_LEFT) && KEY_CON->Press(VK_UP))
 	{
-		move_dir = Vector2(-1.0f, -1.0f).Normalized();
+		moveDir = Vector2(-1.0f, -1.0f).Normalized();
 	}
 	else if (KEY_CON->Press(VK_LEFT) && KEY_CON->Press(VK_DOWN))
 	{
-		move_dir = Vector2(-1.0f, 1.0f).Normalized();
+		moveDir = Vector2(-1.0f, 1.0f).Normalized();
 	}
 	else if (KEY_CON->Press(VK_RIGHT) && KEY_CON->Press(VK_UP))
 	{
-		move_dir = Vector2(1.0f, -1.0f).Normalized();
+		moveDir = Vector2(1.0f, -1.0f).Normalized();
 	}
 	else if (KEY_CON->Press(VK_RIGHT) && KEY_CON->Press(VK_DOWN))
 	{
-		move_dir = Vector2(1.0f, 1.0f).Normalized();
+		moveDir = Vector2(1.0f, 1.0f).Normalized();
 	}
 	// 4방이동
 	else if (KEY_CON->Press(VK_UP))
 	{
-		move_dir = Vector2(0.0f, -1.0f);
+		moveDir = Vector2(0.0f, -1.0f);
 	}
 	else if (KEY_CON->Press(VK_DOWN))
 	{
-		move_dir = Vector2(0.0f, 1.0f);
+		moveDir = Vector2(0.0f, 1.0f);
 	}
 	else if (KEY_CON->Press(VK_LEFT))
 	{
-		move_dir = Vector2(-1.0f, 0.0f);
+		moveDir = Vector2(-1.0f, 0.0f);
 	}
 	else if (KEY_CON->Press(VK_RIGHT))
 	{
-		move_dir = Vector2(1.0f, 0.0f);
+		moveDir = Vector2(1.0f, 0.0f);
 	}
 	else
 	{
-		move_dir = Vector2(0.0f, 0.0f);
+		moveDir = Vector2(0.0f, 0.0f);
 		return;
 	}
 	// 공격 및 바라보는 방향은 Z키를 누르면 고정된다
 	if (!(KEY_CON->Press('Z')))
 	{
-		attack_dir = move_dir;
-		is_looking_right = attack_dir.x > 0.f ? true : attack_dir.x < 0.f ? false : is_looking_right;
-		atk_arrow->rot.z = attack_dir.Angle();
+		attackDir = moveDir;
+		is_looking_right = attackDir.x > 0.f ? true : attackDir.x < 0.f ? false : is_looking_right;
+		atk_arrow->rot.z = attackDir.Angle();
 	}
 }
 
@@ -116,10 +113,12 @@ void Player::ChangeHP(float amount, Vector2 dir, Enemy* causer)
 {
 	if (amount > 0 && SkillManager::Get()->isHealDoubled)
 	{
-		HP += amount * 2.0f;
+		IncreaseHp(amount * 2.0f);
 	}
 	else
-		HP += amount;
+	{
+		IncreaseHp(amount);
+	}
 
 	// DmgText출력
 	if (amount < 0)
@@ -213,4 +212,49 @@ bool Player::isCritical()
 		return true;
 	else
 		return false;
+}
+
+void Player::SetMaxHP(float inMaxHp)
+{
+	this->MaxHP = inMaxHp;
+}
+
+void Player::IncreaseHp(float inChangeAmount)
+{
+	HP + inChangeAmount > MaxHP ? HP = MaxHP : HP += inChangeAmount;
+}
+
+void Player::DecreaseHp(float inChangeAmount)
+{
+	HP - inChangeAmount < 0.0f ? HP = 0.0f : HP -= inChangeAmount;
+}
+
+void Player::SetATK(float inAtk)
+{
+	this->attack = inAtk;
+}
+
+void Player::SetSPD(float inSpd)
+{
+	this->speed = inSpd;
+}
+
+void Player::SetProjCnt(int cnt)
+{
+	projCnt = cnt;
+}
+
+void Player::SetColIdxMelee(int idx)
+{
+	colIdxMelee = idx;
+}
+
+void Player::SetColIdxShot(int idx)
+{
+	colIdxShot = idx;
+}
+
+void Player::SetColIdxRange(int idx)
+{
+	colIdxRange = idx;
 }

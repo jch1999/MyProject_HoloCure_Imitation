@@ -1,31 +1,49 @@
 #include "framework.h"
 
+vector<shared_ptr<const Frame>> Blaze::blazeFrames;
+int Blaze::blazeUseCnt = 0;
+
 Blaze::Blaze(ProjectileSize projSize)
 	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 {
-	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
-	Texture* t = Texture::Add(file);
-
-	vector<Frame*> frames;
-	Vector2 initPos(7.0f, 3736.0f);
-	Vector2 frameSize(38.0f,38.0f);
-	for (int i = 0; i < 4; i++)
+	if (blazeFrames.empty())
 	{
-		frames.push_back(new Frame(file, initPos.x + i * 39.0f, initPos.y
-			, frameSize.x, frameSize.y));
+		Init();
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::PINGPONG, 1 / 4.0f));
-	clip_idx = 0;
+
+	clips.push_back(make_shared<Clip>(blazeFrames, Clip::CLIP_TYPE::PINGPONG, 1 / 4.0f));
+	clipIdx = 0;
 
 	colliders.push_back(new RectCollider(size));
 	collider = colliders[0];
 
 	is_active = false;
 	collider->SetActive(false);
+
+	++blazeUseCnt;
 }
 
 Blaze::~Blaze()
 {
+	if ((--blazeUseCnt) == 0)
+	{
+		blazeFrames.clear();
+	}
+}
+
+void Blaze::Init()
+{
+	if (!blazeFrames.empty()) return;
+
+	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
+	
+	Vector2 initPos(7.0f, 3736.0f);
+	Vector2 frameSize(38.0f, 38.0f);
+	for (int i = 0; i < 4; i++)
+	{
+		blazeFrames.push_back(make_shared<const Frame>(file, initPos.x + i * 39.0f, initPos.y
+			, frameSize.x, frameSize.y));
+	}
 }
 
 void Blaze::Update()
@@ -41,10 +59,10 @@ void Blaze::Update()
 	collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * size /
-		clips[clip_idx]->GetFrameOriginSize() * 1.5f;
+	scale = clips[clipIdx]->GetFrameSize() * size /
+		clips[clipIdx]->GetFrameOriginSize() * 1.5f;
 
-	clips[clip_idx]->Update();
+	clips[clipIdx]->Update();
 	if (nowTime >= lifeTime)
 		is_active = false;
 	else
@@ -61,7 +79,7 @@ void Blaze::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	clips[clipIdx]->Render();
 	collider->Render();
 }
 
@@ -80,12 +98,12 @@ void Blaze::respwan()
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = clips[clipIdx]->GetFrameSize() * collider->Size() /
+		clips[clipIdx]->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);
-	clips[clip_idx]->Play();
+	clips[clipIdx]->Play();
 
 	hitEnemies.clear();
 	cooltimeList.clear();

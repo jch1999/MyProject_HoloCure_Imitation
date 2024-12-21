@@ -1,27 +1,24 @@
 #include "framework.h"
 
+vector<shared_ptr<const Frame>> Anvil::anvilFrames;
+int Anvil::anvilSpawnCnt;
+
 Anvil::Anvil(Vector2 pos, Vector2 size)
 	:Item()
 	,coolTime(0.0f)
+	,usableCnt(0),nowUsedCnt(0)
 {
-	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
-	Texture* t = Texture::Add(file);
-
-	vector<Frame*> frames;
-	// anvil clip
-	frames.push_back(new Frame(file, 81.0f, 179.0f, 41.0f, 24.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
-	// golden anvil clip
-	frames.push_back(new Frame(file, 147.0f, 179.0f, 41.0f, 24.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
+	if (anvilFrames.empty())
+	{
+		InitFrame();
+	}
+	frame = anvilFrames[0];
 
 	collider = new RectCollider(Vector2(41.0f, 24.0f) * 1.5f);
 	id = ITEM_ID::ANVIL;
 	type = ITEM_TYPE::ANVIL;
 
-	light = new ItemLight(pos);
+	light = make_shared<ItemLight>(pos);
 	light->SetOffset(Vector2(0.0f, -45.0f));
 	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.95f);
 
@@ -33,7 +30,12 @@ Anvil::Anvil(Vector2 pos, Vector2 size)
 Anvil::~Anvil()
 {
 	delete collider;
-	delete light;
+	light.reset();
+}
+
+void Anvil::SetUsableCnt(int inUseCnt)
+{
+	this->usableCnt = inUseCnt;
 }
 
 void Anvil::Update()
@@ -70,8 +72,7 @@ void Anvil::Update()
 	}
 
 	light->Update();
-	clips[clip_idx]->Update();
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() / clips[clip_idx]->GetFrameOriginSize();
+	scale = frame->GetFrameSize() * collider->Size() / frame->GetFrameOriginSize();
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
@@ -87,7 +88,7 @@ void Anvil::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 	light->Render();
 	collider->Render();
 }
@@ -107,8 +108,8 @@ void Anvil::Respawn()
 	light->SetPos(pos);
 	light->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 	coolTime = 0.0f;
 
 	is_active = true;
@@ -123,14 +124,14 @@ void Anvil::SetStatus(Item::ITEM_ID id, int value)
 	{
 	case Item::ITEM_ID::ANVIL:
 	{
-		SetUseCnt(value);
-		clip_idx = 0;
+		SetUsableCnt(value);
+		frame = anvilFrames[0];
 	}
 		break;
 	case Item::ITEM_ID::GOLDEN_ANVIL:
 	{
-		useCnt = 1;
-		clip_idx = 1;
+		usableCnt = 1;
+		frame = anvilFrames[1];
 	}
 		break;
 	default:
@@ -157,8 +158,8 @@ void Anvil::SetState(ITEM_STATE state)
 		break;
 	case Item::ITEM_STATE::USED:
 	{
-		useCnt--;
-		if (useCnt > 0)
+		
+		if (usableCnt > 0)
 		{
 			SetState(ITEM_STATE::IDLE);
 		}
@@ -178,11 +179,28 @@ void Anvil::SetPos(Vector2 pos)
 
 void Anvil::SetAmount(int value)
 {
-	useCnt = value;
+	usableCnt = value;
 }
 
 int Anvil::GetAmount()
 {
-	return useCnt;
+	return usableCnt;
+}
+
+void Anvil::InitFrame()
+{
+	if (!anvilFrames.empty()) return;
+
+	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
+	
+	// anvil frame
+	anvilFrames.push_back(make_shared<const Frame>(file, 81.0f, 179.0f, 41.0f, 24.0f));
+	// golden anvil frame
+	anvilFrames.push_back(make_shared<const Frame>(file, 147.0f, 179.0f, 41.0f, 24.0f));
+}
+
+void Anvil::ClearFrame()
+{
+	anvilFrames.clear();
 }
 

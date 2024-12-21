@@ -1,49 +1,73 @@
 #include "framework.h"
 
+vector<vector<shared_ptr<const Frame>>> KiaraSlash::slashFrmaes;
+int KiaraSlash::slashUseCnt = 0;
+
 KiaraSlash::KiaraSlash(ProjectileSize projSize)
 	:Projectile(projSize,20.0f, 200.0f, 1, 2.0f)
 	, isAwaken(false)
 {
-	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
-	Texture* t = Texture::Add(file);
-
-	vector<Frame*> frames;
-
-	// PROJ_STATE::NORMAL
-	Vector2 initPos(7.0f, 711.0f);
-	Vector2 frame_size(185.0f, 133.0f);
-	for (int i = 0; i < 5; i++)
+	if (slashFrmaes.empty())
 	{
-		frames.push_back(new Frame(file, initPos.x + 186.0f * i, initPos.y
-			, frame_size.x, frame_size.y));
+		Init();
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1.0f / 7.5f));
-	frames.clear();
 
-	// PROJ_STATE::AWAKEN
-	initPos = Vector2(7.0f, 861.0f);
-	frame_size = Vector2(182.0f, 136.0f);
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < slashFrmaes.size(); i++)
 	{
-		frames.push_back(new Frame(file, initPos.x + 186.0f * i, initPos.y
-			, frame_size.x, frame_size.y));
+		clips.push_back(make_shared<Clip>(slashFrmaes[i], Clip::CLIP_TYPE::END, 1.0f / 7.5f));
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1.0f / 12.0f));
-	frames.clear();
-
 	// 0~2 : PhoenixSword스킬의 기본 collider 설정,
 	colliders.push_back(new RectCollider(size));
 	colliders.push_back(new RectCollider(size * 1.25f));
 
-	idx_collider;
-	collider = colliders[idx_collider];
-	collider->pos = pos + move_dir * 50.0f;
+	colliderIdx = 0;
+	collider = colliders[colliderIdx];
+	collider->pos = pos + moveDir * 50.0f;
 
 	hitLimitCnt = 0;
+
+	++slashUseCnt;
 }
 
 KiaraSlash::~KiaraSlash()
 {
+	if ((--slashUseCnt) == 0)
+	{
+		slashFrmaes.clear();
+	}
+}
+
+void KiaraSlash::Init()
+{
+	if (!slashFrmaes.empty()) return;
+
+	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
+
+	// PROJ_STATE::NORMAL
+	Vector2 initPos(7.0f, 711.0f);
+	Vector2 frame_size(185.0f, 133.0f);
+	{
+		vector<shared_ptr<const Frame>> normalSlashFrmaes;
+		for (int i = 0; i < 5; i++)
+		{
+			normalSlashFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 186.0f * i, initPos.y
+				, frame_size.x, frame_size.y));
+		}
+		slashFrmaes.emplace_back(normalSlashFrmaes);
+	}
+
+	// PROJ_STATE::AWAKEN
+	initPos = Vector2(7.0f, 861.0f);
+	frame_size = Vector2(182.0f, 136.0f);
+	{
+		vector<shared_ptr<const Frame>> awakenSlashFrmaes;
+		for (int i = 0; i < 8; i++)
+		{
+			awakenSlashFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 186.0f * i, initPos.y
+				, frame_size.x, frame_size.y));
+		}
+		slashFrmaes.emplace_back(awakenSlashFrmaes);
+	}
 }
 
 void KiaraSlash::Update()
@@ -62,17 +86,17 @@ void KiaraSlash::Update()
 
 	WorldUpdate();
 
-	collider->pos = pos + move_dir * 20.0f;
+	collider->pos = pos + moveDir * 20.0f;
 	collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize() * Vector2(1.2f,1.0f);
+	scale = clips[clipIdx]->GetFrameSize() * collider->Size() /
+		clips[clipIdx]->GetFrameOriginSize() * Vector2(1.2f,1.0f);
 
-	if (move_dir.x < 0.0f)
+	if (moveDir.x < 0.0f)
 		scale = scale * Vector2(-1.0f, 1.0f);
 
-	clips[clip_idx]->Update();
+	clips[clipIdx]->Update();
 
 	OnCollision();
 }
@@ -87,7 +111,7 @@ void KiaraSlash::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	clips[clipIdx]->Render();
 	collider->Render();
 
 }
@@ -106,12 +130,12 @@ void KiaraSlash::respwan()
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = clips[clipIdx]->GetFrameSize() * collider->Size() /
+		clips[clipIdx]->GetFrameOriginSize();
 	
 	is_active = true;
 	collider->SetActive(true);
-	clips[clip_idx]->Play();
+	clips[clipIdx]->Play();
 
 	hitEnemies.clear();
 	enemyNowFrame.clear();
@@ -211,4 +235,14 @@ void KiaraSlash::OnCollision()
 		hitEnemies.erase(r.first);
 		cooltimeList.remove(r);
 	}
+}
+
+void KiaraSlash::ActiveAwaken()
+{
+	isAwaken = true;
+}
+
+void KiaraSlash::DeactiveAwaken()
+{
+	isAwaken = false;
 }

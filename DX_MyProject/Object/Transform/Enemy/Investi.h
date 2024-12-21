@@ -1,7 +1,9 @@
 #pragma once
 class Investi :public Enemy
 {
-public:
+protected:
+	static vector<vector<shared_ptr<const Frame>>> investiFrames;
+	static int investiSpawnCnt;
 
 private:
 	Vector2 damageSize, attackSize;
@@ -13,5 +15,8 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void PostRender() override;
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
+
 	virtual void SetEnemyName(ENEMY_NAME name) override;
 };

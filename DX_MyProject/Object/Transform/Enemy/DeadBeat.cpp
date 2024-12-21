@@ -1,62 +1,22 @@
 #include "framework.h"
 
+vector<vector<shared_ptr<const Frame>>> DeadBeat::DeadBeatFrames;
+int DeadBeat::DeadBestSpawnCnt = 0;
+
 DeadBeat::DeadBeat(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(40.0f, 4.0f, 0.4f, 0.33f, 7)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (DeadBeatFrames.empty())
+	{
+		InitFrame();
+	}
 
 	// clips
-	vector<Frame*> frames;
-
-	// DeadBeat clip
-	frames.push_back(new Frame(file, 419.0f, 80.0f, 28.0f, 34.0f));
-	frames.push_back(new Frame(file, 485.0f, 79.0f, 28.0f, 35.0f));
-	frames.push_back(new Frame(file, 550.0f, 81.0f, 28.0f, 35.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// DeadBatter Clip
-	frames.push_back(new Frame(file, 418.0f, 135.0f, 33.0f, 45.0f));
-	frames.push_back(new Frame(file, 485.0f, 135.0f, 33.0f, 45.0f));
-	frames.push_back(new Frame(file, 548.0f, 135.0f, 33.0f, 45.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Q DeadBeat A Clip
-	frames.push_back(new Frame(file, 418.0f, 267.0f, 34.0f, 45.0f));
-	frames.push_back(new Frame(file, 484.0f, 267.0f, 34.0f, 45.0f));
-	frames.push_back(new Frame(file, 548.0f, 267.0f, 34.0f, 45.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Q DeadBeat B Clip
-	frames.push_back(new Frame(file, 418.0f, 333.0f, 34.0f, 45.0f));
-	frames.push_back(new Frame(file, 484.0f, 333.0f, 34.0f, 45.0f));
-	frames.push_back(new Frame(file, 548.0f, 333.0f, 34.0f, 45.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Riot DeadBeat Clip
-	frames.push_back(new Frame(file, 419.0f, 409.0f, 32.0f, 35.0f));
-	frames.push_back(new Frame(file, 485.0f, 409.0f, 32.0f, 35.0f));
-	frames.push_back(new Frame(file, 550.0f, 409.0f, 32.0f, 35.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Riot Q DeadBeat Clip
-	frames.push_back(new Frame(file, 419.0f, 475.0f, 36.0f, 33.0f));
-	frames.push_back(new Frame(file, 484.0f, 475.0f, 36.0f, 33.0f));
-	frames.push_back(new Frame(file, 549.0f, 477.0f, 36.0f, 33.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
+	for (int i = 0; i < DeadBeatFrames.size(); i++)
+	{
+		clips.push_back(make_shared<Clip>(DeadBeatFrames[i], Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	}
 
 	// collider
 	damageColliders.push_back(new RectCollider(Vector2(60.0f,58.0f)));
@@ -66,11 +26,11 @@ DeadBeat::DeadBeat(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 a
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffset_table.push_back(Vector2(0.0f, 15.0f));
-	colliderOffset_table.push_back(Vector2(0.0f, 16.5f));
+	colliderOffsetTable.push_back(Vector2(0.0f, 15.0f));
+	colliderOffsetTable.push_back(Vector2(0.0f, 16.5f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
-	colliderOffset_idx = 0;
+	colliderOffsetIdx = 0;
 
 	id = ENEMY_ID::DEAD_BEAT;
 
@@ -82,10 +42,16 @@ DeadBeat::DeadBeat(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 a
 	
 	SetEnemyName(name);
 	// Respawn();
+
+	++DeadBestSpawnCnt;
 }
 
 DeadBeat::~DeadBeat()
 {
+	if ((--DeadBestSpawnCnt) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void DeadBeat::Update()
@@ -94,21 +60,21 @@ void DeadBeat::Update()
 
 	Move();
 
-	if (atk_nowTime < atk_delay)
-		atk_nowTime += DELTA;
+	if (atkNowTime < atkDelay)
+		atkNowTime += DELTA;
 
 	UINT idx = (UINT)name - (UINT)ENEMY_NAME::DEADBEAT;
 	clips[idx]->Update();
 	scale = clips[idx]->GetFrameSize() * attackCollider->Size() /
 		clips[idx]->GetFrameOriginSize() * Vector2(1.2f, 2.0f);
 
-	if (!is_looking_right)
+	if (!isLookingRight)
 	{
 		scale = scale * Vector2(-1.0f, 1.0f);
 	}
-	if (badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.f)
+	if (badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.f)
 	{
-		badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
+		badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
 		scale = scale * Vector2(1.0f, -1.0f);
 	}
 
@@ -116,7 +82,7 @@ void DeadBeat::Update()
 
 	damageCollider->pos = pos;
 	damageCollider->WorldUpdate();
-	attackCollider->pos = pos + colliderOffset_table[colliderOffset_idx];
+	attackCollider->pos = pos + colliderOffsetTable[colliderOffsetIdx];
 	attackCollider->WorldUpdate();
 
 }
@@ -168,6 +134,71 @@ void DeadBeat::PostRender()
 	ImGui::Text("pos : %f , %f", pos.x, pos.y);
 }
 
+void DeadBeat::InitFrame()
+{
+	ClearFrame();
+
+	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
+
+	// DeadBeat clip
+	{
+		vector<shared_ptr<const Frame>> NormalDeadBeatFrames;
+		NormalDeadBeatFrames.push_back(make_shared<const Frame>(file, 419.0f, 80.0f, 28.0f, 34.0f));
+		NormalDeadBeatFrames.push_back(make_shared<const Frame>(file, 485.0f, 79.0f, 28.0f, 35.0f));
+		NormalDeadBeatFrames.push_back(make_shared<const Frame>(file, 550.0f, 81.0f, 28.0f, 35.0f));
+		DeadBeatFrames.push_back(NormalDeadBeatFrames);
+	}
+	// DeadBatter Clip
+	{
+		vector<shared_ptr<const Frame>> DeadBatterFrames;
+		DeadBatterFrames.push_back(make_shared<const Frame>(file, 418.0f, 135.0f, 33.0f, 45.0f));
+		DeadBatterFrames.push_back(make_shared<const Frame>(file, 485.0f, 135.0f, 33.0f, 45.0f));
+		DeadBatterFrames.push_back(make_shared<const Frame>(file, 548.0f, 135.0f, 33.0f, 45.0f));
+		DeadBeatFrames.push_back(DeadBatterFrames);
+	}
+	// Q DeadBeat A Clip
+	{
+		vector<shared_ptr<const Frame>> QDeadBeatAFrames;
+		QDeadBeatAFrames.push_back(make_shared<const Frame>(file, 418.0f, 267.0f, 34.0f, 45.0f));
+		QDeadBeatAFrames.push_back(make_shared<const Frame>(file, 484.0f, 267.0f, 34.0f, 45.0f));
+		QDeadBeatAFrames.push_back(make_shared<const Frame>(file, 548.0f, 267.0f, 34.0f, 45.0f));
+		DeadBeatFrames.push_back(QDeadBeatAFrames);
+	}
+	// Q DeadBeat B Clip
+	{
+		vector<shared_ptr<const Frame>> QDeadBeatBFrames;
+		QDeadBeatBFrames.push_back(make_shared<const Frame>(file, 418.0f, 333.0f, 34.0f, 45.0f));
+		QDeadBeatBFrames.push_back(make_shared<const Frame>(file, 484.0f, 333.0f, 34.0f, 45.0f));
+		QDeadBeatBFrames.push_back(make_shared<const Frame>(file, 548.0f, 333.0f, 34.0f, 45.0f));
+		DeadBeatFrames.push_back(QDeadBeatBFrames);
+	}
+	// Riot DeadBeat Clip
+	{
+		vector<shared_ptr<const Frame>> RiotDeadBatterFrames;
+		RiotDeadBatterFrames.push_back(make_shared<const Frame>(file, 419.0f, 409.0f, 32.0f, 35.0f));
+		RiotDeadBatterFrames.push_back(make_shared<const Frame>(file, 485.0f, 409.0f, 32.0f, 35.0f));
+		RiotDeadBatterFrames.push_back(make_shared<const Frame>(file, 550.0f, 409.0f, 32.0f, 35.0f));
+		DeadBeatFrames.push_back(RiotDeadBatterFrames);
+	}
+	// Riot Q DeadBeat Clip
+	{
+		vector<shared_ptr<const Frame>> RiotQDeadBatterFrames;
+		RiotQDeadBatterFrames.push_back(make_shared<const Frame>(file, 419.0f, 475.0f, 36.0f, 33.0f));
+		RiotQDeadBatterFrames.push_back(make_shared<const Frame>(file, 484.0f, 475.0f, 36.0f, 33.0f));
+		RiotQDeadBatterFrames.push_back(make_shared<const Frame>(file, 549.0f, 477.0f, 36.0f, 33.0f));
+		DeadBeatFrames.push_back(RiotQDeadBatterFrames);
+	}
+}
+
+void DeadBeat::ClearFrame()
+{
+	for (auto& frames : DeadBeatFrames)
+	{
+		frames.clear();
+	}
+	DeadBeatFrames.clear();
+}
+
 void DeadBeat::SetEnemyName(ENEMY_NAME name) // type°ú move_dirÀº Enemy_Spwaner¿¡¼­ È°¼º ½Ã ÁöÁ¤ÇÏµµ·Ï º¯°æÇÒ ¿¹Á¤
 {
 	this->name = name;
@@ -178,7 +209,7 @@ void DeadBeat::SetEnemyName(ENEMY_NAME name) // type°ú move_dirÀº Enemy_Spwaner¿
 		SetStatus(40.0f, 4.0f, 0.4f, 0.33f, 7);
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[0];
-		colliderOffset_idx = 0;
+		colliderOffsetIdx = 0;
 		attackCollider->SetActive(true);
 		type = MOVE_TYPE::CHASE;
 	}
@@ -188,7 +219,7 @@ void DeadBeat::SetEnemyName(ENEMY_NAME name) // type°ú move_dirÀº Enemy_Spwaner¿
 		SetStatus(150.0f, 7.0f, 0.6f, 0.33f, 9);
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[1];
-		colliderOffset_idx = 1;
+		colliderOffsetIdx = 1;
 		attackCollider->SetActive(true);
 		type = MOVE_TYPE::CHASE;
 	}
@@ -199,7 +230,7 @@ void DeadBeat::SetEnemyName(ENEMY_NAME name) // type°ú move_dirÀº Enemy_Spwaner¿
 		SetStatus(650.0f, 14.0f, 0.7f, 0.33f, 12);
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[1];
-		colliderOffset_idx = 1;
+		colliderOffsetIdx = 1;
 		attackCollider->SetActive(true);
 		type = MOVE_TYPE::CHASE;
 	}
@@ -209,7 +240,7 @@ void DeadBeat::SetEnemyName(ENEMY_NAME name) // type°ú move_dirÀº Enemy_Spwaner¿
 		SetStatus(1000.0f, 4.0f, 160.0f, 0.33f, 7);
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[0];
-		colliderOffset_idx = 1;
+		colliderOffsetIdx = 1;
 		attackCollider->SetActive(true);
 		SetMoveDir(Vector2(1.0f, 0.0f));
 		type = MOVE_TYPE::STRAIGHT;
@@ -220,7 +251,7 @@ void DeadBeat::SetEnemyName(ENEMY_NAME name) // type°ú move_dirÀº Enemy_Spwaner¿
 		SetStatus(2000.0f, 4.0f, 200.0f, 0.33f, 10);
 		attackCollider->SetActive(false);
 		attackCollider = atkColliders[1];
-		colliderOffset_idx = 1;
+		colliderOffsetIdx = 1;
 		attackCollider->SetActive(true);
 		SetMoveDir(Vector2(1.0f, 0.0f));
 		type = MOVE_TYPE::STRAIGHT;

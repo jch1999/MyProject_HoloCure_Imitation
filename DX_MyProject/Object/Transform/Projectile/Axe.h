@@ -1,6 +1,10 @@
 #pragma once
 class Axe :public Projectile
 {
+protected:
+	static shared_ptr<const Frame> axeFrame;
+	static int axeUseCnt;
+
 private:
 	float rotSpeed;
 public:
@@ -9,6 +13,8 @@ public:
 
 
 	// Projectile을(를) 통해 상속됨
+	virtual void Init() override;
+
 	virtual void Update() override;
 
 	virtual void Render() override;

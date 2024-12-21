@@ -1,54 +1,22 @@
 #include "framework.h"
 
+vector<vector<shared_ptr<const Frame>>> Shrimp::shrimpFrames;
+int Shrimp::shrimpSpawnCnt = 0;
+
 Shrimp::Shrimp(ENEMY_NAME name, MOVE_TYPE type,Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(8.0f,2.0f,0.35f,0.33f,6)
 	,damageSize(damageSize),attackSize(attackSize)
 {
-	wstring file=L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (shrimpFrames.empty())
+	{
+		InitFrame();
+	}
 
 	// clips
-	vector<Frame*> frames;
-
-	// Shrimp clip
-	frames.push_back(new Frame(file, 53.0f, 150.0f, 33.0f, 28.0f));
-	frames.push_back(new Frame(file, 181.0f, 150.0f, 33.0f, 28.0f));
-	frames.push_back(new Frame(file, 312.0f, 150.0f, 33.0f, 28.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Dark Shrimp Clip
-	frames.push_back(new Frame(file, 53.0f, 280.0f, 33.0f, 28.0f));
-	frames.push_back(new Frame(file, 181.0f, 280.0f, 33.0f, 28.0f));
-	frames.push_back(new Frame(file, 312.0f, 280.0f, 33.0f, 28.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Q Shrimp A Clip
-	frames.push_back(new Frame(file, 53.0f, 410.0f, 39.0f, 28.0f));
-	frames.push_back(new Frame(file, 181.0f, 410.0f, 39.0f, 28.0f));
-	frames.push_back(new Frame(file, 312.0f, 410.0f, 39.0f, 28.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Q Shrimp B Clip
-	frames.push_back(new Frame(file, 53.0f, 540.0f, 39.0f, 28.0f));
-	frames.push_back(new Frame(file, 181.0f, 540.0f, 39.0f, 28.0f));
-	frames.push_back(new Frame(file, 312.0f, 540.0f, 39.0f, 28.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Riot Q Shrimp Clip
-	frames.push_back(new Frame(file, 53.0f, 670.0f, 33.0f, 28.0f));
-	frames.push_back(new Frame(file, 181.0f, 670.0f, 33.0f, 28.0f));
-	frames.push_back(new Frame(file, 312.0f, 670.0f, 33.0f, 28.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
+	for (auto& frames : shrimpFrames)
+	{
+		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	}
 
 	// collider
 	// dmg - Shrimp, Dark Shrimp, Riot Shrimp
@@ -64,8 +32,8 @@ Shrimp::Shrimp(ENEMY_NAME name, MOVE_TYPE type,Vector2 damgeSize, Vector2 attack
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffset_table.push_back(Vector2(0.0f, 14.0f));
-	colliderOffset_idx = 0;
+	colliderOffsetTable.push_back(Vector2(0.0f, 14.0f));
+	colliderOffsetIdx = 0;
 
 	is_active = false;
 	for (auto c : atkColliders)
@@ -82,10 +50,15 @@ Shrimp::Shrimp(ENEMY_NAME name, MOVE_TYPE type,Vector2 damgeSize, Vector2 attack
 	SetEnemyName(name);
 	// Respawn();
 
+	++shrimpSpawnCnt;
 }
 
 Shrimp::~Shrimp()
 {
+	if ((--shrimpSpawnCnt) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void Shrimp::Update()
@@ -94,21 +67,21 @@ void Shrimp::Update()
 	
 	Move();
 	
-	if (atk_nowTime < atk_delay)
-		atk_nowTime += DELTA;
+	if (atkNowTime < atkDelay)
+		atkNowTime += DELTA;
 	UINT idx = (UINT)name - (UINT)ENEMY_NAME::SHRIMP;
 	clips[idx]->Update();
 	scale = clips[idx]->GetFrameSize() * attackCollider->Size() /
 		clips[idx]->GetFrameOriginSize() * Vector2(1.2, 2.0f);
 	
-	if (!is_looking_right)
+	if (!isLookingRight)
 	{
 		scale = scale * Vector2(-1.0f, 1.0f);
 	}
 
-	if (badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
+	if (badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
 	{
-		badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
+		badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
 		scale = scale * Vector2(1.0f, -1.0f);
 	}
 	
@@ -116,7 +89,7 @@ void Shrimp::Update()
 
 	damageCollider->pos = pos;
 	damageCollider->WorldUpdate();
-	attackCollider->pos = pos + colliderOffset_table[colliderOffset_idx];
+	attackCollider->pos = pos + colliderOffsetTable[colliderOffsetIdx];
 	attackCollider->WorldUpdate();
 
 }
@@ -162,6 +135,63 @@ void Shrimp::PostRender()
 	}
 	ImGui::Text("%f / %f", HP, MaxHP);
 	ImGui::Text("pos : %f , %f", pos.x,pos.y);
+}
+
+void Shrimp::InitFrame()
+{
+	ClearFrame();
+
+	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
+
+	// Shrimp clip
+	{
+		vector<shared_ptr<const Frame>> normalShrimpFrames;
+		normalShrimpFrames.push_back(make_shared<const Frame>(file, 53.0f, 150.0f, 33.0f, 28.0f));
+		normalShrimpFrames.push_back(make_shared<const Frame>(file, 181.0f, 150.0f, 33.0f, 28.0f));
+		normalShrimpFrames.push_back(make_shared<const Frame>(file, 312.0f, 150.0f, 33.0f, 28.0f));
+		shrimpFrames.push_back(normalShrimpFrames);
+	}
+	// Dark Shrimp Clip
+	{
+		vector<shared_ptr<const Frame>> DarkShrimpFrames;
+		DarkShrimpFrames.push_back(make_shared<const Frame>(file, 53.0f, 280.0f, 33.0f, 28.0f));
+		DarkShrimpFrames.push_back(make_shared<const Frame>(file, 181.0f, 280.0f, 33.0f, 28.0f));
+		DarkShrimpFrames.push_back(make_shared<const Frame>(file, 312.0f, 280.0f, 33.0f, 28.0f));
+		shrimpFrames.push_back(DarkShrimpFrames);
+	}
+	// Q Shrimp A Clip
+	{
+		vector<shared_ptr<const Frame>> QShrimpAFrames;
+		QShrimpAFrames.push_back(make_shared<const Frame>(file, 53.0f, 410.0f, 39.0f, 28.0f));
+		QShrimpAFrames.push_back(make_shared<const Frame>(file, 181.0f, 410.0f, 39.0f, 28.0f));
+		QShrimpAFrames.push_back(make_shared<const Frame>(file, 312.0f, 410.0f, 39.0f, 28.0f));
+		shrimpFrames.push_back(QShrimpAFrames);
+	}
+	// Q Shrimp B Clip
+	{
+		vector<shared_ptr<const Frame>> QShrimpBFrames;
+		QShrimpBFrames.push_back(make_shared<const Frame>(file, 53.0f, 540.0f, 39.0f, 28.0f));
+		QShrimpBFrames.push_back(make_shared<const Frame>(file, 181.0f, 540.0f, 39.0f, 28.0f));
+		QShrimpBFrames.push_back(make_shared<const Frame>(file, 312.0f, 540.0f, 39.0f, 28.0f));
+		shrimpFrames.push_back(QShrimpBFrames);
+	}
+	// Riot Q Shrimp Clip
+	{
+		vector<shared_ptr<const Frame>> RiotQShrimpFrames;
+		RiotQShrimpFrames.push_back(make_shared<const Frame>(file, 53.0f, 670.0f, 33.0f, 28.0f));
+		RiotQShrimpFrames.push_back(make_shared<const Frame>(file, 181.0f, 670.0f, 33.0f, 28.0f));
+		RiotQShrimpFrames.push_back(make_shared<const Frame>(file, 312.0f, 670.0f, 33.0f, 28.0f));
+		shrimpFrames.push_back(RiotQShrimpFrames);
+	}
+}
+
+void Shrimp::ClearFrame()
+{
+	for (auto& frames : shrimpFrames)
+	{
+		frames.clear();
+	}
+	shrimpFrames.clear();
 }
 
 void Shrimp::SetEnemyName(ENEMY_NAME name)// type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
@@ -230,5 +260,5 @@ void Shrimp::SetEnemyName(ENEMY_NAME name)// type과 move_dir은 Enemy_Spwaner에서
 	}
 
 	damageCollider->pos = pos;
-	attackCollider->pos = pos + colliderOffset_table[colliderOffset_idx];
+	attackCollider->pos = pos + colliderOffsetTable[colliderOffsetIdx];
 }

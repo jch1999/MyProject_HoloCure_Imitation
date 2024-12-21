@@ -13,11 +13,11 @@ TextPrinter::TextPrinter()
 		text->SetTarget(this);
 		text->SetScale(charScale);
 		textList.push_back(text);
-		child_list.push_back(text);
+		childList.push_back(text);
 	}
 	id = UI_ID::TEXT_PRINTER;
 	type = UI_TYPE::TEXT;
-	ui_scale = Vector2(1, 1);
+	uiScale = Vector2(1, 1);
 	offset = Vector2(0, 0);
 	is_active = false;
 }
@@ -34,7 +34,7 @@ void TextPrinter::Update()
 		pos = target->pos + offset;
 	WorldUpdate();
 
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Update();
 }
 
@@ -42,7 +42,7 @@ void TextPrinter::Render()
 {
 	if (!is_active)return;
 
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Render();
 }
 
@@ -77,7 +77,7 @@ void TextPrinter::SetText(string str)
 				text->SetTarget(this);
 				text->SetScale(charScale);
 				textList.push_back(text);
-				child_list.push_back(text);
+				childList.push_back(text);
 			}
 		}
 
@@ -102,4 +102,26 @@ void TextPrinter::SetText(string str)
 	}
 	for (int i = textIdx; i < textList.size(); i++)
 		textList[i]->SetActive(false);
+}
+
+void TextPrinter::SetTextInfo(Vector2 inCScale, Vector2 inCInterval, int inLen)
+{
+	this->charScale = inCScale;
+	this->charInterval = inCInterval;
+	this->lineLength = inLen;
+}
+
+void TextPrinter::SetLineLength(int inLen)
+{
+	lineLength = inLen;
+}
+
+void TextPrinter::SetCharScale(Vector2 inCScale)
+{
+	charScale = inCScale;
+}
+
+void TextPrinter::SetCharInterval(Vector2 inInterval)
+{
+	charInterval = inInterval;
 }

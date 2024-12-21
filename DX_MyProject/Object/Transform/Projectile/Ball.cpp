@@ -1,36 +1,52 @@
 #include "framework.h"
 
+shared_ptr<const Frame> Ball::ballFrame;
+int Ball::ballUseCnt=0;
+
 Ball::Ball(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (ballFrame == nullptr)
+	{
+		Init();
+	}
 
-	vector<Frame*> frames;
-	frames.push_back(new Frame(file, 4.0f, 3425.0f, 41.0f, 41.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1 / 4.0f));
-	clip_idx = 0;
-
+	frame = ballFrame;
+	
 	colliders.push_back(new CircleCollider(size.x));
 	collider = colliders[0];
 
 	is_active = false;
 	collider->SetActive(false);
+
+	++ballUseCnt;
 }
 
 Ball::~Ball()
 {
+	if ((--ballUseCnt) == 0)
+	{
+		ballFrame.reset();
+	}
+}
+
+void Ball::Init()
+{
+	if (ballFrame) return;
+
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+
+	ballFrame=make_shared<const Frame>(file, 4.0f, 3425.0f, 41.0f, 41.0f);
 }
 
 void Ball::Update()
 {
-	if (lifeTime > 0.0f)
+	if (nowTime >= lifeTime)
 	{
-		lifeTime -= DELTA;
-	}
-	else
 		is_active = false;
+	}
 
+	nowTime += DELTA;
 	velocity += Vector2(0, GRAVITY) * DELTA;
 	pos = pos + velocity * speed * DELTA;
 	WorldUpdate();
@@ -38,13 +54,13 @@ void Ball::Update()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	if (nowCoolDown <= 0.0f)
+	if (nowCoolDown >= hitCoolDown)
 	{
 		OnCollision();
 	}
 	else
 	{
-		nowCoolDown -= DELTA;
+		nowCoolDown += DELTA;
 	}
 }
 
@@ -59,7 +75,7 @@ void Ball::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 	collider->Render();
 }
 
@@ -77,8 +93,8 @@ void Ball::respwan()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 
 	SetVelocity(Vector2(0.0f, 0.0f));
 
@@ -120,7 +136,7 @@ void Ball::OnCollision()
 				else
 					e->ChangeHP(-(GetDamage()), false);
 				Hit();
-				nowCoolDown = hitCoolDown;;
+				nowCoolDown = 0.0f;;
 
 				// ≥ÀπÈ ¡÷±‚
 				if (isKnockback)

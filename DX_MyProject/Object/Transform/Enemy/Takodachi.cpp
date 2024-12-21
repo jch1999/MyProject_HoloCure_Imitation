@@ -1,38 +1,23 @@
 #include "framework.h"
 
+vector<vector<shared_ptr<const Frame>>> Takodachi::takodachiFrames;
+int Takodachi::takodachiSpawnCnt = 0;
+
 Takodachi::Takodachi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(80.0f, 4.0f, 0.4f, 0.33f, 8)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (takodachiFrames.empty())
+	{
+		InitFrame();
+	}
 
 	// clips
-	vector<Frame*> frames;
-
-	// Takodachi clip
-	frames.push_back(new Frame(file, 623.0f, 379.0f, 21.0f, 21.0f));
-	frames.push_back(new Frame(file, 688.0f, 379.0f, 21.0f, 21.0f));
-	frames.push_back(new Frame(file, 754.0f, 379.0f, 21.0f, 21.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Hungry Takodachi Clip
-	frames.push_back(new Frame(file, 623.0f, 445.0f, 21.0f, 21.0f));
-	frames.push_back(new Frame(file, 688.0f, 445.0f, 21.0f, 21.0f));
-	frames.push_back(new Frame(file, 754.0f, 445.0f, 21.0f, 21.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
-	// Tako Viking Clip
-	frames.push_back(new Frame(file, 623.0f, 509.0f, 21.0f, 21.0f));
-	frames.push_back(new Frame(file, 688.0f, 509.0f, 21.0f, 21.0f));
-	frames.push_back(new Frame(file, 754.0f, 509.0f, 21.0f, 21.0f));
-
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
+	for (auto& frames : takodachiFrames)
+	{
+		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	}
+	
 
 	// collider
 	damageColliders.push_back(new RectCollider(Vector2(42.0f, 42.0f)));
@@ -41,10 +26,10 @@ Takodachi::Takodachi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffset_table.push_back(Vector2(0.0f, 10.5f));
+	colliderOffsetTable.push_back(Vector2(0.0f, 10.5f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
-	colliderOffset_idx = 0;
+	colliderOffsetIdx = 0;
 
 	id = ENEMY_ID::TAKODACHI;
 
@@ -56,10 +41,16 @@ Takodachi::Takodachi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2
 
 	SetEnemyName(name);
 	// Respawn();
+
+	++takodachiSpawnCnt;
 }
 
 Takodachi::~Takodachi()
 {
+	if ((--takodachiSpawnCnt) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void Takodachi::Update()
@@ -68,21 +59,21 @@ void Takodachi::Update()
 
 	Move();
 
-	if (atk_nowTime < atk_delay)
-		atk_nowTime += DELTA;
+	if (atkNowTime < atkDelay)
+		atkNowTime += DELTA;
 
 	UINT idx = (UINT)name - (UINT)ENEMY_NAME::TAKODACHI;
 	clips[idx]->Update();
 	scale = clips[idx]->GetFrameSize() * attackCollider->Size() /
 		clips[idx]->GetFrameOriginSize() * Vector2(2.0f, 2.0f);
 
-	if (!is_looking_right)
+	if (!isLookingRight)
 	{
 		scale = scale * Vector2(-1.0f, 1.0f);
 	}
-	if (badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
+	if (badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN]>0.0f)
 	{
-		badStatus_table[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
+		badStatusTable[(UINT)BAD_STATUS::UPSIDE_DOWN] -= DELTA;
 		scale = scale * Vector2(1.0f, -1.0f);
 	}
 
@@ -90,7 +81,7 @@ void Takodachi::Update()
 
 	damageCollider->pos = pos;
 	damageCollider->WorldUpdate();
-	attackCollider->pos = pos + colliderOffset_table[colliderOffset_idx];
+	attackCollider->pos = pos + colliderOffsetTable[colliderOffsetIdx];
 	attackCollider->WorldUpdate();
 
 }
@@ -133,7 +124,48 @@ void Takodachi::PostRender()
 	ImGui::Text("pos : %f , %f", pos.x, pos.y);
 }
 
-void Takodachi::SetEnemyName(ENEMY_NAME name) // type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
+void Takodachi::InitFrame()
+{
+	ClearFrame();
+
+	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
+
+	// Takodachi clip
+	{
+		vector<shared_ptr<const Frame>> normalTakdodachiFrames;
+		normalTakdodachiFrames.push_back(make_shared<const Frame>(file, 623.0f, 379.0f, 21.0f, 21.0f));
+		normalTakdodachiFrames.push_back(make_shared<const Frame>(file, 688.0f, 379.0f, 21.0f, 21.0f));
+		normalTakdodachiFrames.push_back(make_shared<const Frame>(file, 754.0f, 379.0f, 21.0f, 21.0f));
+		takodachiFrames.push_back(normalTakdodachiFrames);
+	}
+	// Hungry Takodachi Clip
+	{
+		vector<shared_ptr<const Frame>> hungryTakdodachiFrames;
+		hungryTakdodachiFrames.push_back(make_shared<const Frame>(file, 623.0f, 445.0f, 21.0f, 21.0f));
+		hungryTakdodachiFrames.push_back(make_shared<const Frame>(file, 688.0f, 445.0f, 21.0f, 21.0f));
+		hungryTakdodachiFrames.push_back(make_shared<const Frame>(file, 754.0f, 445.0f, 21.0f, 21.0f));
+		takodachiFrames.push_back(hungryTakdodachiFrames);
+	}
+	// Tako Viking Clip
+	{
+		vector<shared_ptr<const Frame>> takoVikingFrames;
+		takoVikingFrames.push_back(make_shared<const Frame>(file, 623.0f, 509.0f, 21.0f, 21.0f));
+		takoVikingFrames.push_back(make_shared<const Frame>(file, 688.0f, 509.0f, 21.0f, 21.0f));
+		takoVikingFrames.push_back(make_shared<const Frame>(file, 754.0f, 509.0f, 21.0f, 21.0f));
+		takodachiFrames.push_back(takoVikingFrames);
+	}
+}
+
+void Takodachi::ClearFrame()
+{
+	for (auto& frames : takodachiFrames)
+	{
+		frames.clear();
+	}
+	takodachiFrames.clear();
+}
+
+void Takodachi::SetEnemyName(ENEMY_NAME name) // type과 moveDir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정
 {
 	this->name = name;
 	switch (name)

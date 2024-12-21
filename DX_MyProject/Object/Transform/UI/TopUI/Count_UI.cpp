@@ -1,57 +1,11 @@
 #include "framework.h"
 
 Count_UI::Count_UI()
-	:up_speed(100.0f)
-	, now_coinCnt(0.0f), target_coinCnt(0.0f)
-	,now_defeatCnt(0.0f),target_defeatCnt(0.0f)
+	:upSpeed(100.0f)
+	, nowCoinCnt(0.0f), targetCoinCnt(0.0f)
+	,nowDefeatCnt(0.0f),targetDefeatCnt(0.0f)
 {
-	Vector2 nowOffset(150.0f, -10.0f);
-	Vector2 interval(15, 0);
-	// coin icon
-	CounterIcon* coin_icon = new CounterIcon();
-	coin_icon->SetClipIdx(0);
-	coin_icon->SetTarget(this);
-	coin_icon->SetOffset(nowOffset);
-	coin_icon->SetActive(true);
-	counterIcons.push_back(coin_icon);
-	child_list.push_back(coin_icon);
-	nowOffset = nowOffset + interval * 2.0f;
-	// coin cnt text
-	for (int i = 0; i < 5; i++)
-	{
-		Text* t = new Text();
-		t->SetTarget(this);
-		t->SetOffset(nowOffset);
-		nowOffset = nowOffset + interval;
-		t->SetScale(Vector2(0.5f, 0.5f));
-		t->SetActive(true);
-		coinCnt_text.push_back(t);
-		child_list.push_back(t);
-	}
-	
-	nowOffset=Vector2(150.0f, 40.0f);
-	// defeat icon
-	CounterIcon* defeat_icon = new CounterIcon();
-	defeat_icon->SetClipIdx(1);
-	defeat_icon->SetTarget(this);
-	defeat_icon->SetOffset(nowOffset);
-	defeat_icon->SetActive(true);
-	counterIcons.push_back(defeat_icon);
-	child_list.push_back(defeat_icon);
-	nowOffset = nowOffset + interval * 2.0f;
-	// defeat cnt text
-	for (int i = 0; i < 5; i++)
-	{
-		Text* t = new Text();
-		t->SetTarget(this);
-		t->SetOffset(nowOffset);
-		nowOffset = nowOffset + interval;
-		t->SetScale(Vector2(0.5f, 0.5f));
-		t->SetActive(true);
-		defeatCnt_text.push_back(t);
-		child_list.push_back(t);
-	}
-
+	Init();
 	
 	id = UI::UI_ID::COUNTER;
 	type = UI::UI_TYPE::COUNTER;
@@ -63,6 +17,60 @@ Count_UI::Count_UI()
 
 Count_UI::~Count_UI()
 {
+	counterIcons.clear(); 
+	coinCntText.clear();
+	defeatCntText.clear();
+}
+
+void Count_UI::Init()
+{
+	Vector2 nowOffset(150.0f, -10.0f);
+	Vector2 interval(15, 0);
+	// coin icon
+	CounterIcon* coin_icon = new CounterIcon();
+	coin_icon->SetClipIdx(0);
+	coin_icon->SetTarget(this);
+	coin_icon->SetOffset(nowOffset);
+	coin_icon->SetActive(true);
+	counterIcons.push_back(coin_icon);
+	childList.push_back(coin_icon);
+	nowOffset = nowOffset + interval * 2.0f;
+
+	// coin cnt text
+	for (int i = 0; i < 5; i++)
+	{
+		Text* t = new Text();
+		t->SetTarget(this);
+		t->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		t->SetScale(Vector2(0.5f, 0.5f));
+		t->SetActive(true);
+		coinCntText.push_back(t);
+		childList.push_back(t);
+	}
+
+	nowOffset = Vector2(150.0f, 40.0f);
+	// defeat icon
+	CounterIcon* defeat_icon = new CounterIcon();
+	defeat_icon->SetClipIdx(1);
+	defeat_icon->SetTarget(this);
+	defeat_icon->SetOffset(nowOffset);
+	defeat_icon->SetActive(true);
+	counterIcons.push_back(defeat_icon);
+	childList.push_back(defeat_icon);
+	nowOffset = nowOffset + interval * 2.0f;
+	// defeat cnt text
+	for (int i = 0; i < 5; i++)
+	{
+		Text* t = new Text();
+		t->SetTarget(this);
+		t->SetOffset(nowOffset);
+		nowOffset = nowOffset + interval;
+		t->SetScale(Vector2(0.5f, 0.5f));
+		t->SetActive(true);
+		defeatCntText.push_back(t);
+		childList.push_back(t);
+	}
 }
 
 void Count_UI::Update()
@@ -72,13 +80,13 @@ void Count_UI::Update()
 	pos = target->pos + offset;
 	WorldUpdate();
 
-	target_coinCnt = (float)ItemSpawner::Get()->nowCoinValue;
-	target_defeatCnt = (float)EnemySpawner::Get()->defeatCnt;
+	targetCoinCnt = (float)ItemSpawner::Get()->nowCoinValue;
+	targetDefeatCnt = (float)EnemySpawner::Get()->defeatCnt;
 
 	UpdateCoinCnt();
 	UpdateDefeatCnt();
 
-	for (auto child : child_list)
+	for (auto child : childList)
 		child->Update();
 }
 
@@ -86,7 +94,7 @@ void Count_UI::Render()
 {
 	if (!is_active)return;
 
-	for (auto child : child_list)
+	for (auto child : childList)
 		child->Render();
 }
 
@@ -105,14 +113,19 @@ void Count_UI::SetID(UI::UI_ID id)
 	this->id = id;
 }
 
+void Count_UI::SetClipIdx(int idx)
+{
+	this->clipIdx = idx;
+}
+
 void Count_UI::UpdateCoinCnt()
 {
-	if (target_coinCnt - now_coinCnt > 0.1f)
-		now_coinCnt += up_speed * DELTA;
-	else if (now_coinCnt > target_coinCnt)
-		now_coinCnt = target_coinCnt;
+	if (targetCoinCnt - nowCoinCnt > 0.1f)
+		nowCoinCnt += upSpeed * DELTA;
+	else if (nowCoinCnt > targetCoinCnt)
+		nowCoinCnt = targetCoinCnt;
 
-	int cnt = round(now_coinCnt);
+	int cnt = round(nowCoinCnt);
 	vector<int> cntText;
 	while (cnt != 0)
 	{
@@ -124,28 +137,28 @@ void Count_UI::UpdateCoinCnt()
 	else if (cntText.size() >= 2)
 		reverse(cntText.begin(), cntText.end());
 
-	for (int i = 0; i < coinCnt_text.size(); i++)
+	for (int i = 0; i < coinCntText.size(); i++)
 	{
 		if (i < cntText.size())
 		{
-			coinCnt_text[i]->SetText('0' + cntText[i]);
-			coinCnt_text[i]->SetActive(true);
+			coinCntText[i]->SetText('0' + cntText[i]);
+			coinCntText[i]->SetActive(true);
 		}
 		else
 		{
-			coinCnt_text[i]->SetActive(false);
+			coinCntText[i]->SetActive(false);
 		}
 	}
 }
 
 void Count_UI::UpdateDefeatCnt()
 {
-	if (target_defeatCnt - now_defeatCnt > 0.1f)
-		now_defeatCnt += up_speed * DELTA;
-	else if (now_defeatCnt > target_defeatCnt)
-		now_defeatCnt = target_defeatCnt;
+	if (targetDefeatCnt - nowDefeatCnt > 0.1f)
+		nowDefeatCnt += upSpeed * DELTA;
+	else if (nowDefeatCnt > targetDefeatCnt)
+		nowDefeatCnt = targetDefeatCnt;
 
-	int cnt = round(now_defeatCnt);
+	int cnt = round(nowDefeatCnt);
 	vector<int> cntText;
 	while (cnt != 0)
 	{
@@ -157,16 +170,16 @@ void Count_UI::UpdateDefeatCnt()
 	else if(cntText.size()>=2)
 		reverse(cntText.begin(), cntText.end());
 
-	for (int i = 0; i < defeatCnt_text.size(); i++)
+	for (int i = 0; i < defeatCntText.size(); i++)
 	{
 		if (i < cntText.size())
 		{
-			defeatCnt_text[i]->SetText('0' + cntText[i]);
-			defeatCnt_text[i]->SetActive(true);
+			defeatCntText[i]->SetText('0' + cntText[i]);
+			defeatCntText[i]->SetActive(true);
 		}
 		else
 		{
-			defeatCnt_text[i]->SetActive(false);
+			defeatCntText[i]->SetActive(false);
 		}
 	}
 }

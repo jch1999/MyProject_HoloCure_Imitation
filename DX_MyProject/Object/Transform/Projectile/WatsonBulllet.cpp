@@ -1,19 +1,20 @@
 #include "framework.h"
 
+vector<shared_ptr<const Frame>> WatsonBullet::bulletFrames;
+int WatsonBullet::bulletUseCnt = 0;
+
 WatsonBullet::WatsonBullet(ProjectileSize projSize)
 	:Projectile(projSize,20.0f, 200.0f, 1, 2.0f)
 	, isRicochet(false)
 	,ricochetCnt(0)
 {
-	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png";
-	Texture* t = Texture::Add(file);
-	
-	vector<Frame*> frames;
-	frames.push_back(new Frame(file, 18, 1047, 10, 8));
-	frames.push_back(new Frame(file, 51, 1047, 10, 8));
+	if (bulletFrames.empty())
+	{
+		Init();
+	}
 
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::PINGPONG, 1.0f / 8.0f));
-	clip_idx = 0;
+	clips.push_back(make_shared<Clip>(bulletFrames, Clip::CLIP_TYPE::PINGPONG, 1.0f / 8.0f));
+	clipIdx = 0;
 
 	colliders.push_back(new RectCollider(size));
 	colliders[0]->SetActive(false);
@@ -21,17 +22,33 @@ WatsonBullet::WatsonBullet(ProjectileSize projSize)
 	collider->pos = pos;
 	
 	is_active = false;
+
+	++bulletUseCnt;
 }
 
 WatsonBullet::~WatsonBullet()
 {
+	if ((--bulletUseCnt) == 0)
+	{
+		bulletFrames.clear();
+	}
+}
+
+void WatsonBullet::Init()
+{
+	if (!bulletFrames.empty()) return;
+
+	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png";
+	
+	bulletFrames.push_back(make_shared<const Frame>(file, 18, 1047, 10, 8));
+	bulletFrames.push_back(make_shared<const Frame>(file, 51, 1047, 10, 8));
 }
 
 void WatsonBullet::Update()
 {
 	if (!is_active)return;
 
-	pos += move_dir * speed * DELTA;
+	pos += moveDir * speed * DELTA;
 	nowTime += DELTA;
 
 	if (nowTime >= lifeTime)
@@ -47,9 +64,9 @@ void WatsonBullet::Update()
 	collider->WorldUpdate();
 
 	// watsonBullet은 normal과 awaken의 애니메이션 차이가 없음
-	scale = clips[clip_idx]->GetFrameSize() * size /
-		clips[clip_idx]->GetFrameOriginSize();
-	clips[clip_idx]->Update();
+	scale = clips[clipIdx]->GetFrameSize() * size /
+		clips[clipIdx]->GetFrameOriginSize();
+	clips[clipIdx]->Update();
 
 	OnCollision();
 }
@@ -64,7 +81,7 @@ void WatsonBullet::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	clips[clipIdx]->Render();
 	collider->Render();
 
 }
@@ -83,8 +100,8 @@ void WatsonBullet::respwan()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = clips[clipIdx]->GetFrameSize() * collider->Size() /
+		clips[clipIdx]->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);
@@ -141,7 +158,7 @@ void WatsonBullet::OnCollision()
 							{
 							case 0:
 							{
-								Vector2 dir = Vector2(-1, -1) * move_dir;
+								Vector2 dir = Vector2(-1, -1) * moveDir;
 								float newRot = atan(dir.y / dir.x) + 45;
 								rot.z = newRot;
 								SetDirection(Vector2(cosf(newRot), sinf(newRot)));
@@ -149,7 +166,7 @@ void WatsonBullet::OnCollision()
 							break;
 							case 1:
 							{
-								Vector2 dir = Vector2(-1, -1) * move_dir;
+								Vector2 dir = Vector2(-1, -1) * moveDir;
 								float newRot = atan(dir.y / dir.x) + 90;
 								rot.z = newRot;
 								SetDirection(Vector2(cosf(newRot), sinf(newRot)));
@@ -157,7 +174,7 @@ void WatsonBullet::OnCollision()
 							break;
 							case 2:
 							{
-								Vector2 dir = Vector2(-1, -1) * move_dir;
+								Vector2 dir = Vector2(-1, -1) * moveDir;
 								float newRot = atan(dir.y / dir.x) - 45;
 								rot.z = newRot;
 								SetDirection(Vector2(cosf(newRot), sinf(newRot)));
@@ -165,7 +182,7 @@ void WatsonBullet::OnCollision()
 							break;
 							case 3:
 							{
-								Vector2 dir = Vector2(-1, -1) * move_dir;
+								Vector2 dir = Vector2(-1, -1) * moveDir;
 								float newRot = atan(dir.y / dir.x) - 90;
 								rot.z = newRot;
 								SetDirection(Vector2(cosf(newRot), sinf(newRot)));

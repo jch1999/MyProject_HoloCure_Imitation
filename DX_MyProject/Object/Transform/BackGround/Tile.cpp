@@ -1,5 +1,8 @@
 #include "framework.h"
 
+vector<shared_ptr<const Frame>> Tile::TileFrames;
+int Tile::TileUseCnt = 0;
+
 Tile::Tile(int idx)
 	:idx(idx)
 {
@@ -7,27 +10,44 @@ Tile::Tile(int idx)
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
 	CB = new ColourBuffer();
 
-	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
-	vector<Frame*> frames;
-	frames.push_back(new Frame(file, 4.0f + idx / 10 * 128.0f, 323.0f + idx % 10 * 128.0f, 128.0f, 128.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-	frames.clear();
+	if (TileFrames.empty())
+	{
+		Init();
+	}
+
+	frame = GetFrame(idx);
+	++TileUseCnt;
 
 	is_active = true;
 }
 
 Tile::~Tile()
 {
+	if ((--TileUseCnt) == 0)
+	{
+		TileFrames.clear();
+	}
 }
 
 void Tile::Update()
 {
 	if (!is_active)return;
 
-	clips[0]->Update();
-	scale = clips[0]->GetFrameSize() * Vector2(128.0f,128.0f) / clips[0]->GetFrameOriginSize();
+	scale = frame->GetFrameSize() * Vector2(128.0f,128.0f) / frame->GetFrameOriginSize();
 
 	WorldUpdate();
+}
+
+void Tile::Init()
+{
+	TileFrames.clear();
+
+	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
+
+	for (int i = 0; i < 100; i++)
+	{
+		TileFrames.push_back(make_shared<const Frame>(file, 4.0f + idx / 10 * 128.0f, 323.0f + idx % 10 * 128.0f, 128.0f, 128.0f));
+	}
 }
 
 void Tile::Render()
@@ -38,7 +58,7 @@ void Tile::Render()
 
 	WB->SetVS(0);
 	CB->SetPS(0);
-	clips[0]->Render();
+	frame->Render();
 }
 
 void Tile::PostRender()

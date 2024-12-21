@@ -1,33 +1,19 @@
 #include "framework.h"
 
+vector<vector<shared_ptr<const Frame>>> BaelzDice::diceFrmaes;
+int BaelzDice::diceUseCnt = 0;
+
 BaelzDice::BaelzDice(ProjectileSize projSize)
 	:Projectile(projSize)
 	, isRicochet(false),ricochetCnt(0)
+	,isAwaken(false)
 {
-	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png";
-	Texture* t = Texture::Add(file);
-
-	vector<Frame*> frames;
-	// Normal Dice
-	Vector2 initPos(32.0f, 582.0f);
-	Vector2 frame_size(18.0f, 18.0f);
-	for (int i = 0; i < 6; i++)
+	if (diceFrmaes.empty())
 	{
-		frames.push_back(new Frame(file, initPos.x + 65.0f * i, initPos.y
-			, frame_size.x, frame_size.y));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
+		Init();
 	}
-	// Awaken Dice
-	initPos = Vector2(32.0f, 663.0f);
 
-	for (int i = 0; i < 6; i++)
-	{
-		frames.push_back(new Frame(file, initPos.x + 65.0f * i, initPos.y
-			, frame_size.x, frame_size.y));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
-	}
+	frame = diceFrmaes[0][0];
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -35,41 +21,76 @@ BaelzDice::BaelzDice(ProjectileSize projSize)
 		colliders.push_back(collider);
 	}
 
-	idx_collider = 0;
-	collider = colliders[idx_collider];
+	colliderIdx = 0;
+	collider = colliders[colliderIdx];
 	collider->pos = pos;
-	clip_idx = 0;
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	clipIdx = 0;
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 
 	is_active = false;
 	collider->SetActive(false);
 
+	++diceUseCnt;
 }
 
 BaelzDice::~BaelzDice()
 {
+	if ((--diceUseCnt) == 0)
+	{
+		diceFrmaes.clear();
+	}
+}
+
+void BaelzDice::Init()
+{
+	if (!(diceFrmaes.empty())) return;
+
+	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png";
+
+	// Normal Dice
+	Vector2 initPos(32.0f, 582.0f);
+	Vector2 frame_size(18.0f, 18.0f);
+	{
+		vector<shared_ptr<const Frame>> normalDiceFrmaes;
+		for (int i = 0; i < 6; i++)
+		{
+			normalDiceFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 65.0f * i, initPos.y
+				, frame_size.x, frame_size.y));
+		}
+		diceFrmaes.push_back(normalDiceFrmaes);
+	}
+	// Awaken Dice
+	initPos = Vector2(32.0f, 663.0f);
+	{
+		vector<shared_ptr<const Frame>> awakenDiceFrmaes;
+		for (int i = 0; i < 6; i++)
+		{
+			awakenDiceFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 65.0f * i, initPos.y
+				, frame_size.x, frame_size.y));
+		}
+		diceFrmaes.push_back(awakenDiceFrmaes);
+	}
 }
 
 void BaelzDice::Update()
 {
 	if (!is_active)return;
 	
-	pos += move_dir * speed * DELTA;
+	pos += moveDir * speed * DELTA;
 	
-	moveDist += (move_dir * speed * DELTA).GetLength();
+	moveDist += (moveDir * speed * DELTA).GetLength();
 	if (moveDist >= targetDist) // 다 이동하면 멈춘다
 	{
 		collider->SetActive(false);
-		move_dir = Vector2(0.0f, 0.0f);
-		// 다 이동하고 나면 시간 체크를 시작
-		nowTime += DELTA;
+		moveDir = Vector2(0.0f, 0.0f);
 	}
 	else
 	{
 		OnCollision();
 	}
 
+	nowTime += DELTA;
 	if (nowTime >= lifeTime)
 	{
 		is_active = false;
@@ -85,10 +106,8 @@ void BaelzDice::Update()
 	collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
-
-	clips[clip_idx]->Update();
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 }
 
 void BaelzDice::Render()
@@ -101,7 +120,7 @@ void BaelzDice::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 	collider->Render();
 }
 
@@ -117,12 +136,13 @@ void BaelzDice::respwan()
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+
+	frame = diceFrmaes[isAwaken ? 1 : 0][clipIdx];
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);
-	clips[clip_idx]->Play();
 }
 
 void BaelzDice::Hit()
@@ -136,7 +156,7 @@ void BaelzDice::Hit()
 	{
 		collider->SetActive(false);
 		nowHitCount = 0;
-		move_dir = Vector2(0.0f, 0.0f);
+		moveDir = Vector2(0.0f, 0.0f);
 		moveDist = 0.0f;
 		hitEnemies.clear();
 		return;
@@ -169,7 +189,7 @@ void BaelzDice::OnCollision()
 				Hit();
 				
 				if (isKnockback)
-					e->SetKnockBack(move_dir, 200.0f, 0.2f);
+					e->SetKnockBack(moveDir, 200.0f, 0.2f);
 				hitEnemies.insert(e);
 
 				if (isRicochet) // 도탄 생성
@@ -191,4 +211,20 @@ void BaelzDice::OnCollision()
 			}
 		}
 	}
+}
+
+void BaelzDice::SetRicochetInfo(bool inIsRicochet, int inCnt)
+{
+	this->isRicochet = inIsRicochet;
+	ricochetCnt = inCnt;
+}
+
+void BaelzDice::ActiveAwaken()
+{
+	isAwaken = true;
+}
+
+void BaelzDice::DeactiveAwken()
+{
+	isAwaken = false;
 }

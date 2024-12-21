@@ -152,7 +152,7 @@ bool PhoenixSword::LevelUp()
 
 void PhoenixSword::UpdateSlash()
 {
-	slash->pos = player->pos + slash->move_dir * 60.0f;
+	slash->pos = player->pos + slash->moveDir * 60.0f;
 	slash->Update();
 }
 

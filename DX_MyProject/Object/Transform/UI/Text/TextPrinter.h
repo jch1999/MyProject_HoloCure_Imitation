@@ -20,13 +20,8 @@ public:
 	virtual void SetState(UI::UI_STATE state);
 	virtual void SetID(UI::UI_ID id);
 	void SetText(string str);
-	void SetTextInfo(Vector2 cScale, Vector2 cInterval, int len = 40)
-	{
-		this->charScale = cScale;
-		this->charInterval = cInterval;
-		this->lineLength = len;
-	}
-	void SetLineLength(int len) { lineLength = len; }
-	void SetCharScale(Vector2 c_scale) { charScale = c_scale; }
-	void SetCharInterval(Vector2 interval) { charInterval = interval; }
+	void SetTextInfo(Vector2 cScale, Vector2 cInterval, int len = 40);
+	void SetLineLength(int inLen);
+	void SetCharScale(Vector2 inCScale);
+	void SetCharInterval(Vector2 inInterval);
 };

@@ -1,17 +1,20 @@
 #include "framework.h"
 
+shared_ptr<const Frame> Bomb::bombFrame;
+int Bomb::bombUseCnt = 0;
+
 Bomb::Bomb(ProjectileSize projSize, float targetDist, Vector2 move_dir)
 	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 {
-	this->targetDist = targetDist;
-	this->move_dir = move_dir;
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (!bombFrame)
+	{
+		Init();
+	}
 
-	vector<Frame*> frames;
-	frames.push_back(new Frame(file, 416.0f, 1508.0f, 23.0f, 29.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::END, 1));
-	clip_idx = 0;
+	this->targetDist = targetDist;
+	this->moveDir = move_dir;
+	
+	frame = bombFrame;
 
 	colliders.push_back(new RectCollider(size * Vector2(1.2f, 1.2f)));
 	collider = colliders[0];
@@ -20,10 +23,24 @@ Bomb::Bomb(ProjectileSize projSize, float targetDist, Vector2 move_dir)
 	is_active = false;
 	collider->SetActive(false);
 	
+	++bombUseCnt;
 }
 
 Bomb::~Bomb()
 {
+	if ((--bombUseCnt) == 0)
+	{
+		bombFrame.reset();
+	}
+}
+
+void Bomb::Init()
+{
+	if (bombFrame) return;
+
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+
+	bombFrame = make_shared<const Frame>(file, 416.0f, 1508.0f, 23.0f, 29.0f);
 }
 
 void Bomb::Update()
@@ -43,16 +60,16 @@ void Bomb::Update()
 			collider->pos = pos;
 			collider->WorldUpdate();
 
-			scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-				clips[clip_idx]->GetFrameOriginSize();
-
-			clips[clip_idx]->Update();
-
+			scale = frame->GetFrameSize() * collider->Size() /
+				frame->GetFrameOriginSize();
 
 			OnCollision();
 		}
-		if(explosion->is_active)
+
+		if (explosion->is_active)
+		{
 			explosion->Update();
+		}
 	}
 		
 }
@@ -67,7 +84,7 @@ void Bomb::Render()
 		WB->SetVS(0);
 		CB->SetPS(0);
 
-		clips[clip_idx]->Render();
+		frame->Render();
 		collider->Render();
 	}
 	if (explosion->is_active)
@@ -85,8 +102,8 @@ void Bomb::respwan()
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 
 	moveDist = 0.0f;
 	SetActive(true);

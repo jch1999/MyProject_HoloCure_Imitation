@@ -27,6 +27,6 @@ public:
 	virtual void SetState(UI::UI_STATE state);
 	void SetAnimState(BOX_STATE bState);
 	virtual void SetID(UI::UI_ID id);
-	bool isAnimEnd() { return (clips[clip_idx]->GetFrameNum() == clips[clip_idx]->GetFrameCnt()-1); }
+	FORCEINLINE bool isAnimEnd() { return (clips[clipIdx]->GetFrameNum() == clips[clipIdx]->GetFrameCnt()-1); }
 
 };

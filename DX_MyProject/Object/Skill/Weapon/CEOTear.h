@@ -2,11 +2,9 @@
 class CEOTear :public Weapon
 {
 private:
-	float proj_delay;
-	float now_proj_delay;
+	float projDelay;
+	float nowProjDelay;
 	int projCnt;
-
-	vector<Projectile*> tears;
 
 public:
 	CEOTear();

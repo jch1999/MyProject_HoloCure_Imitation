@@ -15,17 +15,17 @@ BloomGloom::BloomGloom(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vecto
 	// clips
 	for (auto& frames : bloomGloomFrames)
 	{
-		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	}
 	
 	// collider
-	damageColliders.push_back(new RectCollider(Vector2(50.0f, 46.0f)));
+	damageColliders.emplace_back(new RectCollider(Vector2(50.0f, 46.0f)));
 	damageCollider = damageColliders[0];
-	atkColliders.push_back(new RectCollider(Vector2(25.0f, 23.0f)));
+	atkColliders.emplace_back(new RectCollider(Vector2(25.0f, 23.0f)));
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffsetTable.push_back(Vector2(0.0f, 11.0f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 11.0f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
 	colliderOffsetIdx = 0;
@@ -122,34 +122,32 @@ void BloomGloom::PostRender()
 
 void BloomGloom::InitFrame()
 {
-	ClearFrame();
+	if (!(bloomGloomFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - CouncilRyS Enemies EN Gen2 Hope_rm_bg.png";
 
 	// Bloom clip
 	{
 		vector<shared_ptr<const Frame>> bloomFrames;
-		bloomFrames.push_back(make_shared<const Frame>(file, 18.0f, 288.0f, 28.0f, 25.0f));
-		bloomFrames.push_back(make_shared<const Frame>(file, 84.0f, 288.0f, 28.0f, 25.0f));
-		bloomFrames.push_back(make_shared<const Frame>(file, 151.0f, 288.0f, 28.0f, 25.0f));
+		bloomFrames.emplace_back(make_shared<const Frame>(file, 18.0f, 288.0f, 28.0f, 25.0f));
+		bloomFrames.emplace_back(make_shared<const Frame>(file, 84.0f, 288.0f, 28.0f, 25.0f));
+		bloomFrames.emplace_back(make_shared<const Frame>(file, 151.0f, 288.0f, 28.0f, 25.0f));
 		bloomGloomFrames.push_back(bloomFrames);
 	}
 	// Gloom Clip
 	{
 		vector<shared_ptr<const Frame>> gloomFrames;
-		gloomFrames.push_back(make_shared<const Frame>(file, 18.0f, 354.0f, 28.0f, 25.0f));
-		gloomFrames.push_back(make_shared<const Frame>(file, 84.0f, 354.0f, 28.0f, 25.0f));
-		gloomFrames.push_back(make_shared<const Frame>(file, 151.0f, 354.0f, 28.0f, 25.0f));
+		gloomFrames.emplace_back(make_shared<const Frame>(file, 18.0f, 354.0f, 28.0f, 25.0f));
+		gloomFrames.emplace_back(make_shared<const Frame>(file, 84.0f, 354.0f, 28.0f, 25.0f));
+		gloomFrames.emplace_back(make_shared<const Frame>(file, 151.0f, 354.0f, 28.0f, 25.0f));
 		bloomGloomFrames.push_back(gloomFrames);
 	}
 }
 
 void BloomGloom::ClearFrame()
 {
-	for (auto& frames : bloomGloomFrames)
-	{
-		frames.clear();
-	}
+	if (bloomGloomFrames.empty()) return;
+
 	bloomGloomFrames.clear();
 }
 

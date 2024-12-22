@@ -54,7 +54,7 @@ void LevelText::SetClipIdx(int idx)
 	{
 	case 0:
 	{
-		frame = LevelUpFrame;
+		frame = levelUpFrame;
 	}
 		break;
 	case 1:
@@ -68,7 +68,7 @@ void LevelText::SetClipIdx(int idx)
 	case 9:
 	case 10:
 	{
-		frame = WhiteNumberFrames[clipIdx-1];
+		frame = numberFrames[0][clipIdx];
 	}
 		break;
 	case 11:
@@ -82,7 +82,7 @@ void LevelText::SetClipIdx(int idx)
 	case 19:
 	case 20:
 	{
-		frame = YellowNumberFrames[clipIdx - 1];
+		frame = numberFrames[0][clipIdx-10];
 	}
 		break;
 	case 21:
@@ -96,7 +96,7 @@ void LevelText::SetClipIdx(int idx)
 	case 29:
 	case 30:
 	{
-		frame = RedNumberFrames[clipIdx - 1];
+		frame = numberFrames[0][clipIdx - 20];
 	}
 		break;
 	default:

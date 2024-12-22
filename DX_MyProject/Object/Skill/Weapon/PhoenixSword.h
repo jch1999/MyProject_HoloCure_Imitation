@@ -5,8 +5,6 @@ private:
 	vector<float> hitCooldown_table;
 	float blaze_hitCool;
 
-	Projectile* slash;
-
 	// 기존에 충돌한 Enemy 리스트
 	map<Enemy*, float> enemyCooltimes_b;
 	// 이번 프레임에 충돌한 Enemy 리스트
@@ -24,7 +22,5 @@ public:
 	virtual bool LevelUp() override;
 	virtual bool LevelDown() override;
 
-	void UpdateSlash();
-	void UpdateBlaze();
 	Blaze* GetBlaze();
 };

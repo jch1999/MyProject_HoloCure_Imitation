@@ -99,14 +99,16 @@ protected:
 	shared_ptr<const Frame> frame; // 애니메이션이 필요없을 경우 Frame만 사용
 
 public:
-	UI();
+	UI(Vector2 inSize = Vector2(1.0f, 1.0f), Vector2 inScale = Vector2(1.0f, 1.0f), Vector2 inOffset = Vector2(0.0f, 0.0f));
 	virtual ~UI();
 
-	virtual void Init() = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;
-	virtual void PostRender() = 0;
-	virtual void SetState(UI::UI_STATE state) = 0;
+	virtual void PostRender();
+	virtual void InitFrame();
+	virtual void ClearFrame();
+
+	virtual void SetState(UI::UI_STATE inState);
 	virtual void SetID(UI::UI_ID id) = 0;
 
 	void SetTarget(Transform* target);

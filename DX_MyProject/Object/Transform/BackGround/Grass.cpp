@@ -12,7 +12,7 @@ Grass::Grass()
 
 	if (grassFrames.empty())
 	{
-		Init();
+		InitFrame();
 	}
 
 	frame = grassFrames[0];
@@ -29,19 +29,7 @@ Grass::~Grass()
 
 	if ((--grassUseCnt) == 0)
 	{
-		grassFrames.clear();
-	}
-}
-
-void Grass::Init()
-{
-	grassFrames.clear();
-
-	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
-	
-	for (int i = 0; i < 2; i++)
-	{
-		frame=make_shared<const Frame>(file, 190.0f + 31.0f * i, 74.0f, 29.0f, 30.0f);
+		ClearFrame();
 	}
 }
 
@@ -104,6 +92,24 @@ void Grass::ChangePos()
 		is_active = activeRecord[now_pos];
 		SetIndex(clipRecord[now_pos]);
 	}
+}
+
+void Grass::InitFrame()
+{
+	if (!(grassFrames.empty())) return;
+
+	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
+
+	for (int i = 0; i < 2; i++)
+	{
+		grassFrames.emplace_back(make_shared<const Frame>(file, 190.0f + 31.0f * i, 74.0f, 29.0f, 30.0f));
+	}
+}
+
+void Grass::ClearFrame()
+{
+	if (grassFrames.empty()) return;
+	grassFrames.clear();
 }
 
 

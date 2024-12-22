@@ -5,11 +5,11 @@ PhoenixSword::PhoenixSword()
 {
 	weight = 3;
 	skill_name = "PHOENIX SWORD";
-	level_scripts.push_back("Short ranged slash in front.");
+	level_scripts.push_back("Short ranged projectiles[0] in front.");
 	level_scripts.push_back("Increase damage by 20%.");
 	level_scripts.push_back("Increase attack area by 25%.");
 	level_scripts.push_back("Reduce the time between attacks by 15%.");
-	level_scripts.push_back("Can hit twice per slash.");
+	level_scripts.push_back("Can hit twice per projectiles[0].");
 	level_scripts.push_back("Increase damage by 20%.");
 	level_scripts.push_back("Sword is engulfed in flames, and can hit many times. Also leave a burning fire under hit targets.");
 	
@@ -23,8 +23,10 @@ PhoenixSword::PhoenixSword()
 	skillDelay_table = { 0, 1.17f, 1.17f, 1.17f, 1.0f, 1.0f, 1.0f, 1.0f };
 	blaze_hitCool = 1.0f;
 
-	slash = new KiaraSlash();
-	slash->SetOwner(this);
+	// Create KiaraSlash
+	projectiles.emplace_back(new KiaraSlash());
+	projectiles[0]->SetOwner(this);
+
 	for (int i = 0; i < 10; i++)
 	{
 		projectiles.push_back(new Blaze());
@@ -39,7 +41,6 @@ PhoenixSword::PhoenixSword()
 
 PhoenixSword::~PhoenixSword()
 {
-	delete slash;
 	/*for (auto b : projectiles)
 		delete b;*/
 }
@@ -58,17 +59,17 @@ void PhoenixSword::Update()
 			now_skill_delay = 0.0f;
 			action_status = Skill::SKILL_STATUS::PLAY;
 
-			// slash 정보 초기화
+			// projectiles[0] 정보 초기화
 			float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], maxDamage_table[now_level] + 1)
 				* (1 + SkillManager::Get()->add_MainWeapon_dmgRate + SkillManager::Get()->damageRate_Melee)
 				+ player->GetATK()
 				+ enhanceDamage;
-			slash->SetStatus(damage, 250.0f, -1, playTime_table[0]);
-			slash->SetDirection(player->GetAttackDir());
-			slash->rot.z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
-			slash->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxMelee());
-			slash->SetClipIdx(((now_level == max_level) ? 1 : 0));
-			slash->respwan();
+			projectiles[0]->SetStatus(damage, 250.0f, -1, playTime_table[0]);
+			projectiles[0]->SetDirection(player->GetAttackDir());
+			projectiles[0]->rot.z = atan(player->GetAttackDir().y / player->GetAttackDir().x);
+			projectiles[0]->SetColliderIdx(colliderIdx_table[now_level] + player->GetColIdxMelee());
+			projectiles[0]->SetClipIdx(((now_level == max_level) ? 1 : 0));
+			projectiles[0]->respwan();
 		}
 	}
 		break;
@@ -76,21 +77,21 @@ void PhoenixSword::Update()
 	{
 		play_time += DELTA;
 
-		if (slash->GetCollider()->is_active&&play_time>=0.5f)
+		if (projectiles[0]->GetCollider()->is_active&&play_time>=0.5f)
 		{
-			slash->GetCollider()->SetActive(false); 
+			projectiles[0]->GetCollider()->SetActive(false); 
 		}
 
 		if (play_time > playTime_table[0])
 		{
 			play_time = 0.0f;
 			action_status = Skill::SKILL_STATUS::COOLDOWN;
-			slash->is_active = false;
+			projectiles[0]->is_active = false;
 			return;
 		}
 		else
 		{
-			UpdateSlash();
+			projectiles[0]->pos = player->pos + projectiles[0]->moveDir * 60.0f;
 		}
 	}
 		break;
@@ -98,15 +99,17 @@ void PhoenixSword::Update()
 		break;
 	}
 
-	UpdateSlash();
-	UpdateBlaze();
+	for (auto& proj : projectiles)
+	{
+		proj->Update();
+	}
 }
 
 void PhoenixSword::Render()
 {
 	if (now_level == 0)return;
 
-	slash->Render();
+	projectiles[0]->Render();
 	for (auto b : projectiles)
 		b->Render();
 }
@@ -127,7 +130,7 @@ void PhoenixSword::PostRender()
 	default:
 		break;
 	}
-	slash->PostRender();
+	projectiles[0]->PostRender();
 	
 	for (auto b : projectiles)
 		b->PostRender();
@@ -143,25 +146,17 @@ bool PhoenixSword::LevelUp()
 		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
 	}
 	else if (now_level == 7)
-		dynamic_cast<KiaraSlash*>(slash)->SetAwaken(true);
-	slash->SetHitLimit(hitLimit_table[now_level]);
-	slash->SetCoolDown(hitCooldown_table[now_level]);
+	{
+		KiaraSlash* slash = dynamic_cast<KiaraSlash*>(projectiles[0]);
+		if (slash)
+		{
+			slash->ActiveAwaken();
+		}
+	}
+	projectiles[0]->SetHitLimit(hitLimit_table[now_level]);
+	projectiles[0]->SetCoolDown(hitCooldown_table[now_level]);
 	return true;
 	
-}
-
-void PhoenixSword::UpdateSlash()
-{
-	slash->pos = player->pos + slash->moveDir * 60.0f;
-	slash->Update();
-}
-
-void PhoenixSword::UpdateBlaze()
-{
-	for (auto b : projectiles)
-	{
-		b->Update();
-	}
 }
 
 Blaze* PhoenixSword::GetBlaze()

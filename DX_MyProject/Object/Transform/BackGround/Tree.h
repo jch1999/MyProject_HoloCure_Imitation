@@ -28,10 +28,13 @@ public:
 	Tree();
 	~Tree();
 
-	void Init();
 	void Update();
 	void Render();
 	void PostRender();
+	
+	void InitFrame();
+	void ClearFrame();
+
 	void SetIndex(int idx);
 	void SetTarget(Transform* t) { target = t; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }

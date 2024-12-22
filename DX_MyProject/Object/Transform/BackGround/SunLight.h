@@ -2,7 +2,7 @@
 class SunLight :public Transform
 {
 protected:
-	static vector<shared_ptr<const Frame>> SunLightFrames;
+	static vector<shared_ptr<const Frame>> sunLightFrames;
 	static int SunLightUseCnt;
 
 private:
@@ -20,15 +20,16 @@ public:
 	SunLight();
 	~SunLight();
 
-	void Init();
 	void Update();
 	void Render();
 	void PostRender();
+	void InitFrame();
+	void ClearFrame();
 	void SetIndex(int idx);
 	void SetTarget(Transform* t) { target = t; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }
 
 protected:
-	FORCEINLINE static shared_ptr<const Frame> GetSunLightFrame(int idx) { return SunLightFrames[idx]; }
+	FORCEINLINE static shared_ptr<const Frame> GetSunLightFrame(int idx) { return sunLightFrames[idx]; }
 
 };

@@ -1,33 +1,33 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> DeadBeat::DeadBeatFrames;
+vector<vector<shared_ptr<const Frame>>> DeadBeat::deadBeatFrames;
 int DeadBeat::DeadBestSpawnCnt = 0;
 
 DeadBeat::DeadBeat(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(40.0f, 4.0f, 0.4f, 0.33f, 7)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	if (DeadBeatFrames.empty())
+	if (deadBeatFrames.empty())
 	{
 		InitFrame();
 	}
 
 	// clips
-	for (int i = 0; i < DeadBeatFrames.size(); i++)
+	for (int i = 0; i < deadBeatFrames.size(); i++)
 	{
-		clips.push_back(make_shared<Clip>(DeadBeatFrames[i], Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+		clips.emplace_back(make_shared<Clip>(deadBeatFrames[i], Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	}
 
 	// collider
-	damageColliders.push_back(new RectCollider(Vector2(60.0f,58.0f)));
+	damageColliders.emplace_back(new RectCollider(Vector2(60.0f,58.0f)));
 	damageCollider = damageColliders[0];
-	atkColliders.push_back(new RectCollider(Vector2(50.0f, 30.0f)));
-	atkColliders.push_back(new RectCollider(Vector2(60.0f,33.0f)));
+	atkColliders.emplace_back(new RectCollider(Vector2(50.0f, 30.0f)));
+	atkColliders.emplace_back(new RectCollider(Vector2(60.0f,33.0f)));
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffsetTable.push_back(Vector2(0.0f, 15.0f));
-	colliderOffsetTable.push_back(Vector2(0.0f, 16.5f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 15.0f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 16.5f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
 	colliderOffsetIdx = 0;
@@ -136,67 +136,65 @@ void DeadBeat::PostRender()
 
 void DeadBeat::InitFrame()
 {
-	ClearFrame();
+	if (!(deadBeatFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
 
 	// DeadBeat clip
 	{
 		vector<shared_ptr<const Frame>> NormalDeadBeatFrames;
-		NormalDeadBeatFrames.push_back(make_shared<const Frame>(file, 419.0f, 80.0f, 28.0f, 34.0f));
-		NormalDeadBeatFrames.push_back(make_shared<const Frame>(file, 485.0f, 79.0f, 28.0f, 35.0f));
-		NormalDeadBeatFrames.push_back(make_shared<const Frame>(file, 550.0f, 81.0f, 28.0f, 35.0f));
-		DeadBeatFrames.push_back(NormalDeadBeatFrames);
+		NormalDeadBeatFrames.emplace_back(make_shared<const Frame>(file, 419.0f, 80.0f, 28.0f, 34.0f));
+		NormalDeadBeatFrames.emplace_back(make_shared<const Frame>(file, 485.0f, 79.0f, 28.0f, 35.0f));
+		NormalDeadBeatFrames.emplace_back(make_shared<const Frame>(file, 550.0f, 81.0f, 28.0f, 35.0f));
+		deadBeatFrames.push_back(NormalDeadBeatFrames);
 	}
 	// DeadBatter Clip
 	{
 		vector<shared_ptr<const Frame>> DeadBatterFrames;
-		DeadBatterFrames.push_back(make_shared<const Frame>(file, 418.0f, 135.0f, 33.0f, 45.0f));
-		DeadBatterFrames.push_back(make_shared<const Frame>(file, 485.0f, 135.0f, 33.0f, 45.0f));
-		DeadBatterFrames.push_back(make_shared<const Frame>(file, 548.0f, 135.0f, 33.0f, 45.0f));
-		DeadBeatFrames.push_back(DeadBatterFrames);
+		DeadBatterFrames.emplace_back(make_shared<const Frame>(file, 418.0f, 135.0f, 33.0f, 45.0f));
+		DeadBatterFrames.emplace_back(make_shared<const Frame>(file, 485.0f, 135.0f, 33.0f, 45.0f));
+		DeadBatterFrames.emplace_back(make_shared<const Frame>(file, 548.0f, 135.0f, 33.0f, 45.0f));
+		deadBeatFrames.push_back(DeadBatterFrames);
 	}
 	// Q DeadBeat A Clip
 	{
 		vector<shared_ptr<const Frame>> QDeadBeatAFrames;
-		QDeadBeatAFrames.push_back(make_shared<const Frame>(file, 418.0f, 267.0f, 34.0f, 45.0f));
-		QDeadBeatAFrames.push_back(make_shared<const Frame>(file, 484.0f, 267.0f, 34.0f, 45.0f));
-		QDeadBeatAFrames.push_back(make_shared<const Frame>(file, 548.0f, 267.0f, 34.0f, 45.0f));
-		DeadBeatFrames.push_back(QDeadBeatAFrames);
+		QDeadBeatAFrames.emplace_back(make_shared<const Frame>(file, 418.0f, 267.0f, 34.0f, 45.0f));
+		QDeadBeatAFrames.emplace_back(make_shared<const Frame>(file, 484.0f, 267.0f, 34.0f, 45.0f));
+		QDeadBeatAFrames.emplace_back(make_shared<const Frame>(file, 548.0f, 267.0f, 34.0f, 45.0f));
+		deadBeatFrames.push_back(QDeadBeatAFrames);
 	}
 	// Q DeadBeat B Clip
 	{
 		vector<shared_ptr<const Frame>> QDeadBeatBFrames;
-		QDeadBeatBFrames.push_back(make_shared<const Frame>(file, 418.0f, 333.0f, 34.0f, 45.0f));
-		QDeadBeatBFrames.push_back(make_shared<const Frame>(file, 484.0f, 333.0f, 34.0f, 45.0f));
-		QDeadBeatBFrames.push_back(make_shared<const Frame>(file, 548.0f, 333.0f, 34.0f, 45.0f));
-		DeadBeatFrames.push_back(QDeadBeatBFrames);
+		QDeadBeatBFrames.emplace_back(make_shared<const Frame>(file, 418.0f, 333.0f, 34.0f, 45.0f));
+		QDeadBeatBFrames.emplace_back(make_shared<const Frame>(file, 484.0f, 333.0f, 34.0f, 45.0f));
+		QDeadBeatBFrames.emplace_back(make_shared<const Frame>(file, 548.0f, 333.0f, 34.0f, 45.0f));
+		deadBeatFrames.push_back(QDeadBeatBFrames);
 	}
 	// Riot DeadBeat Clip
 	{
 		vector<shared_ptr<const Frame>> RiotDeadBatterFrames;
-		RiotDeadBatterFrames.push_back(make_shared<const Frame>(file, 419.0f, 409.0f, 32.0f, 35.0f));
-		RiotDeadBatterFrames.push_back(make_shared<const Frame>(file, 485.0f, 409.0f, 32.0f, 35.0f));
-		RiotDeadBatterFrames.push_back(make_shared<const Frame>(file, 550.0f, 409.0f, 32.0f, 35.0f));
-		DeadBeatFrames.push_back(RiotDeadBatterFrames);
+		RiotDeadBatterFrames.emplace_back(make_shared<const Frame>(file, 419.0f, 409.0f, 32.0f, 35.0f));
+		RiotDeadBatterFrames.emplace_back(make_shared<const Frame>(file, 485.0f, 409.0f, 32.0f, 35.0f));
+		RiotDeadBatterFrames.emplace_back(make_shared<const Frame>(file, 550.0f, 409.0f, 32.0f, 35.0f));
+		deadBeatFrames.push_back(RiotDeadBatterFrames);
 	}
 	// Riot Q DeadBeat Clip
 	{
 		vector<shared_ptr<const Frame>> RiotQDeadBatterFrames;
-		RiotQDeadBatterFrames.push_back(make_shared<const Frame>(file, 419.0f, 475.0f, 36.0f, 33.0f));
-		RiotQDeadBatterFrames.push_back(make_shared<const Frame>(file, 484.0f, 475.0f, 36.0f, 33.0f));
-		RiotQDeadBatterFrames.push_back(make_shared<const Frame>(file, 549.0f, 477.0f, 36.0f, 33.0f));
-		DeadBeatFrames.push_back(RiotQDeadBatterFrames);
+		RiotQDeadBatterFrames.emplace_back(make_shared<const Frame>(file, 419.0f, 475.0f, 36.0f, 33.0f));
+		RiotQDeadBatterFrames.emplace_back(make_shared<const Frame>(file, 484.0f, 475.0f, 36.0f, 33.0f));
+		RiotQDeadBatterFrames.emplace_back(make_shared<const Frame>(file, 549.0f, 477.0f, 36.0f, 33.0f));
+		deadBeatFrames.push_back(RiotQDeadBatterFrames);
 	}
 }
 
 void DeadBeat::ClearFrame()
 {
-	for (auto& frames : DeadBeatFrames)
-	{
-		frames.clear();
-	}
-	DeadBeatFrames.clear();
+	if (deadBeatFrames.empty()) return;
+
+	deadBeatFrames.clear();
 }
 
 void DeadBeat::SetEnemyName(ENEMY_NAME name) // type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정

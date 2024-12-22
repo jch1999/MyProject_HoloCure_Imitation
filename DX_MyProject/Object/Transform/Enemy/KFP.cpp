@@ -15,17 +15,17 @@ KFP::KFP(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	// clips
 	for (auto& frames : kfpFrames)
 	{
-		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	}
 
 	// collider
-	damageColliders.push_back(new RectCollider(Vector2(50.0f, 46.0f)));
+	damageColliders.emplace_back(new RectCollider(Vector2(50.0f, 46.0f)));
 	damageCollider = damageColliders[0];
-	atkColliders.push_back(new RectCollider(Vector2(25.0f, 23.0f)));
+	atkColliders.emplace_back(new RectCollider(Vector2(25.0f, 23.0f)));
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffsetTable.push_back(Vector2(0.0f, 11.0f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 11.0f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
 	colliderOffsetIdx = 0;
@@ -122,34 +122,32 @@ void KFP::PostRender()
 
 void KFP::InitFrame()
 {
-	ClearFrame();
+	if (!(kfpFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
 
 	// KFP clip
 	{
 		vector<shared_ptr<const Frame>> normalKFPFrames;
-		normalKFPFrames.push_back(make_shared<const Frame>(file, 418.0f, 606.0f, 25.0f, 23.0f));
-		normalKFPFrames.push_back(make_shared<const Frame>(file, 485.0f, 606.0f, 25.0f, 23.0f));
-		normalKFPFrames.push_back(make_shared<const Frame>(file, 551.0f, 606.0f, 25.0f, 23.0f));
+		normalKFPFrames.emplace_back(make_shared<const Frame>(file, 418.0f, 606.0f, 25.0f, 23.0f));
+		normalKFPFrames.emplace_back(make_shared<const Frame>(file, 485.0f, 606.0f, 25.0f, 23.0f));
+		normalKFPFrames.emplace_back(make_shared<const Frame>(file, 551.0f, 606.0f, 25.0f, 23.0f));
 		kfpFrames.push_back(normalKFPFrames);
 	}
 	// Angry KFP Clip
 	{
 		vector<shared_ptr<const Frame>> angryKFPFrames;
-		angryKFPFrames.push_back(make_shared<const Frame>(file, 418.0f, 672.0f, 25.0f, 23.0f));
-		angryKFPFrames.push_back(make_shared<const Frame>(file, 485.0f, 672.0f, 25.0f, 23.0f));
-		angryKFPFrames.push_back(make_shared<const Frame>(file, 551.0f, 672.0f, 25.0f, 23.0f));
+		angryKFPFrames.emplace_back(make_shared<const Frame>(file, 418.0f, 672.0f, 25.0f, 23.0f));
+		angryKFPFrames.emplace_back(make_shared<const Frame>(file, 485.0f, 672.0f, 25.0f, 23.0f));
+		angryKFPFrames.emplace_back(make_shared<const Frame>(file, 551.0f, 672.0f, 25.0f, 23.0f));
 		kfpFrames.push_back(angryKFPFrames);
 	}
 }
 
 void KFP::ClearFrame()
 {
-	for (auto& frames : kfpFrames)
-	{
-		frames.clear();
-	}
+	if (kfpFrames.empty()) return;
+
 	kfpFrames.clear();
 }
 

@@ -233,6 +233,14 @@ void Icon::PostRender()
 {
 }
 
+void Icon::InitFrame()
+{
+}
+
+void Icon::ClearFrame()
+{
+}
+
 void Icon::SetState(UI::UI_STATE state)
 {
 }

@@ -1,51 +1,60 @@
 #include "framework.h"
 
-Button::Button()
+
+vector<shared_ptr<const Frame>>& Button::GetButtonFrames()
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
+	static vector<shared_ptr<const Frame>> buttonFrames;
+	return buttonFrames;
+}
 
-	// idle clip
-	frames.push_back(new Frame(file, 250.0f, 2668.0f, 180.0f, 30.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-	frames.clear();
+int& Button::GetButtonUseCnt()
+{
+	static int buttonUseCnt = 0;
+	return buttonUseCnt;
+}
 
-	// active clip
-	frames.push_back(new Frame(file, 250.0f, 2698, 180.0f, 30.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-	frames.clear();
+Button::Button(Vector2 inSize,Vector2 inScale,Vector2 inOffset)
+	:UI(inSize,inScale,inOffset)
+{
+	if (GetButtonFrames().empty())
+	{
+		InitFrame();
+	}
 
 	btnText = new TextPrinter();
 	btnText->SetTarget(this);
-	btnText->SetOffset(this->ui_size / 2.0f * this->ui_scale);
+	btnText->SetOffset(this->uiSize / 2.0f * this->uiScale);
 	btnText->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(10.0f, 20.0f));
 	btnText->SetActive(true);
-	child_list.push_back(btnText);
+	childList.push_back(btnText);
 
 	id = UI::UI_ID::BUTTON;
 	type = UI::UI_TYPE::BUTTON;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(180.0f, 30.0f);
-	ui_scale = Vector2(1, 1);
-	offset = Vector2(0, 0);
 	is_active = false;
+
+	++GetButtonUseCnt();
 }
 
 Button::~Button()
 {
+	if ((--GetButtonUseCnt()) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void Button::Update()
 {
 	if (!is_active)return;
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
-	clips[clip_idx]->Update();
+	auto& currentFrame = GetButtonFrames()[clipIdx];
+	scale = currentFrame->GetFrameSize() * uiSize / currentFrame->GetFrameOriginSize() * uiScale;
 
 	pos = target->pos + offset;
 	WorldUpdate();
 
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Update();
 }
 
@@ -59,15 +68,33 @@ void Button::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	GetButtonFrames()[clipIdx]->Render();
 
-	for (auto c : child_list)
+	for (auto& c : childList)
 		c->Render();
 }
 
 void Button::PostRender()
 {
 	if (!is_active)return;
+}
+
+void Button::InitFrame()
+{
+	auto& buttonFrames = GetButtonFrames();
+	if (!(buttonFrames.empty())) return;
+
+	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
+
+	// idle clip
+	buttonFrames.emplace_back(make_shared<const Frame>(file, 250.0f, 2668.0f, 180.0f, 30.0f));
+	// active clip
+	buttonFrames.emplace_back(make_shared<const Frame>(file, 250.0f, 2698, 180.0f, 30.0f));
+}
+
+void Button::ClearFrame()
+{
+	GetButtonFrames().clear();
 }
 
 void Button::SetState(UI::UI_STATE state)

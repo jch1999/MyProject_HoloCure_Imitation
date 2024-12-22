@@ -435,8 +435,8 @@ void EnemySpawner::SetPlayer(Player* p)
 
 void EnemySpawner::EnemyDead()
 {
-	nowSpawnCnt--;
-	defeatCnt++;
+	--nowSpawnCnt;
+	++defeatCnt;
 	if (SkillManager::Get()->nurseHron_active)
 	{
 		int rand = Random::Get()->GetRandomInt(0, 9);

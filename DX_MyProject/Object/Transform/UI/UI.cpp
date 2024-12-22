@@ -1,11 +1,14 @@
 #include "framework.h"
 
-UI::UI()
+UI::UI(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
 {
 	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
 	CB = new ColourBuffer();
 
+	uiSize = inSize;
+	uiScale = inScale;
+	offset = inOffset;
 }
 
 UI::~UI()
@@ -14,8 +17,20 @@ UI::~UI()
 
 	clips.clear();
 	
-	for (auto u : childList)
-		delete u;
+	for (auto child : childList)
+		delete child;
+}
+
+void UI::PostRender()
+{
+}
+
+void UI::InitFrame()
+{
+}
+
+void UI::ClearFrame()
+{
 }
 
 void UI::SetTarget(Transform* target)
@@ -61,4 +76,9 @@ void UI::SetClipIdx(int inIdx)
 void UI::SetColor(Float4 inColor) 
 {
 	CB->data.colour = inColor; 
+}
+
+void UI::SetState(UI::UI_STATE inState)
+{
+	state = inState;
 }

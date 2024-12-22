@@ -2,3 +2,4 @@
 #include "IMovable.h"
 #include "IHealth.h"
 #include "IAttack.h"
+#include "IPositionable.h"

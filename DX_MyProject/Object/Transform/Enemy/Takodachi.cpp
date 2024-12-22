@@ -15,18 +15,18 @@ Takodachi::Takodachi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2
 	// clips
 	for (auto& frames : takodachiFrames)
 	{
-		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	}
 	
 
 	// collider
-	damageColliders.push_back(new RectCollider(Vector2(42.0f, 42.0f)));
+	damageColliders.emplace_back(new RectCollider(Vector2(42.0f, 42.0f)));
 	damageCollider = damageColliders[0];
-	atkColliders.push_back(new RectCollider(Vector2(21.0f, 21.0f)));
+	atkColliders.emplace_back(new RectCollider(Vector2(21.0f, 21.0f)));
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffsetTable.push_back(Vector2(0.0f, 10.5f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 10.5f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
 	colliderOffsetIdx = 0;
@@ -126,42 +126,40 @@ void Takodachi::PostRender()
 
 void Takodachi::InitFrame()
 {
-	ClearFrame();
+	if (!(takodachiFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
 
 	// Takodachi clip
 	{
 		vector<shared_ptr<const Frame>> normalTakdodachiFrames;
-		normalTakdodachiFrames.push_back(make_shared<const Frame>(file, 623.0f, 379.0f, 21.0f, 21.0f));
-		normalTakdodachiFrames.push_back(make_shared<const Frame>(file, 688.0f, 379.0f, 21.0f, 21.0f));
-		normalTakdodachiFrames.push_back(make_shared<const Frame>(file, 754.0f, 379.0f, 21.0f, 21.0f));
+		normalTakdodachiFrames.emplace_back(make_shared<const Frame>(file, 623.0f, 379.0f, 21.0f, 21.0f));
+		normalTakdodachiFrames.emplace_back(make_shared<const Frame>(file, 688.0f, 379.0f, 21.0f, 21.0f));
+		normalTakdodachiFrames.emplace_back(make_shared<const Frame>(file, 754.0f, 379.0f, 21.0f, 21.0f));
 		takodachiFrames.push_back(normalTakdodachiFrames);
 	}
 	// Hungry Takodachi Clip
 	{
 		vector<shared_ptr<const Frame>> hungryTakdodachiFrames;
-		hungryTakdodachiFrames.push_back(make_shared<const Frame>(file, 623.0f, 445.0f, 21.0f, 21.0f));
-		hungryTakdodachiFrames.push_back(make_shared<const Frame>(file, 688.0f, 445.0f, 21.0f, 21.0f));
-		hungryTakdodachiFrames.push_back(make_shared<const Frame>(file, 754.0f, 445.0f, 21.0f, 21.0f));
+		hungryTakdodachiFrames.emplace_back(make_shared<const Frame>(file, 623.0f, 445.0f, 21.0f, 21.0f));
+		hungryTakdodachiFrames.emplace_back(make_shared<const Frame>(file, 688.0f, 445.0f, 21.0f, 21.0f));
+		hungryTakdodachiFrames.emplace_back(make_shared<const Frame>(file, 754.0f, 445.0f, 21.0f, 21.0f));
 		takodachiFrames.push_back(hungryTakdodachiFrames);
 	}
 	// Tako Viking Clip
 	{
 		vector<shared_ptr<const Frame>> takoVikingFrames;
-		takoVikingFrames.push_back(make_shared<const Frame>(file, 623.0f, 509.0f, 21.0f, 21.0f));
-		takoVikingFrames.push_back(make_shared<const Frame>(file, 688.0f, 509.0f, 21.0f, 21.0f));
-		takoVikingFrames.push_back(make_shared<const Frame>(file, 754.0f, 509.0f, 21.0f, 21.0f));
+		takoVikingFrames.emplace_back(make_shared<const Frame>(file, 623.0f, 509.0f, 21.0f, 21.0f));
+		takoVikingFrames.emplace_back(make_shared<const Frame>(file, 688.0f, 509.0f, 21.0f, 21.0f));
+		takoVikingFrames.emplace_back(make_shared<const Frame>(file, 754.0f, 509.0f, 21.0f, 21.0f));
 		takodachiFrames.push_back(takoVikingFrames);
 	}
 }
 
 void Takodachi::ClearFrame()
 {
-	for (auto& frames : takodachiFrames)
-	{
-		frames.clear();
-	}
+	if (takodachiFrames.empty()) return;
+
 	takodachiFrames.clear();
 }
 

@@ -15,24 +15,24 @@ Shrimp::Shrimp(ENEMY_NAME name, MOVE_TYPE type,Vector2 damgeSize, Vector2 attack
 	// clips
 	for (auto& frames : shrimpFrames)
 	{
-		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	}
 
 	// collider
 	// dmg - Shrimp, Dark Shrimp, Riot Shrimp
-	damageColliders.push_back(new RectCollider(Vector2(65.0f,62.0f)));
+	damageColliders.emplace_back(new RectCollider(Vector2(65.0f,62.0f)));
 	// dmg -  Q Shrimp
-	damageColliders.push_back(new RectCollider(Vector2(70.0f,62.0f)));
+	damageColliders.emplace_back(new RectCollider(Vector2(70.0f,62.0f)));
 	damageCollider = damageColliders[0];
 	
 	// atk - Shrimp, Dark Shrimp, Riot Shrimp
-	atkColliders.push_back(new RectCollider(Vector2(60.0f, 28.0f)));
+	atkColliders.emplace_back(new RectCollider(Vector2(60.0f, 28.0f)));
 	// atk -  Q Shrimp
-	atkColliders.push_back(new RectCollider(Vector2(66.0f, 28.0f)));
+	atkColliders.emplace_back(new RectCollider(Vector2(66.0f, 28.0f)));
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffsetTable.push_back(Vector2(0.0f, 14.0f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 14.0f));
 	colliderOffsetIdx = 0;
 
 	is_active = false;
@@ -139,58 +139,56 @@ void Shrimp::PostRender()
 
 void Shrimp::InitFrame()
 {
-	ClearFrame();
+	if (!(shrimpFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
 
 	// Shrimp clip
 	{
 		vector<shared_ptr<const Frame>> normalShrimpFrames;
-		normalShrimpFrames.push_back(make_shared<const Frame>(file, 53.0f, 150.0f, 33.0f, 28.0f));
-		normalShrimpFrames.push_back(make_shared<const Frame>(file, 181.0f, 150.0f, 33.0f, 28.0f));
-		normalShrimpFrames.push_back(make_shared<const Frame>(file, 312.0f, 150.0f, 33.0f, 28.0f));
+		normalShrimpFrames.emplace_back(make_shared<const Frame>(file, 53.0f, 150.0f, 33.0f, 28.0f));
+		normalShrimpFrames.emplace_back(make_shared<const Frame>(file, 181.0f, 150.0f, 33.0f, 28.0f));
+		normalShrimpFrames.emplace_back(make_shared<const Frame>(file, 312.0f, 150.0f, 33.0f, 28.0f));
 		shrimpFrames.push_back(normalShrimpFrames);
 	}
 	// Dark Shrimp Clip
 	{
 		vector<shared_ptr<const Frame>> DarkShrimpFrames;
-		DarkShrimpFrames.push_back(make_shared<const Frame>(file, 53.0f, 280.0f, 33.0f, 28.0f));
-		DarkShrimpFrames.push_back(make_shared<const Frame>(file, 181.0f, 280.0f, 33.0f, 28.0f));
-		DarkShrimpFrames.push_back(make_shared<const Frame>(file, 312.0f, 280.0f, 33.0f, 28.0f));
+		DarkShrimpFrames.emplace_back(make_shared<const Frame>(file, 53.0f, 280.0f, 33.0f, 28.0f));
+		DarkShrimpFrames.emplace_back(make_shared<const Frame>(file, 181.0f, 280.0f, 33.0f, 28.0f));
+		DarkShrimpFrames.emplace_back(make_shared<const Frame>(file, 312.0f, 280.0f, 33.0f, 28.0f));
 		shrimpFrames.push_back(DarkShrimpFrames);
 	}
 	// Q Shrimp A Clip
 	{
 		vector<shared_ptr<const Frame>> QShrimpAFrames;
-		QShrimpAFrames.push_back(make_shared<const Frame>(file, 53.0f, 410.0f, 39.0f, 28.0f));
-		QShrimpAFrames.push_back(make_shared<const Frame>(file, 181.0f, 410.0f, 39.0f, 28.0f));
-		QShrimpAFrames.push_back(make_shared<const Frame>(file, 312.0f, 410.0f, 39.0f, 28.0f));
+		QShrimpAFrames.emplace_back(make_shared<const Frame>(file, 53.0f, 410.0f, 39.0f, 28.0f));
+		QShrimpAFrames.emplace_back(make_shared<const Frame>(file, 181.0f, 410.0f, 39.0f, 28.0f));
+		QShrimpAFrames.emplace_back(make_shared<const Frame>(file, 312.0f, 410.0f, 39.0f, 28.0f));
 		shrimpFrames.push_back(QShrimpAFrames);
 	}
 	// Q Shrimp B Clip
 	{
 		vector<shared_ptr<const Frame>> QShrimpBFrames;
-		QShrimpBFrames.push_back(make_shared<const Frame>(file, 53.0f, 540.0f, 39.0f, 28.0f));
-		QShrimpBFrames.push_back(make_shared<const Frame>(file, 181.0f, 540.0f, 39.0f, 28.0f));
-		QShrimpBFrames.push_back(make_shared<const Frame>(file, 312.0f, 540.0f, 39.0f, 28.0f));
+		QShrimpBFrames.emplace_back(make_shared<const Frame>(file, 53.0f, 540.0f, 39.0f, 28.0f));
+		QShrimpBFrames.emplace_back(make_shared<const Frame>(file, 181.0f, 540.0f, 39.0f, 28.0f));
+		QShrimpBFrames.emplace_back(make_shared<const Frame>(file, 312.0f, 540.0f, 39.0f, 28.0f));
 		shrimpFrames.push_back(QShrimpBFrames);
 	}
 	// Riot Q Shrimp Clip
 	{
 		vector<shared_ptr<const Frame>> RiotQShrimpFrames;
-		RiotQShrimpFrames.push_back(make_shared<const Frame>(file, 53.0f, 670.0f, 33.0f, 28.0f));
-		RiotQShrimpFrames.push_back(make_shared<const Frame>(file, 181.0f, 670.0f, 33.0f, 28.0f));
-		RiotQShrimpFrames.push_back(make_shared<const Frame>(file, 312.0f, 670.0f, 33.0f, 28.0f));
+		RiotQShrimpFrames.emplace_back(make_shared<const Frame>(file, 53.0f, 670.0f, 33.0f, 28.0f));
+		RiotQShrimpFrames.emplace_back(make_shared<const Frame>(file, 181.0f, 670.0f, 33.0f, 28.0f));
+		RiotQShrimpFrames.emplace_back(make_shared<const Frame>(file, 312.0f, 670.0f, 33.0f, 28.0f));
 		shrimpFrames.push_back(RiotQShrimpFrames);
 	}
 }
 
 void Shrimp::ClearFrame()
 {
-	for (auto& frames : shrimpFrames)
-	{
-		frames.clear();
-	}
+	if (shrimpFrames.empty()) return;
+
 	shrimpFrames.clear();
 }
 

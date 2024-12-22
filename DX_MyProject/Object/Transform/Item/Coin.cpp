@@ -1,5 +1,8 @@
 #include "framework.h"
 
+vector<shared_ptr<const Frame>> Coin::coinFrames;
+int Coin::coinUseCnt = 0;
+
 Coin::Coin()
 	:Item()
 	, speed(100.0f)
@@ -9,33 +12,28 @@ Coin::Coin()
 	, isUp(false)
 	,coinAmount(0)
 {
-	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
-	Texture* t = Texture::Add(file);
-
-	vector<Frame*> frames;
-
-	// coin clip
-	Vector2 initPos(4, 300);
-	for (int i = 0; i < 8; i++)
+	if (coinFrames.empty())
 	{
-		frames.push_back(new Frame(file, initPos.x+17*i, 300.0f, 15.0f, 15.0f));
+		InitFrame();
 	}
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
+
+	clips.emplace_back(make_shared<Clip>(coinFrames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 
 	// collider
 	colliders.push_back(new RectCollider(Vector2(15.0f, 15.0f) * 2.0f));
 	collider = colliders[0];
 	collider->pos = pos;
 
-	clip_idx = 0;
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() / clips[clip_idx]->GetFrameOriginSize();
+	clipIdx = 0;
+	scale = clips[clipIdx]->GetFrameSize() * collider->Size() / clips[clipIdx]->GetFrameOriginSize();
 
 	id = ITEM_ID::COIN;
 	type = ITEM_TYPE::COIN;
 
 	is_active = false;
 	collider->SetActive(false);
+
+	++coinUseCnt;
 }
 
 Coin::~Coin()
@@ -44,6 +42,11 @@ Coin::~Coin()
 	{
 		if (c != nullptr)
 			delete c;
+	}
+
+	if ((--coinUseCnt) == 0)
+	{
+		ClearFrame();
 	}
 }
 
@@ -57,9 +60,9 @@ void Coin::Update()
 	{
 		nowTime += DELTA;
 		if (isUp)
-			move_dir = Vector2(0, -1.0f);
+			moveDir = Vector2(0, -1.0f);
 		else
-			move_dir = Vector2(0, 1.0f);
+			moveDir = Vector2(0, 1.0f);
 
 		if (nowTime >= changeTime)
 		{
@@ -67,9 +70,9 @@ void Coin::Update()
 			nowTime -= changeTime;
 		}
 
-		if (addtional_dir.GetLength() > 0.1f)
-			move_dir = (move_dir+addtional_dir).Normalized();
-		pos += move_dir * idleSPD * DELTA;
+		if (addtionalDir.GetLength() > 0.1f)
+			moveDir = (moveDir+addtionalDir).Normalized();
+		pos += moveDir * idleSPD * DELTA;
 	}
 	break;
 	case Item::ITEM_STATE::ACTIVE:
@@ -89,8 +92,8 @@ void Coin::Update()
 		break;
 	}
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() / clips[clip_idx]->GetFrameOriginSize();
-	clips[clip_idx]->Update();
+	scale = clips[clipIdx]->GetFrameSize() * collider->Size() / clips[clipIdx]->GetFrameOriginSize();
+	clips[clipIdx]->Update();
 
 	WorldUpdate();
 
@@ -129,6 +132,27 @@ void Coin::SetPos(Vector2 pos)
 	collider->pos = pos;
 }
 
+void Coin::InitFrame()
+{
+	if (!(coinFrames.empty())) return;
+
+	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
+
+	// coin clip
+	Vector2 initPos(4, 300);
+	for (int i = 0; i < 8; i++)
+	{
+		coinFrames.emplace_back(make_shared<const Frame>(file, initPos.x + 17 * i, 300.0f, 15.0f, 15.0f));
+	}
+}
+
+void Coin::ClearFrame()
+{
+	if (coinFrames.empty()) return;
+
+	coinFrames.clear();
+}
+
 void Coin::Respawn()
 {
 	state = ITEM_STATE::IDLE;
@@ -137,8 +161,8 @@ void Coin::Respawn()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = clips[clipIdx]->GetFrameSize() * collider->Size() /
+		clips[clipIdx]->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);

@@ -50,6 +50,14 @@ void TextPrinter::PostRender()
 {
 }
 
+void TextPrinter::InitFrame()
+{
+}
+
+void TextPrinter::ClearFrame()
+{
+}
+
 void TextPrinter::SetState(UI::UI_STATE state)
 {
 	this->state = state;

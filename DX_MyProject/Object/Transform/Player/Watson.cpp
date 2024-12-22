@@ -24,7 +24,7 @@ Watson::Watson(float MaxHP,float atk, float speed,float crt,float pickUpRange,fl
 	}
 
 	// 이를 Clip으로 만들어 clips에 저장
-	AddClip(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
+	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
 	frames.clear();
 
 	// PLAYER_STATUS::MOVE에 대응하는 애니메이션을 넣는 파트
@@ -35,30 +35,30 @@ Watson::Watson(float MaxHP,float atk, float speed,float crt,float pickUpRange,fl
 		frames.push_back(new Frame(file, init_pos.x + 65 * i, init_pos.y,
 			this_frame_size.x, this_frame_size.y));
 	}
-	AddClip(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	frames.clear();
 
 	damageCollider = new RectCollider(size);
 	for (int i = 0; i < 20; i++)
 	{
-		CircleCollider* pickupCollider = new CircleCollider(default_pickUpRange * (1.0f + 0.2f * i));
+		CircleCollider* pickupCollider = new CircleCollider(defaultPickUpRange * (1.0f + 0.2f * i));
 		pickupCollider->SetActive(false);
 		pickUpColliders.push_back(pickupCollider);
 	}
 
 	// collider
 	damageCollider->pos = pos;
-	pickUpColliders[idx_pickUpRange]->pos = pos;
+	pickUpColliders[pickUpRangeIdx]->pos = pos;
 
 	// 기본 설정
 	player_id = PLAYER_ID::WATSON;
 	action_status = PLAYER_STATUS::IDLE;
-	attack_dir = Vector2(1.0f, 0.0f);
-	is_looking_right = true;
+	attackDir = Vector2(1.0f, 0.0f);
+	isLookingRight = true;
 
 	is_active = true;
 	damageCollider->is_active = true;
-	pickUpColliders[idx_pickUpRange]->is_active = true;
+	pickUpColliders[pickUpRangeIdx]->is_active = true;
 }
 
 Watson::~Watson()
@@ -97,13 +97,13 @@ void Watson::Update()
 	{
 		// 이동 방향 지정
 		CheckMoveDir();
-		if (abs(move_dir.x) < 0.00001f && abs(move_dir.y) < 0.00001f)
+		if (abs(moveDir.x) < 0.00001f && abs(moveDir.y) < 0.00001f)
 		{
 			SetStatus(PLAYER_STATUS::IDLE);
 		}
 		else
 		{
-			pos += move_dir * speed * DELTA;
+			pos += moveDir * speed * DELTA;
 		}
 	}
 	break;
@@ -117,7 +117,7 @@ void Watson::Update()
 	scale = clips[(UINT)action_status]->GetFrameSize() * size /
 		clips[(UINT)action_status]->GetFrameOriginSize() * Vector2(2.0f, 1.5f);
 
-	if (!is_looking_right)
+	if (!isLookingRight)
 	{
 		scale = scale * Vector2(-1.0f, 1.0f);
 	}
@@ -128,8 +128,8 @@ void Watson::Update()
 	damageCollider->pos = pos + Vector2(3.0f, 3.0f);
 	damageCollider->WorldUpdate();
 
-	pickUpColliders[idx_pickUpRange]->pos = pos;
-	pickUpColliders[idx_pickUpRange]->WorldUpdate();
+	pickUpColliders[pickUpRangeIdx]->pos = pos;
+	pickUpColliders[pickUpRangeIdx]->WorldUpdate();
 }
 
 void Watson::Render()
@@ -145,7 +145,7 @@ void Watson::Render()
 	clips[(UINT)action_status]->Render();
 
 	damageCollider->Render();
-	pickUpColliders[idx_pickUpRange]->Render();
+	pickUpColliders[pickUpRangeIdx]->Render();
 }
 
 void Watson::PostRender()

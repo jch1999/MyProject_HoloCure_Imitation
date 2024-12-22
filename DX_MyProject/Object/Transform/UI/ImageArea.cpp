@@ -1,29 +1,28 @@
 #include "framework.h"
 
-ImageArea::ImageArea(Frame* f)
-	:frame(f)
+ImageArea::ImageArea(shared_ptr<const Frame>& inFrame)
+	:frame(inFrame)
 {
 	id = UI::UI_ID::IMAGE;
 	type = UI::UI_TYPE::IMAGE;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(43.0f, 38.0f);
-	ui_scale = Vector2(1, 1);
-	additional_scale = Vector2(1, 1);
+	uiSize = Vector2(43.0f, 38.0f);
+	uiScale = Vector2(1, 1);
+	additionalScale = Vector2(1, 1);
 	offset = Vector2(0, 0);
 	is_active = true;
 }
 
 ImageArea::~ImageArea()
 {
-	if(frame!=nullptr)
-		delete frame;
+	frame.reset();
 }
 
 void ImageArea::Update()
 {
 	if (!is_active)return;
 
-	scale = frame->GetFrameSize() * ui_size / frame->GetFrameOriginSize() * ui_scale;
+	scale = frame->GetFrameSize() * uiSize / frame->GetFrameOriginSize() * uiScale;
 
 	if(target!=nullptr)
 		pos = target->pos + offset;
@@ -53,16 +52,6 @@ void ImageArea::Render()
 	default:
 		break;
 	}
-}
-
-void ImageArea::PostRender()
-{
-	
-}
-
-void ImageArea::SetState(UI::UI_STATE state)
-{
-	this->state = state;
 }
 
 void ImageArea::SetID(UI::UI_ID id)

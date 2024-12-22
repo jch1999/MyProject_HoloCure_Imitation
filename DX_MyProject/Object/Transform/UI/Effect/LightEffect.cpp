@@ -2,20 +2,21 @@
 
 LightEffect::LightEffect()
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
+	InitFrame();
 	for (int i = 0; i < 5; i++)
 	{
-		ImageArea* light = new ImageArea(new Frame(file, 218.0f, 953.0f, 24.0f, 43.0f));
+		ImageArea* light = new ImageArea(lightEffectFrame);
 		light->SetSize(Vector2(24.0f, 43.0f));
-		lightEffect.push_back(light);
+		(light);
 		light->SetAngle(72.0f * M_PI / 180.0f * i);
 		light->SetTarget(this);
-		child_list.push_back(light);
+		childList.push_back(light);
 	}
 }
 
 LightEffect::~LightEffect()
 {
+	ClearFrame();
 }
 
 void LightEffect::Update()
@@ -30,7 +31,7 @@ void LightEffect::Update()
 		lightEffect[i]->SetAngle(72.0f * M_PI / 180.0f * i + this->rot.z);
 	}
 
-	for (auto c : child_list)
+	for (auto c : childList)
 	{
 		c->SetOffset(Vector2((cosf(90.0f * M_PI / 180.0f + c->GetAngle())), (sinf(90.0f * M_PI / 180.0f + c->GetAngle()))) * dist * -1.0f
 			+ Vector2(0.0f, 15.0f));
@@ -41,7 +42,7 @@ void LightEffect::Update()
 	//lightEffect[3]->SetOffset(lightEffect[3]->GetOffset() + Vector2(15.0f, 10.0f));
 
 	WorldUpdate();
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Update();
 }
 
@@ -49,20 +50,17 @@ void LightEffect::Render()
 {
 	if (!is_active)return;
 
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Render();
-}
-
-void LightEffect::PostRender()
-{
-	//ImGui::SliderFloat("Dist", &dist, 0.0f, 150.0f);
 }
 
 void LightEffect::SetState(UI::UI_STATE state)
 {
 	this->state = state;
-	for (auto c : child_list)
+	for (auto c : childList)
+	{
 		c->SetState(state);
+	}
 }
 
 void LightEffect::SetID(UI::UI_ID id)
@@ -70,9 +68,22 @@ void LightEffect::SetID(UI::UI_ID id)
 	this->id = id;
 }
 
-void LightEffect::SetScale(Vector2 _scale)
+void LightEffect::SetScale(Vector2 inScale)
 {
-	this->ui_scale = _scale;
+	this->uiScale = inScale;
 	for (auto i : lightEffect)
-		i->SetScale(_scale);
+	{
+		i->SetScale(inScale);
+	}
+}
+
+void LightEffect::InitFrame()
+{
+	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
+	lightEffectFrame = make_shared<const Frame>(file, 218.0f, 953.0f, 24.0f, 43.0f);
+}
+
+void LightEffect::ClearFrame()
+{
+	lightEffectFrame.reset();
 }

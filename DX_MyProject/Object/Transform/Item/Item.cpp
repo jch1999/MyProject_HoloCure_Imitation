@@ -13,12 +13,7 @@ Item::~Item()
 	//delete PS;
 	//delete CB;
 
-	for (auto& clip : clips)
-	{
-		clip.reset();
-	}
 	clips.clear();
-	frame.reset();
 }
 
 void Item::SetState(ITEM_STATE inState)

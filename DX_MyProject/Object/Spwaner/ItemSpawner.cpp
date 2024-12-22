@@ -12,16 +12,16 @@ ItemSpawner::ItemSpawner()
 {
 	for (int i = 0; i < 100; i++)
 	{
-		item_list.push_back(new Exp());
-		item_list.push_back(new Coin());
+		item_list.emplace_back(new Exp());
+		item_list.emplace_back(new Coin());
 	}
 	for (int i = 0; i < 10; i++)
 	{
-		item_list.push_back(new Anvil());
-		item_list.push_back(new Hambureger());
+		item_list.emplace_back(new Anvil());
+		item_list.emplace_back(new Hambureger());
 	}
-	item_list.push_back(new RewardBox());
-	item_list.push_back(new RewardBox());
+	item_list.emplace_back(new RewardBox());
+	item_list.emplace_back(new RewardBox());
 }
 
 ItemSpawner::~ItemSpawner()

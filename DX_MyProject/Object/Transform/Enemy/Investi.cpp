@@ -15,17 +15,17 @@ Investi::Investi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 att
 	// clips
 	for (auto& frames : investiFrames)
 	{
-		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	}
 
 	// collider
-	damageColliders.push_back(new RectCollider(Vector2(66.0f, 86.0f)));
+	damageColliders.emplace_back(new RectCollider(Vector2(66.0f, 86.0f)));
 	damageCollider = damageColliders[0];
-	atkColliders.push_back(new RectCollider(Vector2(33.0f, 43.0f)));
+	atkColliders.emplace_back(new RectCollider(Vector2(33.0f, 43.0f)));
 	attackCollider = atkColliders[0];
 
 	// attackColliderOffset
-	colliderOffsetTable.push_back(Vector2(0.0f, 11.0f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 11.0f));
 	damageCollider->pos = pos;
 	attackCollider->pos = pos;
 	colliderOffsetIdx = 0;
@@ -122,34 +122,32 @@ void Investi::PostRender()
 
 void Investi::InitFrame()
 {
-	ClearFrame();
+	if (!(investiFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
 
 	// Investi Gator clip
 	{
 		vector<shared_ptr<const Frame>> investiGatorFrames;
-		investiGatorFrames.push_back(make_shared<const Frame>(file, 607.0f, 81.0f, 45.0f, 32.0f));
-		investiGatorFrames.push_back(make_shared<const Frame>(file, 673.0f, 81.0f, 45.0f, 32.0f));
-		investiGatorFrames.push_back(make_shared<const Frame>(file, 739.0f, 81.0f, 45.0f, 32.0f));
+		investiGatorFrames.emplace_back(make_shared<const Frame>(file, 607.0f, 81.0f, 45.0f, 32.0f));
+		investiGatorFrames.emplace_back(make_shared<const Frame>(file, 673.0f, 81.0f, 45.0f, 32.0f));
+		investiGatorFrames.emplace_back(make_shared<const Frame>(file, 739.0f, 81.0f, 45.0f, 32.0f));
 		investiFrames.push_back(investiGatorFrames);
 	}
 	// Thicc Bubba Clip
 	{
 		vector<shared_ptr<const Frame>> thiccBubbaFrames;
-		thiccBubbaFrames.push_back(make_shared<const Frame>(file, 617.0f, 203.0f, 33.0f, 43.0f));
-		thiccBubbaFrames.push_back(make_shared<const Frame>(file, 684.0f, 203.0f, 33.0f, 43.0f));
-		thiccBubbaFrames.push_back(make_shared<const Frame>(file, 746.0f, 203.0f, 33.0f, 43.0f));
+		thiccBubbaFrames.emplace_back(make_shared<const Frame>(file, 617.0f, 203.0f, 33.0f, 43.0f));
+		thiccBubbaFrames.emplace_back(make_shared<const Frame>(file, 684.0f, 203.0f, 33.0f, 43.0f));
+		thiccBubbaFrames.emplace_back(make_shared<const Frame>(file, 746.0f, 203.0f, 33.0f, 43.0f));
 		investiFrames.push_back(thiccBubbaFrames);
 	}
 }
 
 void Investi::ClearFrame()
 {
-	for (auto& frames : investiFrames)
-	{
-		frames.clear();
-	}
+	if (investiFrames.empty()) return;
+
 	investiFrames.clear();
 }
 

@@ -183,6 +183,7 @@
     <ClInclude Include="Framework\Utility\Control.h" />
     <ClInclude Include="Framework\Utility\Singleton.h" />
     <ClInclude Include="Framework\Utility\Timer.h" />
+    <ClInclude Include="Object\Interface\IPositionable.h" />
     <ClInclude Include="Object\Transform\Projectile\LavaArea.h" />
     <ClInclude Include="Library\라이브러리 추가법.h" />
     <ClInclude Include="Library\외부 라이브러리 추가방법.h" />
@@ -299,7 +300,6 @@
     <ClInclude Include="Object\Transform\UI\Panel\EnhancePanel.h" />
     <ClInclude Include="Object\Transform\UI\Bar\ExpBar.h" />
     <ClInclude Include="Object\Transform\UI\Bar\HPBar.h" />
-    <ClInclude Include="Object\Transform\UI\Icon\Icon.h" />
     <ClInclude Include="Object\Transform\UI\Icon\IconFrame.h" />
     <ClInclude Include="Object\Transform\UI\Icon\LevelLabel.h" />
     <ClInclude Include="Object\Transform\UI\Panel\LevelUpPanel.h" />
@@ -453,7 +453,6 @@
     <ClCompile Include="Object\Transform\UI\Text\DmgText.cpp" />
     <ClCompile Include="Object\Transform\UI\Bar\ExpBar.cpp" />
     <ClCompile Include="Object\Transform\UI\Bar\HPBar.cpp" />
-    <ClCompile Include="Object\Transform\UI\Icon\Icon.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\IconFrame.cpp" />
     <ClCompile Include="Object\Transform\UI\Icon\LevelLabel.cpp" />
     <ClCompile Include="Object\Transform\UI\Panel\LevelUpPanel.cpp" />

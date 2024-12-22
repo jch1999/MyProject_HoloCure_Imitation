@@ -24,7 +24,6 @@ public:
 	Flower();
 	~Flower();
 
-	void Init();
 	void Update();
 	void Render();
 	void PostRender();
@@ -33,4 +32,6 @@ public:
 	void SetOffset(Vector2 offset) { this->offset = offset; }
 	void ChangePos();
 	void SetColor(Float4 color) { CB->data.colour = color; }
+	void InitFrame();
+	void ClearFrame();
 };

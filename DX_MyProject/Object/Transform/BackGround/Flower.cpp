@@ -12,10 +12,10 @@ Flower::Flower()
 
 	if (flowerFrames.empty())
 	{
-		Init();
+		InitFrame();
 	}
 
-	clips.push_back(make_shared<const Clip>(flowerFrames, Clip::CLIP_TYPE::END, 1 / 4.0f));
+	clips.emplace_back(make_shared<const Clip>(flowerFrames, Clip::CLIP_TYPE::END, 1 / 4.0f));
 	renderSize = Vector2(29.0f, 38.0f)*1.2f;
 	
 	ChangePos();
@@ -30,19 +30,7 @@ Flower::~Flower()
 
 	if ((--flowerUseCnt) == 0)
 	{
-		flowerFrames.clear();
-	}
-}
-
-void Flower::Init()
-{
-	flowerFrames.clear();
-
-	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
-
-	for (int i = 0; i < 6; i++)
-	{
-		flowerFrames.push_back(make_shared<const Frame>(file, 4.0f + 31.0f * i, 74.0f, 29.0f, 38.0f));
+		ClearFrame();
 	}
 }
 
@@ -105,4 +93,22 @@ void Flower::ChangePos()
 		is_active = activeRecord[nowPos];
 		SetIndex(clipRecord[nowPos]);
 	}
+}
+
+void Flower::InitFrame()
+{
+	if (!(flowerFrames.empty())) return;
+
+	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
+
+	for (int i = 0; i < 6; i++)
+	{
+		flowerFrames.emplace_back(make_shared<const Frame>(file, 4.0f + 31.0f * i, 74.0f, 29.0f, 38.0f));
+	}
+}
+
+void Flower::ClearFrame()
+{
+
+	flowerFrames.clear();
 }

@@ -1,17 +1,19 @@
 #include "framework.h"
 
+shared_ptr<const Frame> RewardBox::rewardBoxFrame;
+int RewardBox::rewardBoxUseCnt = 0;
+
 RewardBox::RewardBox(Vector2 pos, Vector2 size)
 	:Item()
 	,reward_coin(0)
 {
-	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
-	Texture* t = Texture::Add(file);
+	if (!rewardBoxFrame)
+	{
+		InitFrame();
+	}
 
-	vector<Frame*> frames;
 	// RewardBox clip
-	frames.push_back(new Frame(file, 20.0f, 184.0f, 33.0f, 19.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
+	frame = rewardBoxFrame;
 
 	collider = new RectCollider(Vector2(33.0f, 19.0f) * 1.5f);
 	id = ITEM_ID::REWORD_BOX;
@@ -23,12 +25,19 @@ RewardBox::RewardBox(Vector2 pos, Vector2 size)
 	light->SetActive(false);
 	is_active = false;
 	collider->SetActive(false);
+
+	++rewardBoxUseCnt;
 }
 
 RewardBox::~RewardBox()
 {
 	delete collider;
 	delete light;
+
+	if ((--rewardBoxUseCnt) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void RewardBox::Update()
@@ -54,10 +63,12 @@ void RewardBox::Update()
 	default:
 		break;
 	}
+	
 	light->Update();
-	clips[clip_idx]->Update();
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() / clips[clip_idx]->GetFrameOriginSize();
+
+	scale = frame->GetFrameSize() * collider->Size() / frame->GetFrameOriginSize();
 	WorldUpdate();
+
 	collider->pos = pos;
 	collider->WorldUpdate();
 }
@@ -72,7 +83,7 @@ void RewardBox::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 	light->Render();
 	collider->Render();
 }
@@ -91,12 +102,27 @@ void RewardBox::Respawn()
 	collider->WorldUpdate();
 	light->SetPos(pos);
 
-	scale = clips[clip_idx]->GetFrameSize() * collider->Size() /
-		clips[clip_idx]->GetFrameOriginSize();
+	scale = frame->GetFrameSize() * collider->Size() /
+		frame->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);
 	light->SetActive(true);
+}
+
+void RewardBox::InitFrame()
+{
+	if (rewardBoxFrame) return;
+
+	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
+	rewardBoxFrame=make_shared<const Frame>(file, 20.0f, 184.0f, 33.0f, 19.0f);
+}
+
+void RewardBox::ClearFrame()
+{
+	if (!rewardBoxFrame) return;
+
+	rewardBoxFrame.reset();
 }
 
 void RewardBox::SetStatus(Item::ITEM_ID id, int value)

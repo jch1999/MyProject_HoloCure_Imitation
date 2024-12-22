@@ -63,6 +63,6 @@ public:
 
 	Vector2 GetAddtionalDir() { return addtionalDir; }
 	void SetAddtionalDir(Vector2 inDir);
-	virtual void SetAmount(int value) = 0;
+	virtual void SetAmount(int inAmount) = 0;
 	virtual int GetAmount() = 0;
 };

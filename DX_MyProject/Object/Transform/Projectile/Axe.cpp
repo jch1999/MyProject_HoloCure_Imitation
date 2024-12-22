@@ -6,7 +6,7 @@ int Axe::axeUseCnt = 0;
 Axe::Axe(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	if (axeFrame = nullptr)
+	if (axeFrame == nullptr)
 	{
 		Init();
 	}

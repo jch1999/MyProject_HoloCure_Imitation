@@ -104,7 +104,7 @@ void Player::CheckMoveDir()
 	if (!(KEY_CON->Press('Z')))
 	{
 		attackDir = moveDir;
-		is_looking_right = attackDir.x > 0.f ? true : attackDir.x < 0.f ? false : is_looking_right;
+		isLookingRight = attackDir.x > 0.f ? true : attackDir.x < 0.f ? false : isLookingRight;
 		atk_arrow->rot.z = attackDir.Angle();
 	}
 }
@@ -125,7 +125,7 @@ void Player::ChangeHP(float amount, Vector2 dir, Enemy* causer)
 	{
 		int idx = 0;
 		DmgText* ui = nullptr;
-		Vector2 initPos(pos.x + ((is_looking_right) ? (-damageCollider->Size().x / 4.0f) : (damageCollider->Size().x / 4.0f))
+		Vector2 initPos(pos.x + ((isLookingRight) ? (-damageCollider->Size().x / 4.0f) : (damageCollider->Size().x / 4.0f))
 			, pos.y - damageCollider->Size().y / 2.0f);
 		int damage = (int)abs(amount);
 

@@ -2,6 +2,9 @@
 class ItemLight :public Transform
 {
 public:
+	static shared_ptr<const Frame> itemLightFrame;
+	static int itemLightUseCnt;
+
 protected:
 	VertexShader* VS;
 	PixelShader* PS;
@@ -10,8 +13,7 @@ protected:
 	Vector2 size;
 	Vector2 offset;
 
-	vector<Clip*> clips; // 애니메이션 클립들
-	int clip_idx;
+	shared_ptr<const Frame> frame;
 
 public:
 	ItemLight(Vector2 pos);
@@ -21,6 +23,8 @@ public:
 	void Render();
 	void PostRender();
 	void Respawn();
+	void InitFrame();
+	void ClearFrame();
 
 	void SetPos(Vector2 pos);
 	void SetOffset(Vector2 offset) { this->offset = offset; }

@@ -5,25 +5,6 @@ Count_UI::Count_UI()
 	, nowCoinCnt(0.0f), targetCoinCnt(0.0f)
 	,nowDefeatCnt(0.0f),targetDefeatCnt(0.0f)
 {
-	Init();
-	
-	id = UI::UI_ID::COUNTER;
-	type = UI::UI_TYPE::COUNTER;
-	state = UI::UI_STATE::IDLE;
-	target = CAM;
-	offset = Vector2(WIN_CENTER_X + 150.0f, 50.0f);
-	is_active = true;
-}
-
-Count_UI::~Count_UI()
-{
-	counterIcons.clear(); 
-	coinCntText.clear();
-	defeatCntText.clear();
-}
-
-void Count_UI::Init()
-{
 	Vector2 nowOffset(150.0f, -10.0f);
 	Vector2 interval(15, 0);
 	// coin icon
@@ -71,6 +52,20 @@ void Count_UI::Init()
 		defeatCntText.push_back(t);
 		childList.push_back(t);
 	}
+	
+	id = UI::UI_ID::COUNTER;
+	type = UI::UI_TYPE::COUNTER;
+	state = UI::UI_STATE::IDLE;
+	target = CAM;
+	offset = Vector2(WIN_CENTER_X + 150.0f, 50.0f);
+	is_active = true;
+}
+
+Count_UI::~Count_UI()
+{
+	counterIcons.clear(); 
+	coinCntText.clear();
+	defeatCntText.clear();
 }
 
 void Count_UI::Update()
@@ -101,6 +96,14 @@ void Count_UI::Render()
 void Count_UI::PostRender()
 {
 	ImGui::Text("Count UI's pos : %f %f", pos.x, pos.y);
+}
+
+void Count_UI::InitFrame()
+{
+}
+
+void Count_UI::ClearFrame()
+{
 }
 
 void Count_UI::SetState(UI::UI_STATE state)

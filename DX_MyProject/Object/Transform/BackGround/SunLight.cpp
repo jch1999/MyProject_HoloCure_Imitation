@@ -1,6 +1,6 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> SunLight::SunLightFrames;
+vector<shared_ptr<const Frame>> SunLight::sunLightFrames;
 int SunLight::SunLightUseCnt=0;
 
 SunLight::SunLight()
@@ -10,12 +10,12 @@ SunLight::SunLight()
 	CB = new ColourBuffer();
 
 	// 프레임은 한 번만 생성해서 공유
-	if (SunLightFrames.empty())
+	if (sunLightFrames.empty())
 	{
-		Init();
+		InitFrame();
 	}
 	
-	clips.push_back(make_shared<Clip>(SunLightFrames, Clip::CLIP_TYPE::LOOP, 1));
+	clips.emplace_back(make_shared<Clip>(sunLightFrames, Clip::CLIP_TYPE::LOOP, 1));
 
 	render_size = Vector2(WIN_WIDTH, WIN_HEIGHT);
 
@@ -30,20 +30,7 @@ SunLight::~SunLight()
 
 	if ((--SunLightUseCnt) == 0)
 	{
-		SunLightFrames.clear();
-	}
-}
-
-void SunLight::Init()
-{
-	SunLightFrames.clear();
-
-	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
-
-
-	for (int i = 0; i < 2; i++)
-	{
-		SunLightFrames.push_back(make_shared<const Frame>(file, 4.0f + 642.0f * i, 1642.0f, 640.0f, 360.0f));
+		ClearFrame();
 	}
 }
 
@@ -71,6 +58,26 @@ void SunLight::Render()
 
 void SunLight::PostRender()
 {
+}
+
+void SunLight::InitFrame()
+{
+	if (!(sunLightFrames.empty())) return;
+
+	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
+
+
+	for (int i = 0; i < 2; i++)
+	{
+		sunLightFrames.emplace_back(make_shared<const Frame>(file, 4.0f + 642.0f * i, 1642.0f, 640.0f, 360.0f));
+	}
+}
+
+void SunLight::ClearFrame()
+{
+	if (sunLightFrames.empty()) return;
+
+	sunLightFrames.clear();
 }
 
 void SunLight::SetIndex(int idx)

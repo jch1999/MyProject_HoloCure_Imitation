@@ -1,144 +1,23 @@
 #include "framework.h"
 
-SkillIcon::SkillIcon()
+vector<shared_ptr<const Frame>>& SkillIcon::GetSkillIconFrames()
 {
-	vector<wstring> files =
+	static vector<shared_ptr<const Frame>> skillIconFrames;
+	return skillIconFrames;
+}
+
+int& SkillIcon::GetSkillIconUseCnt()
+{
+	static int skillIconUseCnt = 0;
+	return skillIconUseCnt;
+}
+
+SkillIcon::SkillIcon(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize, inScale, inOffset)
+{
+	if (GetSkillIconFrames().empty())
 	{
-		// PlayerIcon & Defulat Weapon Skill Icon
-		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png",
-		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png",
-		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png",
-		// Back Icon
-		L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png",
-		// Skill Icon
-		L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png",
-	};
-	vector<Frame*> frames;
-
-	// Weapon Icon Back
-	frames.push_back(new Frame(files[3], 139, 567, 12, 11));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-	frames.clear();
-
-	// Buff Icon Back
-	frames.push_back(new Frame(files[3], 153, 567, 12, 11));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-	frames.clear();
-
-	// Default Weapon Icon
-	{
-		// PistolShot
-		// Normal
-		frames.push_back(new Frame(files[0], 11, 1956, 18, 20));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// Awake
-		frames.push_back(new Frame(files[0], 34, 1956, 24, 25));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// PhoenixSword
-		// Normal
-		frames.push_back(new Frame(files[1], 8, 3683, 22, 21));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// Awake
-		frames.push_back(new Frame(files[1], 33, 3684, 25, 25));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// PlayDice
-		// Normal
-		frames.push_back(new Frame(files[2], 9, 703, 21, 20));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// Awake
-		frames.push_back(new Frame(files[2], 33, 703, 25, 20));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-	}
-	// Weapon Skill Icon
-	{
-		// HOLO_BOMB:
-		frames.push_back(new Frame(files[4], 139, 52, 25, 20));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// ELITE_LAVA_BUCKET:
-		frames.push_back(new Frame(files[4], 31, 52, 25, 20));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-
-		// PSYCHO_AXE:
-		frames.push_back(new Frame(files[4], 166, 52, 25, 20));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-
-		// BOUNCE_BALL:
-		frames.push_back(new Frame(files[4], 58, 76, 25, 22));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-
-		// CEO_TEAR:
-		frames.push_back(new Frame(files[4], 58, 52, 25, 22));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-
-		// SPIDER_COOKING:
-		frames.push_back(new Frame(files[4], 4, 52, 25, 20));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-	}
-	// Buff Skill Icon
-	{
-		// NURSE_HORN
-		frames.push_back(new Frame(files[4], 31.0f, 224.0f, 25.0f, 20.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// FULL_MEAL
-		frames.push_back(new Frame(files[4], 58.0f, 224.0f, 25.0f, 20.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// PIKIPIK_PIMAN
-		frames.push_back(new Frame(files[4], 112.0f, 224.0f, 25.0f, 22.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// STUDY_GLASSES
-		frames.push_back(new Frame(files[4], 139.0f, 248.0f, 25.0f, 20.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// SUPER_CHATTO_TIME
-		frames.push_back(new Frame(files[4], 4.0f, 272.0f, 25.0f, 20.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// BLACKSMITH_GEAR
-		frames.push_back(new Frame(files[4], 31.0f, 272.0f, 25.0f, 22.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// NINJA_HEADBAND
-		frames.push_back(new Frame(files[4], 4.0f, 176.0f, 25.0f, 22.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-	}
-	// Stat Skill Icon
-	// MAX_HP ATK SPD CRT PICK_UP
-	for (int i = 0; i < 5; i++)
-	{
-		frames.push_back(new Frame(files[4], 4.0f + i * 27.0f, 322.0f, 25.0f, 25.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-	}
-	// Extra Skill Icon
-	{
-		// COIN
-		frames.push_back(new Frame(files[4], 200.0f, 322.0f, 15.0f, 15.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// FOOD
-		frames.push_back(new Frame(files[4], 166.0f, 322.0f, 32.0f, 32.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		frames.clear();
-		// EXP
-		//frames.push_back(new Frame(files[4], 4.0f, 322.0f, 25.0f, 25.0f));
-		//clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-		//frames.clear();
+		InitFrame();
 	}
 	// Level Label
 	label = new LevelLabel();
@@ -146,7 +25,7 @@ SkillIcon::SkillIcon()
 	label->SetOffset(Vector2(0, 30));
 	label->SetActive(false);
 
-	child_list.push_back(label);
+	childList.push_back(label);
 
 	// Icon Frame
 	icon_frame = new IconFrame();
@@ -154,30 +33,32 @@ SkillIcon::SkillIcon()
 	icon_frame->SetScale(Vector2(1.5f, 1.5f));
 	icon_frame->SetActive(false);
 
-	child_list.push_back(icon_frame);
+	childList.push_back(icon_frame);
 
 	id = UI::UI_ID::SKILL_ICON;
 	type = UI::UI_TYPE::ICON;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(43.0f, 38.0f);
-	ui_scale = Vector2(1, 1);
-	additional_scale = Vector2(1, 1);
-	offset = Vector2(0, 0);
 	is_active = false;
+
+	++GetSkillIconUseCnt();
 }
 
 SkillIcon::~SkillIcon()
 {
+	if ((--GetSkillIconUseCnt()) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void SkillIcon::Update()
 {
 	if (!is_active)return;
 
-	if (clip_idx != -1)
+	if (clipIdx != -1)
 	{
-		scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale * additional_scale;
-		clips[clip_idx]->Update();
+		auto& currentFrame = GetSkillIconFrames()[clipIdx];
+		scale = currentFrame->GetFrameSize() * uiSize / currentFrame->GetFrameOriginSize() * uiScale * additionalScale;
 	}
 
 	if(target!=nullptr)
@@ -191,7 +72,7 @@ void SkillIcon::Update()
 		SetID(this->id);
 	}
 
-	for (auto child : child_list)
+	for (auto child : childList)
 		child->Update();
 }
 
@@ -204,20 +85,108 @@ void SkillIcon::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	if(clip_idx!=-1)
-		clips[clip_idx]->Render();
-
-	for (auto child : child_list)
+	if (clipIdx != -1)
+	{
+		GetSkillIconFrames()[clipIdx]->Render();
+	}
+	for (auto child : childList)
 		child->Render();
 }
 
-void SkillIcon::PostRender()
+void SkillIcon::InitFrame()
 {
+	auto& skillIconFrames = GetSkillIconFrames();
+	if (!(skillIconFrames.empty())) return;
+
+	vector<wstring> files =
+	{
+		// PlayerIcon & Defulat Weapon Skill Icon
+		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png",
+		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png",
+		L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png",
+		// Back Icon
+		L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png",
+		// Skill Icon
+		L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png",
+	};
+
+	// Weapon Icon Back
+	skillIconFrames.emplace_back(make_shared<const Frame>(files[3], 139, 567, 12, 11));
+	// Buff Icon Back
+	skillIconFrames.emplace_back(make_shared<const Frame>(files[3], 153, 567, 12, 11));
+
+	// Default Weapon Icon
+	{
+		// PistolShot
+		// Normal
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[0], 11, 1956, 18, 20));
+		// Awake
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[0], 34, 1956, 24, 25));
+		// PhoenixSword
+		// Normal
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[1], 8, 3683, 22, 21));
+		// Awake
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[1], 33, 3684, 25, 25));
+		// PlayDice
+		// Normal
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[2], 9, 703, 21, 20));
+		// Awake
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[2], 33, 703, 25, 20));
+	}
+	// Weapon Skill Icon
+	{
+		// HOLO_BOMB:
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 139, 52, 25, 20));
+		// ELITE_LAVA_BUCKET:
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 31, 52, 25, 20));
+		// PSYCHO_AXE:
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 166, 52, 25, 20));
+		// BOUNCE_BALL:
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 58, 76, 25, 22));
+		// CEO_TEAR:
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 58, 52, 25, 22));
+		// SPIDER_COOKING:
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 4, 52, 25, 20));
+	}
+	// Buff Skill Icon
+	{
+		// NURSE_HORN
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 31.0f, 224.0f, 25.0f, 20.0f));
+		// FULL_MEAL
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 58.0f, 224.0f, 25.0f, 20.0f));
+		// PIKIPIK_PIMAN
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 112.0f, 224.0f, 25.0f, 22.0f));
+		// STUDY_GLASSES
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 139.0f, 248.0f, 25.0f, 20.0f));
+		// SUPER_CHATTO_TIME
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 4.0f, 272.0f, 25.0f, 20.0f));
+		// BLACKSMITH_GEAR
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 31.0f, 272.0f, 25.0f, 22.0f));
+		// NINJA_HEADBAND
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 4.0f, 176.0f, 25.0f, 22.0f));
+	}
+	// Stat Skill Icon
+	// MAX_HP ATK SPD CRT PICK_UP
+	for (int i = 0; i < 5; i++)
+	{
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 4.0f + i * 27.0f, 322.0f, 25.0f, 25.0f));
+	}
+	// Extra Skill Icon
+	{
+		// COIN
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 200.0f, 322.0f, 15.0f, 15.0f));
+		// FOOD
+		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 166.0f, 322.0f, 32.0f, 32.0f));
+		// EXP
+		//skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 4.0f, 322.0f, 25.0f, 25.0f));
+		//clips.push_back(new Clip(skillIconFrames, Clip::CLIP_TYPE::LOOP, 1));
+		//skillIconFrames.clear();
+	}
 }
 
-void SkillIcon::SetState(UI::UI_STATE state)
+void SkillIcon::ClearFrame()
 {
-	this->state = state;
+	GetSkillIconFrames().clear();
 }
 
 
@@ -238,11 +207,11 @@ void SkillIcon::SetID(UI::UI_ID id)
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
 			if (level == 7)
 			{
-				clip_idx = 2 + skill_id * 2 + 1;
+				clipIdx = 2 + skill_id * 2 + 1;
 			}
 			else
 			{
-				clip_idx = 2 + skill_id * 2;
+				clipIdx = 2 + skill_id * 2;
 			}
 			label->SetClipIdx(2);
 			label->SetLevel(level);
@@ -280,7 +249,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 				label->SetClipIdx(0);
 			}
 			label->SetLevel(level);
-			clip_idx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 		}
 		break;
 		{
@@ -307,11 +276,11 @@ void SkillIcon::SetID(UI::UI_ID id)
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
 			if (level == 7)
 			{
-				clip_idx = 2 + skill_id * 2 + 1;
+				clipIdx = 2 + skill_id * 2 + 1;
 			}
 			else
 			{
-				clip_idx = 2 + skill_id * 2;
+				clipIdx = 2 + skill_id * 2;
 			}
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(0);
@@ -324,7 +293,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::CEO_TEAR:
 		case (int)Skill::SKILL_ID::SPIDER_COOKING:
 		{
-			clip_idx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(0);
 		}
@@ -337,7 +306,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::BLACKSMITH_GEAR:
 		case (int)Skill::SKILL_ID::NINJA_HEADBAND:
 		{
-			clip_idx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(1);
 		}
@@ -348,7 +317,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::CRT:
 		case (int)Skill::SKILL_ID::PICK_UP:
 		{
-			clip_idx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(2);
 		}
@@ -356,7 +325,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::COIN:
 		case (int)Skill::SKILL_ID::FOOD:
 		{
-			clip_idx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(3);
 		}
@@ -379,11 +348,11 @@ void SkillIcon::SetID(UI::UI_ID id)
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
 			if (level == 7)
 			{
-				clip_idx = 2 + skill_id * 2 + 1;
+				clipIdx = 2 + skill_id * 2 + 1;
 			}
 			else
 			{
-				clip_idx = 2 + skill_id * 2;
+				clipIdx = 2 + skill_id * 2;
 			}
 		}
 		break;
@@ -407,10 +376,10 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::PICK_UP:
 		case (int)Skill::SKILL_ID::COIN:
 		case (int)Skill::SKILL_ID::FOOD:
-			clip_idx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
 			break;
 		default:
-			clip_idx = -1;
+			clipIdx = -1;
 			break;
 		}
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 1.0f); 
@@ -420,7 +389,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 	break;
 	case UI::UI_ID::WEAPON_ICON_BACK:
 	{
-		clip_idx = 0;
+		clipIdx = 0;
 		label->SetActive(false);
 		CB->data.colour = Float4(0.8f, 0.8f, 0.8f, 0.3f);
 		SetSize(Vector2(43.0f, 38.0f));
@@ -428,7 +397,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 	break;
 	case UI::UI_ID::BUFF_ICON_BACK:
 	{
-		clip_idx = 1;
+		clipIdx = 1;
 		label->SetActive(false);
 		CB->data.colour = Float4(0.8f, 0.8f, 0.8f, 0.3f);
 		SetSize(Vector2(43.0f, 38.0f));
@@ -437,4 +406,14 @@ void SkillIcon::SetID(UI::UI_ID id)
 	default:
 		break;
 	}
+}
+
+void SkillIcon::SetSkillID(int skill_id)
+{
+	this->skill_id = skill_id;
+}
+
+void SkillIcon::SetLabelActive(bool active)
+{
+	label->SetActive(active);
 }

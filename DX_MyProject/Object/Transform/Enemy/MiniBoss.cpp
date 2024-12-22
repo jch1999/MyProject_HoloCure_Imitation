@@ -14,33 +14,33 @@ MiniBoss::MiniBoss(ENEMY_NAME name, MOVE_TYPE type)
 	// clips
 	for (auto& frames : miniBossFrames)
 	{
-		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	}
 	
 	// collider
 	// Mega Shrimp & Mega Dark Shrimp
-	damageColliders.push_back(new RectCollider(Vector2(65.0f, 62.0f)*2.0f));
-	atkColliders.push_back(new RectCollider(Vector2(48.0f, 28.0f)*2.0f));
+	damageColliders.emplace_back(new RectCollider(Vector2(65.0f, 62.0f)*2.0f));
+	atkColliders.emplace_back(new RectCollider(Vector2(48.0f, 28.0f)*2.0f));
 	// Tako Grande
-	damageColliders.push_back(new RectCollider(Vector2(42.0f, 42.0f) * 3.0f));
-	atkColliders.push_back(new RectCollider(Vector2(28.0f, 21.0f) * 3.0f));
+	damageColliders.emplace_back(new RectCollider(Vector2(42.0f, 42.0f) * 3.0f));
+	atkColliders.emplace_back(new RectCollider(Vector2(28.0f, 21.0f) * 3.0f));
 	// Giant DeadBatter
-	damageColliders.push_back(new RectCollider(Vector2(60.0f, 58.0f) * 2.0f));
-	atkColliders.push_back(new RectCollider(Vector2(48.0f, 33.0f) * 2.0f));
+	damageColliders.emplace_back(new RectCollider(Vector2(60.0f, 58.0f) * 2.0f));
+	atkColliders.emplace_back(new RectCollider(Vector2(48.0f, 33.0f) * 2.0f));
 	// Giant Q DeadBeat
-	damageColliders.push_back(new RectCollider(Vector2(60.0f, 58.0f) * 2.0f));
-	atkColliders.push_back(new RectCollider(Vector2(48.0f, 33.0f) * 2.0f));
+	damageColliders.emplace_back(new RectCollider(Vector2(60.0f, 58.0f) * 2.0f));
+	atkColliders.emplace_back(new RectCollider(Vector2(48.0f, 33.0f) * 2.0f));
 	// Mega Q Shrimp
-	damageColliders.push_back(new RectCollider(Vector2(70.0f, 62.0f) * 2.0f));
-	atkColliders.push_back(new RectCollider(Vector2(52.8f, 28.0f) * 2.0f));
+	damageColliders.emplace_back(new RectCollider(Vector2(70.0f, 62.0f) * 2.0f));
+	atkColliders.emplace_back(new RectCollider(Vector2(52.8f, 28.0f) * 2.0f));
 
 	// colliderOffset idx
 	// Mega Shrimp & Mega Dark Shrimp & Mega Q Shrimp
-	colliderOffsetTable.push_back(Vector2(0.0f, 12.5f * 2.0f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 12.5f * 2.0f));
 	// Tako Grande
-	colliderOffsetTable.push_back(Vector2(0.0f, 9.0f * 3.0f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 9.0f * 3.0f));
 	// Giant DeadBatter & Giant Q DeadBeat 
-	colliderOffsetTable.push_back(Vector2(0.0f, 15.0f * 2.0f));
+	colliderOffsetTable.emplace_back(Vector2(0.0f, 15.0f * 2.0f));
 
 	damageCollider = damageColliders[0];
 	attackCollider = atkColliders[0];
@@ -144,7 +144,7 @@ void MiniBoss::PostRender()
 
 void MiniBoss::InitFrame()
 {
-	ClearFrame();
+	if (!(miniBossFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
 
@@ -153,64 +153,62 @@ void MiniBoss::InitFrame()
 	// Mega Shrimp
 	{
 		vector<shared_ptr<const Frame>> megaShrimpFrame;
-		megaShrimpFrame.push_back(make_shared<const Frame>(file, 53.0f, 150.0f, 33.0f, 28.0f));
-		megaShrimpFrame.push_back(make_shared<const Frame>(file, 181.0f, 150.0f, 33.0f, 28.0f));
-		megaShrimpFrame.push_back(make_shared<const Frame>(file, 312.0f, 150.0f, 33.0f, 28.0f));
+		megaShrimpFrame.emplace_back(make_shared<const Frame>(file, 53.0f, 150.0f, 33.0f, 28.0f));
+		megaShrimpFrame.emplace_back(make_shared<const Frame>(file, 181.0f, 150.0f, 33.0f, 28.0f));
+		megaShrimpFrame.emplace_back(make_shared<const Frame>(file, 312.0f, 150.0f, 33.0f, 28.0f));
 		miniBossFrames.push_back(megaShrimpFrame);
 	}
 
 	// Tako Grande
 	{
 		vector<shared_ptr<const Frame>> takoGrandeFrame;
-		takoGrandeFrame.push_back(make_shared<const Frame>(file, 623.0f, 379.0f, 21.0f, 21.0f));
-		takoGrandeFrame.push_back(make_shared<const Frame>(file, 688.0f, 381.0f, 21.0f, 21.0f));
-		takoGrandeFrame.push_back(make_shared<const Frame>(file, 755.0f, 380.0f, 21.0f, 21.0f));
+		takoGrandeFrame.emplace_back(make_shared<const Frame>(file, 623.0f, 379.0f, 21.0f, 21.0f));
+		takoGrandeFrame.emplace_back(make_shared<const Frame>(file, 688.0f, 381.0f, 21.0f, 21.0f));
+		takoGrandeFrame.emplace_back(make_shared<const Frame>(file, 755.0f, 380.0f, 21.0f, 21.0f));
 		miniBossFrames.push_back(takoGrandeFrame);
 	}
 
 	// Mega Dark Shrimp
 	{
 		vector<shared_ptr<const Frame>> megaDarkShrimpFrame;
-		megaDarkShrimpFrame.push_back(make_shared<const Frame>(file, 53.0f, 280.0f, 33.0f, 28.0f));
-		megaDarkShrimpFrame.push_back(make_shared<const Frame>(file, 181.0f, 280.0f, 33.0f, 28.0f));
-		megaDarkShrimpFrame.push_back(make_shared<const Frame>(file, 312.0f, 280.0f, 33.0f, 28.0f));
+		megaDarkShrimpFrame.emplace_back(make_shared<const Frame>(file, 53.0f, 280.0f, 33.0f, 28.0f));
+		megaDarkShrimpFrame.emplace_back(make_shared<const Frame>(file, 181.0f, 280.0f, 33.0f, 28.0f));
+		megaDarkShrimpFrame.emplace_back(make_shared<const Frame>(file, 312.0f, 280.0f, 33.0f, 28.0f));
 		miniBossFrames.push_back(megaDarkShrimpFrame);
 	}
 
 	// Giant DeadBatter
 	{
 		vector<shared_ptr<const Frame>> giantDeadBatterFrame;
-		giantDeadBatterFrame.push_back(make_shared<const Frame>(file, 418.0f, 135.0f, 33.0f, 45.0f));
-		giantDeadBatterFrame.push_back(make_shared<const Frame>(file, 485.0f, 135.0f, 33.0f, 45.0f));
-		giantDeadBatterFrame.push_back(make_shared<const Frame>(file, 548.0f, 135.0f, 33.0f, 45.0f));
+		giantDeadBatterFrame.emplace_back(make_shared<const Frame>(file, 418.0f, 135.0f, 33.0f, 45.0f));
+		giantDeadBatterFrame.emplace_back(make_shared<const Frame>(file, 485.0f, 135.0f, 33.0f, 45.0f));
+		giantDeadBatterFrame.emplace_back(make_shared<const Frame>(file, 548.0f, 135.0f, 33.0f, 45.0f));
 		miniBossFrames.push_back(giantDeadBatterFrame);
 	}
 
 	// Giant Q DeadBeat
 	{
 		vector<shared_ptr<const Frame>> giantQDeadBeatFrame;
-		giantQDeadBeatFrame.push_back(make_shared<const Frame>(file, 418.0f, 333.0f, 34.0f, 45.0f));
-		giantQDeadBeatFrame.push_back(make_shared<const Frame>(file, 484.0f, 333.0f, 34.0f, 45.0f));
-		giantQDeadBeatFrame.push_back(make_shared<const Frame>(file, 548.0f, 333.0f, 34.0f, 45.0f));
+		giantQDeadBeatFrame.emplace_back(make_shared<const Frame>(file, 418.0f, 333.0f, 34.0f, 45.0f));
+		giantQDeadBeatFrame.emplace_back(make_shared<const Frame>(file, 484.0f, 333.0f, 34.0f, 45.0f));
+		giantQDeadBeatFrame.emplace_back(make_shared<const Frame>(file, 548.0f, 333.0f, 34.0f, 45.0f));
 		miniBossFrames.push_back(giantQDeadBeatFrame);
 	}
 
 	// Mega Q Shrimp
 	{
 		vector<shared_ptr<const Frame>> MegaQShrimpFrame;
-		MegaQShrimpFrame.push_back(make_shared<const Frame>(file, 53.0f, 410.0f, 39.0f, 28.0f));
-		MegaQShrimpFrame.push_back(make_shared<const Frame>(file, 181.0f, 410.0f, 39.0f, 28.0f));
-		MegaQShrimpFrame.push_back(make_shared<const Frame>(file, 312.0f, 410.0f, 39.0f, 28.0f));
+		MegaQShrimpFrame.emplace_back(make_shared<const Frame>(file, 53.0f, 410.0f, 39.0f, 28.0f));
+		MegaQShrimpFrame.emplace_back(make_shared<const Frame>(file, 181.0f, 410.0f, 39.0f, 28.0f));
+		MegaQShrimpFrame.emplace_back(make_shared<const Frame>(file, 312.0f, 410.0f, 39.0f, 28.0f));
 		miniBossFrames.push_back(MegaQShrimpFrame);
 	}
 }
 
 void MiniBoss::ClearFrame()
 {
-	for (auto& frames : miniBossFrames)
-	{
-		frames.clear();
-	}
+	if (miniBossFrames.empty()) return;
+
 	miniBossFrames.clear();
 }
 

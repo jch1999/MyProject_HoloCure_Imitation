@@ -1,42 +1,47 @@
 #include "framework.h"
 
-Arrow::Arrow()
+vector<shared_ptr<const Frame>>& Arrow::GetArrowFrames()
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
-	// atk dir arrow 
-	// normal clip
-	frames.push_back(new Frame(file, 236, 494, 64, 64));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
-	// fixed clip
-	frames.push_back(new Frame(file, 302, 494, 64, 64));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
-	// ? clip
-	frames.push_back(new Frame(file, 368, 494, 64, 64));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
+	static vector<shared_ptr<const Frame>> arrowFrames;
+	return arrowFrames;
+}
+
+int& Arrow::GetArrowUseCnt()
+{
+	static int arrowUseCnt = 0;
+	return arrowUseCnt;
+}
+
+Arrow::Arrow(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize,inScale,inOffset)
+{
+	if (GetArrowFrames().empty())
+	{
+		InitFrame();
+	}
 
 	id = UI::UI_ID::ATK_ARROW;
 	type = UI::UI_TYPE::ARROW;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(64.0f, 64.0f);
-	ui_scale = Vector2(1, 1);
-	offset = Vector2(0, 0);
 	is_active = false;
+
+	++GetArrowUseCnt();
 }
 
 Arrow::~Arrow()
 {
+	if ((--GetArrowUseCnt()) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void Arrow::Update()
 {
 	if (!is_active)return;
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
-	clips[clip_idx]->Update();
+	const auto& currentFrame = GetArrowFrames()[clipIdx];
+	scale = currentFrame->GetFrameSize() * uiSize / currentFrame->GetFrameOriginSize() * uiScale;
 
 	pos = target->pos;
 	WorldUpdate();
@@ -52,11 +57,7 @@ void Arrow::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
-}
-
-void Arrow::PostRender()
-{
+	GetArrowFrames()[clipIdx]->Render();
 }
 
 void Arrow::SetState(UI::UI_STATE state)
@@ -73,15 +74,40 @@ void Arrow::SetID(UI::UI_ID id)
 	{
 	case UI::UI_ID::ATK_ARROW:
 	{
-		clip_idx = 0;
+		clipIdx = 0;
 	}
 		break;
 	case UI::UI_ID::ATK_ARROW_FIXED:
 	{
-		clip_idx = 1;
+		clipIdx = 1;
 	}
 	break;
 	default:
 		break;
 	}
+}
+
+void Arrow::InitFrame()
+{
+	UI::InitFrame();
+
+	auto& arrowFrames = GetArrowFrames();
+	if (!(arrowFrames.empty())) return;
+
+	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
+
+	// atk dir arrow 
+	// normal clip
+	arrowFrames.emplace_back(make_shared<const Frame>(file, 236, 494, 64, 64));
+	// fixed clip
+	arrowFrames.emplace_back(make_shared<const Frame>(file, 302, 494, 64, 64));
+	// ? clip
+	arrowFrames.emplace_back(make_shared<const Frame>(file, 368, 494, 64, 64));
+}
+
+void Arrow::ClearFrame()
+{
+	UI::ClearFrame();
+
+	GetArrowFrames().clear();
 }

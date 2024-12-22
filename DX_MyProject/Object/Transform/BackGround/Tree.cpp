@@ -12,7 +12,7 @@ Tree::Tree()
 
 	if (treeFrames.empty())
 	{
-		Init();
+		InitFrame();
 	}
 
 	collider = new RectCollider(Vector2(48.0f, 30.0f));
@@ -29,20 +29,8 @@ Tree::~Tree()
 
 	if ((--TreeUseCnt) == 0)
 	{
-		treeFrames.clear();
+		ClearFrame();
 	}
-}
-
-void Tree::Init()
-{
-	treeFrames.clear();
-	
-	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
-
-	// leaf tree
-	treeFrames.push_back(make_shared<const Frame>(file, 4.0f, 151.0f, 137.0f, 133.0f));
-	// leaf less tree
-	treeFrames.push_back(make_shared<const Frame>(file, 141.0f, 151.0f, 116.0f, 127.0f));
 }
 
 void Tree::Update()
@@ -77,6 +65,25 @@ void Tree::Render()
 
 void Tree::PostRender()
 {
+}
+
+void Tree::InitFrame()
+{
+	if (!(treeFrames.empty())) return;
+
+	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
+
+	// leaf tree
+	treeFrames.emplace_back(make_shared<const Frame>(file, 4.0f, 151.0f, 137.0f, 133.0f));
+	// leaf less tree
+	treeFrames.emplace_back(make_shared<const Frame>(file, 141.0f, 151.0f, 116.0f, 127.0f));
+}
+
+void Tree::ClearFrame()
+{
+	if (treeFrames.empty()) return;
+
+	treeFrames.clear();
 }
 
 void Tree::SetIndex(int idx)

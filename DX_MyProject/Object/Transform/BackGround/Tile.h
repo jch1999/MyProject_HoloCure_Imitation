@@ -2,7 +2,7 @@
 class Tile :public Transform
 {
 private:
-	static vector<shared_ptr<const Frame>> TileFrames;
+	static vector<shared_ptr<const Frame>> tileFrames;
 	static int TileUseCnt;
 
 private:
@@ -17,12 +17,15 @@ public:
 	Tile(int idx);
 	~Tile();
 
-	void Init();
 	void Update();
 	void Render();
 	void PostRender();
+	
+	void InitFrame();
+	void ClearFrame();
+
 	void SetActive(bool active);
 
 private:
-	FORCEINLINE static shared_ptr<const Frame> GetFrame(int index) { return TileFrames[index]; }
+	FORCEINLINE static shared_ptr<const Frame> GetFrame(int index) { return tileFrames[index]; }
 };

@@ -24,7 +24,6 @@ public:
 	Grass();
 	~Grass();
 
-	void Init();
 	void Update();
 	void Render();
 	void PostRender();
@@ -32,4 +31,6 @@ public:
 	void SetTarget(Transform* t) { target = t; }
 	void SetOffset(Vector2 offset) { this->offset = offset; }
 	void ChangePos();
+	void InitFrame();
+	void ClearFrame();
 };

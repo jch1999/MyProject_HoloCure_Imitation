@@ -2,9 +2,13 @@
 class Button :public UI
 {
 protected:
+	static vector<shared_ptr<const Frame>>& GetButtonFrames();
+	static int& GetButtonUseCnt();
+
+protected:
 	TextPrinter* btnText;
 public:
-	Button();
+	Button(Vector2 inSize = Vector2(180.0f, 30.0f), Vector2 inScale = Vector2(1.0f, 1.0f), Vector2 inOffset = Vector2(0.0f, 0.0f));
 	virtual ~Button();
 
 
@@ -15,6 +19,10 @@ public:
 	virtual void Render() override;
 
 	virtual void PostRender() override;
+
+	virtual void InitFrame() override;
+
+	virtual void ClearFrame() override;
 
 	virtual void SetState(UI::UI_STATE state);
 

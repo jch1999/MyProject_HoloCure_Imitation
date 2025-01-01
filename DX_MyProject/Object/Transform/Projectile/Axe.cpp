@@ -1,17 +1,24 @@
 #include "framework.h"
 
-shared_ptr<const Frame> Axe::axeFrame;
-int Axe::axeUseCnt = 0;
+shared_ptr<const Frame>& Axe::GetAxeFrame()
+{
+	static shared_ptr<const Frame> axeFrame;
+	return axeFrame;
+}
+
+int& Axe::GetAxeUseCnt()
+{
+	static int axeUseCnt = 0;
+	return axeUseCnt;
+}
 
 Axe::Axe(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	if (axeFrame == nullptr)
+	if (GetAxeFrame() == nullptr)
 	{
-		Init();
+		InitFrame();
 	}
-	
-	frame = axeFrame;
 
 	colliders.push_back(new CircleCollider(size.x * 0.5f));
 	colliders.push_back(new CircleCollider(size.x * 0.6f));
@@ -22,19 +29,20 @@ Axe::Axe(ProjectileSize projSize)
 	is_active = false;
 	collider->SetActive(false);
 
-	++axeUseCnt;
+	++GetAxeUseCnt();
 }
 
 Axe::~Axe()
 {
-	if ((--axeUseCnt) == 0)
+	if ((--GetAxeUseCnt()) == 0)
 	{
-		axeFrame.reset();
+		ClearFrame();
 	}
 }
 
-void Axe::Init()
+void Axe::InitFrame()
 {
+	auto& axeFrame = GetAxeFrame();
 	if (axeFrame) return;
 
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
@@ -43,6 +51,11 @@ void Axe::Init()
 	Vector2 frameSize(46.0f, 46.0f);
 	
 	axeFrame=make_shared<const Frame>(file, initPos.x, initPos.y, frameSize.x, frameSize.y);
+}
+
+void Axe::ClearFrame()
+{
+	GetAxeFrame().reset();
 }
 
 void Axe::Update()
@@ -80,7 +93,7 @@ void Axe::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetAxeFrame()->Render();
 	collider->Render();
 }
 
@@ -159,8 +172,8 @@ void Axe::respwan()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = clips[clipIdx]->GetFrameSize() * collider->Size() /
-		clips[clipIdx]->GetFrameOriginSize();
+	scale = GetAxeFrame()->GetFrameSize() * collider->Size() /
+		GetAxeFrame()->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);

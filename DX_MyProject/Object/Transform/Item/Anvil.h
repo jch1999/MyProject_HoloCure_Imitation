@@ -2,13 +2,14 @@
 class Anvil :public Item
 {
 protected:
-	static vector<shared_ptr<const Frame>> anvilFrames;
-	static int anvilSpawnCnt;
+	static vector<shared_ptr<const Frame>>& GetAnvilFrames();
+	static int& GetAnvilSpawnCnt();
 
 private:
 	int usableCnt;
 	int nowUsedCnt;
 	float coolTime; // 모루는 사용을 취소할 수 있으며, 이 때 일정시간 충돌불가 상태가 된다.
+	float nowTime;
 	shared_ptr<ItemLight> light;
 
 public:

@@ -1,17 +1,28 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> MiniBoss::miniBossFrames;
-int MiniBoss::miniBossSpawnCnt = 0;
+
+vector<vector<shared_ptr<const Frame>>>& MiniBoss::GetMiniBossFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> miniBossFrames;
+	return miniBossFrames;
+}
+
+int& MiniBoss::GetMiniBossSpawnCnt()
+{
+	static int miniBossSpawnCnt = 0;
+	return miniBossSpawnCnt;
+}
 
 MiniBoss::MiniBoss(ENEMY_NAME name, MOVE_TYPE type)
 	:Enemy(600.0f, 6.0f, 0.5f, 0.33f, 150)
 {
-	if (miniBossFrames.empty())
+	if (GetMiniBossFrames().empty())
 	{
 		InitFrame();
 	}
 
 	// clips
+	auto& miniBossFrames = GetMiniBossFrames();
 	for (auto& frames : miniBossFrames)
 	{
 		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
@@ -52,12 +63,12 @@ MiniBoss::MiniBoss(ENEMY_NAME name, MOVE_TYPE type)
 	damageCollider->SetActive(false);
 	attackCollider->SetActive(false);
 
-	++miniBossSpawnCnt;
+	++GetMiniBossSpawnCnt();
 }
 
 MiniBoss::~MiniBoss()
 {
-	if ((--miniBossSpawnCnt) == 0)
+	if ((--GetMiniBossSpawnCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -144,11 +155,10 @@ void MiniBoss::PostRender()
 
 void MiniBoss::InitFrame()
 {
+	auto& miniBossFrames = GetMiniBossFrames();
 	if (!(miniBossFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
-
-	vector<Frame*> frames;
 
 	// Mega Shrimp
 	{
@@ -207,9 +217,7 @@ void MiniBoss::InitFrame()
 
 void MiniBoss::ClearFrame()
 {
-	if (miniBossFrames.empty()) return;
-
-	miniBossFrames.clear();
+	GetMiniBossFrames().clear();
 }
 
 void MiniBoss::SetEnemyName(ENEMY_NAME name)

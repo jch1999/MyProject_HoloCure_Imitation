@@ -2,8 +2,8 @@
 class KiaraSlash :public Projectile
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> slashFrmaes;
-	static int slashUseCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetSlashFrames();
+	static int& SlashUseCnt();
 
 private:
 	bool isAwaken;
@@ -15,9 +15,6 @@ public:
 	~KiaraSlash();
 
 public:
-	// Projectile을(를) 통해 상속됨
-	virtual void Init() override;
-
 	virtual void Update() override;
 
 	virtual void Render() override;
@@ -27,6 +24,9 @@ public:
 	virtual void respwan() override;
 
 	virtual void Hit() override;
+
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 
 	// Projectile을(를) 통해 상속됨
 	virtual void OnCollision() override;

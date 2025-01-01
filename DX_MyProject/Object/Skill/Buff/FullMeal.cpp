@@ -4,8 +4,8 @@ FullMeal::FullMeal()
     :Buff(SKILL_ID::FULL_MEAL,1)
 {
     weight = 1;
-    skill_name = "FULL MEAL";
-    level_scripts.push_back("All healing is doubled.");
+    skillName = "FULL MEAL";
+    levelScripts.push_back("All healing is doubled.");
 }
 
 FullMeal::~FullMeal()
@@ -31,10 +31,10 @@ void FullMeal::PostRender()
 
 bool FullMeal::LevelUp()
 {
-    if(now_level == max_level)return false;
+    if(nowLevel == maxLevel)return false;
 
-    now_level++;
-    SkillManager::Get()->nowBuff_list[SkillManager::Get()->buffCnt++] = this;
+    nowLevel++;
+    SkillManager::Get()->nowBuffList[SkillManager::Get()->buffCnt++] = this;
     SkillManager::Get()->isHealDoubled = true;
     return true;
 }

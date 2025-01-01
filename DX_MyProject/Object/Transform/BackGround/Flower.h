@@ -1,37 +1,16 @@
 #pragma once
-class Flower :public Transform
+class Flower :public BackgroundObject
 {
 protected:
-	static vector<shared_ptr<const Frame>> flowerFrames;
-	static int flowerUseCnt;
+	static vector<shared_ptr<const Frame>>& GetFlowerFrames();
+	static int& GetFlowerUseCnt();
 
-private:
-	float spawn_rate;
-
-	Transform* target;
-	Vector2 offset;
-	vector<shared_ptr<const Clip>> clips;
-	int clipIdx;
-	Vector2 renderSize;
-
-	VertexShader* VS;
-	PixelShader* PS;
-	ColourBuffer* CB;
-
-	map<pair<int, int>, bool> activeRecord;
-	map<pair<int, int>, int> clipRecord;
 public:
-	Flower();
+	Flower(Vector2 inRenderSize = Vector2(29.0f, 38.0f) * 1.2f, float inSpawnRate = 0.35f);
 	~Flower();
 
-	void Update();
-	void Render();
-	void PostRender();
-	void SetIndex(int idx);
-	void SetTarget(Transform* t) { target = t; }
-	void SetOffset(Vector2 offset) { this->offset = offset; }
-	void ChangePos();
-	void SetColor(Float4 color) { CB->data.colour = color; }
+	virtual void Update() override;
+	virtual void Render() override;
 	void InitFrame();
 	void ClearFrame();
 };

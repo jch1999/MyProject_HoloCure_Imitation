@@ -5,28 +5,29 @@ ItemSpawner::ItemSpawner()
 	,anvilUseCnt(1),enhanceDmg(2.0f)
 	,magnetDropRate(1.0f / 3000.0f)
 	,coinDefault(1.0f / 90.0f),coinRate(coinDefault)
-	,coinValueDefault(10.0f),coinValue(coinValueDefault),nowCoinValue(0.0f)
+	,coinValueDefault(10.0f),coinValue(coinValueDefault),nowCoinValue(0)
 	,foodDefault(1.0f/200.0f),foodRate(foodDefault)
 	,nowTime(FIXED_INTERVAL)
 	,isCoinAutoPick(false)
+	,player(nullptr)
 {
 	for (int i = 0; i < 100; i++)
 	{
-		item_list.emplace_back(new Exp());
-		item_list.emplace_back(new Coin());
+		itemList.emplace_back(new Exp());
+		itemList.emplace_back(new Coin());
 	}
 	for (int i = 0; i < 10; i++)
 	{
-		item_list.emplace_back(new Anvil());
-		item_list.emplace_back(new Hambureger());
+		itemList.emplace_back(new Anvil());
+		itemList.emplace_back(new Hambureger());
 	}
-	item_list.emplace_back(new RewardBox());
-	item_list.emplace_back(new RewardBox());
+	itemList.emplace_back(new RewardBox());
+	itemList.emplace_back(new RewardBox());
 }
 
 ItemSpawner::~ItemSpawner()
 {
-	for (auto i : item_list)
+	for (auto i : itemList)
 		delete i;
 }
 
@@ -44,11 +45,11 @@ void ItemSpawner::GenerateItem(Vector2 pos, int value)
 	}
 	else if (rand <= anvilDropRate + magnetDropRate + coinRate)
 	{
-		GenerateItem(pos, Item::ITEM_ID::COIN, coinValue);
+		GenerateItem(pos, Item::ITEM_ID::COIN, (int)(coinValue));
 	}
 	else if (rand <= anvilDropRate + magnetDropRate + coinRate + foodRate)
 	{
-		GenerateItem(pos, Item::ITEM_ID::HAMBURGER, player->GetMaxHP() * 0.2f);
+		GenerateItem(pos, Item::ITEM_ID::HAMBURGER, (int)(player->GetMaxHP() * 0.2f));
 	}
 	else
 	{
@@ -64,7 +65,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 	case Item::ITEM_ID::EXP:
 	{
 		Item* target = nullptr;
-		for (auto i : item_list)
+		for (auto i : itemList)
 		{
 			if (i->is_active)continue;
 			if (i->type == Item::ITEM_TYPE::EXP)
@@ -79,7 +80,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 			Item* exp = new Exp();
 			target = exp;
 			target->SetPlayer(player);
-			item_list.push_back(exp);
+			itemList.push_back(exp);
 		}
 		target->SetStatus(Item::ITEM_ID::EXP, value);
 		target->SetPos(pos);
@@ -89,7 +90,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 	case Item::ITEM_ID::EXP_MAGNET:
 	{
 		Item* target = nullptr;
-		for (auto i : item_list)
+		for (auto i : itemList)
 		{
 			if (!i->is_active)continue;
 			if (i->type == Item::ITEM_TYPE::EXP)
@@ -104,7 +105,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 			Item* exp = new Exp();
 			target = exp;
 			target->SetPlayer(player);
-			item_list.push_back(exp);
+			itemList.push_back(exp);
 		}
 		target->SetStatus(Item::ITEM_ID::EXP_MAGNET);
 		target->SetPos(pos);
@@ -114,7 +115,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 	case Item::ITEM_ID::ANVIL:
 	{
 		Item* target = nullptr;
-		for (auto i : item_list)
+		for (auto i : itemList)
 		{
 			if (i->is_active)continue;
 			if (i->type == Item::ITEM_TYPE::ANVIL)
@@ -128,7 +129,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		{
 			Item* anvil = new Anvil();
 			target = anvil;
-			item_list.push_back(anvil);
+			itemList.push_back(anvil);
 		}
 		target->SetStatus(Item::ITEM_ID::ANVIL,value);
 		target->SetPos(pos);
@@ -138,7 +139,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 	case Item::ITEM_ID::GOLDEN_ANVIL:
 	{
 		Item* target = nullptr;
-		for (auto i : item_list)
+		for (auto i : itemList)
 		{
 			if (i->is_active)continue;
 			if (i->type == Item::ITEM_TYPE::ANVIL)
@@ -152,7 +153,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		{
 			Item* anvil = new Anvil();
 			target = anvil;
-			item_list.push_back(anvil);
+			itemList.push_back(anvil);
 		}
 		target->SetStatus(Item::ITEM_ID::GOLDEN_ANVIL);
 		target->SetPos(pos);
@@ -162,7 +163,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 	case Item::ITEM_ID::COIN:
 	{
 		Item* target = nullptr;
-		for (auto i : item_list)
+		for (auto i : itemList)
 		{
 			if (i->is_active)continue;
 			if (i->type == Item::ITEM_TYPE::COIN)
@@ -176,7 +177,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		{
 			Item* coin = new Coin();
 			target = coin;
-			item_list.push_back(coin);
+			itemList.push_back(coin);
 		}
 		target->SetPlayer(player);
 		target->SetStatus(Item::ITEM_ID::COIN, value);
@@ -187,7 +188,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 	case Item::ITEM_ID::REWORD_BOX:
 	{
 		Item* target = nullptr;
-		for (auto i : item_list)
+		for (auto i : itemList)
 		{
 			if (i->is_active)continue;
 			if (i->type == Item::ITEM_TYPE::REWARD_BOX)
@@ -201,7 +202,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		{
 			Item* box = new RewardBox();
 			target = box;
-			item_list.push_back(box);
+			itemList.push_back(box);
 		}
 		target->SetStatus(Item::ITEM_ID::REWORD_BOX);
 		target->SetPos(pos);
@@ -212,7 +213,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 	case Item::ITEM_ID::HAMBURGER:
 	{
 		Item* target = nullptr;
-		for (auto i : item_list)
+		for (auto i : itemList)
 		{
 			if (i->is_active)continue;
 			if (i->type == Item::ITEM_TYPE::FOOD)
@@ -226,7 +227,7 @@ void ItemSpawner::GenerateItem(Vector2 pos, Item::ITEM_ID id, int value)
 		{
 			Item* food = new Hambureger();
 			target = food;
-			item_list.push_back(food);
+			itemList.push_back(food);
 		}
 		target->SetPlayer(player);
 		target->SetStatus(Item::ITEM_ID::HAMBURGER, value);
@@ -245,7 +246,7 @@ void ItemSpawner::Update()
 	nowTime -= DELTA;
 	if (isPause)return;
 	
-	for (auto i : item_list)
+	for (auto i : itemList)
 	{
 		if (!i->is_active)continue;
 		if (!(i->state == Item::ITEM_STATE::IDLE))continue;
@@ -334,7 +335,7 @@ void ItemSpawner::Update()
 		}
 	}
 
-	for (auto i : item_list)
+	for (auto i : itemList)
 	{
 		if (!i->is_active)continue;
 		i->Update();
@@ -390,7 +391,7 @@ void ItemSpawner::FixedUpdate()
 	partition.clear();
 
 	// 모든 Item를 각 칸에 맞게 
-	for (auto e : item_list)
+	for (auto e : itemList)
 	{
 		if (!e->is_active)continue;
 		int cell_x = (int)(e->pos.x) / CELL_X;
@@ -409,7 +410,7 @@ void ItemSpawner::FixedUpdate()
 
 void ItemSpawner::Render()
 {
-	for (auto i : item_list)
+	for (auto i : itemList)
 	{
 		if ((i->pos - player->pos).GetLength() < Vector2(WIN_WIDTH, WIN_HEIGHT).GetLength())
 			i->Render();
@@ -419,19 +420,23 @@ void ItemSpawner::Render()
 void ItemSpawner::PostRneder()
 {
 	/*
-	for (auto i : item_list)
+	for (auto i : itemList)
 		i->PostRender();
 	*/
 	ImGui::Text("Now Coin : %f", nowCoinValue);
 	ImGui::Text("Now Gettable CoinAmount : %f", coinValue);
 	ImGui::Text("Now Anvil UseCnt : %d", anvilUseCnt);
 	ImGui::Text("Now EnhanceDmg : %f", enhanceDmg);
+	for (const auto& item : itemList)
+	{
+		item->PostRender();
+	}
 }
 
 void ItemSpawner::SetPlayer(Player* p)
 {
 	player = p;
-	for (auto i : item_list)
+	for (auto i : itemList)
 	{
 		if (i->type == Item::ITEM_TYPE::EXP)
 			i->SetPlayer(player);

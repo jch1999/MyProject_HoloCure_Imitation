@@ -1,18 +1,29 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> BloomGloom::bloomGloomFrames;
-int BloomGloom::bloomGloomSpawnCnt = 0;
+
+vector<vector<shared_ptr<const Frame>>>& BloomGloom::GetBloomGloomFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> bloomGloomFrames;
+	return bloomGloomFrames;
+}
+
+int& BloomGloom::GetBloomGloomSpawnCnt()
+{
+	static int bloomGloomSpawnCnt = 0;
+	return bloomGloomSpawnCnt;
+}
 
 BloomGloom::BloomGloom(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(8.0f, 2.0f, 0.35f, 0.33f, 7)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	if (bloomGloomFrames.empty())
+	if (GetBloomGloomFrames().empty())
 	{
 		InitFrame();
 	}
 
 	// clips
+	auto& bloomGloomFrames = GetBloomGloomFrames();
 	for (auto& frames : bloomGloomFrames)
 	{
 		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
@@ -41,12 +52,12 @@ BloomGloom::BloomGloom(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vecto
 	SetEnemyName(name);
 	// Respawn();
 
-	++bloomGloomSpawnCnt;
+	++GetBloomGloomSpawnCnt();
 }
 
 BloomGloom::~BloomGloom()
 {
-	if ((--bloomGloomSpawnCnt) == 0)
+	if ((--GetBloomGloomSpawnCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -122,6 +133,7 @@ void BloomGloom::PostRender()
 
 void BloomGloom::InitFrame()
 {
+	auto& bloomGloomFrames = GetBloomGloomFrames();
 	if (!(bloomGloomFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - CouncilRyS Enemies EN Gen2 Hope_rm_bg.png";
@@ -146,9 +158,7 @@ void BloomGloom::InitFrame()
 
 void BloomGloom::ClearFrame()
 {
-	if (bloomGloomFrames.empty()) return;
-
-	bloomGloomFrames.clear();
+	GetBloomGloomFrames().clear();
 }
 
 void BloomGloom::SetEnemyName(ENEMY_NAME name) // type과 moveDir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정

@@ -1,18 +1,28 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> Anvil::anvilFrames;
-int Anvil::anvilSpawnCnt;
+
+
+vector<shared_ptr<const Frame>>& Anvil::GetAnvilFrames()
+{
+	static vector<shared_ptr<const Frame>> anvilFrames;
+	return anvilFrames;
+}
+
+int& Anvil::GetAnvilSpawnCnt()
+{
+	static int anvilSpawnCnt = 0;
+	return anvilSpawnCnt;
+}
 
 Anvil::Anvil(Vector2 pos, Vector2 size)
 	:Item()
 	,coolTime(0.0f)
 	,usableCnt(0),nowUsedCnt(0)
 {
-	if (anvilFrames.empty())
+	if (GetAnvilFrames().empty())
 	{
 		InitFrame();
 	}
-	frame = anvilFrames[0];
 
 	collider = new RectCollider(Vector2(41.0f, 24.0f) * 1.5f);
 	id = ITEM_ID::ANVIL;
@@ -45,10 +55,10 @@ void Anvil::Update()
 	switch (state)
 	{
 	case Item::ITEM_STATE::IDLE:
-		if (coolTime > 0.0f)
+		if (coolTime > nowTime)
 		{
 			collider->SetActive(false);
-			coolTime -= DELTA;
+			nowTime += DELTA;
 		}
 		else
 		{
@@ -57,23 +67,29 @@ void Anvil::Update()
 		break;
 	case Item::ITEM_STATE::ACTIVE:
 	{
-		if (UIManager::Get()->enhancePanel->GetAnvil() != this)
+		if (UIManager::Get()->GetEnhancePanel()->GetAnvil() != this)
 		{
 			SetState(Item::ITEM_STATE::IDLE);
 		}
 	}
 		break;
 	case Item::ITEM_STATE::USED:
-		is_active = false;
-		collider->SetActive(false);
+	{
+		
+	}
 		break;
 	default:
 		break;
 	}
 
-	light->Update();
-	scale = frame->GetFrameSize() * collider->Size() / frame->GetFrameOriginSize();
+	light->Update(); 
+	
+	auto& currentFrame = GetAnvilFrames()[clipIdx];
+	scale = currentFrame->GetFrameSize() * collider->Size() /
+		currentFrame->GetFrameOriginSize();
+	
 	WorldUpdate();
+
 	collider->pos = pos;
 	collider->WorldUpdate();
 }
@@ -88,7 +104,7 @@ void Anvil::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetAnvilFrames()[clipIdx]->Render();
 	light->Render();
 	collider->Render();
 }
@@ -96,6 +112,8 @@ void Anvil::Render()
 void Anvil::PostRender()
 {
 	if (!is_active)return;
+	ImGui::Text("Now UsableCnt : %d", usableCnt);
+	ImGui::Text("Now UsedCnt : %d", nowUsedCnt);
 }
 
 void Anvil::Respawn()
@@ -108,9 +126,11 @@ void Anvil::Respawn()
 	light->SetPos(pos);
 	light->WorldUpdate();
 
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
-	coolTime = 0.0f;
+	auto& currentFrame = GetAnvilFrames()[clipIdx];
+	scale = currentFrame->GetFrameSize() * collider->Size() /
+		currentFrame->GetFrameOriginSize();
+	nowTime = coolTime;
+	nowUsedCnt = 0;
 
 	is_active = true;
 	collider->SetActive(true);
@@ -125,13 +145,13 @@ void Anvil::SetStatus(Item::ITEM_ID id, int value)
 	case Item::ITEM_ID::ANVIL:
 	{
 		SetUsableCnt(value);
-		frame = anvilFrames[0];
+		clipIdx = 0;
 	}
 		break;
 	case Item::ITEM_ID::GOLDEN_ANVIL:
 	{
 		usableCnt = 1;
-		frame = anvilFrames[1];
+		clipIdx = 1;
 	}
 		break;
 	default:
@@ -146,20 +166,24 @@ void Anvil::SetState(ITEM_STATE state)
 	{
 	case Item::ITEM_STATE::IDLE:
 	{
-		coolTime = 2.0f;
+		nowTime = 0.0f;
 	}
 		break;
 	case Item::ITEM_STATE::ACTIVE:
 	{
-		UIManager::Get()->isEnhance = true;
-		UIManager::Get()->enhancePanel->SetAnvil(this);
+		UIManager::Get()->ActivateEnhancePanel();
+		UIManager::Get()->GetEnhancePanel()->SetAnvil(this);
 		collider->SetActive(false);
 	}
 		break;
 	case Item::ITEM_STATE::USED:
 	{
-		
-		if (usableCnt > 0)
+		if ((++nowUsedCnt) == usableCnt)
+		{
+			is_active = false;
+			collider->SetActive(false);
+		}
+		else
 		{
 			SetState(ITEM_STATE::IDLE);
 		}
@@ -189,6 +213,7 @@ int Anvil::GetAmount()
 
 void Anvil::InitFrame()
 {
+	auto& anvilFrames = GetAnvilFrames();
 	if (!anvilFrames.empty()) return;
 
 	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
@@ -201,6 +226,6 @@ void Anvil::InitFrame()
 
 void Anvil::ClearFrame()
 {
-	anvilFrames.clear();
+	GetAnvilFrames().clear();
 }
 

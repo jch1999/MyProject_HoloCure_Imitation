@@ -1,35 +1,17 @@
 #pragma once
-class SunLight :public Transform
+class SunLight :public BackgroundObject
 {
 protected:
-	static vector<shared_ptr<const Frame>> sunLightFrames;
-	static int SunLightUseCnt;
-
-private:
-	Transform* target;
-	Vector2 offset;
-	vector<shared_ptr<Clip>> clips;
-	int clip_idx;
-	Vector2 render_size;
-
-	VertexShader* VS;
-	PixelShader* PS;
-	ColourBuffer* CB;
+	static vector<shared_ptr<const Frame>>& GetSunLightFrames();
+	static int& GetSunLightUseCnt();
 
 public:
-	SunLight();
+	SunLight(Vector2 inRenderSize = Vector2(WIN_WIDTH, WIN_HEIGHT));
 	~SunLight();
 
-	void Update();
-	void Render();
-	void PostRender();
-	void InitFrame();
-	void ClearFrame();
-	void SetIndex(int idx);
-	void SetTarget(Transform* t) { target = t; }
-	void SetOffset(Vector2 offset) { this->offset = offset; }
-
-protected:
-	FORCEINLINE static shared_ptr<const Frame> GetSunLightFrame(int idx) { return sunLightFrames[idx]; }
-
+	virtual void Update() override;
+	virtual void Render() override;
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
+	virtual void SetIndex(int inIdx) override;
 };

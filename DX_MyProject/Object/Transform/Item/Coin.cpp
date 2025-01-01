@@ -1,7 +1,16 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> Coin::coinFrames;
-int Coin::coinUseCnt = 0;
+vector<shared_ptr<const Frame>>& Coin::GetCoinFrames()
+{
+	static vector<shared_ptr<const Frame>> coinFrames;
+	return coinFrames;
+}
+
+int& Coin::GetCoinUseCnt()
+{
+	static int coinUseCnt = 0;
+	return coinUseCnt;
+}
 
 Coin::Coin()
 	:Item()
@@ -12,12 +21,12 @@ Coin::Coin()
 	, isUp(false)
 	,coinAmount(0)
 {
-	if (coinFrames.empty())
+	if (GetCoinFrames().empty())
 	{
 		InitFrame();
 	}
 
-	clips.emplace_back(make_shared<Clip>(coinFrames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	clips.emplace_back(make_shared<Clip>(GetCoinFrames(), Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 
 	// collider
 	colliders.push_back(new RectCollider(Vector2(15.0f, 15.0f) * 2.0f));
@@ -33,7 +42,7 @@ Coin::Coin()
 	is_active = false;
 	collider->SetActive(false);
 
-	++coinUseCnt;
+	++GetCoinUseCnt();
 }
 
 Coin::~Coin()
@@ -44,7 +53,7 @@ Coin::~Coin()
 			delete c;
 	}
 
-	if ((--coinUseCnt) == 0)
+	if ((--GetCoinUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -134,6 +143,7 @@ void Coin::SetPos(Vector2 pos)
 
 void Coin::InitFrame()
 {
+	auto& coinFrames = GetCoinFrames();
 	if (!(coinFrames.empty())) return;
 
 	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
@@ -148,9 +158,7 @@ void Coin::InitFrame()
 
 void Coin::ClearFrame()
 {
-	if (coinFrames.empty()) return;
-
-	coinFrames.clear();
+	GetCoinFrames().clear();
 }
 
 void Coin::Respawn()

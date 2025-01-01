@@ -24,7 +24,7 @@ protected:
 	Button* getBtn, *dropBtn;
 	
 public:
-	RewardPanel();
+	RewardPanel(Vector2 inSize = Vector2(WIN_WIDTH, WIN_HEIGHT), Vector2 inScale = Vector2(0.0f, 0.0f), Vector2 inOffset = WIN_CENTER);
 	~RewardPanel();
 
 
@@ -32,10 +32,6 @@ public:
 	virtual void Update() override;
 
 	virtual void Render() override;
-
-	virtual void PostRender() override;
-
-	virtual void SetState(UI::UI_STATE state);
 
 	virtual void SetID(UI::UI_ID id);
 	virtual void SetActive(bool active)override;

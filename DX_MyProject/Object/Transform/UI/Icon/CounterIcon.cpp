@@ -1,8 +1,8 @@
 #include "framework.h"
 
-vector<shared_ptr<Frame>>& CounterIcon::GetCounterIconFrames()
+vector<shared_ptr<const Frame>>& CounterIcon::GetCounterIconFrames()
 {
-	static vector<shared_ptr<Frame>> counterIconFrames;
+	static vector<shared_ptr<const Frame>> counterIconFrames;
 	return counterIconFrames;
 }
 
@@ -23,6 +23,8 @@ CounterIcon::CounterIcon(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
 	id = UI::UI_ID::COUNTER_ICON;
 	type = UI::UI_TYPE::ICON;
 	state = UI::UI_STATE::IDLE;
+	additionalScale = Vector2(1.0f, 1.0f);
+	
 	is_active = true;
 
 	++GetCounterIconUseCnt();

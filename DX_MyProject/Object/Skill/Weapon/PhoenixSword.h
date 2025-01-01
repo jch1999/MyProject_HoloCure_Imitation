@@ -2,15 +2,15 @@
 class PhoenixSword :public Weapon
 {
 private:
-	vector<float> hitCooldown_table;
-	float blaze_hitCool;
+	vector<float> hitCooldownTable;
+	float blazeHitCool;
 
 	// 기존에 충돌한 Enemy 리스트
-	map<Enemy*, float> enemyCooltimes_b;
+	map<Enemy*, float> enemyCooltimesB;
 	// 이번 프레임에 충돌한 Enemy 리스트
-	vector<Enemy*> enemyNowFrame_b;
+	vector<Enemy*> enemyNowFrameB;
 	// 이번 프레임에 충돌하지 않아 제거할 Enemy 리스트
-	vector<Enemy*> removeList_b;
+	vector<Enemy*> removeListB;
 public:
 	PhoenixSword();
 	~PhoenixSword();

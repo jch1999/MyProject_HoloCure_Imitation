@@ -21,6 +21,19 @@ Projectile::~Projectile()
 	clips.clear();
 }
 
+
+void Projectile::PostRender()
+{
+}
+
+void Projectile::InitFrame()
+{
+}
+
+void Projectile::ClearFrame()
+{
+}
+
 void Projectile::SetStatus(float inDamage, float inSpeed, int inHitCount, float inLifeTime, float inHitCoolDown)
 {
 	this->damage = inDamage;

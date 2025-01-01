@@ -2,8 +2,8 @@
 class Axe :public Projectile
 {
 protected:
-	static shared_ptr<const Frame> axeFrame;
-	static int axeUseCnt;
+	static shared_ptr<const Frame>& GetAxeFrame();
+	static int& GetAxeUseCnt();
 
 private:
 	float rotSpeed;
@@ -13,7 +13,8 @@ public:
 
 
 	// Projectile을(를) 통해 상속됨
-	virtual void Init() override;
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 
 	virtual void Update() override;
 

@@ -5,8 +5,8 @@ PickRangeUp::PickRangeUp()
 	:Skill(SKILL_ID::PICK_UP, SKILL_TYPE::STAT, 1)
 {
 	weight = 4;
-	skill_name = "PICK UP RANGE UP";
-	level_scripts.push_back("Pick Up Range +20% Up.");
+	skillName = "PICK UP RANGE UP";
+	levelScripts.push_back("Pick Up Range +20% Up.");
 }
 
 PickRangeUp::~PickRangeUp()
@@ -29,7 +29,12 @@ void PickRangeUp::PostRender()
 
 bool PickRangeUp::LevelUp()
 {
-	player->SetPickUpRange(player->GetPickUpRnage() + 1);
+	player->IncreasePickUpRange();
+	if (player->GetPickUpRnage() == player->GetPickUpRangeColNum() - 1)
+	{
+		// SkillManager::Get()->totalWeightS -= this->weight;
+		
+	}
 	return true;
 }
 

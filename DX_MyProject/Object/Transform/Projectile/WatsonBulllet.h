@@ -2,8 +2,8 @@
 class WatsonBullet :public Projectile
 {
 protected:
-	static vector<shared_ptr<const Frame>> bulletFrames;
-	static int bulletUseCnt;
+	static vector<shared_ptr<const Frame>>& GetBulletFrames();
+	static int& GetBulletUseCnt();
 
 private:
 	Vector2 size;
@@ -16,7 +16,8 @@ public:
 
 
 	// Projectile을(를) 통해 상속됨
-	virtual void Init() override;
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 
 	virtual void Update() override;
 

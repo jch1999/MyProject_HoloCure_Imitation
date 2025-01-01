@@ -7,7 +7,7 @@ PlayScene::PlayScene()
 
 	CAM->SetTarget(player);
 
-	BackGroundManager::Get()->SetPlayer(player);
+	BackgroundManager::Get()->SetPlayer(player);
 	ItemSpawner::Get()->SetPlayer(player);
 	EnemySpawner::Get()->SetPlayer(player);
 	SkillManager::Get()->SetPlayer(player);
@@ -20,7 +20,7 @@ PlayScene::PlayScene()
 PlayScene::~PlayScene()
 {
 	delete player;
-	BackGroundManager::Delete();
+	BackgroundManager::Delete();
 	EnemySpawner::Delete();
 	SkillManager::Delete();
 	UIManager::Delete();
@@ -28,7 +28,7 @@ PlayScene::~PlayScene()
 
 void PlayScene::Update()
 {
-	BackGroundManager::Get()->Update();
+	BackgroundManager::Get()->Update();
 	EnemySpawner::Get()->Update();
 	ItemSpawner::Get()->Update();
 	SkillManager::Get()->Update();
@@ -38,12 +38,12 @@ void PlayScene::Update()
 
 void PlayScene::Render()
 {
-	BackGroundManager::Get()->BeforeRender();
+	BackgroundManager::Get()->BeforeRender();
 	ItemSpawner::Get()->Render();
-	BackGroundManager::Get()->Render();
+	BackgroundManager::Get()->Render();
 	player->Render();
 	EnemySpawner::Get()->Render();
-	BackGroundManager::Get()->AfterRender();
+	BackgroundManager::Get()->AfterRender();
 	SkillManager::Get()->Render();
 	UIManager::Get()->Render();
 }

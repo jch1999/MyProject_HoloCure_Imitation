@@ -96,7 +96,7 @@ protected:
 	Vector2 additionalScale;
 	vector<shared_ptr<const Clip>> clips; // 애니메이션 클립들
 	int clipIdx;
-	shared_ptr<const Frame> frame; // 애니메이션이 필요없을 경우 Frame만 사용
+	int frameIdx;
 
 public:
 	UI(Vector2 inSize = Vector2(1.0f, 1.0f), Vector2 inScale = Vector2(1.0f, 1.0f), Vector2 inOffset = Vector2(0.0f, 0.0f));
@@ -129,5 +129,6 @@ public:
 	
 	virtual void SetActive(bool inActive);
 	virtual void SetClipIdx(int inIdx);
+	virtual void SetIndex(int inIdx);
 	virtual void SetColor(Float4 inColor);
 };

@@ -3,7 +3,7 @@
 int& Text::GetTextUseCnt()
 {
 	static int textUseCnt = 0;
-	return;
+	return textUseCnt;
 }
 
 unordered_map<char, shared_ptr<const Frame>>& Text::GetTextFrameMap()
@@ -281,6 +281,18 @@ void Text::InitFrame()
 		// ''' // 72
 		textFrameMap['\''] = make_shared<const Frame>(file, 362.0f, 432.0f, 13.0f, 46.0f);
 		textSizeMap['\''] = Vector2(15.0f, 46.0f);
+		// '(', ')' // 73 74
+		textFrameMap['('] = make_shared<const Frame>(file, 182.0f,
+			289.0f, 18.0f, 46.0f);
+		textSizeMap['('] = Vector2(18.0f, 46.0f);
+		textFrameMap[')'] = make_shared<const Frame>(file, 201.0f, 289.0f, 18.0f, 46.0f);
+		textSizeMap[')'] = Vector2(18.0f, 46.0f);
+		// '[', ']' // 75 76
+		textFrameMap['['] = make_shared<const Frame>(file, 440.5f, 241.0f, 18.0f, 46.0f);
+		textSizeMap['['] = Vector2(18.0f, 46.0f);
+		textFrameMap[']'] = make_shared<const Frame>(file, 463.5f, 241.0f, 18.0f, 46.0f);
+		textSizeMap[']'] = Vector2(18.0f, 46.0f);
+
 	}
 }
 

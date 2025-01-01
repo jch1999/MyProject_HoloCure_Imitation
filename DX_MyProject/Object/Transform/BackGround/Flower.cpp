@@ -1,34 +1,37 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> Flower::flowerFrames;
-int Flower::flowerUseCnt = 0;
-
-Flower::Flower()
-	:spawn_rate(0.35f)
+vector<shared_ptr<const Frame>>& Flower::GetFlowerFrames()
 {
-	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
-	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
-	CB = new ColourBuffer();
+	static vector<shared_ptr<const Frame>> flowerFrames;
+	return flowerFrames;
+}
 
-	if (flowerFrames.empty())
+int& Flower::GetFlowerUseCnt()
+{
+	static int flowerUseCnt = 0;
+	return flowerUseCnt;
+}
+
+Flower::Flower(Vector2 inRenderSize,float inSpawnRate)
+	:BackgroundObject(inRenderSize,inSpawnRate)
+{
+	if (GetFlowerFrames().empty())
 	{
 		InitFrame();
 	}
 
-	clips.emplace_back(make_shared<const Clip>(flowerFrames, Clip::CLIP_TYPE::END, 1 / 4.0f));
-	renderSize = Vector2(29.0f, 38.0f)*1.2f;
-	
+	SetMaxIdx(GetFlowerFrames().size());
+
 	ChangePos();
 
-	++flowerUseCnt;
+	++GetFlowerUseCnt();
 }
 
 Flower::~Flower()
 {
-	clips.clear();
 	delete CB;
 
-	if ((--flowerUseCnt) == 0)
+	if ((--GetFlowerUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -36,8 +39,8 @@ Flower::~Flower()
 
 void Flower::Update()
 {
-	clips[clipIdx]->Update();
-	scale = clips[clipIdx]->GetFrameSize() * renderSize / clips[clipIdx]->GetFrameOriginSize();
+	auto& currentFrame = GetFlowerFrames()[frameIdx];
+	scale = currentFrame->GetFrameSize() * renderSize / currentFrame->GetFrameOriginSize();
 	
 	Vector2 before_pos = pos;
 	pos = target->pos + offset;
@@ -52,51 +55,14 @@ void Flower::Update()
 void Flower::Render()
 {
 	if (!is_active)return;
-	VS->Set();
-	PS->Set();
+	BackgroundObject::Render();
 
-	WB->SetVS(0);
-	CB->SetPS(0);
-	clips[clipIdx]->Render();
-}
-
-void Flower::PostRender()
-{
-}
-
-void Flower::SetIndex(int idx)
-{
-	clipIdx = idx;
-}
-
-void Flower::ChangePos()
-{
-	pair<int, int> nowPos = make_pair((int)pos.x, (int)pos.y);
-	if (activeRecord.find(nowPos) == activeRecord.end())
-	{
-		float rand = Random::Get()->GetRandomFloat(0.0f, 1.0f);
-		if (rand < spawn_rate)
-		{
-			is_active = true;
-			SetIndex(Random::Get()->GetRandomInt(0, 5));
-			activeRecord[nowPos] = true;
-			clipRecord[nowPos] = clipIdx;
-		}
-		else
-		{
-			is_active = false;
-			activeRecord[nowPos] = false;
-		}
-	}
-	else
-	{
-		is_active = activeRecord[nowPos];
-		SetIndex(clipRecord[nowPos]);
-	}
+	GetFlowerFrames()[frameIdx]->Render();
 }
 
 void Flower::InitFrame()
 {
+	auto& flowerFrames = GetFlowerFrames();
 	if (!(flowerFrames.empty())) return;
 
 	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
@@ -109,6 +75,5 @@ void Flower::InitFrame()
 
 void Flower::ClearFrame()
 {
-
-	flowerFrames.clear();
+	GetFlowerFrames().clear();
 }

@@ -1,20 +1,31 @@
 #include "framework.h"
 
-shared_ptr<const Frame> Bomb::bombFrame;
-int Bomb::bombUseCnt = 0;
+
+
+
+shared_ptr<const Frame>& Bomb::GetBombFrame()
+{
+	static shared_ptr<const Frame> bombFrame;
+	return bombFrame;
+}
+
+int& Bomb::GetBombUseCnt()
+{
+	static int bombUseCnt = 0;
+	return bombUseCnt;
+}
 
 Bomb::Bomb(ProjectileSize projSize, float targetDist, Vector2 move_dir)
 	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 {
-	if (!bombFrame)
+	if (!GetBombFrame())
 	{
-		Init();
+		InitFrame();
 	}
 
 	this->targetDist = targetDist;
 	this->moveDir = move_dir;
 	
-	frame = bombFrame;
 
 	colliders.push_back(new RectCollider(size * Vector2(1.2f, 1.2f)));
 	collider = colliders[0];
@@ -23,24 +34,15 @@ Bomb::Bomb(ProjectileSize projSize, float targetDist, Vector2 move_dir)
 	is_active = false;
 	collider->SetActive(false);
 	
-	++bombUseCnt;
+	++GetBombUseCnt();
 }
 
 Bomb::~Bomb()
 {
-	if ((--bombUseCnt) == 0)
+	if ((--GetBombUseCnt()) == 0)
 	{
-		bombFrame.reset();
+		ClearFrame();
 	}
-}
-
-void Bomb::Init()
-{
-	if (bombFrame) return;
-
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-
-	bombFrame = make_shared<const Frame>(file, 416.0f, 1508.0f, 23.0f, 29.0f);
 }
 
 void Bomb::Update()
@@ -60,8 +62,9 @@ void Bomb::Update()
 			collider->pos = pos;
 			collider->WorldUpdate();
 
-			scale = frame->GetFrameSize() * collider->Size() /
-				frame->GetFrameOriginSize();
+			auto& bombFrame = GetBombFrame();
+			scale = bombFrame->GetFrameSize() * collider->Size() /
+				bombFrame->GetFrameOriginSize();
 
 			OnCollision();
 		}
@@ -84,7 +87,7 @@ void Bomb::Render()
 		WB->SetVS(0);
 		CB->SetPS(0);
 
-		frame->Render();
+		GetBombFrame()->Render();
 		collider->Render();
 	}
 	if (explosion->is_active)
@@ -102,8 +105,10 @@ void Bomb::respwan()
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+
+	auto& bombFrame = GetBombFrame();
+	scale = bombFrame->GetFrameSize() * collider->Size() /
+		bombFrame->GetFrameOriginSize();
 
 	moveDist = 0.0f;
 	SetActive(true);
@@ -149,4 +154,19 @@ void Bomb::Hit()
 void Bomb::SetExplosionStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown)
 {
 	explosion->SetStatus(damage, speed, hitCount, lifeTime, hitCoolDown);
+}
+
+void Bomb::InitFrame()
+{
+	auto& bombFrame = GetBombFrame();
+	if (bombFrame) return;
+
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+
+	bombFrame = make_shared<const Frame>(file, 416.0f, 1508.0f, 23.0f, 29.0f);
+}
+
+void Bomb::ClearFrame()
+{
+	GetBombFrame().reset();
 }

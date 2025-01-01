@@ -1,18 +1,28 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> Takodachi::takodachiFrames;
-int Takodachi::takodachiSpawnCnt = 0;
+vector<vector<shared_ptr<const Frame>>>& Takodachi::GetTakodachiFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> takodachiFrames;
+	return takodachiFrames;
+}
+
+int& Takodachi::GetTakodachiSpawnCnt()
+{
+	static int takodachiSpawnCnt = 0;
+	return takodachiSpawnCnt;
+}
 
 Takodachi::Takodachi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(80.0f, 4.0f, 0.4f, 0.33f, 8)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	if (takodachiFrames.empty())
+	if (GetTakodachiFrames().empty())
 	{
 		InitFrame();
 	}
 
 	// clips
+	auto& takodachiFrames = GetTakodachiFrames();
 	for (auto& frames : takodachiFrames)
 	{
 		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
@@ -42,12 +52,12 @@ Takodachi::Takodachi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2
 	SetEnemyName(name);
 	// Respawn();
 
-	++takodachiSpawnCnt;
+	++GetTakodachiSpawnCnt();
 }
 
 Takodachi::~Takodachi()
 {
-	if ((--takodachiSpawnCnt) == 0)
+	if ((--GetTakodachiSpawnCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -126,6 +136,7 @@ void Takodachi::PostRender()
 
 void Takodachi::InitFrame()
 {
+	auto& takodachiFrames = GetTakodachiFrames();
 	if (!(takodachiFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
@@ -158,9 +169,7 @@ void Takodachi::InitFrame()
 
 void Takodachi::ClearFrame()
 {
-	if (takodachiFrames.empty()) return;
-
-	takodachiFrames.clear();
+	GetTakodachiFrames().clear();
 }
 
 void Takodachi::SetEnemyName(ENEMY_NAME name) // type과 moveDir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정

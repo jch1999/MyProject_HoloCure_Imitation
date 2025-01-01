@@ -2,8 +2,8 @@
 class Takodachi :public Enemy
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> takodachiFrames;
-	static int takodachiSpawnCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetTakodachiFrames();
+	static int& GetTakodachiSpawnCnt();
 
 private:
 	Vector2 damageSize, attackSize;

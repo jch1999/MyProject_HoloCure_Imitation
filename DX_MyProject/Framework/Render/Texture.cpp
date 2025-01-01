@@ -50,16 +50,19 @@ Texture* Texture::Add(wstring file)
 
 void Texture::Delete()
 {
-	for (auto t : texture_data)
+	for (auto& t : texture_data)
 	{
-		delete t.second;
+		if (t.second)
+		{
+			delete t.second;
+		}
 	}
 }
 
 Vector2 Texture::GetSize()
 // 이 텍스쳐(=이미지 파일)이 가지고 있는 데이터의 크기(=사진 크기)를 반환하는 함수
 {
-	return Vector2(image.GetMetadata().width, image.GetMetadata().height);
+	return Vector2((float)(image.GetMetadata().width), (float)(image.GetMetadata().height));
 	// 텍스쳐의 메타데이터(파일의 내용물이 아닌 파일 자체에 대한 설명을 담당하는 데이터)룰 받아와서
 	// 그 중 텍스쳐의 가로 전체 크기/세로 전체 크기를 이요해 이 텍스쳐의 크기를 확인하여 반환
 

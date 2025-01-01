@@ -1,19 +1,28 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> WatsonBullet::bulletFrames;
-int WatsonBullet::bulletUseCnt = 0;
+vector<shared_ptr<const Frame>>& WatsonBullet::GetBulletFrames()
+{
+	static vector<shared_ptr<const Frame>> bulletFrames;
+	return bulletFrames;
+}
+
+int& WatsonBullet::GetBulletUseCnt()
+{
+	static int bulletUseCnt = 0;;
+	return bulletUseCnt;
+}
 
 WatsonBullet::WatsonBullet(ProjectileSize projSize)
 	:Projectile(projSize,20.0f, 200.0f, 1, 2.0f)
 	, isRicochet(false)
 	,ricochetCnt(0)
 {
-	if (bulletFrames.empty())
+	if (GetBulletFrames().empty())
 	{
-		Init();
+		InitFrame();
 	}
 
-	clips.push_back(make_shared<Clip>(bulletFrames, Clip::CLIP_TYPE::PINGPONG, 1.0f / 8.0f));
+	clips.push_back(make_shared<Clip>(GetBulletFrames(), Clip::CLIP_TYPE::PINGPONG, 1.0f / 8.0f));
 	clipIdx = 0;
 
 	colliders.push_back(new RectCollider(size));
@@ -23,25 +32,31 @@ WatsonBullet::WatsonBullet(ProjectileSize projSize)
 	
 	is_active = false;
 
-	++bulletUseCnt;
+	++GetBulletUseCnt();
 }
 
 WatsonBullet::~WatsonBullet()
 {
-	if ((--bulletUseCnt) == 0)
+	if ((--GetBulletUseCnt()) == 0)
 	{
-		bulletFrames.clear();
+		ClearFrame();
 	}
 }
 
-void WatsonBullet::Init()
+void WatsonBullet::InitFrame()
 {
+	auto& bulletFrames = GetBulletFrames();
 	if (!bulletFrames.empty()) return;
 
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png";
 	
 	bulletFrames.push_back(make_shared<const Frame>(file, 18, 1047, 10, 8));
 	bulletFrames.push_back(make_shared<const Frame>(file, 51, 1047, 10, 8));
+}
+
+void WatsonBullet::ClearFrame()
+{
+	GetBulletFrames().clear();
 }
 
 void WatsonBullet::Update()

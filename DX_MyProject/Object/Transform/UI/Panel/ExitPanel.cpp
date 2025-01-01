@@ -1,22 +1,23 @@
 #include "framework.h"
 
-ExitPanel::ExitPanel()
+ExitPanel::ExitPanel(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:Panel(inSize, inScale, inOffset)
 {
-	popUp = new ImageArea(new Frame(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
+	popUp = new ImageArea(make_shared<const Frame>(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
 		, 4.0f, 2533.0f, 240.0f, 285.0f));
 	popUp->SetSize(Vector2(240.0f, 285.0f));
 	popUp->SetScale(Vector2(1.5f, 1.5f));
 	popUp->SetTarget(this);
 	popUp->SetOffset(Vector2(0.0f, -WIN_CENTER_Y * 0.1f));
 	popUp->SetState(UI_STATE::ACTIVE);
-	child_list.push_back(popUp);
+	childList.push_back(popUp);
 
 	pauseText = new TextPrinter();
 	pauseText->SetTarget(popUp);
 	pauseText->SetOffset(Vector2(-75.0f, -popUp->GetSize().y * 0.5f));
 	pauseText->SetTextInfo(Vector2(1.0f, 1.0f), Vector2(30.0f, 50.0f));
 	pauseText->SetText("PAUSED");
-	child_list.push_back(pauseText);
+	childList.push_back(pauseText);
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -29,7 +30,7 @@ ExitPanel::ExitPanel()
 		btn->SetState(UI_STATE::IDLE);
 
 		btns.push_back(btn);
-		child_list.push_back(btn);
+		childList.push_back(btn);
 	}
 	btns[0]->GetBtnText()->SetText("Resume");
 	btns[0]->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
@@ -39,9 +40,6 @@ ExitPanel::ExitPanel()
 	id = UI::UI_ID::EXIT_PANEL;
 	type = UI::UI_TYPE::PANEL;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(WIN_WIDTH, WIN_HEIGHT);
-	ui_scale = Vector2(1, 1);
-	offset = WIN_CENTER;
 	SetActive(false);
 }
 
@@ -61,8 +59,10 @@ void ExitPanel::Update()
 	else if (KEY_CON->Down(VK_UP))
 	{
 		selectIdx--;
-		if(selectIdx<0)
-			selectIdx = btns.size() - 1;
+		if (selectIdx < 0)
+		{
+			selectIdx = (int)(btns.size() - 1);
+		}
 	}
 	else if (KEY_CON->Down(VK_RETURN))
 	{
@@ -70,7 +70,7 @@ void ExitPanel::Update()
 		{
 		case 0:
 		{
-			UIManager::Get()->nowPanel = nullptr;
+			UIManager::Get()->ResetPanel();
 			isPause = false;
 			SetActive(false);
 		}
@@ -117,7 +117,7 @@ void ExitPanel::PostRender()
 void ExitPanel::SetActive(bool active)
 {
 	this->is_active = active;
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->SetActive(active);
 	selectIdx = 0;
 	

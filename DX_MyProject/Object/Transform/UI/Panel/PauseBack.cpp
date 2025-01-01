@@ -1,25 +1,43 @@
 #include "framework.h"
 
-PauseBack::PauseBack()
+shared_ptr<const Frame>& PauseBack::GetPauseBackFrame()
 {
-	wstring file = L"Textures/UI/Black.png";
-	vector<Frame*> frames;
-	frames.push_back(new Frame(file, 0, 0, 64, 64));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	static shared_ptr<const Frame> pausBackFrame;
+	return pausBackFrame;
+}
+
+int& PauseBack::GetPauseBackUseCnt()
+{
+	static int pauseBackUseCnt = 0;
+	return pauseBackUseCnt;
+}
+
+PauseBack::PauseBack(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize, inScale, inOffset)
+{
+	if (GetPauseBackFrame() == nullptr)
+	{
+		InitFrame();
+	}
+	
 
 	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.5f);
 	id = UI::UI_ID::PLAYER_ICON;
 	type = UI::UI_TYPE::PANEL;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(WIN_WIDTH, WIN_HEIGHT);
-	ui_scale = Vector2(1, 1);
-	additional_scale = Vector2(1, 1);
+	additionalScale = Vector2(1, 1);
 	offset = Vector2(0,0);
 	is_active = true;
+
+	++GetPauseBackUseCnt();
 }
 
 PauseBack::~PauseBack()
 {
+	if ((--GetPauseBackUseCnt()) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void PauseBack::Update()
@@ -43,8 +61,8 @@ void PauseBack::Update()
 		break;
 	}
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
-	clips[clip_idx]->Update();
+	auto& pauseBackFrame = GetPauseBackFrame();
+	scale = pauseBackFrame->GetFrameSize() * uiSize / pauseBackFrame->GetFrameOriginSize() * uiScale;
 
 	pos = target->pos + offset;
 	WorldUpdate();
@@ -66,7 +84,7 @@ void PauseBack::Render()
 		WB->SetVS(0);
 		CB->SetPS(0);
 
-		clips[clip_idx]->Render();
+		GetPauseBackFrame()->Render();
 	}
 		break;
 	default:
@@ -74,13 +92,19 @@ void PauseBack::Render()
 	}
 }
 
-void PauseBack::PostRender()
+void PauseBack::InitFrame()
 {
+	auto& pauseBackFrame = GetPauseBackFrame();
+	if (pauseBackFrame) return;
+	
+	wstring file = L"Textures/UI/Black.png";
+	
+	pauseBackFrame= make_shared<const Frame>(file, 0, 0, 64, 64);
 }
 
-void PauseBack::SetState(UI::UI_STATE state)
+void PauseBack::ClearFrame()
 {
-	this->state = state;
+	GetPauseBackFrame().reset();
 }
 
 void PauseBack::SetID(UI::UI_ID id)

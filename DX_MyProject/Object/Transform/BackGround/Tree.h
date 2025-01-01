@@ -1,44 +1,25 @@
 #pragma once
-class Tree :public Transform
+class Tree :public BackgroundObject
 {
 protected:
-	static vector<shared_ptr<const Frame>> treeFrames;
-	static int TreeUseCnt;
+	static vector<shared_ptr<const Frame>>& GetTreeFrames();
+	static int& GetTreeUseCnt();
 
 private:
-	float spawnRate;
-
-	Transform* target;
-	Vector2 offset;
-	
-	shared_ptr<const Frame> frame;
-	int frameIdx;
-	Vector2 renderSize;
-
-	VertexShader* VS;
-	PixelShader* PS;
-	ColourBuffer* CB;
-
 	RectCollider* collider;
 	Vector2 colliderOffset;
 
-	map<pair<int, int>, bool> activeRecord;
-	map<pair<int, int>, int> frameRecord;
 public:
-	Tree();
+	Tree(Vector2 inRenderSize = Vector2(137.0f, 133.0f) * 1.5f, float inSpawnRate = 0.85f);
 	~Tree();
 
-	void Update();
-	void Render();
-	void PostRender();
+	virtual void Update() override;
+	virtual void Render() override;
 	
-	void InitFrame();
-	void ClearFrame();
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 
-	void SetIndex(int idx);
-	void SetTarget(Transform* t) { target = t; }
-	void SetOffset(Vector2 offset) { this->offset = offset; }
-	void ChangePos();
-	void SetColor(Float4 color) { CB->data.colour = color; }
+	virtual void SetIndex(int idx) override;
+	virtual void ChangePos() override;
 	Collider* GetCollider() { return collider; }
 };

@@ -1,34 +1,34 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> SunLight::sunLightFrames;
-int SunLight::SunLightUseCnt=0;
-
-SunLight::SunLight()
+vector<shared_ptr<const Frame>>& SunLight::GetSunLightFrames()
 {
-	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
-	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
-	CB = new ColourBuffer();
+	static vector<shared_ptr<const Frame>> sunLightFrames;
+	return sunLightFrames;
+}
 
+int& SunLight::GetSunLightUseCnt()
+{
+	static int sunLightUseCnt = 0;
+	return sunLightUseCnt;
+}
+
+SunLight::SunLight(Vector2 inRenderSize)
+	:BackgroundObject(inRenderSize)
+{
 	// 프레임은 한 번만 생성해서 공유
-	if (sunLightFrames.empty())
+	if (GetSunLightFrames().empty())
 	{
 		InitFrame();
 	}
-	
-	clips.emplace_back(make_shared<Clip>(sunLightFrames, Clip::CLIP_TYPE::LOOP, 1));
 
-	render_size = Vector2(WIN_WIDTH, WIN_HEIGHT);
+	SetMaxIdx(GetSunLightFrames().size());
 
-	++SunLightUseCnt;
+	++GetSunLightUseCnt();
 }
 
 SunLight::~SunLight()
 {
-	clips.clear();
-
-	delete CB;
-
-	if ((--SunLightUseCnt) == 0)
+	if ((--GetSunLightUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -38,8 +38,9 @@ void SunLight::Update()
 {
 	if (!is_active)return;
 
-	clips[clip_idx]->Update();
-	scale = clips[clip_idx]->GetFrameSize() * render_size / clips[clip_idx]->GetFrameOriginSize();
+	auto& currentFrame = GetSunLightFrames()[frameIdx];
+
+	scale = currentFrame->GetFrameSize() * renderSize / currentFrame->GetFrameOriginSize();
 
 	pos = target->pos + offset;
 	WorldUpdate();
@@ -47,21 +48,14 @@ void SunLight::Update()
 
 void SunLight::Render()
 {
-	if (!is_active)return;
-	VS->Set();
-	PS->Set();
+	BackgroundObject::Render();
 
-	WB->SetVS(0);
-	CB->SetPS(0);
-	clips[clip_idx]->Render();
-}
-
-void SunLight::PostRender()
-{
+	GetSunLightFrames()[frameIdx]->Render();
 }
 
 void SunLight::InitFrame()
 {
+	auto& sunLightFrames = GetSunLightFrames();
 	if (!(sunLightFrames.empty())) return;
 
 	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
@@ -75,15 +69,14 @@ void SunLight::InitFrame()
 
 void SunLight::ClearFrame()
 {
-	if (sunLightFrames.empty()) return;
-
-	sunLightFrames.clear();
+	GetSunLightFrames().clear();
 }
 
-void SunLight::SetIndex(int idx)
+void SunLight::SetIndex(int inIdx)
 {
-	clip_idx = idx;
-	if(clip_idx==0)
+	BackgroundObject::SetIndex(inIdx);
+
+	if(inIdx==0)
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.85f);
 	else
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.35f);

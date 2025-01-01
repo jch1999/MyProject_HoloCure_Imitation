@@ -1,17 +1,25 @@
 #include "framework.h"
 
-shared_ptr<const Frame> PoisonArea::poisonFrame;
+
+shared_ptr<const Frame>& PoisonArea::GetPoisonFrame()
+{
+	static shared_ptr<const Frame> poisonFrame;
+	return poisonFrame;
+}
+
+int& PoisonArea::GetPoisonUseCnt()
+{
+	static int poisonUseCnt = 0;
+	return poisonUseCnt;
+}
 
 PoisonArea::PoisonArea(ProjectileSize projSize)
 	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 {
-	if (poisonFrame == nullptr)
+	if (!GetPoisonFrame())
 	{
-		Init();
+		InitFrame();
 	}
-
-	frame = poisonFrame;
-
 	// 0~2 : SpiderCooking스킬의 기본 collider 설정,
 	colliders.push_back(new CircleCollider(size.x * 0.5f));
 	colliders.push_back(new CircleCollider(size.x * 0.5f * 1.15f)); // SpiderCooking LV 2
@@ -21,23 +29,16 @@ PoisonArea::PoisonArea(ProjectileSize projSize)
 	collider = colliders[colliderIdx];
 	collider->pos = pos;
 	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.5f);
+	++GetPoisonUseCnt();
 }
 
 PoisonArea::~PoisonArea()
 {
-	poisonFrame.reset();
+	if ((--GetPoisonUseCnt()) == 0)
+	{
+		ClearFrame();
+	}
 }
-
-void PoisonArea::Init()
-{
-	if (poisonFrame) return;
-
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-
-	// PROJ_STATE::NORMAL
-	poisonFrame = make_shared<const Frame>(file, 4.0f, 80.0f, 107.0f, 107.0f);
-}
-
 void PoisonArea::Update()
 {
 	if (!is_active)return;
@@ -47,8 +48,8 @@ void PoisonArea::Update()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+	scale = GetPoisonFrame()->GetFrameSize() * collider->Size() /
+		GetPoisonFrame()->GetFrameOriginSize();
 
 	OnCollision();
 }
@@ -63,12 +64,8 @@ void PoisonArea::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetPoisonFrame()->Render();
 	collider->Render();
-}
-
-void PoisonArea::PostRender()
-{
 }
 
 void PoisonArea::respwan()
@@ -161,4 +158,18 @@ void PoisonArea::Hit()
 {
 	// 충돌 횟수 제한 없음
 	return;
+}
+
+void PoisonArea::InitFrame()
+{
+	if (GetPoisonFrame()) return;
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+
+	// PROJ_STATE::NORMAL
+	GetPoisonFrame() = make_shared<const Frame>(file, 4.0f, 80.0f, 107.0f, 107.0f);
+}
+
+void PoisonArea::ClearFrame()
+{
+	GetPoisonFrame().reset();
 }

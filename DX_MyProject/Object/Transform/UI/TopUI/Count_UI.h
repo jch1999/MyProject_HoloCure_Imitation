@@ -11,7 +11,7 @@ protected:
 	float upSpeed;
 
 public:
-	Count_UI();
+	Count_UI(Vector2 inSize = Vector2(0.0f, 0.0f), Vector2 inScale = Vector2(1.0f, 1.0f), Vector2 inOffset = Vector2(WIN_CENTER_X + 150.0f, 50.0f));
 	~Count_UI();
 
 

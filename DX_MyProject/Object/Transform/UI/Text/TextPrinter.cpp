@@ -1,7 +1,8 @@
 #include "framework.h"
 
-TextPrinter::TextPrinter()
-	:lineLength(10),textIdx(0)
+TextPrinter::TextPrinter(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize,inScale,inOffset)
+	,lineLength(10),textIdx(0)
 	,charScale(Vector2(0,0)),charPos(Vector2(0,0))
 	, charInterval(Vector2(0,0))
 	,printStr("")
@@ -17,8 +18,6 @@ TextPrinter::TextPrinter()
 	}
 	id = UI_ID::TEXT_PRINTER;
 	type = UI_TYPE::TEXT;
-	uiScale = Vector2(1, 1);
-	offset = Vector2(0, 0);
 	is_active = false;
 }
 
@@ -44,23 +43,6 @@ void TextPrinter::Render()
 
 	for (auto c : childList)
 		c->Render();
-}
-
-void TextPrinter::PostRender()
-{
-}
-
-void TextPrinter::InitFrame()
-{
-}
-
-void TextPrinter::ClearFrame()
-{
-}
-
-void TextPrinter::SetState(UI::UI_STATE state)
-{
-	this->state = state;
 }
 
 void TextPrinter::SetID(UI::UI_ID id)

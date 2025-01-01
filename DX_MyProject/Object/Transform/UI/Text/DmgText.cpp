@@ -30,7 +30,9 @@ void DmgText::Update()
 	}
 
 	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, nowTime / 1.5f);
-	scale = frame->GetFrameSize() * uiSize / frame->GetFrameOriginSize() * uiScale;
+	
+	auto& currentFrame = GetNumberFrames()[idx][clipIdx];
+	scale = currentFrame->GetFrameSize() * uiSize / currentFrame->GetFrameOriginSize() * uiScale;
 	
 	pos = pos + moveDir * speed * DELTA;
 	WorldUpdate();
@@ -45,7 +47,7 @@ void DmgText::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetNumberFrames()[idx][clipIdx]->Render();
 }
 
 void DmgText::PostRender()
@@ -56,30 +58,30 @@ void DmgText::PostRender()
 void DmgText::SetID(UI::UI_ID id)
 {
 	this->id = id;
-}
-
-void DmgText::SetClipIdx(int idx)
-{
 	switch (id)
 	{
 	case UI::UI_ID::DMG_TEXT:
 	{
-		frame = WhiteNumberFrames[idx];
-	}
-		break;
-	case UI::UI_ID::CRT_DMG_TEXT:
-	{
-		frame = YellowNumberFrames[idx];
-	}
-		break;
-	default:
-	case UI::UI_ID::PLAYER_DMG_TEXT:
-	{
-		frame = RedNumberFrames[idx];
+		idx = 0;
 	}
 	break;
-		break;
+	case UI::UI_ID::CRT_DMG_TEXT:
+	{
+		idx = 1;
 	}
+	break;
+	case UI::UI_ID::PLAYER_DMG_TEXT:
+	{
+		idx = 2;
+	}
+	break;
+	}
+}
+
+void DmgText::SetClipIdx(int idx)
+{
+	
+	clipIdx = idx;
 }
 
 void DmgText::SetActive(bool active)

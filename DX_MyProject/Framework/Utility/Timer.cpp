@@ -46,7 +46,8 @@ void Timer::Update()
 	if (one_sec_count >= 1.0f) // 총 1초가 경과되었나 확인
 	{
 		frame_rate = frame_count;
-		one_sec_count = frame_count = 0;
+		one_sec_count = 0.0f;
+		frame_count = 0;
 		// 1초가 경과되었다면 현 시점의 초당 프레임 레이트를 갱신하고
 		// 연산에 사용된 값들을 초기화
 	}

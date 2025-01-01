@@ -1,6 +1,7 @@
 #include "framework.h"
 
-Time_UI::Time_UI()
+Time_UI::Time_UI(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize,inScale,inOffset)
 {
 	Vector2 nowOffset(-25.0f,-10.0f);
 	Vector2 interval(15, 0);
@@ -14,7 +15,7 @@ Time_UI::Time_UI()
 		t->SetScale(Vector2(0.5f, 0.5f));
 		t->SetActive(true);
 		stage_text.push_back(t);
-		child_list.push_back(t);
+		childList.push_back(t);
 	}
 	stage_text[0]->SetText('S');
 	stage_text[1]->SetText('t');
@@ -37,14 +38,13 @@ Time_UI::Time_UI()
 		t->SetScale(Vector2(0.3f, 0.3f));
 		t->SetActive(true);
 		time_text.push_back(t);
-		child_list.push_back(t);
+		childList.push_back(t);
 	}
 
 	id = UI::UI_ID::TIMER;
 	type = UI::UI_TYPE::TIMER;
 	state = UI::UI_STATE::IDLE;
 	target = CAM;
-	offset = Vector2(WIN_CENTER_X, 50.0f);
 	is_active = true;
 }
 
@@ -69,7 +69,7 @@ void Time_UI::Update()
 	time_text[4]->SetText('0' + ((nowTime % 60) % 10));
 
 	
-	for (auto child : child_list)
+	for (auto child : childList)
 		child->Update();
 }
 
@@ -77,12 +77,8 @@ void Time_UI::Render()
 {
 	if (!is_active)return;
 
-	for (auto child : child_list)
+	for (auto child : childList)
 		child->Render();
-}
-
-void Time_UI::PostRender()
-{
 }
 
 void Time_UI::SetState(UI::UI_STATE state)

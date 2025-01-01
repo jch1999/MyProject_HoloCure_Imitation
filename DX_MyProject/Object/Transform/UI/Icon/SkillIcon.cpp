@@ -38,6 +38,8 @@ SkillIcon::SkillIcon(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
 	id = UI::UI_ID::SKILL_ICON;
 	type = UI::UI_TYPE::ICON;
 	state = UI::UI_STATE::IDLE;
+	additionalScale = Vector2(1, 1);
+
 	is_active = false;
 
 	++GetSkillIconUseCnt();
@@ -179,7 +181,7 @@ void SkillIcon::InitFrame()
 		skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 166.0f, 322.0f, 32.0f, 32.0f));
 		// EXP
 		//skillIconFrames.emplace_back(make_shared<const Frame>(files[4], 4.0f, 322.0f, 25.0f, 25.0f));
-		//clips.push_back(new Clip(skillIconFrames, Clip::CLIP_TYPE::LOOP, 1));
+		//clips.emplace_back(make_shared<Clip>(skillIconFrames, Clip::CLIP_TYPE::LOOP, 1));
 		//skillIconFrames.clear();
 	}
 }
@@ -207,11 +209,11 @@ void SkillIcon::SetID(UI::UI_ID id)
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
 			if (level == 7)
 			{
-				clipIdx = 2 + skill_id * 2 + 1;
+				SetClipIdx(2 + skill_id * 2 + 1);
 			}
 			else
 			{
-				clipIdx = 2 + skill_id * 2;
+				SetClipIdx(2 + skill_id * 2);
 			}
 			label->SetClipIdx(2);
 			label->SetLevel(level);
@@ -249,12 +251,9 @@ void SkillIcon::SetID(UI::UI_ID id)
 				label->SetClipIdx(0);
 			}
 			label->SetLevel(level);
-			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			SetClipIdx(8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB));
 		}
 		break;
-		{
-
-		}
 		default:
 			break;
 		}
@@ -276,11 +275,11 @@ void SkillIcon::SetID(UI::UI_ID id)
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
 			if (level == 7)
 			{
-				clipIdx = 2 + skill_id * 2 + 1;
+				SetClipIdx(2 + skill_id * 2 + 1);
 			}
 			else
 			{
-				clipIdx = 2 + skill_id * 2;
+				SetClipIdx(2 + skill_id * 2);
 			}
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(0);
@@ -293,7 +292,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::CEO_TEAR:
 		case (int)Skill::SKILL_ID::SPIDER_COOKING:
 		{
-			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			SetClipIdx(8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB));
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(0);
 		}
@@ -306,7 +305,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::BLACKSMITH_GEAR:
 		case (int)Skill::SKILL_ID::NINJA_HEADBAND:
 		{
-			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			SetClipIdx(8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB));
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(1);
 		}
@@ -317,7 +316,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::CRT:
 		case (int)Skill::SKILL_ID::PICK_UP:
 		{
-			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			SetClipIdx(8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB));
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(2);
 		}
@@ -325,7 +324,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::COIN:
 		case (int)Skill::SKILL_ID::FOOD:
 		{
-			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			SetClipIdx(8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB));
 			icon_frame->SetActive(true);
 			icon_frame->SetClipIdx(3);
 		}
@@ -348,11 +347,11 @@ void SkillIcon::SetID(UI::UI_ID id)
 			int level = SkillManager::Get()->GetSkillByID(Skill::SKILL_ID(skill_id))->GetLevel();
 			if (level == 7)
 			{
-				clipIdx = 2 + skill_id * 2 + 1;
+				SetClipIdx(2 + skill_id * 2 + 1);
 			}
 			else
 			{
-				clipIdx = 2 + skill_id * 2;
+				SetClipIdx(2 + skill_id * 2);
 			}
 		}
 		break;
@@ -376,7 +375,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 		case (int)Skill::SKILL_ID::PICK_UP:
 		case (int)Skill::SKILL_ID::COIN:
 		case (int)Skill::SKILL_ID::FOOD:
-			clipIdx = 8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB);
+			SetClipIdx(8 + (int)(skill_id)-(int)(Skill::SKILL_ID::HOLO_BOMB));
 			break;
 		default:
 			clipIdx = -1;
@@ -389,7 +388,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 	break;
 	case UI::UI_ID::WEAPON_ICON_BACK:
 	{
-		clipIdx = 0;
+		SetClipIdx(0);
 		label->SetActive(false);
 		CB->data.colour = Float4(0.8f, 0.8f, 0.8f, 0.3f);
 		SetSize(Vector2(43.0f, 38.0f));
@@ -397,7 +396,7 @@ void SkillIcon::SetID(UI::UI_ID id)
 	break;
 	case UI::UI_ID::BUFF_ICON_BACK:
 	{
-		clipIdx = 1;
+		SetClipIdx(1);
 		label->SetActive(false);
 		CB->data.colour = Float4(0.8f, 0.8f, 0.8f, 0.3f);
 		SetSize(Vector2(43.0f, 38.0f));

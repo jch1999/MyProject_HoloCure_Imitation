@@ -3,8 +3,8 @@ class ExplosionSmoke;
 class Bomb :public Projectile
 {
 protected:
-	static shared_ptr<const Frame> bombFrame;
-	static int bombUseCnt;
+	static shared_ptr<const Frame>& GetBombFrame();
+	static int& GetBombUseCnt();
 
 private:
 	float thorwDist;
@@ -18,8 +18,6 @@ public:
 
 
 	// Projectile을(를) 통해 상속됨
-	virtual void Init() override;
-
 	virtual void Update() override;
 
 	virtual void Render() override;
@@ -34,4 +32,7 @@ public:
 
 	void SetTargetPos(Vector2 tPos) { targetPos = tPos; }
 	void SetExplosionStatus(float damage, float speed, int hitCount, float lifeTime, float hitCoolDown);
+
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 };

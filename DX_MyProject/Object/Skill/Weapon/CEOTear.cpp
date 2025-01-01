@@ -4,24 +4,24 @@ CEOTear::CEOTear()
 	:Weapon(SKILL_ID::CEO_TEAR)
 {
 	weight = 2;
-	skill_name = "CEO'S TEAR";
-	level_scripts.push_back("Fires rapid tears at random targets.");
-	level_scripts.push_back("Increases damage by 20%.");
-	level_scripts.push_back("Shoot 2 tears.");
-	level_scripts.push_back("Reduce the time between attacks by 33%.");
-	level_scripts.push_back("Tears are 25% faster and increase damage by 20%.");
-	level_scripts.push_back("Reduce the time between attacks by 50%.");
-	level_scripts.push_back("Shoot 4 tears.");
+	skillName = "CEO'S TEAR";
+	levelScripts.push_back("Fires rapid tears at random targets.");
+	levelScripts.push_back("Increases damage by 20%.");
+	levelScripts.push_back("Shoot 2 tears.");
+	levelScripts.push_back("Reduce the time between attacks by 33%.");
+	levelScripts.push_back("Tears are 25% faster and increase damage by 20%.");
+	levelScripts.push_back("Reduce the time between attacks by 50%.");
+	levelScripts.push_back("Shoot 4 tears.");
 	
-	skillDelay_table = { 0.0f,0.5f,0.5f,0.5f,0.33f,0.33f,0.17f,0.17f };
-	minDamage_table = { 0.0f,8.0f,10.0f,10.0f,10.0f,12.0f,12.0f,12.0f };
-	maxDamage_table = { 0.0f,12.0f,14.0f,14.0f,14.0f,16.0f,16.0f,16.0f };
-	projCnt_talbe = { 0,1,1,2,2,2,2,4 };
+	skillDelayTable = { 0.0f,0.5f,0.5f,0.5f,0.33f,0.33f,0.17f,0.17f };
+	minDamageTable = { 0.0f,8.0f,10.0f,10.0f,10.0f,12.0f,12.0f,12.0f };
+	maxDamageTable = { 0.0f,12.0f,14.0f,14.0f,14.0f,16.0f,16.0f,16.0f };
+	projCntTalbe = { 0,1,1,2,2,2,2,4 };
 	projDelay = 0.15f;
-	projSpd_table = { 0.0f,200.0f,200.0f,200.0f,200.0f,250.0f,250.0f,250.0f };
-	hitLimit_table = { 0,1,1,1,1,1,1,1 };
+	projSpdTable = { 0.0f,200.0f,200.0f,200.0f,200.0f,250.0f,250.0f,250.0f };
+	hitLimitTable = { 0,1,1,1,1,1,1,1 };
 
-	weapon_type = WEAPON_TYPE::MULTI_SHOT;
+	weaponType = WEAPON_TYPE::MULTI_SHOT;
 
 	// 기본적으로 눈물을 10개 생성시켜 놓고 재활용
 	for (int i = 0; i < 8; i++)
@@ -63,17 +63,17 @@ bool CEOTear::LevelDown()
 
 void CEOTear::Update()
 {
-	if (now_level == 0)return;
+	if (nowLevel == 0)return;
 
 	switch (action_status)
 	{
 	case Skill::SKILL_STATUS::COOLDOWN:
 	{
-		now_skill_delay += DELTA;
-		if (now_skill_delay >= skillDelay_table[now_level])
+		nowSkillDelay += DELTA;
+		if (nowSkillDelay >= skillDelayTable[nowLevel])
 		{
 			action_status = SKILL_STATUS::PLAY;
-			now_skill_delay = 0.0f;
+			nowSkillDelay = 0.0f;
 		}
 	}
 		break;
@@ -86,15 +86,15 @@ void CEOTear::Update()
 		else
 		{
 			nowProjDelay = 0.0f;
-			if (projCnt < projCnt_talbe[now_level] + player->GetProjCnt()) // 투사체를 덜 발사함
+			if (projCnt < projCntTalbe[nowLevel] + player->GetProjCnt()) // 투사체를 덜 발사함
 			{
 				Tear* proj = GetProjectTile<Tear>();
 
-				float damage = Random::Get()->GetRandomInt(minDamage_table[now_level], (maxDamage_table[now_level] + 1))
-					* (1 + SkillManager::Get()->add_Weapon_dmgRate + SkillManager::Get()->damageRate_Shot)
+				float damage = Random::Get()->GetRandomInt(minDamageTable[nowLevel], (maxDamageTable[nowLevel] + 1))
+					* (1 + SkillManager::Get()->addWeaponDmgRate + SkillManager::Get()->damageRateShot)
 					+ player->GetATK()
 					+ enhanceDamage;
-				proj->SetStatus(damage, projSpd_table[now_level], hitLimit_table[now_level], 5.0f);
+				proj->SetStatus(damage, projSpdTable[nowLevel], hitLimitTable[nowLevel], 5.0f);
 				proj->SetDirection(player->GetAttackDir());
 				proj->SetColliderIdx(0);
 				proj->pos = player->pos + player->GetAttackDir() * 50.0f;
@@ -119,7 +119,7 @@ void CEOTear::Update()
 
 void CEOTear::Render()
 {
-	if (now_level == 0)return;
+	if (nowLevel == 0)return;
 	for (auto proj : projectiles)
 	{
 		proj->Render();
@@ -132,12 +132,12 @@ void CEOTear::PostRender()
 
 bool CEOTear::LevelUp()
 {
-	if (now_level == max_level)return false;
+	if (nowLevel == maxLevel)return false;
 
-	now_level++;
-	if (now_level == 1)
+	nowLevel++;
+	if (nowLevel == 1)
 	{
-		SkillManager::Get()->nowWeapon_list[SkillManager::Get()->weaponCnt++] = this;
+		SkillManager::Get()->nowWeaponList[SkillManager::Get()->weaponCnt++] = this;
 	}
 	return true;
 }

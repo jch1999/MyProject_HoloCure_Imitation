@@ -2,8 +2,8 @@
 class Ball :public Projectile
 {
 protected:
-	static shared_ptr<const Frame> ballFrame;
-	static int ballUseCnt;
+	static shared_ptr<const Frame>& GetBallFrame();
+	static int& GetBallUseCnt();
 
 private:
 	Vector2 velocity;
@@ -13,7 +13,6 @@ public:
 	~Ball();
 
 	// Projectile을(를) 통해 상속됨
-	virtual void Init() override;
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void PostRender() override;
@@ -25,4 +24,7 @@ public:
 
 	// Projectile을(를) 통해 상속됨
 	virtual void OnCollision() override;
+
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 };

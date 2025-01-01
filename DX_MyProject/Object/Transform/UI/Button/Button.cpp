@@ -22,6 +22,7 @@ Button::Button(Vector2 inSize,Vector2 inScale,Vector2 inOffset)
 	}
 
 	btnText = new TextPrinter();
+	btnText->SetParent(this->GetWorld());
 	btnText->SetTarget(this);
 	btnText->SetOffset(this->uiSize / 2.0f * this->uiScale);
 	btnText->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(10.0f, 20.0f));

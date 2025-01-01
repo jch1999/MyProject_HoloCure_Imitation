@@ -1,16 +1,17 @@
 #include "framework.h"
 
-RewardPanel::RewardPanel()
-	:increaseSpd(100.0f),playTime(0.0f)
+RewardPanel::RewardPanel(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:Panel(inSize, inScale, inOffset)
+	, increaseSpd(100.0f),playTime(0.0f)
 {
-	popUp = new ImageArea(new Frame(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
+	popUp = new ImageArea(make_shared<const Frame>(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
 		, 4.0f, 790.0f, 208.0f, 240.0f));
 	popUp->SetSize(Vector2(208.0f, 240.0f));
 	popUp->SetScale(Vector2(1.7f, 1.7f));
 	popUp->SetTarget(this);
 	popUp->SetOffset(Vector2(0.0f, -WIN_CENTER_Y * 0.1f));
 	popUp->SetState(UI_STATE::ACTIVE);
-	child_list.push_back(popUp);
+	childList.push_back(popUp);
 
 	// box 
 	anim = new RewardBoxAnim();
@@ -18,16 +19,16 @@ RewardPanel::RewardPanel()
 	anim->SetOffset(Vector2(0.0f, 25.0f));
 	anim->SetScale(Vector2(1.3f, 1.3f));
 	anim->SetAnimState(RewardBoxAnim::BOX_STATE::FALL);
-	child_list.push_back(anim);
+	childList.push_back(anim);
 
-	spotLight = new ImageArea(new Frame(L"Textures/Item/PC Computer - HoloCure - Save the Fans - Holozon Box.png"
+	spotLight = new ImageArea(make_shared<const Frame>(L"Textures/Item/PC Computer - HoloCure - Save the Fans - Holozon Box.png"
 		, 251.0f, 52.0f, 262.0f, 360.0f));
 	spotLight->SetState(UI_STATE::ACTIVE);
 	spotLight->SetSize(Vector2(262.0f, 360.0f));
 	spotLight->SetTarget(popUp);
 	spotLight->SetOffset(Vector2(0.0f, -20.0f));
 	spotLight->SetColor(Float4(1.0f, 1.0f, 1.0f, 0.8f));
-	child_list.push_back(spotLight);
+	childList.push_back(spotLight);
 	
 	openText = new TextPrinter();
 	openText->SetTarget(popUp);
@@ -35,7 +36,7 @@ RewardPanel::RewardPanel()
 	openText->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(12.0f, 20.0f));
 	openText->SetText("Enter to Open!");
 	openText->SetActive(false);
-	child_list.push_back(openText);
+	childList.push_back(openText);
 
 	lEffect = new LightEffect();
 	lEffect->SetTarget(anim);
@@ -44,22 +45,22 @@ RewardPanel::RewardPanel()
 	lEffect->SetScale(Vector2(2.0f, 2.0f));
 	lEffect->SetState(UI_STATE::IDLE);
 	lEffect->SetDist(70.0f);
-	child_list.push_back(lEffect);
+	childList.push_back(lEffect);
 
 	// coin
-	coinImg = new ImageArea(new Frame(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
+	coinImg = new ImageArea(make_shared<const Frame>(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
 		, 200.0f, 322.0f, 15.0f, 15.0f));
 	coinImg->SetTarget(popUp);
 	coinImg->SetOffset(Vector2(-20.0f, -150.0f));
 	coinImg->SetScale(Vector2(0.7f, 0.7f));
 	coinImg->SetState(UI::UI_STATE::ACTIVE);
-	child_list.push_back(coinImg);
+	childList.push_back(coinImg);
 
 	coinText = new TextPrinter();
 	coinText->SetTarget(coinImg);
 	coinText->SetOffset(Vector2(35.0f, 0.0f));
 	coinText->SetTextInfo(Vector2(0.5f, 0.5f), Vector2(15.0f, 20.0f));
-	child_list.push_back(coinText);
+	childList.push_back(coinText);
 
 	// Skill
 	icon = new SkillIcon();
@@ -68,7 +69,7 @@ RewardPanel::RewardPanel()
 	icon->SetScale(Vector2(1.3f, 1.3f));
 	icon->SetID(UI_ID::SKILL_ICON);
 	icon->SetActive(false);
-	child_list.push_back(icon);
+	childList.push_back(icon);
 
 	selector = new SkillSelector();
 	selector->SetTarget(popUp);
@@ -79,7 +80,7 @@ RewardPanel::RewardPanel()
 	selector->SetScriptTOffset(Vector2(-210.0f, -10.0f));
 	selector->SetClipIdx(1);
 	selector->SetActive(false);
-	child_list.push_back(selector);
+	childList.push_back(selector);
 	
 	// select btn
 	getBtn = new Button();
@@ -91,9 +92,9 @@ RewardPanel::RewardPanel()
 	getBtn->SetState(UI_STATE::IDLE);
 	getBtn->GetBtnText()->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(12.0f, 20.0f));
 	getBtn->GetBtnText()->SetText("Get");
-	getBtn->GetBtnText()->AddOffset(Vector2(-15.0f, 0.0f));
+	getBtn->GetBtnText()->AddOffset(Vector2(-100.0f, -15.0f));
 	getBtn->SetActive(false);
-	child_list.push_back(getBtn);
+	childList.push_back(getBtn);
 
 	dropBtn = new Button();
 	dropBtn->SetTarget(this);
@@ -103,17 +104,14 @@ RewardPanel::RewardPanel()
 	dropBtn->SetClipIdx(0);
 	dropBtn->SetState(UI_STATE::IDLE);
 	dropBtn->GetBtnText()->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(12.0f, 20.0f));
-	dropBtn->GetBtnText()->AddOffset(Vector2(-15.0f, 0.0f));
+	dropBtn->GetBtnText()->AddOffset(Vector2(-100.0f, -15.0f));
 	dropBtn->GetBtnText()->SetText("Drop");
 	dropBtn->SetActive(false);
-	child_list.push_back(dropBtn);
+	childList.push_back(dropBtn);
 
 	id = UI_ID::REWARD_PANEL;
 	type = UI_TYPE::PANEL;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(WIN_WIDTH, WIN_HEIGHT);
-	ui_scale = Vector2(1, 1);
-	offset = WIN_CENTER;
 	SetActive(false);
 }
 
@@ -199,7 +197,7 @@ void RewardPanel::Update()
 		anim->SetSize(Vector2(160.0f, 90.0f));
 		coinValue = targetCoinValue;
 		coinText->SetText(to_string((int)coinValue));
-		lEffect->rot.z += 60.0f * M_PI / 180.0f * DELTA;
+		lEffect->rot.z += (float)(60.0f * M_PI / 180.0f * DELTA);
 		// Ã¢´Ý±â
 		if (KEY_CON->Down(VK_RETURN))
 		{
@@ -211,8 +209,8 @@ void RewardPanel::Update()
 			default:
 				break;
 			}
-			UIManager::Get()->isReward = false;
-			UIManager::Get()->nowPanel = nullptr;
+			UIManager::Get()->DeactivateRewardPanel();
+			UIManager::Get()->ResetPanel();
 			nowBox->SetState(Item::ITEM_STATE::USED);
 			nowBox = nullptr;
 			isPause = false;
@@ -258,7 +256,7 @@ void RewardPanel::Update()
 
 	WorldUpdate();
 
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Update();
 }
 
@@ -266,19 +264,8 @@ void RewardPanel::Render()
 {
 	if (!is_active)return;
 
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Render();
-}
-
-void RewardPanel::PostRender()
-{
-	if (!is_active)return;
-	lEffect->PostRender();
-}
-
-void RewardPanel::SetState(UI::UI_STATE state)
-{
-	this->state = state;
 }
 
 void RewardPanel::SetID(UI::UI_ID id)
@@ -295,7 +282,7 @@ void RewardPanel::SetActive(bool active)
 
 	anim->SetAnimState(RewardBoxAnim::BOX_STATE::FALL);
 	anim->SetOffset(Vector2(0.0f, 25.0f));
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->SetActive(active);
 
 	openText->SetActive(false);

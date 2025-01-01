@@ -22,7 +22,6 @@ public:
 	virtual void PostRender() override;
 	virtual void InitFrame() override;
 	virtual void ClearFrame() override;
-	virtual void SetState(UI::UI_STATE state);
 	virtual void SetID(UI::UI_ID id);
 	Vector2 GetTextSize();
 

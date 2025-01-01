@@ -1,74 +1,82 @@
 #include "framework.h"
 
-SkillSelector::SkillSelector()
-	:char_pos(Vector2(0,0)),char_interval(Vector2(10.0f,20.0f)), line_length(40)
-	,name_offset(Vector2(-230.0f,-35.0f))
-	,script_offset(Vector2(-180.0f,-10.0f))
+vector<shared_ptr<const Frame>>& SkillSelector::GetSkillSelectorFrames()
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
+	static vector<shared_ptr<const Frame>> skillSelectorFrames;
+	return skillSelectorFrames;
+}
 
-	// unselect clip
-	frames.push_back(new Frame(file, 4.0f, 2049.0f, 386.0f, 69.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-	frames.clear();
+int& SkillSelector::GetSkillSelectorUseCnt()
+{
+	static int skillSelectorUseCnt = 0;
+	return skillSelectorUseCnt;
+}
 
-	// select clip
-	frames.push_back(new Frame(file, 4.0f, 1979.0f, 386.0f, 69.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
-	frames.clear();
+SkillSelector::SkillSelector(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize, inScale, inOffset)
+	, charPos(Vector2(0,0)),charInterval(Vector2(10.0f,20.0f)), lineLength(40)
+	,nameOffset(Vector2(-230.0f,-35.0f))
+	,scriptOffset(Vector2(-180.0f,-10.0f))
+{
+	if (GetSkillSelectorFrames().empty())
+	{
+		InitFrame();
+	}
 
-	skill_icon = new SkillIcon();
-	skill_icon->SetID(UI_ID::SKILL_LEVEL_UP_ICON);
-	skill_icon->SetTarget(this);
-	skill_icon->SetOffset(Vector2(-215.0f, 5.0f));
-	skill_icon->SetActive(true);
+	skillIcon = new SkillIcon();
+	skillIcon->SetID(UI_ID::SKILL_LEVEL_UP_ICON);
+	skillIcon->SetTarget(this);
+	skillIcon->SetOffset(Vector2(-215.0f, 5.0f));
+	skillIcon->SetActive(true);
 	
-	child_list.push_back(skill_icon);
+	childList.push_back(skillIcon);
 
 	// text 
-	skillName_text = new TextPrinter();
-	skillName_text->SetTarget(this);
-	skillName_text->SetOffset(name_offset);
-	skillName_text->SetCharInterval(char_interval);
-	skillName_text->SetLineLength(line_length);
-	skillName_text->SetCharScale(Vector2(0.3f, 0.3f));
+	skillNameText = new TextPrinter();
+	skillNameText->SetTarget(this);
+	skillNameText->SetOffset(nameOffset);
+	skillNameText->SetCharInterval(charInterval);
+	skillNameText->SetLineLength(lineLength);
+	skillNameText->SetCharScale(Vector2(0.3f, 0.3f));
 
-	skillScript_text = new TextPrinter();
-	skillScript_text->SetTarget(this);
-	skillScript_text->SetOffset(script_offset);
-	skillScript_text->SetCharInterval(char_interval);
-	skillScript_text->SetLineLength(line_length);
-	skillScript_text->SetCharScale(Vector2(0.3f, 0.3f));
+	skillScriptText = new TextPrinter();
+	skillScriptText->SetTarget(this);
+	skillScriptText->SetOffset(scriptOffset);
+	skillScriptText->SetCharInterval(charInterval);
+	skillScriptText->SetLineLength(lineLength);
+	skillScriptText->SetCharScale(Vector2(0.3f, 0.3f));
 
-	child_list.push_back(skillName_text);
-	child_list.push_back(skillScript_text);
+	childList.push_back(skillNameText);
+	childList.push_back(skillScriptText);
 
 	id = UI::UI_ID::SELECTOR;
 	type = UI::UI_TYPE::SELECTOR;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(386.0f, 69.0f);
-	ui_scale = Vector2(1, 1);
-	additional_scale = Vector2(1, 1);
-	offset = Vector2(0, 0);
+	additionalScale = Vector2(1, 1);
 	is_active = false;
+
+	++GetSkillSelectorUseCnt();
 }
 
 SkillSelector::~SkillSelector()
 {
+	if ((--GetSkillSelectorUseCnt()) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void SkillSelector::Update()
 {
 	if (!is_active)return;
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale * additional_scale;
-	clips[clip_idx]->Update();
+	auto& currentFrame = GetSkillSelectorFrames()[clipIdx];
+	scale = currentFrame->GetFrameSize() * uiSize / currentFrame->GetFrameOriginSize() * uiScale * additionalScale;
 
 	pos = target->pos + offset;
 	WorldUpdate();
 
-	for (auto child : child_list)
+	for (auto child : childList)
 		child->Update();
 }
 
@@ -81,20 +89,34 @@ void SkillSelector::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	GetSkillSelectorFrames()[clipIdx]->Render();
 
-	for (auto child : child_list)
+	for (auto child : childList)
 		child->Render();
 }
 
 void SkillSelector::PostRender()
 {
-	ImGui::Text("Now Skill ID : %d", skill_id);
+	ImGui::Text("Now Skill ID : %d", skillId);
 }
 
-void SkillSelector::SetState(UI::UI_STATE state)
+void SkillSelector::InitFrame()
 {
-	this->state = state;
+	auto& skillSelectorFrames = GetSkillSelectorFrames();
+	if (!(skillSelectorFrames.empty())) return;
+
+	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
+
+	// unselect clip
+	skillSelectorFrames.emplace_back(make_shared<const Frame>(file, 4.0f, 2049.0f, 386.0f, 69.0f));
+
+	// select clip
+	skillSelectorFrames.emplace_back(make_shared<const Frame>(file, 4.0f, 1979.0f, 386.0f, 69.0f));
+}
+
+void SkillSelector::ClearFrame()
+{
+	GetSkillSelectorFrames().clear();
 }
 
 void SkillSelector::SetID(UI::UI_ID id)
@@ -102,20 +124,20 @@ void SkillSelector::SetID(UI::UI_ID id)
 	this->id = id;
 }
 
-void SkillSelector::SetSkillID(int skill_id)
+void SkillSelector::SetSkillID(int skillId)
 {
-	this->skill_id = skill_id;
-	skill_icon->SetSkillID(skill_id);
+	this->skillId = skillId;
+	skillIcon->SetSkillID(skillId);
 	
 	SetText();
 }
 
 void SkillSelector::SetText()
 {
-	int text_idx = 0;
-	if (skill_id != -1)
+	int textIdx = 0;
+	if (skillId != -1)
 	{
-		Skill* skill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skill_id);
+		Skill* skill = SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)skillId);
 		
 
 		if (skill->GetLevelUpAble())
@@ -124,38 +146,38 @@ void SkillSelector::SetText()
 			string scripts = skill->GetScript();
 			if (scripts.length() > 120)
 			{
-				skillScript_text->SetTextInfo(Vector2(0.25f, 0.25f), char_interval * 0.7f, 60);
+				skillScriptText->SetTextInfo(Vector2(0.25f, 0.25f), charInterval * 0.7f, 60);
 			}
 			else
 			{
-				skillScript_text->SetTextInfo(Vector2(0.3f, 0.3f), char_interval, 40);
+				skillScriptText->SetTextInfo(Vector2(0.3f, 0.3f), charInterval, 40);
 			}
-			skillName_text->SetText(name);
-			skillScript_text->SetText(scripts);
-			skillName_text->SetActive(true);
-			skillScript_text->SetActive(true);
+			skillNameText->SetText(name);
+			skillScriptText->SetText(scripts);
+			skillNameText->SetActive(true);
+			skillScriptText->SetActive(true);
 		}
 		else
 		{
 			string name = skill->GetSkillName() + " LV MAX";
-			skillName_text->SetText(name);
-			skillName_text->SetActive(true);
-			skillScript_text->SetActive(false);
+			skillNameText->SetText(name);
+			skillNameText->SetActive(true);
+			skillScriptText->SetActive(false);
 		}
-		skill_icon->SetActive(true);
+		skillIcon->SetActive(true);
 	}
 	else
 	{
-		skill_icon->SetActive(false);
-		skillName_text->SetActive(false);
-		skillScript_text->SetActive(false);
+		skillIcon->SetActive(false);
+		skillNameText->SetActive(false);
+		skillScriptText->SetActive(false);
 	}
 }
 
 void SkillSelector::SetText(string& nameStr, string& scriptStr)
 {
-	skillName_text->SetText(nameStr);
-	skillScript_text->SetText(scriptStr);
-	skillName_text->SetActive(true);
-	skillScript_text->SetActive(true);
+	skillNameText->SetText(nameStr);
+	skillScriptText->SetText(scriptStr);
+	skillNameText->SetActive(true);
+	skillScriptText->SetActive(true);
 }

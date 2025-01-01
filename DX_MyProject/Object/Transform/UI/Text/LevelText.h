@@ -1,6 +1,8 @@
 #pragma once
 class LevelText :public SpecialText
 {
+protected:
+	int numIdIdx;
 public:
 	LevelText();
 	~LevelText();

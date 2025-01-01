@@ -2,8 +2,8 @@
 class RewardBox :public Item
 {
 protected:
-	static shared_ptr<const Frame> rewardBoxFrame;
-	static int rewardBoxUseCnt;
+	static shared_ptr<const Frame>& GetRewardBoxFrame();
+	static int& GetRewardBoxUseCnt();
 
 private:
 	ItemLight* light;

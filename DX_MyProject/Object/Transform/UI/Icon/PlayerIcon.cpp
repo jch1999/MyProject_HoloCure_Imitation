@@ -12,7 +12,8 @@ int& PlayerIcon::GetPlayerIconUseCnt()
 	return playerIconUseCnt;
 }
 
-PlayerIcon::PlayerIcon()
+PlayerIcon::PlayerIcon(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize, inScale, inOffset)
 {
 	if (GetPlayerIconFrames().empty())
 	{
@@ -22,10 +23,7 @@ PlayerIcon::PlayerIcon()
 	id = UI::UI_ID::PLAYER_ICON;
 	type = UI::UI_TYPE::ICON;
 	state = UI::UI_STATE::IDLE;
-	uiSize = Vector2(43.0f, 38.0f);
-	uiScale = Vector2(1, 1);
 	additionalScale = Vector2(1, 1);
-	offset = Vector2(0, 0);
 	is_active = false;
 
 	++GetPlayerIconUseCnt();

@@ -1,19 +1,24 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> LavaBucket::labaBucketFrames;
-int LavaBucket::labaBucketUseCnt = 0;
+shared_ptr<const Frame>& LavaBucket::GetLabaBucketFrame()
+{
+	static shared_ptr<const Frame> lavaBucketFrame;;
+	return lavaBucketFrame;
+}
+
+int& LavaBucket::GetLabaBucketUseCnt()
+{
+	static int labaBucketUseCnt = 0;
+	return labaBucketUseCnt;
+}
 
 LavaBucket::LavaBucket(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	if (labaBucketFrames.empty())
+	if (!GetLabaBucketFrame())
 	{
-		Init();
+		InitFrame();
 	}
-
-	clips.push_back(make_shared<Clip>(labaBucketFrames, Clip::CLIP_TYPE::END, 1 / 9.0f));
-
-	clipIdx = 0;
 
 	colliders.push_back(new RectCollider(size));
 	collider = colliders[0];
@@ -23,34 +28,14 @@ LavaBucket::LavaBucket(ProjectileSize projSize)
 	is_active = false;
 	collider->SetActive(false);
 
-	++labaBucketUseCnt;
+	++GetLabaBucketUseCnt();
 }
 
 LavaBucket::~LavaBucket()
 {
-	if ((--labaBucketUseCnt) == 0)
+	if ((--GetLabaBucketUseCnt()) == 0)
 	{
-		labaBucketFrames.clear();
-	}
-}
-
-void LavaBucket::Init()
-{
-	if (!labaBucketFrames.empty()) return;
-
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-
-	// ?? 이게 왜 필요하지? 이 클래스는 용암 양동이 인데? 작업 내역을 확인하고 수정 진행
-	// Lava Start
-	Vector2 initPos(176.0f, 193.0f);
-	Vector2 frameSize(17.0f, 20.0f);
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			labaBucketFrames.push_back(make_shared<const Frame>(file, initPos.x + j * 129.0f, initPos.y + i * 129.0f
-				, frameSize.x, frameSize.y));
-		}
+		ClearFrame();
 	}
 }
 
@@ -89,7 +74,7 @@ void LavaBucket::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clipIdx]->Render();
+	GetLabaBucketFrame()->Render();
 	collider->Render();
 }
 
@@ -131,4 +116,19 @@ void LavaBucket::Hit()
 void LavaBucket::OnCollision()
 {
 	
+}
+
+void LavaBucket::InitFrame()
+{
+	auto& lavaBucketFrame = GetLabaBucketFrame();
+	if (!lavaBucketFrame) return;
+
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+
+	lavaBucketFrame = make_shared<const Frame>(file, 0.0f, 0.0f, 0.0f, 0.0f);
+}
+
+void LavaBucket::ClearFrame()
+{
+	GetLabaBucketFrame().reset();
 }

@@ -13,155 +13,155 @@ Icon::Icon()
 		// Skill Icon
 		L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png",
 	};
-	vector<Frame*> frames;
+	vector<shared_ptr<const Frame>> frames;
 
 	// Player Icon
 	// Watson
-	frames.push_back(new Frame(files[0], 10, 2363, 43, 38));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[0], 10, 2363, 43, 38));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Kiara
-	frames.push_back(new Frame(files[1], 10, 3953, 43, 38));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[1], 10, 3953, 43, 38));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Baelz
-	frames.push_back(new Frame(files[2], 10, 802, 43, 38));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[2], 10, 802, 43, 38));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
 	// Player Full Icon
 	// Watson
-	frames.push_back(new Frame(files[0], 7, 2419, 73, 105));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[0], 7, 2419, 73, 105));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Kiara
-	frames.push_back(new Frame(files[1], 7, 4008, 63, 115));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[1], 7, 4008, 63, 115));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Baelz
-	frames.push_back(new Frame(files[2], 7, 858, 73, 112));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[2], 7, 858, 73, 112));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	
 	// Weapon Icon Back
-	frames.push_back(new Frame(files[3], 139, 567, 12, 11));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[3], 139, 567, 12, 11));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
 	// Buff Icon Back
-	frames.push_back(new Frame(files[3], 153, 567, 12, 11));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[3], 153, 567, 12, 11));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
 	// Default Weapon Icon
 	// PistolShot
 	// Normal
-	frames.push_back(new Frame(files[0], 11, 1956, 18, 20));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[0], 11, 1956, 18, 20));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Awake
-	frames.push_back(new Frame(files[0], 34, 1956, 24, 25));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[0], 34, 1956, 24, 25));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// PhoenixSword
 	// Normal
-	frames.push_back(new Frame(files[1], 8, 3683, 22, 21));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[1], 8, 3683, 22, 21));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Awake
-	frames.push_back(new Frame(files[1], 33, 3684, 25, 25));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[1], 33, 3684, 25, 25));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// PlayDice
 	// Normal
-	frames.push_back(new Frame(files[2], 9, 703, 21, 20));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[2], 9, 703, 21, 20));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// Awake
-	frames.push_back(new Frame(files[2], 33, 703, 25, 20));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[2], 33, 703, 25, 20));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
 	// Weapon Skill Icon
 	// HOLO_BOMB:
-	frames.push_back(new Frame(files[4], 139, 52, 25, 20));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 139, 52, 25, 20));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// ELITE_LAVA_BUCKET:
-	frames.push_back(new Frame(files[4], 31, 52, 25, 20));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 31, 52, 25, 20));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	
 	// PSYCHO_AXE:
-	frames.push_back(new Frame(files[4], 166, 52, 25, 20));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 166, 52, 25, 20));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
 	// BOUNCE_BALL:
-	frames.push_back(new Frame(files[4], 58, 76, 25, 22));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 58, 76, 25, 22));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
 	// CEO_TEAR:
-	frames.push_back(new Frame(files[4], 58, 52, 25, 22));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 58, 52, 25, 22));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	
 	// SPIDER_COOKING:
-	frames.push_back(new Frame(files[4], 4, 52, 25, 20));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 4, 52, 25, 20));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	
 	// Buff Skill Icon
 	// NURSE_HORN
-	frames.push_back(new Frame(files[4], 31.0f, 224.0f, 25.0f, 20.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 31.0f, 224.0f, 25.0f, 20.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// FULL_MEAL
-	frames.push_back(new Frame(files[4], 58.0f, 224.0f, 25.0f, 20.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 58.0f, 224.0f, 25.0f, 20.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// PIKIPIK_PIMAN
-	frames.push_back(new Frame(files[4], 112.0f, 224.0f, 25.0f, 22.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 112.0f, 224.0f, 25.0f, 22.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// STUDY_GLASSES
-	frames.push_back(new Frame(files[4], 139.0f, 248.0f, 25.0f, 20.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 139.0f, 248.0f, 25.0f, 20.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// SUPER_CHATTO_TIME
-	frames.push_back(new Frame(files[4], 4.0f, 272.0f, 25.0f, 20.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 4.0f, 272.0f, 25.0f, 20.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// BLACKSMITH_GEAR
-	frames.push_back(new Frame(files[4], 31.0f, 272.0f, 25.0f, 22.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 31.0f, 272.0f, 25.0f, 22.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// NINJA_HEADBAND
-	frames.push_back(new Frame(files[4], 4.0f, 176.0f, 25.0f, 22.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 4.0f, 176.0f, 25.0f, 22.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 
 	// Stat Skill Icon
 	// MAX_HP ATK SPD CRT PICK_UP
 	for (int i = 0; i < 5; i++)
 	{
-		frames.push_back(new Frame(files[4], 4.0f +i *27.0f, 322.0f, 25.0f, 25.0f));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+		frames.emplace_back(make_shared<const Frame>(files[4], 4.0f +i *27.0f, 322.0f, 25.0f, 25.0f));
+		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 		frames.clear();
 	}
 	// Extra Skill Icon
 	// COIN
-	frames.push_back(new Frame(files[4], 200.0f, 322.0f, 15.0f, 15.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 200.0f, 322.0f, 15.0f, 15.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// FOOD
-	frames.push_back(new Frame(files[4], 166.0f, 322.0f, 32.0f, 32.0f));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	frames.emplace_back(make_shared<const Frame>(files[4], 166.0f, 322.0f, 32.0f, 32.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	frames.clear();
 	// EXP
-	//frames.push_back(new Frame(files[4], 4.0f, 322.0f, 25.0f, 25.0f));
-	//clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1));
+	//frames.emplace_back(make_shared<const Frame>(files[4], 4.0f, 322.0f, 25.0f, 25.0f));
+	//clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1));
 	//frames.clear();
 	
 	// Level Label

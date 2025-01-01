@@ -2,7 +2,7 @@
 class CounterIcon :public UI
 {
 protected:
-	static vector<shared_ptr<Frame>>& GetCounterIconFrames();
+	static vector<shared_ptr<const Frame>>& GetCounterIconFrames();
 	static int& GetCounterIconUseCnt();
 
 public:

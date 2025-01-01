@@ -2,8 +2,8 @@
 class Shrimp :public Enemy
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> shrimpFrames;
-	static int shrimpSpawnCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetShrimpFrames();
+	static int& GetShrimpSpawnCnt();
 
 private:
 	Vector2 damageSize, attackSize;

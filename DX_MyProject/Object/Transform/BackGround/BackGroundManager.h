@@ -1,5 +1,5 @@
 #pragma once
-class BackGroundManager :public Singleton<BackGroundManager>
+class BackgroundManager :public Singleton<BackgroundManager>
 {
 private:
 	Player* player;
@@ -11,8 +11,8 @@ public:
 	vector<Grass*> grasses;
 	vector<SunLight*> lights;
 private:
-	BackGroundManager();
-	~BackGroundManager();
+	BackgroundManager();
+	~BackgroundManager();
 
 	float now_time;
 

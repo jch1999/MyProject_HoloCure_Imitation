@@ -1,7 +1,8 @@
 #include "framework.h"
 
-Count_UI::Count_UI()
-	:upSpeed(100.0f)
+Count_UI::Count_UI(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize,inScale,inOffset)
+	, upSpeed(100.0f)
 	, nowCoinCnt(0.0f), targetCoinCnt(0.0f)
 	,nowDefeatCnt(0.0f),targetDefeatCnt(0.0f)
 {
@@ -57,7 +58,6 @@ Count_UI::Count_UI()
 	type = UI::UI_TYPE::COUNTER;
 	state = UI::UI_STATE::IDLE;
 	target = CAM;
-	offset = Vector2(WIN_CENTER_X + 150.0f, 50.0f);
 	is_active = true;
 }
 
@@ -95,7 +95,7 @@ void Count_UI::Render()
 
 void Count_UI::PostRender()
 {
-	ImGui::Text("Count UI's pos : %f %f", pos.x, pos.y);
+	//ImGui::Text("Count UI's pos : %f %f", pos.x, pos.y);
 }
 
 void Count_UI::InitFrame()

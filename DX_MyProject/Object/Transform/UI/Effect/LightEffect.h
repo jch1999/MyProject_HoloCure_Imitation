@@ -2,9 +2,9 @@
 class LightEffect :public UI
 {
 protected:
-	shared_ptr<const Frame> lightEffectFrame;
-	vector<shared_ptr<ImageArea>> lightEffect;
-	float dist;
+	static shared_ptr<const Frame>& GetLightEffectFrame();
+	static int& GetLightEffectUseCnt();
+
 public:
 	LightEffect();
 	~LightEffect();
@@ -19,4 +19,7 @@ public:
 
 	virtual void InitFrame() override;
 	virtual void ClearFrame() override;
+
+protected:
+	float dist;
 };

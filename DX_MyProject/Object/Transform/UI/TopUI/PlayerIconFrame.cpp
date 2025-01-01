@@ -1,11 +1,11 @@
 #include "framework.h"
 
-PlayerIconFrame::PlayerIconFrame()
+PlayerIconFrame::PlayerIconFrame(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize, inScale, inOffset)
 {
 	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
-	frames.push_back(new Frame(file, 4, 213, 199, 87));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 10.f));
+	
+	frame=make_shared<const Frame>(file, 4, 213, 199, 87);
 
 	// 자식 UI 생성 - playerIcon 1개, HP Bar, HP Bar Back, Hp Text
 	playerIcon = new PlayerIcon();
@@ -43,20 +43,17 @@ PlayerIconFrame::PlayerIconFrame()
 		t->SetActive(false);
 	}
 
-	child_list.push_back(playerIcon);
-	child_list.push_back(hpBar_back);
-	child_list.push_back(hpBar);
+	childList.push_back(playerIcon);
+	childList.push_back(hpBar_back);
+	childList.push_back(hpBar);
 	for (int i = 0; i < 7; i++)
 	{
-		child_list.push_back(hpText[i]);
+		childList.push_back(hpText[i]);
 	}
 	
 	id = UI::UI_ID::PLAYER_ICON_FRAME;
 	type = UI::UI_TYPE::FRAME;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(199.0f, 86.0f);
-	ui_scale = Vector2(2.0f, 2.0f);
-	offset = Vector2(180, 85);
 	is_active = true;
 }
 
@@ -67,8 +64,7 @@ PlayerIconFrame::~PlayerIconFrame()
 
 void PlayerIconFrame::Update()
 {
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
-	clips[0]->Update();
+	scale = frame->GetFrameSize() * uiSize / frame->GetFrameOriginSize() * uiScale;
 
 	// 자식에 추가 작업
 	float hpRate = UIManager::Get()->GetPlayer()->GetHP() / UIManager::Get()->GetPlayer()->GetMaxHP();
@@ -79,7 +75,7 @@ void PlayerIconFrame::Update()
 
 	pos = target->pos + offset;
 	WorldUpdate();
-	for (auto ui : child_list)
+	for (auto ui : childList)
 	{
 		ui->Update();
 	}
@@ -95,9 +91,9 @@ void PlayerIconFrame::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	frame->Render();
 
-	for (auto ui : child_list)
+	for (auto ui : childList)
 		ui->Render();
 }
 

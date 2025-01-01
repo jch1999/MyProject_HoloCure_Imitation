@@ -4,12 +4,12 @@ SuperChattoTime::SuperChattoTime()
 	:Buff(SKILL_ID::SUPER_CHATTO_TIME,5)
 {
 	weight = 2;
-	skill_name = "SUPER CHATTO TIME!";
-	level_scripts.push_back("Targets drop 20% more HoloCoins. All HoloCoins are picked automatically.");
-	level_scripts.push_back("Targets drop 40% more HoloCoins. All HoloCoins are picked automatically.");
-	level_scripts.push_back("Targets drop 60% more HoloCoins. All HoloCoins are picked automatically.");
-	level_scripts.push_back("Targets drop 80% more HoloCoins. All HoloCoins are picked automatically.");
-	level_scripts.push_back("Targets drop 100% more HoloCoins. All HoloCoins are picked automatically.");
+	skillName = "SUPER CHATTO TIME!";
+	levelScripts.push_back("Targets drop 20% more HoloCoins. All HoloCoins are picked automatically.");
+	levelScripts.push_back("Targets drop 40% more HoloCoins. All HoloCoins are picked automatically.");
+	levelScripts.push_back("Targets drop 60% more HoloCoins. All HoloCoins are picked automatically.");
+	levelScripts.push_back("Targets drop 80% more HoloCoins. All HoloCoins are picked automatically.");
+	levelScripts.push_back("Targets drop 100% more HoloCoins. All HoloCoins are picked automatically.");
 }
 
 SuperChattoTime::~SuperChattoTime()
@@ -35,14 +35,14 @@ void SuperChattoTime::PostRender()
 
 bool SuperChattoTime::LevelUp()
 {
-	if (now_level == max_level)return false;
+	if (nowLevel == maxLevel)return false;
 
-	now_level++;
-	switch (now_level)
+	nowLevel++;
+	switch (nowLevel)
 	{
 	case 1:
 	{
-		SkillManager::Get()->nowBuff_list[SkillManager::Get()->buffCnt++] = this;
+		SkillManager::Get()->nowBuffList[SkillManager::Get()->buffCnt++] = this;
 		ItemSpawner::Get()->isCoinAutoPick = true;
 		ItemSpawner::Get()->coinValue += ItemSpawner::Get()->coinValueDefault * 0.2f;
 	}

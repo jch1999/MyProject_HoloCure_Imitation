@@ -1,18 +1,28 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> KFP::kfpFrames;
-int KFP::kfpSpawnCnt = 0;
+vector<vector<shared_ptr<const Frame>>>& KFP::GetKfpFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> kfpFrames;
+	return kfpFrames;
+}
+
+int& KFP::GetKfpSpawnCnt()
+{
+	static int kfpSpawnCnt = 0;
+	return kfpSpawnCnt;
+}
 
 KFP::KFP(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(20.0f, 2.0f, 1.0f, 0.33f, 3)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	if (kfpFrames.empty())
+	if (GetKfpFrames().empty())
 	{
 		InitFrame();
 	}
 
 	// clips
+	auto& kfpFrames = GetKfpFrames();
 	for (auto& frames : kfpFrames)
 	{
 		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
@@ -41,12 +51,12 @@ KFP::KFP(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	SetEnemyName(name);
 	// Respawn();
 
-	++kfpSpawnCnt;
+	++GetKfpSpawnCnt();
 }
 
 KFP::~KFP()
 {
-	if ((--kfpSpawnCnt) == 0)
+	if ((--GetKfpSpawnCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -122,6 +132,7 @@ void KFP::PostRender()
 
 void KFP::InitFrame()
 {
+	auto& kfpFrames = GetKfpFrames();
 	if (!(kfpFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
@@ -146,9 +157,7 @@ void KFP::InitFrame()
 
 void KFP::ClearFrame()
 {
-	if (kfpFrames.empty()) return;
-
-	kfpFrames.clear();
+	GetKfpFrames().clear();
 }
 
 void KFP::SetEnemyName(ENEMY_NAME name) // type과 moveDir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정

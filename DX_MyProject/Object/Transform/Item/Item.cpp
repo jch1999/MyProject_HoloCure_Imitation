@@ -11,14 +11,18 @@ Item::~Item()
 {
 	//delete VS;
 	//delete PS;
-	//delete CB;
+	delete CB;
 
 	clips.clear();
 }
 
+void Item::PostRender()
+{
+}
+
 void Item::SetState(ITEM_STATE inState)
 {
-	this->state = state;
+	this->state = inState;
 }
 
 void Item::SetAddtionalDir(Vector2 inDir)

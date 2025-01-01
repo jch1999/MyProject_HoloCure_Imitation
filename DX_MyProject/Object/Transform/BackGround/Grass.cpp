@@ -1,33 +1,35 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> Grass::grassFrames;
-int Grass::grassUseCnt = 0;
 
-Grass::Grass()
-	:spawn_rate(0.05f)
+vector<shared_ptr<const Frame>>& Grass::GetGrassFrames()
 {
-	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
-	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
-	CB = new ColourBuffer();
+	static vector<shared_ptr<const Frame>> grassFrames;
+	return grassFrames;
+}
 
-	if (grassFrames.empty())
+int& Grass::GetGrassUseCnt()
+{
+	static int grassUseCnt = 0;
+	return grassUseCnt;
+}
+
+Grass::Grass(Vector2 inRenderSize,float inSpawnRate)
+	:BackgroundObject(inRenderSize,inSpawnRate)
+{
+	if (GetGrassFrames().empty())
 	{
 		InitFrame();
 	}
+	SetMaxIdx(GetGrassFrames().size());
 
-	frame = grassFrames[0];
-
-	renderSize = Vector2(29.0f, 30.0f);
 	ChangePos();
 
-	++grassUseCnt;
+	++GetGrassUseCnt();
 }
 
 Grass::~Grass()
 {
-	delete CB;
-
-	if ((--grassUseCnt) == 0)
+	if ((--GetGrassUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -35,7 +37,8 @@ Grass::~Grass()
 
 void Grass::Update()
 {
-	scale = frame->GetFrameSize() * renderSize / frame->GetFrameOriginSize();
+	auto& currentFrame = GetGrassFrames()[frameIdx];
+	scale = currentFrame->GetFrameSize() * renderSize / currentFrame->GetFrameOriginSize();
 	
 	Vector2 before_pos = pos;
 	pos = target->pos + offset;
@@ -50,52 +53,15 @@ void Grass::Update()
 void Grass::Render()
 {
 	if (!is_active)return;
-	VS->Set();
-	PS->Set();
+	BackgroundObject::Render();
 
-	WB->SetVS(0);
-	CB->SetPS(0);
-	frame->Render();
+	GetGrassFrames()[frameIdx]->Render();
 }
 
-void Grass::PostRender()
-{
-}
-
-void Grass::SetIndex(int idx)
-{
-	frameIdx = idx;
-	frame = grassFrames[idx];
-}
-
-void Grass::ChangePos()
-{
-	pair<int, int> now_pos = make_pair((int)pos.x, (int)pos.y);
-	if (activeRecord.find(now_pos) == activeRecord.end())
-	{
-		float rand = Random::Get()->GetRandomFloat(0.0f, 1.0f);
-		if (rand < spawn_rate)
-		{
-			is_active = true;
-			SetIndex(Random::Get()->GetRandomInt(0, 1));
-			activeRecord[now_pos] = true;
-			clipRecord[now_pos] = frameIdx;
-		}
-		else
-		{
-			is_active = false;
-			activeRecord[now_pos] = false;
-		}
-	}
-	else
-	{
-		is_active = activeRecord[now_pos];
-		SetIndex(clipRecord[now_pos]);
-	}
-}
 
 void Grass::InitFrame()
 {
+	auto& grassFrames = GetGrassFrames();
 	if (!(grassFrames.empty())) return;
 
 	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
@@ -108,8 +74,7 @@ void Grass::InitFrame()
 
 void Grass::ClearFrame()
 {
-	if (grassFrames.empty()) return;
-	grassFrames.clear();
+	GetGrassFrames().clear();
 }
 
 

@@ -2,8 +2,8 @@
 class ExplosionSmoke :public Projectile
 {
 protected:
-	static vector<shared_ptr<const Frame>> explosionSmokeFrames;
-	static int explosionSmokeUseCnt;
+	static vector<shared_ptr<const Frame>>& GetExplosionSmokeFrames();
+	static int& GetExplosionSmokeUseCnt();
 
 private:
 	Vector2 size;
@@ -12,10 +12,10 @@ public:
 	~ExplosionSmoke();
 
 	// Projectile을(를) 통해 상속됨
-	virtual void Init() override;
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 	virtual void Update() override;
 	virtual void Render() override;
-	virtual void PostRender() override;
 	virtual void respwan() override;
 	virtual void OnCollision() override;
 	virtual void Hit() override;

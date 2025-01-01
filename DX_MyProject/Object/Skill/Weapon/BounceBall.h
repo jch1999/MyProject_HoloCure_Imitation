@@ -1,8 +1,6 @@
 #pragma once
 class BounceBall :public Weapon
 {
-private:
-
 public:
 	BounceBall();
 	~BounceBall();

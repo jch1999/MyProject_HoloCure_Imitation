@@ -28,7 +28,7 @@ Frame::Frame(wstring file, Vector2 startUV, Vector2 endUV)
 	VB = new VertexBuffer(vertices.data(), sizeof(VertexUV), vertices.size());
 	IB = new IndexBuffer(indices.data(), indices.size());
 
-	frame_size = endUV - startUV;
+	frameSize = endUV - startUV;
 	// 전체 프레임의 크기 중 이 프레임이 파지하는 비율이 얼마나 되는지를 frame_size에 기록
 	// 이 값은 나중에 이 프레임이 관리하고 있는 이미지 파일에 곱해 실제 크기를 확인하는 데 사용
 }
@@ -71,7 +71,7 @@ Frame::Frame(wstring file, float x, float y, float w, float h)
 	VB = new VertexBuffer(vertices.data(), sizeof(VertexUV), vertices.size());
 	IB = new IndexBuffer(indices.data(), indices.size());
 
-	frame_size = Vector2(w / texture->GetSize().x, h / texture->GetSize().y);
+	frameSize = Vector2(w / texture->GetSize().x, h / texture->GetSize().y);
 	// 전체 프레임의 크기 중 이 프레임이 파지하는 비율이 얼마나 되는지를 frame_size에 기록
 	// 이 값은 나중에 이 프레임이 관리하고 있는 이밎 파일에 곱해 실제 크기를 확인하는 데 사용
 }

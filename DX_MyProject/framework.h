@@ -86,6 +86,7 @@
 #include <set>
 #include <memory>
 #include <mutex>
+#include <iostream>
 
 // DirectX11 관련 라이브러리
 #include <d3d11.h>

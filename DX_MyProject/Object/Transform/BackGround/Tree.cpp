@@ -1,33 +1,39 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> Tree::treeFrames;
-int Tree::TreeUseCnt = 0;
-
-Tree::Tree()
-	:spawnRate(0.85f)
+vector<shared_ptr<const Frame>>& Tree::GetTreeFrames()
 {
-	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
-	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
-	CB = new ColourBuffer();
+	static vector<shared_ptr<const Frame>> treeFrames;
+	return treeFrames;
+}
 
-	if (treeFrames.empty())
+int& Tree::GetTreeUseCnt() 
+{
+	static int treeUseCnt = 0;
+	return treeUseCnt;
+}
+
+Tree::Tree(Vector2 inRenderSize, float inSpawnRate)
+	:BackgroundObject(inRenderSize,inSpawnRate)
+{
+
+	if (GetTreeFrames().empty())
 	{
 		InitFrame();
 	}
+	SetMaxIdx(GetTreeFrames().size());
 
 	collider = new RectCollider(Vector2(48.0f, 30.0f));
 
 	ChangePos();
 	
-	++TreeUseCnt;
+	++GetTreeUseCnt();
 }
 
 Tree::~Tree()
 {
 	delete collider;
-	delete CB;
 
-	if ((--TreeUseCnt) == 0)
+	if ((--GetTreeUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -37,7 +43,8 @@ void Tree::Update()
 {
 	if (!is_active)return;
 
-	scale = frame->GetFrameSize() * renderSize / frame->GetFrameOriginSize();
+	auto& currentFrame = GetTreeFrames()[frameIdx];
+	scale = currentFrame->GetFrameSize() * renderSize / currentFrame->GetFrameOriginSize();
 	Vector2 before_pos = pos;
 	pos = target->pos + offset;
 	WorldUpdate();
@@ -54,21 +61,15 @@ void Tree::Update()
 void Tree::Render()
 {
 	if (!is_active)return;
-	VS->Set();
-	PS->Set();
+	BackgroundObject::Render();
 
-	WB->SetVS(0);
-	CB->SetPS(0);
-	frame->Render();
+	GetTreeFrames()[frameIdx]->Render();
 	collider->Render();
-}
-
-void Tree::PostRender()
-{
 }
 
 void Tree::InitFrame()
 {
+	auto& treeFrames = GetTreeFrames();
 	if (!(treeFrames.empty())) return;
 
 	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
@@ -81,22 +82,19 @@ void Tree::InitFrame()
 
 void Tree::ClearFrame()
 {
-	if (treeFrames.empty()) return;
-
-	treeFrames.clear();
+	GetTreeFrames().clear();
 }
 
-void Tree::SetIndex(int idx)
+void Tree::SetIndex(int inIdx)
 {
-	switch (idx)
+	BackgroundObject::SetIndex(inIdx);
+	switch (inIdx)
 	{
 	case 0:
-		frame = treeFrames[idx];
 		renderSize = Vector2(137.0f, 133.0f) * 1.5f;
 		colliderOffset = Vector2(5.0f, 60.0f);
 		break;
 	case 1:
-		frame = treeFrames[idx];
 		renderSize = Vector2(116.0f, 127.0f) * 1.5f;
 		colliderOffset = Vector2(5.0f, 60.0f);
 		break;

@@ -9,7 +9,7 @@ Player::Player(float inMaxHP, float inAtk, float inSpeed, float inCrtRate, float
 	,damageDelay(inDamageDelay),nowDamageDelay(inDamageDelay)
 	,pickUpRangeIdx(inPickUpRangeIdx)
 	,nowExp(0.0f),level(1)
-	,size(size)
+	,size(inSize)
 	,projCnt(0)
 	,colIdxMelee(0),colIdxRange(0),colIdxShot(0)
 	,hp_bar(nullptr)
@@ -19,7 +19,7 @@ Player::Player(float inMaxHP, float inAtk, float inSpeed, float inCrtRate, float
 	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
 	CB = new ColourBuffer();
 
-	nowMaxExp = round(pow((4 * (level + 1)),2.1f)) - round(pow((4 * level),2.1f));
+	SetMaxExp();
 }
 
 Player::~Player()
@@ -184,9 +184,9 @@ void Player::ChangeHP(float amount, Vector2 dir, Enemy* causer)
 	}
 }
 
-void Player::GetExp(int expValue)
+void Player::GetExp(float expValue)
 {
-	nowExp += expValue * (1 + SkillManager::Get()->add_expRate);
+	nowExp += expValue * (1 + SkillManager::Get()->addExpRate);
 	if (exp_bar == nullptr)
 	{
 		exp_bar = (ExpBar*)(UIManager::Get()->GetUI(UI::UI_ID::EXP_BAR));
@@ -196,13 +196,18 @@ void Player::GetExp(int expValue)
 	while(nowExp >= nowMaxExp)
 	{
 		nowExp -= nowMaxExp;
-		level++;
-		nowMaxExp = round(pow((4 * (level + 1)), 2.1f)) - round(pow((4 * level), 2.1f));
+		++level;
+		SetMaxExp();
 		// 레벨 업 시 이벤트 내용은 추후 추가
 		
-		UIManager::Get()->levelUpCnt++;
+		UIManager::Get()->IncreaseLevelUpCnt();
 	}
 	exp_bar->SetExpRate(nowExp / nowMaxExp);
+}
+
+void Player::SetMaxExp()
+{
+	nowMaxExp = (float)(round(pow((4 * (level + 1)), 2.1f)) - round(pow((4 * level), 2.1f)));
 }
 
 bool Player::isCritical()
@@ -237,6 +242,19 @@ void Player::SetATK(float inAtk)
 void Player::SetSPD(float inSpd)
 {
 	this->speed = inSpd;
+}
+
+void Player::SetPickUpRange(int inIdx)
+{
+	pickUpRangeIdx = inIdx;
+}
+
+void Player::IncreasePickUpRange()
+{
+	if (pickUpColliders.size() - 1 == pickUpRangeIdx)return;
+
+	pickUpColliders[pickUpRangeIdx++]->SetActive(false);
+	pickUpColliders[pickUpRangeIdx]->SetActive(true);
 }
 
 void Player::SetProjCnt(int cnt)

@@ -1,19 +1,27 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> BaelzDice::diceFrmaes;
-int BaelzDice::diceUseCnt = 0;
+
+vector<vector<shared_ptr<const Frame>>>& BaelzDice::GetDiceFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> diceFrames;
+	return diceFrames;
+}
+
+int& BaelzDice::GetDiceiceUseCnt()
+{
+	static int diceUseCnt = 0;
+	return diceUseCnt;
+}
 
 BaelzDice::BaelzDice(ProjectileSize projSize)
 	:Projectile(projSize)
 	, isRicochet(false),ricochetCnt(0)
 	,isAwaken(false)
 {
-	if (diceFrmaes.empty())
+	if (GetDiceFrames().empty())
 	{
-		Init();
+		InitFrame();
 	}
-
-	frame = diceFrmaes[0][0];
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -25,51 +33,22 @@ BaelzDice::BaelzDice(ProjectileSize projSize)
 	collider = colliders[colliderIdx];
 	collider->pos = pos;
 	clipIdx = 0;
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+
+	auto& currentFrame = GetDiceFrames()[isAwaken ? 1 : 0][clipIdx];
+	scale = currentFrame->GetFrameSize() * collider->Size() /
+		currentFrame->GetFrameOriginSize();
 
 	is_active = false;
 	collider->SetActive(false);
 
-	++diceUseCnt;
+	++GetDiceiceUseCnt();
 }
 
 BaelzDice::~BaelzDice()
 {
-	if ((--diceUseCnt) == 0)
+	if ((--GetDiceiceUseCnt()) == 0)
 	{
-		diceFrmaes.clear();
-	}
-}
-
-void BaelzDice::Init()
-{
-	if (!(diceFrmaes.empty())) return;
-
-	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png";
-
-	// Normal Dice
-	Vector2 initPos(32.0f, 582.0f);
-	Vector2 frame_size(18.0f, 18.0f);
-	{
-		vector<shared_ptr<const Frame>> normalDiceFrmaes;
-		for (int i = 0; i < 6; i++)
-		{
-			normalDiceFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 65.0f * i, initPos.y
-				, frame_size.x, frame_size.y));
-		}
-		diceFrmaes.push_back(normalDiceFrmaes);
-	}
-	// Awaken Dice
-	initPos = Vector2(32.0f, 663.0f);
-	{
-		vector<shared_ptr<const Frame>> awakenDiceFrmaes;
-		for (int i = 0; i < 6; i++)
-		{
-			awakenDiceFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 65.0f * i, initPos.y
-				, frame_size.x, frame_size.y));
-		}
-		diceFrmaes.push_back(awakenDiceFrmaes);
+		ClearFrame();
 	}
 }
 
@@ -106,8 +85,9 @@ void BaelzDice::Update()
 	collider->rot.z = this->rot.z;
 	collider->WorldUpdate();
 
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+	auto& currentFrame = GetDiceFrames()[isAwaken ? 1 : 0][clipIdx];
+	scale = currentFrame->GetFrameSize() * collider->Size() /
+		currentFrame->GetFrameOriginSize();
 }
 
 void BaelzDice::Render()
@@ -120,12 +100,8 @@ void BaelzDice::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetDiceFrames()[isAwaken ? 1 : 0][clipIdx]->Render();
 	collider->Render();
-}
-
-void BaelzDice::PostRender()
-{
 }
 
 void BaelzDice::respwan()
@@ -137,9 +113,9 @@ void BaelzDice::respwan()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	frame = diceFrmaes[isAwaken ? 1 : 0][clipIdx];
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+	auto& currentFrame = GetDiceFrames()[isAwaken ? 1 : 0][clipIdx];
+	scale = currentFrame->GetFrameSize() * collider->Size() /
+		currentFrame->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);
@@ -227,4 +203,41 @@ void BaelzDice::ActiveAwaken()
 void BaelzDice::DeactiveAwken()
 {
 	isAwaken = false;
+}
+
+void BaelzDice::InitFrame()
+{
+	auto& frames = GetDiceFrames();
+	if (!(frames.empty())) return;
+
+	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Hakos Baelz_rm_bg.png";
+
+	// Normal Dice
+	Vector2 initPos(32.0f, 582.0f);
+	Vector2 frame_size(18.0f, 18.0f);
+	{
+		vector<shared_ptr<const Frame>> normalDiceFrmaes;
+		for (int i = 0; i < 6; i++)
+		{
+			normalDiceFrmaes.emplace_back(make_shared<const Frame>(file, initPos.x + 65.0f * i, initPos.y
+				, frame_size.x, frame_size.y));
+		}
+		frames.push_back(normalDiceFrmaes);
+	}
+	// Awaken Dice
+	initPos = Vector2(32.0f, 663.0f);
+	{
+		vector<shared_ptr<const Frame>> awakenDiceFrmaes;
+		for (int i = 0; i < 6; i++)
+		{
+			awakenDiceFrmaes.emplace_back(make_shared<const Frame>(file, initPos.x + 65.0f * i, initPos.y
+				, frame_size.x, frame_size.y));
+		}
+		frames.push_back(awakenDiceFrmaes);
+	}
+}
+
+void BaelzDice::ClearFrame()
+{
+	GetDiceFrames().clear();
 }

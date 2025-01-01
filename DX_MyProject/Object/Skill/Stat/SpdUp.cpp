@@ -5,8 +5,8 @@ SpdUp::SpdUp()
 	:Skill(SKILL_ID::SPD, SKILL_TYPE::STAT, 1)
 {
 	weight = 4;
-	skill_name = "SPD UP";
-	level_scripts.push_back("SPD +12% Up.");
+	skillName = "SPD UP";
+	levelScripts.push_back("SPD +12% Up.");
 }
 
 SpdUp::~SpdUp()

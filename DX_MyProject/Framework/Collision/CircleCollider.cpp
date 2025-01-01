@@ -3,10 +3,10 @@
 void CircleCollider::CreateLine()
 {
     float angle = (M_PI * 2);
-    for (int i = 0; i <= vertex_count; i++)
+    for (UINT i = 0; i <= vertex_count; i++)
     {
         verticies.emplace_back(cos(angle) * radius, sin(angle) * radius);
-        angle -= 2 * M_PI / vertex_count;
+        angle -= 2 * (float)(M_PI) / vertex_count;
     }
 
     VB = new VertexBuffer(verticies.data(), sizeof(VertexPos), verticies.size());

@@ -1,36 +1,17 @@
 #pragma once
-class Grass:public Transform
+class Grass:public BackgroundObject
 {
 protected:
-	static vector<shared_ptr<const Frame>> grassFrames;
-	static int grassUseCnt;
+	static vector<shared_ptr<const Frame>>& GetGrassFrames();
+	static int& GetGrassUseCnt();
 
-private:
-	float spawn_rate;
-
-	Transform* target;
-	Vector2 offset;
-	shared_ptr<const Frame> frame;
-	int frameIdx;
-	Vector2 renderSize;
-
-	VertexShader* VS;
-	PixelShader* PS;
-	ColourBuffer* CB;
-
-	map<pair<int, int>, bool> activeRecord;
-	map<pair<int, int>, int> clipRecord;
 public:
-	Grass();
+	Grass(Vector2 inRenderSize = Vector2(29.0f, 30.0f), float inSpawnRate = 0.05f);
 	~Grass();
 
-	void Update();
-	void Render();
-	void PostRender();
-	void SetIndex(int idx);
-	void SetTarget(Transform* t) { target = t; }
-	void SetOffset(Vector2 offset) { this->offset = offset; }
-	void ChangePos();
-	void InitFrame();
-	void ClearFrame();
+	virtual void Update() override;
+	virtual void Render() override;
+
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 };

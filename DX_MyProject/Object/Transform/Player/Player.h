@@ -100,9 +100,9 @@ public:
 	{
 		CB->data.colour = color;
 	}
-	void AddClip(shared_ptr<Clip> clip) { clips.emplace_back(clip); }
 
-	void GetExp(int expValue);
+	void GetExp(float expValue);
+	void SetMaxExp();
 
 	// critical Ã³¸®
 	bool isCritical();
@@ -128,8 +128,10 @@ public:
 	FORCEINLINE const float GetCRT() { return crt; }
 	void SetCRT(float crt) { this->crt = crt; }
 	
-	FORCEINLINE int GetPickUpRnage() { return pickUpRangeIdx; }
-	void SetPickUpRange(int idx) { pickUpRangeIdx = idx; }
+	FORCEINLINE const int GetPickUpRnage() { return pickUpRangeIdx; }
+	void SetPickUpRange(int inIdx);
+	void IncreasePickUpRange();
+	FORCEINLINE const int GetPickUpRangeColNum() { return pickUpColliders.size(); }
 
 	FORCEINLINE float GetMaxExp() { return nowMaxExp; }
 	FORCEINLINE int GetLevel() { return level; }

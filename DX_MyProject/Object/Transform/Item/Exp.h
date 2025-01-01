@@ -2,8 +2,8 @@
 class Exp :public Item
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> expFrames;
-	static int expUseCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetExpFrames();
+	static int& GetExpUseCnt();
 
 private:
 	Player* target;
@@ -23,7 +23,6 @@ public:
 	~Exp();
 
 	void SetExp(int expAmount);
-	void SetFrame();
 
 	// Item을(를) 통해 상속됨
 	virtual void Update() override;
@@ -41,4 +40,7 @@ public:
 
 	virtual void SetAmount(int inAmount) override;
 	virtual int GetAmount() override { return exp; }
+
+private:
+	void SetScale();
 };

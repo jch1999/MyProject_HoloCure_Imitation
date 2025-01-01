@@ -1,18 +1,29 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> Investi::investiFrames;
-int Investi::investiSpawnCnt = 0;
+
+vector<vector<shared_ptr<const Frame>>>& Investi::GetInvestiFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> investiFrames;
+	return investiFrames;
+}
+
+int& Investi::GetInvestiSpawnCnt()
+{
+	static int investiSpawnCnt = 0;
+	return investiSpawnCnt;
+}
 
 Investi::Investi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(20.0f, 2.0f, 1.0f, 0.33f, 3)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	if (investiFrames.empty())
+	if (GetInvestiFrames().empty())
 	{
 		InitFrame();
 	}
 
 	// clips
+	auto& investiFrames = GetInvestiFrames();
 	for (auto& frames : investiFrames)
 	{
 		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
@@ -41,12 +52,12 @@ Investi::Investi(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 att
 	SetEnemyName(name);
 	// Respawn();
 
-	++investiSpawnCnt;
+	++GetInvestiSpawnCnt();
 }
 
 Investi::~Investi()
 {
-	if ((--investiSpawnCnt) == 0)
+	if ((--GetInvestiSpawnCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -122,6 +133,7 @@ void Investi::PostRender()
 
 void Investi::InitFrame()
 {
+	auto& investiFrames = GetInvestiFrames();
 	if (!(investiFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
@@ -146,9 +158,7 @@ void Investi::InitFrame()
 
 void Investi::ClearFrame()
 {
-	if (investiFrames.empty()) return;
-
-	investiFrames.clear();
+	GetInvestiFrames().clear();
 }
 
 void Investi::SetEnemyName(ENEMY_NAME name) // type과 moveDir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정

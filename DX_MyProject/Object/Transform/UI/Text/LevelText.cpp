@@ -20,8 +20,16 @@ void LevelText::Update()
 {
 	if (!is_active)return;
 
-	scale = frame->GetFrameSize() * uiSize / frame->GetFrameOriginSize() * uiScale;
-
+	if (numIdIdx==-1)
+	{
+		auto& frame = GetLevelUpFrame();
+		scale = frame->GetFrameSize() * uiSize / frame->GetFrameOriginSize() * uiScale;
+	}
+	else
+	{
+		auto& frame = GetNumberFrames()[numIdIdx][clipIdx];
+		scale = frame->GetFrameSize() * uiSize / frame->GetFrameOriginSize() * uiScale;
+	}
 	pos = target->pos + offset;
 	WorldUpdate();
 }
@@ -35,7 +43,14 @@ void LevelText::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	if (numIdIdx == -1)
+	{
+		GetLevelUpFrame()->Render();
+	}
+	else
+	{
+		GetNumberFrames()[numIdIdx][clipIdx]->Render();
+	}
 }
 
 void LevelText::PostRender()
@@ -54,7 +69,7 @@ void LevelText::SetClipIdx(int idx)
 	{
 	case 0:
 	{
-		frame = levelUpFrame;
+		numIdIdx = -1;
 	}
 		break;
 	case 1:
@@ -68,7 +83,8 @@ void LevelText::SetClipIdx(int idx)
 	case 9:
 	case 10:
 	{
-		frame = numberFrames[0][clipIdx];
+		numIdIdx = 0;
+		clipIdx -= 1;
 	}
 		break;
 	case 11:
@@ -82,7 +98,8 @@ void LevelText::SetClipIdx(int idx)
 	case 19:
 	case 20:
 	{
-		frame = numberFrames[0][clipIdx-10];
+		numIdIdx = 1;
+		clipIdx -= 11;
 	}
 		break;
 	case 21:
@@ -96,7 +113,8 @@ void LevelText::SetClipIdx(int idx)
 	case 29:
 	case 30:
 	{
-		frame = numberFrames[0][clipIdx - 20];
+		numIdIdx = 2;
+		clipIdx -= 21;
 	}
 		break;
 	default:

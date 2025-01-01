@@ -12,7 +12,8 @@ int& ChargeEffect::GetChangeEffectUseCnt()
 	return changeEffectUseCnt;
 }
 
-ChargeEffect::ChargeEffect()
+ChargeEffect::ChargeEffect(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize, inScale, inOffset)
 {
 	if (GetChangeEffectFrames().empty())
 	{
@@ -23,9 +24,6 @@ ChargeEffect::ChargeEffect()
 	type = UI_TYPE::EFFECT;
 	id = UI_ID::CHARGE_EFFECT;
 	state = UI_STATE::IDLE;
-	uiSize = Vector2(128.0f, 128.0f);
-	uiScale = Vector2(1, 1);
-	offset = Vector2(0.0f, 0.0f);
 
 	++GetChangeEffectUseCnt();
 }

@@ -1,19 +1,29 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> LavaArea::lavaAreaFrames;
-int LavaArea::lavaAreaUseCnt = 0;
+vector<vector<shared_ptr<const Frame>>>& LavaArea::GetLavaAreaFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> lavaAreaFrames;
+	return lavaAreaFrames;
+}
+
+int& LavaArea::GetLavaAreaUseCnt()
+{
+	static int lavaAreaUseCnt = 0;
+	return lavaAreaUseCnt;
+}
 
 LavaArea::LavaArea(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	if (lavaAreaFrames.empty())
+	if (GetLavaAreaFrames().empty())
 	{
-		Init();
+		InitFrame();
 	}
 
-	for (int i = 0; i < lavaAreaFrames.size(); i++)
+	auto& lavaAeraFrames = GetLavaAreaFrames();
+	for (auto& frames: lavaAeraFrames)
 	{
-		clips.push_back(make_shared<Clip>(lavaAreaFrames[i], Clip::CLIP_TYPE::END, 1 / 9.0f));
+		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::END, 1 / 9.0f));
 	}
 	clipIdx = 0;
 
@@ -23,19 +33,20 @@ LavaArea::LavaArea(ProjectileSize projSize)
 	is_active = false;
 	collider->SetActive(false);
 
-	++lavaAreaUseCnt;
+	++GetLavaAreaUseCnt();
 }
 
 LavaArea::~LavaArea()
 {
-	if ((--lavaAreaUseCnt) == 0)
+	if ((--GetLavaAreaUseCnt()) == 0)
 	{
-		lavaAreaFrames.clear();
+		ClearFrame();
 	}
 }
 
-void LavaArea::Init()
+void LavaArea::InitFrame()
 {
+	auto& lavaAreaFrames = GetLavaAreaFrames();
 	if (!lavaAreaFrames.empty()) return;
 
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
@@ -85,6 +96,11 @@ void LavaArea::Init()
 		}
 		lavaAreaFrames.push_back(endFrames);
 	}
+}
+
+void LavaArea::ClearFrame()
+{
+	GetLavaAreaFrames().clear();
 }
 
 void LavaArea::Update()

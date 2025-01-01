@@ -437,7 +437,7 @@ void EnemySpawner::EnemyDead()
 {
 	--nowSpawnCnt;
 	++defeatCnt;
-	if (SkillManager::Get()->nurseHron_active)
+	if (SkillManager::Get()->nurseHronActive)
 	{
 		int rand = Random::Get()->GetRandomInt(0, 9);
 		if (rand < 3) // 30 %

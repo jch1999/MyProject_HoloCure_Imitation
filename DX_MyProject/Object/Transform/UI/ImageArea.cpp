@@ -1,15 +1,13 @@
 #include "framework.h"
 
-ImageArea::ImageArea(shared_ptr<const Frame>& inFrame)
-	:frame(inFrame)
+ImageArea::ImageArea(shared_ptr<const Frame> inFrame,Vector2 inSize,Vector2 inScale,Vector2 inOffset)
+	:UI(inSize,inScale,inOffset)
+	,frame(inFrame)
 {
 	id = UI::UI_ID::IMAGE;
 	type = UI::UI_TYPE::IMAGE;
 	state = UI::UI_STATE::IDLE;
-	uiSize = Vector2(43.0f, 38.0f);
-	uiScale = Vector2(1, 1);
 	additionalScale = Vector2(1, 1);
-	offset = Vector2(0, 0);
 	is_active = true;
 }
 

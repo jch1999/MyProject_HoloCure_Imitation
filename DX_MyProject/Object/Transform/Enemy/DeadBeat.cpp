@@ -1,21 +1,31 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> DeadBeat::deadBeatFrames;
-int DeadBeat::DeadBestSpawnCnt = 0;
+vector<vector<shared_ptr<const Frame>>>& DeadBeat::GetDeadBeatFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> deadBeatFrames;
+	return deadBeatFrames;
+}
+
+int& DeadBeat::GetDeadBestSpawnCnt()
+{
+	static int deadBeatSpawnCnt = 0;
+	return deadBeatSpawnCnt;
+}
 
 DeadBeat::DeadBeat(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(40.0f, 4.0f, 0.4f, 0.33f, 7)
 	, damageSize(damageSize), attackSize(attackSize)
 {
-	if (deadBeatFrames.empty())
+	if (GetDeadBeatFrames().empty())
 	{
 		InitFrame();
 	}
 
 	// clips
-	for (int i = 0; i < deadBeatFrames.size(); i++)
+	auto& deadBeatFrames = GetDeadBeatFrames();
+	for (auto& frame: deadBeatFrames)
 	{
-		clips.emplace_back(make_shared<Clip>(deadBeatFrames[i], Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+		clips.emplace_back(make_shared<Clip>(frame, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	}
 
 	// collider
@@ -43,12 +53,12 @@ DeadBeat::DeadBeat(ENEMY_NAME name, MOVE_TYPE type, Vector2 damgeSize, Vector2 a
 	SetEnemyName(name);
 	// Respawn();
 
-	++DeadBestSpawnCnt;
+	++GetDeadBestSpawnCnt();
 }
 
 DeadBeat::~DeadBeat()
 {
-	if ((--DeadBestSpawnCnt) == 0)
+	if ((--GetDeadBestSpawnCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -136,6 +146,7 @@ void DeadBeat::PostRender()
 
 void DeadBeat::InitFrame()
 {
+	auto& deadBeatFrames = GetDeadBeatFrames();
 	if (!(deadBeatFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
@@ -192,9 +203,7 @@ void DeadBeat::InitFrame()
 
 void DeadBeat::ClearFrame()
 {
-	if (deadBeatFrames.empty()) return;
-
-	deadBeatFrames.clear();
+	GetDeadBeatFrames().clear();
 }
 
 void DeadBeat::SetEnemyName(ENEMY_NAME name) // type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정

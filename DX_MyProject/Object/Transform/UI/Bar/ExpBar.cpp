@@ -1,45 +1,47 @@
 #include "framework.h"
 
-ExpBar::ExpBar()
+vector<shared_ptr<const Frame>>& ExpBar::GetExpBarFrames()
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
-	// ExpBar_Back_Frame
-	frames.push_back(new Frame(file, 4, 52, 650, 26));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
-	// ExpBar_Front_Frame
-	frames.push_back(new Frame(file, 4, 80, 650, 26));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-	frames.clear();
-	// ExpBar
-	Vector2 initPos(666, 52);
-	for (int i = 0; i < 61; i++)
+	static vector<shared_ptr<const Frame>> expBarFrames;
+	return expBarFrames;
+}
+
+int& ExpBar::GetExpBarUseCtnt()
+{
+	static int expBarUseCnt = 0;
+	return expBarUseCnt;
+}
+
+ExpBar::ExpBar(Vector2 inSize,Vector2 inScale,Vector2 inOffset)
+	:UI(inSize,inScale,inOffset)
+{
+	if (GetExpBarFrames().empty())
 	{
-		frames.push_back(new Frame(file, initPos.x, initPos.y + i*28.0f, 650, 26));
-		clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 1.0f));
-		frames.clear();
+		InitFrame();
 	}
 
 	id = UI_ID::EXP_BAR;
 	type = UI_TYPE::EXP_BAR; 
-	ui_size = Vector2(WIN_WIDTH+20.0f, 40.0f);
-	ui_scale = Vector2(1, 1);
-	additional_scale = Vector2(1, 1);
-	offset = Vector2(WIN_CENTER_X+10.0f, 20.0f);
+	additionalScale = Vector2(1, 1);
 	is_active = false;
+
+	++GetExpBarUseCtnt();
 }
 
 ExpBar::~ExpBar()
 {
+	if ((--GetExpBarUseCtnt()) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void ExpBar::Update()
 {
 	if (!is_active)return;
 
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
-	clips[clip_idx]->Update();
+	auto& currentFrame = GetExpBarFrames()[clipIdx];
+	scale = currentFrame->GetFrameSize() * uiSize / currentFrame->GetFrameOriginSize() * uiScale;
 	pos = target->pos + offset;
 	WorldUpdate();
 }
@@ -53,16 +55,7 @@ void ExpBar::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
-}
-
-void ExpBar::PostRender()
-{
-}
-
-void ExpBar::SetState(UI::UI_STATE state)
-{
-	this->state = state;
+	GetExpBarFrames()[clipIdx]->Render();
 }
 
 void ExpBar::SetID(UI::UI_ID id)
@@ -73,7 +66,7 @@ void ExpBar::SetID(UI::UI_ID id)
 	case UI_ID::EXP_BAR_BACK:
 	{
 		CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.85f);
-		clip_idx = 0;
+		clipIdx = 0;
 	}
 		break;
 	case UI_ID::EXP_BAR:
@@ -83,7 +76,7 @@ void ExpBar::SetID(UI::UI_ID id)
 		break;
 	case UI_ID::EXP_BAR_FRONT:
 	{
-		clip_idx = 1;
+		clipIdx = 1;
 	}
 		break;
 	default:
@@ -94,7 +87,31 @@ void ExpBar::SetID(UI::UI_ID id)
 void ExpBar::SetExpRate(float rate)
 {
 	expRate = rate;
-	clip_idx = 2 + (int)(rate * 61.0f);
+	clipIdx = 2 + (int)(rate * 61.0f);
 
 	int a;
+}
+
+void ExpBar::InitFrame()
+{
+	auto& expBarFrames = GetExpBarFrames();
+	if (!(expBarFrames.empty())) return;
+
+	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
+
+	// ExpBar_Back_Frame
+	expBarFrames.emplace_back(new Frame(file, 4, 52, 650, 26));
+	// ExpBar_Front_Frame
+	expBarFrames.emplace_back(new Frame(file, 4, 80, 650, 26));
+	// ExpBar
+	Vector2 initPos(666, 52);
+	for (int i = 0; i < 61; i++)
+	{
+		expBarFrames.emplace_back(new Frame(file, initPos.x, initPos.y + i * 28.0f, 650, 26));
+	}
+}
+
+void ExpBar::ClearFrame()
+{
+	GetExpBarFrames().clear();
 }

@@ -2,8 +2,8 @@
 class DeadBeat :public Enemy
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> deadBeatFrames;
-	static int DeadBestSpawnCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetDeadBeatFrames();
+	static int& GetDeadBestSpawnCnt();
 
 private:
 	Vector2 damageSize, attackSize;

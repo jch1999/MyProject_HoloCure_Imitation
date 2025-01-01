@@ -187,8 +187,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_MOUSEMOVE:
     {
-        mouse_pos.x = GET_X_LPARAM(lParam);
-        mouse_pos.y = GET_Y_LPARAM(lParam);
+        mouse_pos.x = (float)(GET_X_LPARAM(lParam));
+        mouse_pos.y = (float)(GET_Y_LPARAM(lParam));
     }
     break;
     case WM_PAINT:

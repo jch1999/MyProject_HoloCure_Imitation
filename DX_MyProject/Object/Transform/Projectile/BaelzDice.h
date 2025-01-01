@@ -2,8 +2,8 @@
 class BaelzDice :public Projectile
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> diceFrmaes;
-	static int diceUseCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetDiceFrames();
+	static int& GetDiceiceUseCnt();
 
 private:
 	bool isAwaken;
@@ -16,13 +16,10 @@ public:
 
 public:
 	// Projectile을(를) 통해 상속됨
-	virtual void Init() override;
 
 	virtual void Update() override;
 
 	virtual void Render() override;
-
-	virtual void PostRender() override;
 
 	virtual void respwan() override;
 
@@ -33,4 +30,7 @@ public:
 	void SetRicochetInfo(bool isRicochet, int inCnt);
 	void ActiveAwaken();
 	void DeactiveAwken();
+
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 };

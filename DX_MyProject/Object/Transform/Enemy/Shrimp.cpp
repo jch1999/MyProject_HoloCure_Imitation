@@ -1,18 +1,28 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> Shrimp::shrimpFrames;
-int Shrimp::shrimpSpawnCnt = 0;
+vector<vector<shared_ptr<const Frame>>>& Shrimp::GetShrimpFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> shrimpFrames;
+	return shrimpFrames;
+}
+
+int& Shrimp::GetShrimpSpawnCnt()
+{
+	static int shrimpSpawnCnt = 0;
+	return shrimpSpawnCnt;
+}
 
 Shrimp::Shrimp(ENEMY_NAME name, MOVE_TYPE type,Vector2 damgeSize, Vector2 attackSize)
 	:Enemy(8.0f,2.0f,0.35f,0.33f,6)
 	,damageSize(damageSize),attackSize(attackSize)
 {
-	if (shrimpFrames.empty())
+	if (GetShrimpFrames().empty())
 	{
 		InitFrame();
 	}
 
 	// clips
+	auto& shrimpFrames = GetShrimpFrames();
 	for (auto& frames : shrimpFrames)
 	{
 		clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
@@ -50,12 +60,12 @@ Shrimp::Shrimp(ENEMY_NAME name, MOVE_TYPE type,Vector2 damgeSize, Vector2 attack
 	SetEnemyName(name);
 	// Respawn();
 
-	++shrimpSpawnCnt;
+	++GetShrimpSpawnCnt();
 }
 
 Shrimp::~Shrimp()
 {
-	if ((--shrimpSpawnCnt) == 0)
+	if ((--GetShrimpSpawnCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -139,6 +149,7 @@ void Shrimp::PostRender()
 
 void Shrimp::InitFrame()
 {
+	auto& shrimpFrames = GetShrimpFrames();
 	if (!(shrimpFrames.empty())) return;
 
 	wstring file = L"Textures/Enemy/PC Computer - HoloCure - Save the Fans - Myth Enemies EN Gen1_rm_bg.png";
@@ -187,9 +198,7 @@ void Shrimp::InitFrame()
 
 void Shrimp::ClearFrame()
 {
-	if (shrimpFrames.empty()) return;
-
-	shrimpFrames.clear();
+	GetShrimpFrames().clear();
 }
 
 void Shrimp::SetEnemyName(ENEMY_NAME name)// type과 move_dir은 Enemy_Spwaner에서 활성 시 지정하도록 변경할 예정

@@ -7,6 +7,7 @@ protected:
 	float nowTime;
 	float lifeTime;
 	float speed;
+	int idx;
 
 public:
 	DmgText();

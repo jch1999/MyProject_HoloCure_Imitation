@@ -4,10 +4,10 @@ NurseHorn::NurseHorn()
     :Buff(SKILL_ID::NURSE_HORN,3)
 {
     weight = 3;
-	skill_name = "NURSE'S HORN";
-	level_scripts.push_back("When defeating a target, there is a 30% chance to life-steal 2 HP. If taking a hit while HP is less than 15%, there is a chance to heal 20% HP.");
-	level_scripts.push_back("When defeating a target, there is a 30% chance to life-steal 4 HP. If taking a hit while HP is less than 25%, there is a chance to heal 20% HP.");
-	level_scripts.push_back("When defeating a target, there is a 30% chance to life-steal 6 HP. If taking a hit while HP is less than 30%, there is a chance to heal 20% HP.");
+	skillName = "NURSE'S HORN";
+	levelScripts.push_back("When defeating a target, there is a 30% chance to life-steal 2 HP. If taking a hit while HP is less than 15%, there is a chance to heal 20% HP.");
+	levelScripts.push_back("When defeating a target, there is a 30% chance to life-steal 4 HP. If taking a hit while HP is less than 25%, there is a chance to heal 20% HP.");
+	levelScripts.push_back("When defeating a target, there is a 30% chance to life-steal 6 HP. If taking a hit while HP is less than 30%, there is a chance to heal 20% HP.");
 }
 
 NurseHorn::~NurseHorn()
@@ -33,15 +33,15 @@ void NurseHorn::PostRender()
 
 bool NurseHorn::LevelUp()
 {
-	if (now_level == max_level)return false;
+	if (nowLevel == maxLevel)return false;
 
-	now_level++;
-	switch (now_level)
+	nowLevel++;
+	switch (nowLevel)
 	{
 	case 1:
 	{
-		SkillManager::Get()->nowBuff_list[SkillManager::Get()->buffCnt++] = this;
-		SkillManager::Get()->nurseHron_active = true;
+		SkillManager::Get()->nowBuffList[SkillManager::Get()->buffCnt++] = this;
+		SkillManager::Get()->nurseHronActive = true;
 		healAmount = 2.0f;
 		hpRate = 0.2f;
 	}

@@ -26,5 +26,5 @@ public:
 	FORCEINLINE const int GetSkillID() { return skill_id; }
 	void SetLabelActive(bool active);
 	FORCEINLINE const LevelLabel* GetLabel() { return label; }
-	const IconFrame* GetFrame() { return icon_frame; }
+	IconFrame* GetFrame() { return icon_frame; }
 };

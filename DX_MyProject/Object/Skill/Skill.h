@@ -54,25 +54,25 @@ protected:
 	// 투사체에 플레이어를 전달하기 위해 필요
 	Player* player;
 
-	int max_level;
-	int now_level;
+	int maxLevel;
+	int nowLevel;
 
-	int enhance_level;
-	float enhance_rate;
+	int enhanceLevel;
+	float enhanceRate;
 	float enhanceDamage;
 
 	// 스킬 대기 시간
-	vector<float> skillDelay_table;
-	float now_skill_delay;
-	int idx_skillDelay;
+	vector<float> skillDelayTable;
+	float nowSkillDelay;
+	int skillDelayIdx;
 	
 	// 활성화 시간
-	float play_time;
-	vector<float> playTime_table;
-	int idx_playTime;
+	float playTime;
+	vector<float> playTimeTable;
+	int playTimeIdx;
 	
-	string skill_name;
-	vector<string> level_scripts;
+	string skillName;
+	vector<string> levelScripts;
 
 public:
 	Skill(SKILL_ID id, SKILL_TYPE type,int maxLevl);
@@ -85,20 +85,20 @@ public:
 	Player* GetPlayer() { return player; }
 	void SetPlayer(Player* player) { this->player = player; }
 
-	Skill::SKILL_ID GetSkillID() { return id; }
+	FORCEINLINE const Skill::SKILL_ID GetSkillID() { return id; }
 	// LevelUp
 	virtual bool LevelUp() = 0;
 	virtual bool LevelDown() = 0;
-	bool GetLevelUpAble() { return now_level < max_level; }
-	int GetLevel() { return now_level; }
+	bool GetLevelUpAble() { return nowLevel < maxLevel; }
+	int GetLevel() { return nowLevel; }
 	// Enhance
 	virtual bool GetEnhanceAble() = 0;
 	virtual bool Enhance() = 0;
-	int GetEnhanceLevel() { return enhance_level; }
-	int GetEnhanceCost();
-	int GetEnhanceRate() { return (int)round(enhance_rate * 100.0f); }
-	float GetEnhanceDamge() { return enhanceDamage; }
+	FORCEINLINE const int& GetEnhanceLevel() { return enhanceLevel; }
+	const int GetEnhanceCost();
+	FORCEINLINE const int GetEnhanceRate() { return (int)round(enhanceRate * 100.0f); }
+	FORCEINLINE const float& GetEnhanceDamge() { return enhanceDamage; }
 
-	string GetScript() { return level_scripts[now_level]; }
-	string GetSkillName() { return skill_name; }
+	FORCEINLINE const string& GetScript() { return levelScripts[nowLevel]; }
+	FORCEINLINE const string& GetSkillName() { return skillName; }
 };

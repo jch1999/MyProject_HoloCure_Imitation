@@ -1,17 +1,26 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> Blaze::blazeFrames;
-int Blaze::blazeUseCnt = 0;
+vector<shared_ptr<const Frame>>& Blaze::GetBlazeFrames()
+{
+	static vector<shared_ptr<const Frame>> blazeFrames;
+	return blazeFrames;
+}
+
+int& Blaze::GetBlazeUseCnt()
+{
+	static int blazeUseCnt = 0;
+	return blazeUseCnt;
+}
 
 Blaze::Blaze(ProjectileSize projSize)
 	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 {
-	if (blazeFrames.empty())
+	if (GetBlazeFrames().empty())
 	{
-		Init();
+		InitFrame();
 	}
 
-	clips.push_back(make_shared<Clip>(blazeFrames, Clip::CLIP_TYPE::PINGPONG, 1 / 4.0f));
+	clips.push_back(make_shared<Clip>(GetBlazeFrames(), Clip::CLIP_TYPE::PINGPONG, 1 / 4.0f));
 	clipIdx = 0;
 
 	colliders.push_back(new RectCollider(size));
@@ -20,29 +29,14 @@ Blaze::Blaze(ProjectileSize projSize)
 	is_active = false;
 	collider->SetActive(false);
 
-	++blazeUseCnt;
+	++GetBlazeUseCnt();
 }
 
 Blaze::~Blaze()
 {
-	if ((--blazeUseCnt) == 0)
+	if ((--GetBlazeUseCnt()) == 0)
 	{
-		blazeFrames.clear();
-	}
-}
-
-void Blaze::Init()
-{
-	if (!blazeFrames.empty()) return;
-
-	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
-	
-	Vector2 initPos(7.0f, 3736.0f);
-	Vector2 frameSize(38.0f, 38.0f);
-	for (int i = 0; i < 4; i++)
-	{
-		blazeFrames.push_back(make_shared<const Frame>(file, initPos.x + i * 39.0f, initPos.y
-			, frameSize.x, frameSize.y));
+		ClearFrame();
 	}
 }
 
@@ -81,13 +75,6 @@ void Blaze::Render()
 
 	clips[clipIdx]->Render();
 	collider->Render();
-}
-
-void Blaze::PostRender()
-{
-	if (!is_active)return;
-	// ImGui::Text("Blaze pos : ", (float*)&pos, -WIN_WIDTH, WIN_WIDTH);
-	ImGui::Text("Blaze damage : %f", damage);
 }
 
 void Blaze::respwan()
@@ -171,4 +158,25 @@ void Blaze::OnCollision()
 		hitEnemies.erase(r.first);
 		cooltimeList.remove(r);
 	}
+}
+
+void Blaze::InitFrame()
+{
+	auto& blazeFrames = GetBlazeFrames();
+	if (!blazeFrames.empty()) return;
+
+	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
+
+	Vector2 initPos(7.0f, 3736.0f);
+	Vector2 frameSize(38.0f, 38.0f);
+	for (int i = 0; i < 4; i++)
+	{
+		blazeFrames.push_back(make_shared<const Frame>(file, initPos.x + i * 39.0f, initPos.y
+			, frameSize.x, frameSize.y));
+	}
+}
+
+void Blaze::ClearFrame()
+{
+	GetBlazeFrames().clear();
 }

@@ -2,8 +2,8 @@
 class KFP :public Enemy
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> kfpFrames;
-	static int kfpSpawnCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetKfpFrames();
+	static int& GetKfpSpawnCnt();
 
 private:
 	Vector2 damageSize, attackSize;

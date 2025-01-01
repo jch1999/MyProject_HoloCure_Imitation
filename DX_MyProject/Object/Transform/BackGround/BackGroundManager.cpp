@@ -1,6 +1,6 @@
 #include "framework.h"
 
-BackGroundManager::BackGroundManager()
+BackgroundManager::BackgroundManager()
 	:player(nullptr),now_time(0.35f)
 {
 	// 이 방식은 tile이 900개다...256,256으로 크기를 변경하면 225개이긴 한데 랜더해야 할 사이즈가 커지니 부하 자체는 비슷한가?
@@ -73,7 +73,7 @@ BackGroundManager::BackGroundManager()
 	}
 }
 
-BackGroundManager::~BackGroundManager()
+BackgroundManager::~BackgroundManager()
 {
 	for (auto t : tiles)
 		delete t;
@@ -87,7 +87,7 @@ BackGroundManager::~BackGroundManager()
 		delete l;
 }
 
-void BackGroundManager::Update()
+void BackgroundManager::Update()
 {
 	now_time += DELTA;
 	if (now_time > 0.2f)
@@ -134,7 +134,7 @@ void BackGroundManager::Update()
 	}
 }
 
-void BackGroundManager::FixedUpdate()
+void BackgroundManager::FixedUpdate()
 {
 	Vector2 move_dir = player->GetMoveDir();
 	int x = round(move_dir.x);
@@ -187,7 +187,7 @@ void BackGroundManager::FixedUpdate()
 	lights[1]->Update();
 }
 
-void BackGroundManager::BeforeRender()
+void BackgroundManager::BeforeRender()
 {
 	for (auto t : tiles)
 	{
@@ -196,7 +196,7 @@ void BackGroundManager::BeforeRender()
 	}
 }
 
-void BackGroundManager::Render()
+void BackgroundManager::Render()
 {
 	
 	for (auto t : trees)
@@ -230,7 +230,7 @@ void BackGroundManager::Render()
 	}
 }
 
-void BackGroundManager::AfterRender()
+void BackgroundManager::AfterRender()
 {
 	for (auto t : trees)
 	{
@@ -266,7 +266,7 @@ void BackGroundManager::AfterRender()
 	}
 }
 
-void BackGroundManager::PostRneder()
+void BackgroundManager::PostRneder()
 {
 	for (auto t : tiles)
 	{
@@ -275,7 +275,7 @@ void BackGroundManager::PostRneder()
 	}
 }
 
-void BackGroundManager::SetPlayer(Player* p)
+void BackgroundManager::SetPlayer(Player* p)
 {
 	this->player = p;
 }

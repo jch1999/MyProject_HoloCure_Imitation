@@ -2,8 +2,8 @@
 class ItemLight :public Transform
 {
 public:
-	static shared_ptr<const Frame> itemLightFrame;
-	static int itemLightUseCnt;
+	static shared_ptr<const Frame>& GetItemLightFrame();
+	static int& GetItemLightUseCnt();
 
 protected:
 	VertexShader* VS;
@@ -12,8 +12,6 @@ protected:
 
 	Vector2 size;
 	Vector2 offset;
-
-	shared_ptr<const Frame> frame;
 
 public:
 	ItemLight(Vector2 pos);

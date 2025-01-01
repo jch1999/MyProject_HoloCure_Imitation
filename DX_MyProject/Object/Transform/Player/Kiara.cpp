@@ -1,52 +1,49 @@
 #include "framework.h"
 #include "Kiara.h"
 
-Kiara::Kiara(float MaxHP, float atk, float speed, float crt, float pickUpRange, float delay, Vector2 idle_size,Vector2 move_size)
-	:Player(MaxHP, atk, speed, crt, pickUpRange, delay, 0, idle_size)
-	,idle_size(idle_size)
-	,move_size(move_size)
+Kiara::Kiara(float MaxHP, float atk, float speed, float crt, float pickUpRange, float delay, Vector2 inIdleSize,Vector2 inMoveSize)
+	:Player(MaxHP, atk, speed, crt, pickUpRange, delay, 0, inIdleSize)
+	,idleSize(inIdleSize)
+	,moveSize(inMoveSize)
 {
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
-	Texture* t = Texture::Add(file);
-
+	
 	// clips
-	vector<Frame*> frames;
 
 	// PLAYER_STATUS::IDLE에 대응하는 애니메이션을 넣는 파트
-	frames.push_back(new Frame(file, 28, 61, 24, 32));
-	frames.push_back(new Frame(file, 92, 60, 24, 33));
-	frames.push_back(new Frame(file, 158, 61, 24, 32));
-	frames.push_back(new Frame(file, 223, 60, 24, 33));
+	idleFrames.emplace_back(make_shared<const Frame>(file, 28, 61, 24, 32)); 
+	idleFrames.emplace_back(make_shared<const Frame>(file, 92, 60, 24, 33));
+	idleFrames.emplace_back(make_shared<const Frame>(file, 158, 61, 24, 32));
+	idleFrames.emplace_back(make_shared<const Frame>(file, 223, 60, 24, 33));
 	// 이를 Clip으로 만들어 clips에 저장
-	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
-	frames.clear();
+	clips.emplace_back(make_shared<Clip>(idleFrames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
+	//frames.clear();
 
 	// PLAYER_STATUS::MOVE에 대응하는 애니메이션을 넣는 파트
-	frames.push_back(new Frame(file, 15, 137, 39, 32));
-	frames.push_back(new Frame(file, 79, 138, 39, 32));
-	frames.push_back(new Frame(file, 143, 140, 39, 32));
-	frames.push_back(new Frame(file, 209, 137, 39, 32));
-	frames.push_back(new Frame(file, 275, 138, 39, 32));
-	frames.push_back(new Frame(file, 340, 140, 39, 32));
+	moveFrames.emplace_back(make_shared<const Frame>(file, 15, 137, 39, 32));
+	moveFrames.emplace_back(make_shared<const Frame>(file, 79, 138, 39, 32));
+	moveFrames.emplace_back(make_shared<const Frame>(file, 143, 140, 39, 32));
+	moveFrames.emplace_back(make_shared<const Frame>(file, 209, 137, 39, 32));
+	moveFrames.emplace_back(make_shared<const Frame>(file, 275, 138, 39, 32));
+	moveFrames.emplace_back(make_shared<const Frame>(file, 340, 140, 39, 32));
 
-	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
+	clips.emplace_back(make_shared<Clip>(moveFrames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	//frames.clear();
 
 	// Idle collider
-	kiaraCollider.push_back(new RectCollider(idle_size));
-	colliderOffset.push_back(Vector2(0.0f, 5.0f));
-	renderScales.push_back(Vector2(1.5f, 1.5f));
+	kiaraCollider.emplace_back(new RectCollider(idleSize));
+	colliderOffset.emplace_back(Vector2(0.0f, 5.0f));
+	renderScales.emplace_back(Vector2(1.5f, 1.5f));
 	// Move collider
-	kiaraCollider.push_back(new RectCollider(move_size));
-	colliderOffset.push_back(Vector2(10.0f, 0.0f));
-	renderScales.push_back(Vector2(2.5f, 1.5f));
+	kiaraCollider.emplace_back(new RectCollider(moveSize));
+	colliderOffset.emplace_back(Vector2(10.0f, 0.0f));
+	renderScales.emplace_back(Vector2(2.5f, 1.5f));
 
 	damageCollider = kiaraCollider[(UINT)PLAYER_STATUS::IDLE];
 	for (int i = 0; i < 20; i++)
 	{
-		CircleCollider* pickupCollider = new CircleCollider(defaultPickUpRange * (1.0f + 0.2f * i));
-		pickupCollider->SetActive(false);
-		pickUpColliders.push_back(pickupCollider);
+		pickUpColliders.emplace_back(new CircleCollider(defaultPickUpRange * (1.0f + 0.2f * i)));
+		pickUpColliders[i]->SetActive(false);
 	}
 
 	// collider
@@ -62,6 +59,7 @@ Kiara::Kiara(float MaxHP, float atk, float speed, float crt, float pickUpRange, 
 	is_active = true;
 	damageCollider->is_active = true;
 	pickUpColliders[pickUpRangeIdx]->is_active = true;
+	clips[(UINT)action_status]->Play();
 }
 
 Kiara::~Kiara()
@@ -104,9 +102,9 @@ void Kiara::Update()
 	
 	UpdateDefault();
 
-	clips[(UINT)action_status]->Update();
 	scale = clips[(UINT)action_status]->GetFrameSize() * size /
-		clips[(UINT)action_status]->GetFrameOriginSize()*renderScales[(UINT)action_status];
+		clips[(UINT)action_status]->GetFrameOriginSize() * renderScales[(UINT)action_status];
+	clips[(UINT)action_status]->Update();
 
 	if (!isLookingRight)
 	{
@@ -169,13 +167,13 @@ void Kiara::SetStatus(PLAYER_STATUS newStatus, UINT playOption)
 		damageCollider->SetActive(false);
 		damageCollider = kiaraCollider[(UINT)PLAYER_STATUS::IDLE];
 		damageCollider->SetActive(true);
-		size = idle_size;
+		size = idleSize;
 	}
 	else
 	{
 		damageCollider->SetActive(false);
 		damageCollider = kiaraCollider[(UINT)PLAYER_STATUS::MOVE];
 		damageCollider->SetActive(true);
-		size = move_size;
+		size = moveSize;
 	}
 }

@@ -2,8 +2,8 @@
 class Investi :public Enemy
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> investiFrames;
-	static int investiSpawnCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetInvestiFrames();
+	static int& GetInvestiSpawnCnt();
 
 private:
 	Vector2 damageSize, attackSize;

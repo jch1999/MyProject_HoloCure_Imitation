@@ -6,7 +6,7 @@ TestScene::TestScene()
 	player->pos = WIN_CENTER;
 	CAM->SetTarget(player);
 
-	BackGroundManager::Get()->SetPlayer(player);
+	BackgroundManager::Get()->SetPlayer(player);
 	ItemSpawner::Get()->SetPlayer(player);
 	EnemySpawner::Get()->SetPlayer(player);
 	SkillManager::Get()->SetPlayer(player);
@@ -18,7 +18,7 @@ TestScene::TestScene()
 TestScene::~TestScene()
 {
 	delete player;
-	BackGroundManager::Delete();
+	BackgroundManager::Delete();
 	EnemySpawner::Delete();
 	SkillManager::Delete();
 	UIManager::Delete();
@@ -67,7 +67,7 @@ void TestScene::Update()
 	
 	if (KEY_CON->Down('C'))
 		ItemSpawner::Get()->nowCoinValue += 100.0f;
-	BackGroundManager::Get()->Update();
+	BackgroundManager::Get()->Update();
 	EnemySpawner::Get()->Update();
 	ItemSpawner::Get()->Update();
 	SkillManager::Get()->Update();
@@ -78,12 +78,12 @@ void TestScene::Update()
 // Render ¼ø¼­ item ->player->enemy->skill->ui
 void TestScene::Render()
 {
-	BackGroundManager::Get()->BeforeRender();
+	BackgroundManager::Get()->BeforeRender();
 	ItemSpawner::Get()->Render();
-	BackGroundManager::Get()->Render();
+	BackgroundManager::Get()->Render();
 	player->Render();
 	EnemySpawner::Get()->Render();
-	BackGroundManager::Get()->AfterRender();
+	BackgroundManager::Get()->AfterRender();
 	SkillManager::Get()->Render();
 	UIManager::Get()->Render();
 }
@@ -97,6 +97,6 @@ void TestScene::PostRender()
 	player->PostRender();
 
 	SkillManager::Get()->PostRneder();
-	//ItemSpawner::Get()->PostRneder();
+	ItemSpawner::Get()->PostRneder();
 	UIManager::Get()->PostRneder();
 }

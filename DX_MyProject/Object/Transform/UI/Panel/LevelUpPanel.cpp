@@ -1,6 +1,7 @@
 #include "framework.h"
 
-LevelUpPanel::LevelUpPanel()
+LevelUpPanel::LevelUpPanel(Vector2 inSize,Vector2 inScale, Vector2 inOffset)
+	:Panel(inSize,inScale,inOffset)
 {
 	levelUpText = new LevelText();
 	levelUpText->SetID(UI_ID::LEVEL_TEXT);
@@ -9,7 +10,7 @@ LevelUpPanel::LevelUpPanel()
 	levelUpText->SetSize(Vector2(94.0f, 20.0f));
 	levelUpText->SetScale(Vector2(2.0f, 2.0f));
 	levelUpText->SetOffset(Vector2(-WIN_CENTER_X * 0.65f, -WIN_CENTER_Y * 0.45f));
-	child_list.push_back(levelUpText);
+	childList.push_back(levelUpText);
 
 	Vector2 selector_initOffset(WIN_CENTER_X * 0.5f, -WIN_CENTER_Y * 0.4f);
 	Vector2 interval(0.0f, 100.0f);
@@ -22,14 +23,11 @@ LevelUpPanel::LevelUpPanel()
 		selector->SetSkillID(1);
 
 		skillSelectors.push_back(selector);
-		child_list.push_back(selector);
+		childList.push_back(selector);
 	}
 	id = UI::UI_ID::LEVEL_UP_PANEL;
 	type = UI::UI_TYPE::PANEL;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(WIN_WIDTH, WIN_HEIGHT);
-	ui_scale = Vector2(1, 1);
-	offset = WIN_CENTER;
 	is_active = false;
 }
 
@@ -71,8 +69,8 @@ void LevelUpPanel::Update()
 		// selector에서 id를 가져와 해당 아이디의 스킬의 level을 상승
 		SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)(skillSelectors[selectIdx]->GetSkillID()))->LevelUp();
 		isPause = false;
-		UIManager::Get()->nowPanel = nullptr;
-		UIManager::Get()->levelUpCnt--;
+		UIManager::Get()->ResetPanel();
+		UIManager::Get()->DecreaseLevelUpCnt();
 		SetActive(false);
 		return;
 	}
@@ -98,7 +96,7 @@ void LevelUpPanel::PostRender()
 void LevelUpPanel::SetActive(bool active)
 {
 	this->is_active = active;
-	for (auto ui : child_list)
+	for (auto ui : childList)
 		ui->SetActive(active);
 }
 

@@ -5,8 +5,8 @@ MaxHpUp::MaxHpUp()
 	:Skill(SKILL_ID::MAX_HP, SKILL_TYPE::STAT, 1)
 {
 	weight = 2;
-	skill_name = "MAX HP UP";
-	level_scripts.push_back("Max HP +10% Up.");
+	skillName = "MAX HP UP";
+	levelScripts.push_back("Max HP +10% Up.");
 }
 
 MaxHpUp::~MaxHpUp()

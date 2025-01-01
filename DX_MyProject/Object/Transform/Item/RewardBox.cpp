@@ -1,20 +1,25 @@
 #include "framework.h"
 
-shared_ptr<const Frame> RewardBox::rewardBoxFrame;
-int RewardBox::rewardBoxUseCnt = 0;
+shared_ptr<const Frame>& RewardBox::GetRewardBoxFrame()
+{
+	static shared_ptr<const Frame> rewardBoxFrame;
+	return rewardBoxFrame;
+}
+
+int& RewardBox::GetRewardBoxUseCnt()
+{
+	static int rewardBoxUseCnt = 0;
+	return rewardBoxUseCnt;
+}
 
 RewardBox::RewardBox(Vector2 pos, Vector2 size)
 	:Item()
 	,reward_coin(0)
 {
-	if (!rewardBoxFrame)
+	if (!GetRewardBoxFrame())
 	{
 		InitFrame();
 	}
-
-	// RewardBox clip
-	frame = rewardBoxFrame;
-
 	collider = new RectCollider(Vector2(33.0f, 19.0f) * 1.5f);
 	id = ITEM_ID::REWORD_BOX;
 	type = ITEM_TYPE::REWARD_BOX;
@@ -26,7 +31,7 @@ RewardBox::RewardBox(Vector2 pos, Vector2 size)
 	is_active = false;
 	collider->SetActive(false);
 
-	++rewardBoxUseCnt;
+	++GetRewardBoxUseCnt();
 }
 
 RewardBox::~RewardBox()
@@ -34,7 +39,7 @@ RewardBox::~RewardBox()
 	delete collider;
 	delete light;
 
-	if ((--rewardBoxUseCnt) == 0)
+	if ((--GetRewardBoxUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -50,7 +55,7 @@ void RewardBox::Update()
 		break;
 	case Item::ITEM_STATE::ACTIVE:
 	{
-		if (UIManager::Get()->rewardPanel->GetBox() != this)
+		if (UIManager::Get()->GetRewardPanel()->GetBox() != this)
 		{
 			SetState(ITEM_STATE::IDLE);
 		}
@@ -66,7 +71,8 @@ void RewardBox::Update()
 	
 	light->Update();
 
-	scale = frame->GetFrameSize() * collider->Size() / frame->GetFrameOriginSize();
+	auto& currentFrame = GetRewardBoxFrame();
+	scale = currentFrame->GetFrameSize() * collider->Size() / currentFrame->GetFrameOriginSize();
 	WorldUpdate();
 
 	collider->pos = pos;
@@ -83,7 +89,7 @@ void RewardBox::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetRewardBoxFrame()->Render();
 	light->Render();
 	collider->Render();
 }
@@ -102,8 +108,9 @@ void RewardBox::Respawn()
 	collider->WorldUpdate();
 	light->SetPos(pos);
 
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+	auto& currentFrame = GetRewardBoxFrame();
+	scale = currentFrame->GetFrameSize() * collider->Size() /
+		currentFrame->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);
@@ -112,6 +119,7 @@ void RewardBox::Respawn()
 
 void RewardBox::InitFrame()
 {
+	auto& rewardBoxFrame = GetRewardBoxFrame();
 	if (rewardBoxFrame) return;
 
 	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
@@ -119,10 +127,7 @@ void RewardBox::InitFrame()
 }
 
 void RewardBox::ClearFrame()
-{
-	if (!rewardBoxFrame) return;
-
-	rewardBoxFrame.reset();
+{GetRewardBoxFrame().reset();
 }
 
 void RewardBox::SetStatus(Item::ITEM_ID id, int value)
@@ -145,8 +150,8 @@ void RewardBox::SetState(ITEM_STATE state)
 	{
 		isPause = true;
 		collider->SetActive(false); 
-		UIManager::Get()->isReward = true;
-		UIManager::Get()->rewardPanel->SetBox(this);
+		UIManager::Get()->ActivateRewardPanel();
+		UIManager::Get()->GetRewardPanel()->SetBox(this);
 		collider->SetActive(false);
 	}
 	break;

@@ -15,7 +15,7 @@ Baelz::Baelz(float MaxHP, float atk, float speed, float crt, float pickUpRange, 
 	frames.push_back(make_shared<const Frame>(file, 149, 60, 37, 33));
 	frames.push_back(make_shared<const Frame>(file, 214, 59, 38, 34));
 	// 이를 Clip으로 만들어 clips에 저장
-	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
 	frames.clear();
 
 	// PLAYER_STATUS::MOVE에 대응하는 애니메이션을 넣는 파트
@@ -26,28 +26,8 @@ Baelz::Baelz(float MaxHP, float atk, float speed, float crt, float pickUpRange, 
 	frames.push_back(make_shared<const Frame>(file, 281, 136, 38, 32));
 	frames.push_back(make_shared<const Frame>(file, 346, 139, 38, 33));
 	
-	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	frames.clear();
-
-	// PLAYER_STATUS::IDLE_DAMAGED - IDLE과 동일
-	frames.push_back(make_shared<const Frame>(file, 21, 60, 36, 33));
-	frames.push_back(make_shared<const Frame>(file, 87, 59, 35, 34));
-	frames.push_back(make_shared<const Frame>(file, 149, 60, 37, 33));
-	frames.push_back(make_shared<const Frame>(file, 214, 59, 38, 34));
-	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
-	frames.clear();
-
-	// PLAUER_STATUS::MOVE_DAMAGED - MOVE와 동일
-	frames.push_back(make_shared<const Frame>(file, 23, 135, 36, 31));
-	frames.push_back(make_shared<const Frame>(file, 86, 136, 38, 32));
-	frames.push_back(make_shared<const Frame>(file, 151, 139, 38, 33));
-	frames.push_back(make_shared<const Frame>(file, 218, 135, 36, 31));
-	frames.push_back(make_shared<const Frame>(file, 281, 136, 38, 32));
-	frames.push_back(make_shared<const Frame>(file, 346, 139, 38, 33));
-	
-	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
-	frames.clear();
-
 
 	damageCollider = new RectCollider(size);
 	for (int i = 0; i < 20; i++)

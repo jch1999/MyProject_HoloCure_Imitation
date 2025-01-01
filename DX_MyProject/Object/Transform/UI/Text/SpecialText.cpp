@@ -1,9 +1,9 @@
 #include "framework.h"
 
-shared_ptr<Frame>& SpecialText::GetLevelUpFrame()
+shared_ptr<const Frame>& SpecialText::GetLevelUpFrame()
 {
-	static shared_ptr<Frame> levelUpFrame;
-	return;
+	static shared_ptr<const Frame> levelUpFrame;
+	return levelUpFrame;
 }
 
 vector<vector<shared_ptr<const Frame>>>& SpecialText::GetNumberFrames()
@@ -30,10 +30,7 @@ SpecialText::SpecialText(Vector2 inSize,Vector2 inScale,Vector2 inOffset)
 
 	id = UI_ID::LEVEL_TEXT;
 	type = UI_TYPE::TEXT;
-	uiSize = Vector2(10.0f, 14.0f);
-	uiScale = Vector2(1, 1);
 	additionalScale = Vector2(1, 1);
-	offset = Vector2(0, 0);
 	is_active = false;
 }
 

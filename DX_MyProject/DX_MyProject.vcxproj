@@ -184,15 +184,7 @@
     <ClInclude Include="Framework\Utility\Singleton.h" />
     <ClInclude Include="Framework\Utility\Timer.h" />
     <ClInclude Include="Object\Interface\IPositionable.h" />
-    <ClInclude Include="Object\Transform\Projectile\LavaArea.h" />
-    <ClInclude Include="Library\라이브러리 추가법.h" />
-    <ClInclude Include="Library\외부 라이브러리 추가방법.h" />
-    <ClInclude Include="Object\Interface\IAttack.h" />
-    <ClInclude Include="Object\Interface\IHealth.h" />
-    <ClInclude Include="Object\Interface\IMovable.h" />
-    <ClInclude Include="Object\Interface\InterfaceList.h" />
     <ClInclude Include="Object\Shape\Circle.h" />
-    <ClInclude Include="Object\Shape\Missile.h" />
     <ClInclude Include="Object\Shape\PO.h" />
     <ClInclude Include="Object\Shape\Quad.h" />
     <ClInclude Include="Object\Shape\Quad2.h" />
@@ -200,8 +192,15 @@
     <ClInclude Include="Object\Shape\ScrollRectUV.h" />
     <ClInclude Include="Object\Shape\Shape.h" />
     <ClInclude Include="Object\Shape\ShapeList.h" />
-    <ClInclude Include="Object\Shape\SRTCircle_ver_Instructor.h" />
     <ClInclude Include="Object\Shape\SRTTriangle.h" />
+    <ClInclude Include="Object\Transform\BackGround\BackgroundObject.h" />
+    <ClInclude Include="Object\Transform\Projectile\LavaArea.h" />
+    <ClInclude Include="Library\라이브러리 추가법.h" />
+    <ClInclude Include="Library\외부 라이브러리 추가방법.h" />
+    <ClInclude Include="Object\Interface\IAttack.h" />
+    <ClInclude Include="Object\Interface\IHealth.h" />
+    <ClInclude Include="Object\Interface\IMovable.h" />
+    <ClInclude Include="Object\Interface\InterfaceList.h" />
     <ClInclude Include="Object\Shape\Vertex.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Object\Skill\Buff\BlackSmithGear.h" />
@@ -240,7 +239,7 @@
     <ClInclude Include="Object\Spwaner\EnemySpawner.h" />
     <ClInclude Include="Object\Spwaner\ItemSpawner.h" />
     <ClInclude Include="Object\Spwaner\SpawnerList.h" />
-    <ClInclude Include="Object\Transform\BackGround\BackGroundManager.h" />
+    <ClInclude Include="Object\Transform\BackGround\BackgroundManager.h" />
     <ClInclude Include="Object\Transform\BackGround\Flower.h" />
     <ClInclude Include="Object\Transform\BackGround\Grass.h" />
     <ClInclude Include="Object\Transform\BackGround\SunLight.h" />
@@ -297,7 +296,6 @@
     <ClInclude Include="Object\Transform\UI\Text\TextPrinter.h" />
     <ClInclude Include="Object\Transform\UI\TopUI\Count_UI.h" />
     <ClInclude Include="Object\Transform\UI\Text\DmgText.h" />
-    <ClInclude Include="Object\Transform\UI\Panel\EnhancePanel.h" />
     <ClInclude Include="Object\Transform\UI\Bar\ExpBar.h" />
     <ClInclude Include="Object\Transform\UI\Bar\HPBar.h" />
     <ClInclude Include="Object\Transform\UI\Icon\IconFrame.h" />
@@ -319,7 +317,6 @@
     <ClInclude Include="Object\Transform\UI\UIManager.h" />
     <ClInclude Include="Program\Program.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Scenes\CollisionScene.h" />
     <ClInclude Include="Scenes\MyGame\PlayScene.h" />
     <ClInclude Include="Scenes\MyGame\SceneList.h" />
     <ClInclude Include="Scenes\MyGame\SelectScene.h" />
@@ -351,17 +348,16 @@
     <ClCompile Include="Framework\Utility\Control.cpp" />
     <ClCompile Include="Framework\Utility\Random.cpp" />
     <ClCompile Include="Framework\Utility\Timer.cpp" />
-    <ClCompile Include="Object\Transform\Projectile\LavaArea.cpp" />
     <ClCompile Include="Object\Shape\Circle.cpp" />
-    <ClCompile Include="Object\Shape\Missile.cpp" />
     <ClCompile Include="Object\Shape\PO.cpp" />
     <ClCompile Include="Object\Shape\Quad.cpp" />
     <ClCompile Include="Object\Shape\Quad2.cpp" />
     <ClCompile Include="Object\Shape\RectUV.cpp" />
     <ClCompile Include="Object\Shape\ScrollRectUV.cpp" />
     <ClCompile Include="Object\Shape\Shape.cpp" />
-    <ClCompile Include="Object\Shape\SRTCircle_ver_Instructor.cpp" />
     <ClCompile Include="Object\Shape\SRTTriangle.cpp" />
+    <ClCompile Include="Object\Transform\BackGround\BackgroundObject.cpp" />
+    <ClCompile Include="Object\Transform\Projectile\LavaArea.cpp" />
     <ClCompile Include="framework.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -398,7 +394,7 @@
     <ClCompile Include="Object\Skill\Weapon\Weapon.cpp" />
     <ClCompile Include="Object\Spwaner\EnemySpawner.cpp" />
     <ClCompile Include="Object\Spwaner\ItemSpawner.cpp" />
-    <ClCompile Include="Object\Transform\BackGround\BackGroundManager.cpp" />
+    <ClCompile Include="Object\Transform\BackGround\BackgroundManager.cpp" />
     <ClCompile Include="Object\Transform\BackGround\Flower.cpp" />
     <ClCompile Include="Object\Transform\BackGround\Grass.cpp" />
     <ClCompile Include="Object\Transform\BackGround\SunLight.cpp" />
@@ -467,7 +463,6 @@
     <ClCompile Include="Object\Transform\UI\UI.cpp" />
     <ClCompile Include="Object\Transform\UI\UIManager.cpp" />
     <ClCompile Include="Program\Program.cpp" />
-    <ClCompile Include="Scenes\CollisionScene.cpp" />
     <ClCompile Include="Scenes\MyGame\PlayScene.cpp" />
     <ClCompile Include="Scenes\MyGame\TestScene.cpp" />
     <ClCompile Include="Framework\Math\Transform.cpp" />

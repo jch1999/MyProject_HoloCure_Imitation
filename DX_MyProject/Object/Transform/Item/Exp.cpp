@@ -1,7 +1,16 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> Exp::expFrames;
-int Exp::expUseCnt = 0;
+vector<vector<shared_ptr<const Frame>>>& Exp::GetExpFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> expFrames;
+	return expFrames;
+}
+
+int& Exp::GetExpUseCnt()
+{
+	static int expUseCnt = 0;
+	return expUseCnt;
+}
 
 Exp::Exp()
 	:Item()
@@ -11,10 +20,11 @@ Exp::Exp()
 	,nowTime(0.5f)
 	,isUp(false)
 {
-	if (expFrames.empty())
+	if (GetExpFrames().empty())
 	{
 		InitFrame();
 	}
+	clips.emplace_back(make_shared<Clip>(GetExpFrames()[0], Clip::CLIP_TYPE::LOOP, 1.0f / 12.0f));
 
 	// magnetCollider
 	colliders.emplace_back(new RectCollider(Vector2(23.0f, 24.0f) * 1.5f));
@@ -23,7 +33,8 @@ Exp::Exp()
 	collider = colliders[0];
 	collider->pos = pos;
 
-	scale = clips[expLevel]->GetFrameSize() * collider->Size() / clips[expLevel]->GetFrameOriginSize();
+	SetExp(1);
+	SetScale();
 
 	id = ITEM_ID::EXP;
 	type = ITEM_TYPE::EXP;
@@ -31,8 +42,7 @@ Exp::Exp()
 	is_active = false;
 	collider->SetActive(false);
 
-	SetExp(1);
-	++expUseCnt;
+	++GetExpUseCnt();
 }
 
 Exp::~Exp()
@@ -43,7 +53,7 @@ Exp::~Exp()
 			delete c;
 	}
 
-	if ((--expUseCnt) == 0)
+	if ((--GetExpUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -83,8 +93,10 @@ void Exp::Update()
 		break;
 	case Item::ITEM_STATE::USED:
 	{
-		if(id==ITEM_ID::EXP)
+		if (id == ITEM_ID::EXP)
+		{
 			target->GetExp(exp);
+		}
 		else if (id == ITEM_ID::EXP_MAGNET)
 		{
 			vector<Item*> itemList = ItemSpawner::Get()->GetItemList();
@@ -103,8 +115,7 @@ void Exp::Update()
 		break;
 	}
 
-	scale = clips[expLevel]->GetFrameSize() * collider->Size() / clips[expLevel]->GetFrameOriginSize();
-	clips[expLevel]->Update();
+	SetScale();
 
 	WorldUpdate();
 	
@@ -122,7 +133,15 @@ void Exp::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[expLevel]->Render();
+	if(id == ITEM_ID::EXP)
+	{
+		GetExpFrames()[1][(expLevel - 1)]->Render();
+	}
+	else if (id == ITEM_ID::EXP_MAGNET)
+	{
+		clips[0]->Render();
+	}
+
 	collider->Render();
 }
 
@@ -168,9 +187,10 @@ void Exp::SetAmount(int inAmount)
 
 void Exp::InitFrame()
 {
+	auto& expFrames = GetExpFrames();
 	if (!(expFrames.empty())) return;
 
-	wstring file = L"Textures/Item/PC Computer - Homake_shared<const Frame>loCure - Save the Fans - EXP_rm_bg.png";
+	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - EXP_rm_bg.png";
 	
 	// exp magnet
 	{
@@ -210,9 +230,7 @@ void Exp::InitFrame()
 
 void Exp::ClearFrame()
 {
-	if (expFrames.empty()) return;
-
-	expFrames.clear();
+	GetExpFrames().clear();
 }
 
 void Exp::SetExp(int expAmount)
@@ -233,46 +251,33 @@ void Exp::SetExp(int expAmount)
 		expLevel = 5;
 	else
 		expLevel = 6;
-
-	SetFrame();
-}
-
-void Exp::SetFrame()
-{
-	if (expLevel != 0)
-	{
-		frame = expFrames[1][expLevel - 1];
-		if (!(clips.empty()))
-		{
-			clips.clear();
-		}
-	}
-	else if (frame)
-	{
-		clips.emplace_back(make_shared<Clip>(expFrames[0], Clip::CLIP_TYPE::LOOP, 1.0f / 12.0f));
-		frame.reset();
-	}
 }
 
 void Exp::Respawn()
 {
 	state = ITEM_STATE::IDLE; 
-	
+
+	SetScale();
+
 	WorldUpdate();
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	if (expLevel == 0)
-	{
-		scale = clips[clipIdx]->GetFrameSize() * collider->Size() /
-			clips[clipIdx]->GetFrameOriginSize();
-	}
-	else
-	{
-		scale = frame->GetFrameSize() * collider->Size() /
-			frame->GetFrameOriginSize();
-	}
-
 	is_active = true;
 	collider->SetActive(true);
+}
+
+void Exp::SetScale()
+{
+
+	if (id == ITEM_ID::EXP)
+	{
+		auto& currentFrame = GetExpFrames()[1][(expLevel-1)];
+		scale = currentFrame->GetFrameSize() * collider->Size() / currentFrame->GetFrameOriginSize();
+	}
+	else if (id == ITEM_ID::EXP_MAGNET)
+	{
+		scale = clips[0]->GetFrameSize() * collider->Size() / clips[0]->GetFrameOriginSize();
+		clips[0]->Update();
+	}
 }

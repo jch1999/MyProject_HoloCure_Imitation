@@ -2,8 +2,8 @@
 class BloomGloom :public Enemy
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> bloomGloomFrames;
-	static int bloomGloomSpawnCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetBloomGloomFrames();
+	static int& GetBloomGloomSpawnCnt();
 
 private:
 	Vector2 damageSize, attackSize;

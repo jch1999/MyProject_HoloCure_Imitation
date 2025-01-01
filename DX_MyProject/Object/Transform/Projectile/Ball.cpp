@@ -1,17 +1,24 @@
 #include "framework.h"
 
-shared_ptr<const Frame> Ball::ballFrame;
-int Ball::ballUseCnt=0;
+shared_ptr<const Frame>& Ball::GetBallFrame()
+{
+	static shared_ptr<const Frame> ballFrame;
+	return ballFrame;
+}
+
+int& Ball::GetBallUseCnt()
+{
+	static int ballUseCnt = 0;
+	return ballUseCnt;
+}
 
 Ball::Ball(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	if (ballFrame == nullptr)
+	if (GetBallFrame() == nullptr)
 	{
-		Init();
+		InitFrame();
 	}
-
-	frame = ballFrame;
 	
 	colliders.push_back(new CircleCollider(size.x));
 	collider = colliders[0];
@@ -19,24 +26,15 @@ Ball::Ball(ProjectileSize projSize)
 	is_active = false;
 	collider->SetActive(false);
 
-	++ballUseCnt;
+	++GetBallUseCnt();
 }
 
 Ball::~Ball()
 {
-	if ((--ballUseCnt) == 0)
+	if ((--GetBallUseCnt()) == 0)
 	{
-		ballFrame.reset();
+		ClearFrame();
 	}
-}
-
-void Ball::Init()
-{
-	if (ballFrame) return;
-
-	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
-
-	ballFrame=make_shared<const Frame>(file, 4.0f, 3425.0f, 41.0f, 41.0f);
 }
 
 void Ball::Update()
@@ -75,7 +73,7 @@ void Ball::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetBallFrame()->Render();
 	collider->Render();
 }
 
@@ -93,8 +91,9 @@ void Ball::respwan()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+	auto& ballFrame = GetBallFrame();
+	scale = ballFrame->GetFrameSize() * collider->Size() /
+		ballFrame->GetFrameOriginSize();
 
 	SetVelocity(Vector2(0.0f, 0.0f));
 
@@ -168,4 +167,19 @@ void Ball::OnCollision()
 			}
 		}
 	}
+}
+
+void Ball::InitFrame()
+{
+	auto& ballFrame = GetBallFrame();
+	if (ballFrame) return;
+
+	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
+
+	ballFrame = make_shared<const Frame>(file, 4.0f, 3425.0f, 41.0f, 41.0f);
+}
+
+void Ball::ClearFrame()
+{
+	GetBallFrame().reset();
 }

@@ -1,6 +1,16 @@
 #include "framework.h"
-shared_ptr<const Frame> ItemLight::itemLightFrame;
-int ItemLight::itemLightUseCnt = 0;
+
+shared_ptr<const Frame>& ItemLight::GetItemLightFrame()
+{
+	static shared_ptr<const Frame> itemLightFrame;
+	return itemLightFrame;
+}
+
+int& ItemLight::GetItemLightUseCnt()
+{
+	static int itemLightUseCnt = 0;
+	return itemLightUseCnt;
+}
 
 ItemLight::ItemLight(Vector2 pos)
 	:size(Vector2(55.0f,105.0f)*1.5f)
@@ -11,24 +21,22 @@ ItemLight::ItemLight(Vector2 pos)
 
 	this->pos = pos + offset;
 
-	if (!itemLightFrame)
+	if (!GetItemLightFrame())
 	{
 		InitFrame();
 	}
 
-	frame = itemLightFrame;;
-
 	CB->data.colour = Float4(1.0f, 1.0f, 1.0f, 0.85f);
 	is_active = false;
 
-	++itemLightUseCnt;
+	++GetItemLightUseCnt();
 }
 
 ItemLight::~ItemLight()
 {
 	delete CB;
 
-	if ((--itemLightUseCnt) == 0)
+	if ((--GetItemLightUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -39,8 +47,8 @@ void ItemLight::Update()
 	if (!is_active)return;
 	WorldUpdate();
 
-	scale = frame->GetFrameSize() * size /
-		frame->GetFrameOriginSize();
+	scale = GetItemLightFrame()->GetFrameSize() * size /
+		GetItemLightFrame()->GetFrameOriginSize();
 }
 
 void ItemLight::Render()
@@ -53,7 +61,7 @@ void ItemLight::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetItemLightFrame()->Render();
 }
 
 void ItemLight::PostRender()
@@ -64,15 +72,16 @@ void ItemLight::Respawn()
 {
 	WorldUpdate();
 
-	scale = frame->GetFrameSize() * size /
-		frame->GetFrameOriginSize();
+	scale = GetItemLightFrame()->GetFrameSize() * size /
+		GetItemLightFrame()->GetFrameOriginSize();
 
 	is_active = true;
 }
 
 void ItemLight::InitFrame()
 {
-	if (itemLightFrame) return;
+	auto& frame = GetItemLightFrame();
+	if (frame) return;
 	
 	wstring file = L"Textures/Item/PC Computer - HoloCure - Save the Fans - Pickups_rm_bg.png";
 
@@ -81,9 +90,7 @@ void ItemLight::InitFrame()
 
 void ItemLight::ClearFrame()
 {
-	if (!itemLightFrame) return;
-
-	itemLightFrame.reset();
+	GetItemLightFrame().reset();
 }
 
 void ItemLight::SetPos(Vector2 pos)

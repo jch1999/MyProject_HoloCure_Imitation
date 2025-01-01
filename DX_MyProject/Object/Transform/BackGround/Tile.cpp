@@ -1,29 +1,36 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> Tile::tileFrames;
-int Tile::TileUseCnt = 0;
 
-Tile::Tile(int idx)
-	:idx(idx)
+vector<shared_ptr<const Frame>>& Tile::GetTileFrames()
 {
-	VS = VertexShader::GetInstance(L"Shader/VertexShader/VertexUV.hlsl", 1);
-	PS = PixelShader::GetInstance(L"Shader/PixelShader/PixelUV.hlsl");
-	CB = new ColourBuffer();
+	static vector<shared_ptr<const Frame>> tileFrames;
+	return tileFrames;
+}
 
-	if (tileFrames.empty())
+int& Tile::GetTileUseCnt()
+{
+	static int tileUseCnt = 0;
+	return tileUseCnt;
+}
+
+Tile::Tile(int inIdx, Vector2 inRenderSize)
+	:BackgroundObject(inRenderSize,1.0f,inIdx)
+{
+	if (GetTileFrames().empty())
 	{
 		InitFrame();
 	}
+	SetMaxIdx(GetTileFrames().size());
+	SetIndex(inIdx);
 
-	frame = GetFrame(idx);
-	++TileUseCnt;
+	++GetTileUseCnt();
 
 	is_active = true;
 }
 
 Tile::~Tile()
 {
-	if ((--TileUseCnt) == 0)
+	if ((--GetTileUseCnt()) == 0)
 	{
 		ClearFrame();
 	}
@@ -33,7 +40,8 @@ void Tile::Update()
 {
 	if (!is_active)return;
 
-	scale = frame->GetFrameSize() * Vector2(128.0f,128.0f) / frame->GetFrameOriginSize();
+	auto& currentFrame = GetTileFrames()[frameIdx];
+	scale = currentFrame->GetFrameSize() * renderSize / currentFrame->GetFrameOriginSize();
 
 	WorldUpdate();
 }
@@ -41,16 +49,9 @@ void Tile::Update()
 void Tile::Render()
 {
 	if (!is_active)return;
-	VS->Set();
-	PS->Set();
+	BackgroundObject::Render();
 
-	WB->SetVS(0);
-	CB->SetPS(0);
-	frame->Render();
-}
-
-void Tile::PostRender()
-{
+	GetTileFrames()[frameIdx]->Render();
 }
 
 void Tile::SetActive(bool active)
@@ -60,18 +61,17 @@ void Tile::SetActive(bool active)
 
 void Tile::InitFrame()
 {
+	auto& tileFrames = GetTileFrames();
 	if (!(tileFrames.empty())) return;
 
 	wstring file = L"Textures/Background/PC Computer - HoloCure - Save the Fans - Stage 1 - Grassy Plains_rm_bg.png";
 
 	for (int i = 0; i < 100; i++)
 	{
-		tileFrames.emplace_back(make_shared<const Frame>(file, 4.0f + idx / 10 * 128.0f, 323.0f + idx % 10 * 128.0f, 128.0f, 128.0f));
+		tileFrames.emplace_back(make_shared<const Frame>(file, 4.0f + i / 10 * 128.0f, 323.0f + i % 10 * 128.0f, 128.0f, 128.0f));
 	}
 }
 void Tile::ClearFrame() 
 {
-	if (tileFrames.empty()) return;
-
-	tileFrames.clear();
+	GetTileFrames().clear();
 }

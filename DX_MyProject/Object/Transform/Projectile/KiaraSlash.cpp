@@ -1,21 +1,35 @@
 #include "framework.h"
 
-vector<vector<shared_ptr<const Frame>>> KiaraSlash::slashFrmaes;
-int KiaraSlash::slashUseCnt = 0;
+
+
+
+vector<vector<shared_ptr<const Frame>>>& KiaraSlash::GetSlashFrames()
+{
+	static vector<vector<shared_ptr<const Frame>>> slashFrames;
+	return slashFrames;
+}
+
+int& KiaraSlash::SlashUseCnt()
+{
+	static int slashUseCnt = 0;
+	return slashUseCnt;
+}
 
 KiaraSlash::KiaraSlash(ProjectileSize projSize)
 	:Projectile(projSize,20.0f, 200.0f, 1, 2.0f)
 	, isAwaken(false)
 {
-	if (slashFrmaes.empty())
+	if (GetSlashFrames().empty())
 	{
-		Init();
+		InitFrame();
 	}
 
-	for (int i = 0; i < slashFrmaes.size(); i++)
+	auto& slashFrames = GetSlashFrames();
+	for (auto& frames:slashFrames)
 	{
-		clips.push_back(make_shared<Clip>(slashFrmaes[i], Clip::CLIP_TYPE::END, 1.0f / 7.5f));
+		clips.push_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::END, 1.0f / 7.5f));
 	}
+
 	// 0~2 : PhoenixSword스킬의 기본 collider 설정,
 	colliders.push_back(new RectCollider(size));
 	colliders.push_back(new RectCollider(size * 1.25f));
@@ -26,47 +40,14 @@ KiaraSlash::KiaraSlash(ProjectileSize projSize)
 
 	hitLimitCnt = 0;
 
-	++slashUseCnt;
+	++SlashUseCnt();
 }
 
 KiaraSlash::~KiaraSlash()
 {
-	if ((--slashUseCnt) == 0)
+	if ((--SlashUseCnt()) == 0)
 	{
-		slashFrmaes.clear();
-	}
-}
-
-void KiaraSlash::Init()
-{
-	if (!slashFrmaes.empty()) return;
-
-	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
-
-	// PROJ_STATE::NORMAL
-	Vector2 initPos(7.0f, 711.0f);
-	Vector2 frame_size(185.0f, 133.0f);
-	{
-		vector<shared_ptr<const Frame>> normalSlashFrmaes;
-		for (int i = 0; i < 5; i++)
-		{
-			normalSlashFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 186.0f * i, initPos.y
-				, frame_size.x, frame_size.y));
-		}
-		slashFrmaes.emplace_back(normalSlashFrmaes);
-	}
-
-	// PROJ_STATE::AWAKEN
-	initPos = Vector2(7.0f, 861.0f);
-	frame_size = Vector2(182.0f, 136.0f);
-	{
-		vector<shared_ptr<const Frame>> awakenSlashFrmaes;
-		for (int i = 0; i < 8; i++)
-		{
-			awakenSlashFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 186.0f * i, initPos.y
-				, frame_size.x, frame_size.y));
-		}
-		slashFrmaes.emplace_back(awakenSlashFrmaes);
+		ClearFrame();
 	}
 }
 
@@ -245,4 +226,43 @@ void KiaraSlash::ActiveAwaken()
 void KiaraSlash::DeactiveAwaken()
 {
 	isAwaken = false;
+}
+
+void KiaraSlash::InitFrame()
+{
+	auto& slashFrmaes = GetSlashFrames();
+	if (!slashFrmaes.empty()) return;
+
+	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Takanashi Kiara_rm_bg.png";
+
+	// PROJ_STATE::NORMAL
+	Vector2 initPos(7.0f, 711.0f);
+	Vector2 frame_size(185.0f, 133.0f);
+	{
+		vector<shared_ptr<const Frame>> normalSlashFrmaes;
+		for (int i = 0; i < 5; i++)
+		{
+			normalSlashFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 186.0f * i, initPos.y
+				, frame_size.x, frame_size.y));
+		}
+		slashFrmaes.emplace_back(normalSlashFrmaes);
+	}
+
+	// PROJ_STATE::AWAKEN
+	initPos = Vector2(7.0f, 861.0f);
+	frame_size = Vector2(182.0f, 136.0f);
+	{
+		vector<shared_ptr<const Frame>> awakenSlashFrmaes;
+		for (int i = 0; i < 8; i++)
+		{
+			awakenSlashFrmaes.push_back(make_shared<const Frame>(file, initPos.x + 186.0f * i, initPos.y
+				, frame_size.x, frame_size.y));
+		}
+		slashFrmaes.emplace_back(awakenSlashFrmaes);
+	}
+}
+
+void KiaraSlash::ClearFrame()
+{
+	GetSlashFrames().clear();
 }

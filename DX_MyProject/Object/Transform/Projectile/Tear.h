@@ -2,8 +2,8 @@
 class Tear :public Projectile
 {
 protected:
-	static shared_ptr<const Frame> tearFrame;
-	static int tearUseCnt;
+	static shared_ptr<const Frame>& GetTearFrame();
+	static int& GetTearUseCnt();
 
 public:
 	Tear(ProjectileSize projSize = ProjectileSize(Vector2(10.0f, 8.0f)));
@@ -11,7 +11,8 @@ public:
 
 
 	// Projectile을(를) 통해 상속됨
-	virtual void Init() override;
+	virtual void InitFrame() override;
+	virtual void ClearFrame() override;
 
 	virtual void Update() override;
 

@@ -5,7 +5,7 @@ Program::Program()
 {
 	Create();	// 하술
 	scenes.push_back(new TestScene());
-	scenes.push_back(new AnimateScene());
+	//scenes.push_back(new AnimateScene());
 	scene_idx = 0;
 	// 이 프로그램이 사용할 Scene을 관리하는 부분
 	// scene 자체는 후에 설명
@@ -19,10 +19,10 @@ Program::~Program()
 
 void Program::Update()
 {
-	if (KEY_CON->Down(VK_DELETE))
+	/*if (KEY_CON->Down(VK_DELETE))
 	{
 		++scene_idx %= 2;
-	}
+	}*/
 	Control::Get()->Update();
 	Timer::Get()->Update();
 	// 유틸리티를 다루는 싱글톤 객체들을 업데이트할 때마다 같이 업데이트

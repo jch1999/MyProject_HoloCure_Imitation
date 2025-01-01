@@ -2,8 +2,8 @@
 class MiniBoss :public Enemy
 {
 protected:
-	static vector<vector<shared_ptr<const Frame>>> miniBossFrames;
-	static int miniBossSpawnCnt;
+	static vector<vector<shared_ptr<const Frame>>>& GetMiniBossFrames();
+	static int& GetMiniBossSpawnCnt();
 
 public:
 	MiniBoss(ENEMY_NAME name = ENEMY_NAME::DEADBEAT, MOVE_TYPE type = MOVE_TYPE::CHASE);

@@ -6,29 +6,29 @@ private:
 	Player* player;
 
 public:
-	vector<Skill*> skill_table; // 전체 스킬 테이블
+	vector<Skill*> skillTable; // 전체 스킬 테이블
 
-	vector<Skill*> nowWeapon_list;
-	vector<Skill*> nowBuff_list;
+	vector<Skill*> nowWeaponList;
+	vector<Skill*> nowBuffList;
 	int weaponCnt;
 	int buffCnt;
-	int total_weight_W;
-	int total_weight_B;
-	int total_weight_S;
-	int total_weight_E;
+	int totalWeightW;
+	int totalWeightB;
+	int totalWeightS;
+	int totalWeightE;
 
 	// About Skill Effect
 	bool isHealDoubled;
-	bool nurseHron_active;
-	float add_expRate;
-	float add_MainWeapon_dmgRate;
-	float add_Weapon_dmgRate;
+	bool nurseHronActive;
+	float addExpRate;
+	float addMainWeaponDmgRate;
+	float addWeaponDmgRate;
 	// Weapon type별 damage 증가량
-	float damageRate_Melee;
-	float damageRate_Shot;
-	float damageRate_Range;
+	float damageRateMelee;
+	float damageRateShot;
+	float damageRateRange;
 	// 0 weapon 1 buff 2 stat 3 extra
-	vector<vector<Skill*>> levelUpAble_list;
+	vector<vector<Skill*>> levelUpAbleList;
 
 private:
 	SkillManager();

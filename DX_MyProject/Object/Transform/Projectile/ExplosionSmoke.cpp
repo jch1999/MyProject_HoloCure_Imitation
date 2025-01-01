@@ -1,18 +1,27 @@
 #include "framework.h"
 
-vector<shared_ptr<const Frame>> ExplosionSmoke::explosionSmokeFrames;
-int ExplosionSmoke::explosionSmokeUseCnt = 0;
+vector<shared_ptr<const Frame>>& ExplosionSmoke::GetExplosionSmokeFrames()
+{
+	static vector<shared_ptr<const Frame>> explosionSmokeFrames;
+	return explosionSmokeFrames;
+}
+
+int& ExplosionSmoke::GetExplosionSmokeUseCnt()
+{
+	static int explosionSmokeUseCnt = 0;
+	return explosionSmokeUseCnt;
+}
 
 ExplosionSmoke::ExplosionSmoke(ProjectileSize projSize)
 	:Projectile(projSize, 20.0f, 200.0f, 1, 2.0f)
 	, size(size)
 {
-	if (explosionSmokeFrames.empty())
+	if (GetExplosionSmokeFrames().empty())
 	{
-		Init();
+		InitFrame();
 	}
 	
-	clips.push_back(make_shared<Clip>(explosionSmokeFrames, Clip::CLIP_TYPE::END, 1 / 12.0f));
+	clips.push_back(make_shared<Clip>(GetExplosionSmokeFrames(), Clip::CLIP_TYPE::END, 1 / 12.0f));
 	clipIdx = 0;
 
 	colliders.push_back(new RectCollider(size));
@@ -23,19 +32,20 @@ ExplosionSmoke::ExplosionSmoke(ProjectileSize projSize)
 	is_active = false;
 	collider->SetActive(false);
 
-	++explosionSmokeUseCnt;
+	++GetExplosionSmokeUseCnt();
 }
 
 ExplosionSmoke::~ExplosionSmoke()
 {
-	if ((--explosionSmokeUseCnt) == 0)
+	if ((--GetExplosionSmokeUseCnt()) == 0)
 	{
-		explosionSmokeFrames.clear();
+		ClearFrame();
 	}
 }
 
-void ExplosionSmoke::Init()
+void ExplosionSmoke::InitFrame()
 {
+	auto& explosionSmokeFrames = GetExplosionSmokeFrames();
 	if (!explosionSmokeFrames.empty()) return;
 
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
@@ -52,6 +62,11 @@ void ExplosionSmoke::Init()
 				break;
 		}
 	}
+}
+
+void ExplosionSmoke::ClearFrame()
+{
+	GetExplosionSmokeFrames().clear();
 }
 
 void ExplosionSmoke::Update()
@@ -91,10 +106,6 @@ void ExplosionSmoke::Render()
 
 	clips[clipIdx]->Render();
 	collider->Render();
-}
-
-void ExplosionSmoke::PostRender()
-{
 }
 
 void ExplosionSmoke::respwan()

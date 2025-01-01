@@ -1,11 +1,6 @@
 #pragma once
 class HoloBomb :public Weapon
 {
-private:
-	float proj_delay;
-	float now_proj_delay;
-	int projCnt;
-
 public:
 	HoloBomb();
 	~HoloBomb();

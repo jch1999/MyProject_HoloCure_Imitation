@@ -1,31 +1,22 @@
 #pragma once
-class Tile :public Transform
+class Tile :public BackgroundObject
 {
 private:
-	static vector<shared_ptr<const Frame>> tileFrames;
-	static int TileUseCnt;
+	static vector<shared_ptr<const Frame>>& GetTileFrames();
+	static int& GetTileUseCnt();
 
 private:
-	int idx;
-	shared_ptr<const Frame> frame;
-
-	VertexShader* VS;
-	PixelShader* PS;
-	ColourBuffer* CB;
 
 public:
-	Tile(int idx);
+	Tile(int inIdx=0, Vector2 inRenderSize = Vector2(128.0f, 128.0f));
 	~Tile();
 
 	void Update();
 	void Render();
-	void PostRender();
 	
 	void InitFrame();
 	void ClearFrame();
 
 	void SetActive(bool active);
 
-private:
-	FORCEINLINE static shared_ptr<const Frame> GetFrame(int index) { return tileFrames[index]; }
 };

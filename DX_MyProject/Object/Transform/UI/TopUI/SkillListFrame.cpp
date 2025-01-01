@@ -1,11 +1,24 @@
 #include "framework.h"
 
-SkillListFrame::SkillListFrame()
+shared_ptr<const Frame>& SkillListFrame::GetSkillListFrameFrame()
 {
-	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
-	vector<Frame*> frames;
-	frames.push_back(new Frame(file, 4, 302, 199, 87));
-	clips.push_back(new Clip(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 10.f));
+	static shared_ptr<const Frame> skillListFrameFrame;
+	return skillListFrameFrame;
+}
+
+int& SkillListFrame::GetSkillListFrameUseCnt()
+{
+	static int skillListFrameUseCnt = 0;
+	return skillListFrameUseCnt;
+}
+
+SkillListFrame::SkillListFrame(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:UI(inSize, inScale, inOffset)
+{
+	if (GetSkillListFrameFrame() == nullptr)
+	{
+		InitFrame();
+	}
 
 	// 자식 UI 생성 - Weapon Skill Icon 6개 , Buff Skill Icon 6개
 	// Weapon Skill Icon
@@ -16,8 +29,8 @@ SkillListFrame::SkillListFrame()
 		weaponIcon->SetTarget(this);
 		if (i == 0)
 		{
-			Skill::SKILL_ID s_id = (*(SkillManager::Get()->nowWeapon_list.begin()))->id;
-			weaponIcon->SetSkillID((int)s_id);
+			Skill::SKILL_ID sId = (*(SkillManager::Get()->nowWeaponList.begin()))->id;
+			weaponIcon->SetSkillID((int)sId);
 			weaponIcon->SetID(UI_ID::SKILL_ICON);
 		}
 		else
@@ -26,7 +39,7 @@ SkillListFrame::SkillListFrame()
 		weaponIcon->SetActive(true);
 
 		weaponIconList.push_back(weaponIcon);
-		child_list.push_back(weaponIcon);
+		childList.push_back(weaponIcon);
 	}
 
 	// Buff Skill Icon
@@ -40,29 +53,32 @@ SkillListFrame::SkillListFrame()
 		buffIcon->SetActive(true);
 
 		buffIconList.push_back(buffIcon);
-		child_list.push_back(buffIcon);
+		childList.push_back(buffIcon);
 	}
 
 	id = UI::UI_ID::SKILL_LIST_FRAME;
 	type = UI::UI_TYPE::FRAME;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(199.0f, 86.0f);
-	ui_scale = Vector2(2.0f, 2.0f);
-	offset = Vector2(180, 85);
 	is_active = true;
+
+	++GetSkillListFrameUseCnt();
 }
 
 SkillListFrame::~SkillListFrame()
 {
+	if ((--GetSkillListFrameUseCnt()) == 0)
+	{
+		ClearFrame();
+	}
 }
 
 void SkillListFrame::Update()
 {
-	scale = clips[clip_idx]->GetFrameSize() * ui_size / clips[clip_idx]->GetFrameOriginSize() * ui_scale;
-	clips[0]->Update();
+	scale = GetSkillListFrameFrame()->GetFrameSize() * uiSize / GetSkillListFrameFrame()->GetFrameOriginSize() * uiScale;
+	
 
 	// 자식에 추가 작업 - weponList, buffList를 가져와 Icon 정보를 갱신하는 코드를 여기에
-	vector<Skill*>& weaponList = (SkillManager::Get()->nowWeapon_list);
+	vector<Skill*>& weaponList = (SkillManager::Get()->nowWeaponList);
 	for (int i = 0; i < 6; i++)
 	{
 		int cnt = SkillManager::Get()->weaponCnt;
@@ -78,7 +94,7 @@ void SkillListFrame::Update()
 		}
 	}
 
-	vector<Skill*>& buffList = (SkillManager::Get()->nowBuff_list);
+	vector<Skill*>& buffList = (SkillManager::Get()->nowBuffList);
 	for (int i = 0; i < 6; i++)
 	{
 		if (i < SkillManager::Get()->buffCnt)
@@ -96,7 +112,7 @@ void SkillListFrame::Update()
 	pos = target->pos + offset;
 	WorldUpdate();
 
-	for (auto ui : child_list)
+	for (auto ui : childList)
 	{
 		ui->Update();
 	}
@@ -112,12 +128,24 @@ void SkillListFrame::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	clips[clip_idx]->Render();
+	GetSkillListFrameFrame()->Render();
 
-	for (auto ui : child_list)
+	for (auto ui : childList)
 		ui->Render();
 }
 
-void SkillListFrame::PostRender()
+void SkillListFrame::InitFrame()
 {
+	auto& frame = GetSkillListFrameFrame();
+	
+	if (frame) return;
+
+	wstring file = L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png";
+
+	frame = make_shared<const Frame>(file, 4, 302, 199, 87);
+}
+
+void SkillListFrame::ClearFrame()
+{
+	GetSkillListFrameFrame().reset();
 }

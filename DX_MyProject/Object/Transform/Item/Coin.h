@@ -2,8 +2,8 @@
 class Coin :public Item
 {
 protected:
-	static vector<shared_ptr<const Frame>> coinFrames;
-	static int coinUseCnt;
+	static vector<shared_ptr<const Frame>>& GetCoinFrames();
+	static int& GetCoinUseCnt();
 
 private:
 	Player* target;

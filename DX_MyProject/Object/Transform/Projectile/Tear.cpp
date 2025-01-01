@@ -1,18 +1,27 @@
 #include "framework.h"
 
-shared_ptr<const Frame> Tear::tearFrame;
-int Tear::tearUseCnt = 0;  
+ 
 
+
+shared_ptr<const Frame>& Tear::GetTearFrame()
+{
+	static shared_ptr<const Frame> tearFrame;
+	return tearFrame;
+}
+
+int& Tear::GetTearUseCnt()
+{
+	static int tearUseCnt = 0;
+	return tearUseCnt;
+}
 
 Tear::Tear(ProjectileSize projSize)
 	:Projectile(projSize)
 {
-	if (tearFrame == nullptr)
+	if (GetTearFrame() == nullptr)
 	{
-		Init();
+		InitFrame();
 	}
-	
-	frame = tearFrame;
 
 	colliders.push_back(new RectCollider(size * 1.5f));
 	collider = colliders[0];
@@ -20,25 +29,30 @@ Tear::Tear(ProjectileSize projSize)
 	is_active = false;
 	collider->SetActive(false);
 
-	++tearUseCnt;
+	++GetTearUseCnt();
 }
 
 Tear::~Tear()
 {
-	if ((--tearUseCnt) == 0)
+	if ((--GetTearUseCnt()) == 0)
 	{
-		tearFrame.reset();
+		ClearFrame();
 	}
 }
 
-void Tear::Init()
+void Tear::InitFrame()
 {
+	auto& tearFrame = GetTearFrame();
 	if (tearFrame) return;
 
 	wstring file = L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Weapons_rm_bg.png";
 	
 	tearFrame = make_shared<const Frame>(file, 4.0f, 946.0f, 10.0f, 8.0f);
+}
 
+void Tear::ClearFrame()
+{
+	GetTearFrame().reset();
 }
 
 void Tear::Update()
@@ -60,8 +74,8 @@ void Tear::Update()
 	collider->rot = this->rot;
 	collider->WorldUpdate();
 
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+	scale = GetTearFrame()->GetFrameSize() * collider->Size() /
+		GetTearFrame()->GetFrameOriginSize();
 
 	OnCollision();
 }
@@ -76,7 +90,7 @@ void Tear::Render()
 	WB->SetVS(0);
 	CB->SetPS(0);
 
-	frame->Render();
+	GetTearFrame()->Render();
 	collider->Render();
 }
 
@@ -93,8 +107,8 @@ void Tear::respwan()
 	collider->pos = pos;
 	collider->WorldUpdate();
 
-	scale = frame->GetFrameSize() * collider->Size() /
-		frame->GetFrameOriginSize();
+	scale = GetTearFrame()->GetFrameSize() * collider->Size() /
+		GetTearFrame()->GetFrameOriginSize();
 
 	is_active = true;
 	collider->SetActive(true);

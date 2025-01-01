@@ -6,10 +6,9 @@ Watson::Watson(float MaxHP,float atk, float speed,float crt,float pickUpRange,fl
 	, isRevenge(false), revengeDmg(0.0f)
 {
 	wstring file = L"Textures/Player/PC Computer - HoloCure - Save the Fans - Amelia Watson_rm_bg.png";
-	Texture* t = Texture::Add(file);
 
 	// clips
-	vector<Frame*> frames;
+	vector<shared_ptr<const Frame>> frames;
 
 	// PLAYER_STATUS::IDLE에 대응하는 애니메이션을 넣는 파트
 	// 스프라이트 크기
@@ -19,12 +18,12 @@ Watson::Watson(float MaxHP,float atk, float speed,float crt,float pickUpRange,fl
 
 	for (int i = 0; i < 3; i++)
 	{
-		frames.push_back(new Frame(file, init_pos.x + 65 * i, init_pos.y,
+		frames.emplace_back(make_shared<const Frame>(file, init_pos.x + 65 * i, init_pos.y,
 			this_frame_size.x, this_frame_size.y));
 	}
 
 	// 이를 Clip으로 만들어 clips에 저장
-	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 4.5f));
 	frames.clear();
 
 	// PLAYER_STATUS::MOVE에 대응하는 애니메이션을 넣는 파트
@@ -32,10 +31,10 @@ Watson::Watson(float MaxHP,float atk, float speed,float crt,float pickUpRange,fl
 	this_frame_size = Vector2(24, 30);
 	for (int i = 0; i < 6; i++)
 	{
-		frames.push_back(new Frame(file, init_pos.x + 65 * i, init_pos.y,
+		frames.emplace_back(make_shared<const Frame>(file, init_pos.x + 65 * i, init_pos.y,
 			this_frame_size.x, this_frame_size.y));
 	}
-	AddClip(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
+	clips.emplace_back(make_shared<Clip>(frames, Clip::CLIP_TYPE::LOOP, 1.0f / 6.0f));
 	frames.clear();
 
 	damageCollider = new RectCollider(size);

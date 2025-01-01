@@ -1,16 +1,17 @@
 #include "framework.h"
 
-EnhancePanel::EnhancePanel()
-	: selectIdx(0)
-	,moveRot(0.0f),iconMoveSpd(300.0f)
-	,targetPlayTime(2.0f),targetMoveTime(0.1f)
+EnhancePanel::EnhancePanel(Vector2 inSize, Vector2 inScale, Vector2 inOffset)
+	:Panel(inSize, inScale, inOffset)
+	, selectIdx(0)
+	, moveRot(0.0f),iconMoveSpd(300.0f)
+	, targetPlayTime(2.0f),targetMoveTime(0.1f)
 {
 	upgradeText = new TextPrinter();
 	upgradeText->SetTarget(this);
 	upgradeText->SetOffset(Vector2(WIN_CENTER_X*0.2f, -WIN_CENTER_Y*0.5f));
 	upgradeText->SetTextInfo(Vector2(1.0f, 1.0f), Vector2(30.0f, 20.0f));
 	upgradeText->SetText("UPGRADE!");
-	child_list.push_back(upgradeText);
+	childList.push_back(upgradeText);
 
 	Vector2 iconStartPos(WIN_CENTER_X*0.05f, -WIN_CENTER_Y*0.3f);
 	Vector2 iconInterval(80.0f, 80.0f);
@@ -26,7 +27,7 @@ EnhancePanel::EnhancePanel()
 			icon->SetID(UI_ID::SKILL_ENHANCE_ICON);
 			icon->GetFrame()->SetClipIdx(4);
 			skillIconList[i].push_back(icon);
-			child_list.push_back(icon);
+			childList.push_back(icon);
 		}
 	}
 
@@ -37,7 +38,7 @@ EnhancePanel::EnhancePanel()
 	selector->SetIconOffset(Vector2(-245.0f, 5.0f));
 	selector->SetNameTOffset(Vector2(-260.0f, -40.0f));
 	selector->SetScriptTOffset(Vector2(-210.0f, -10.0f));
-	child_list.push_back(selector);
+	childList.push_back(selector);
 
 	enhanceRateText = new TextPrinter();
 	enhanceRateText->SetTarget(this);
@@ -45,22 +46,21 @@ EnhancePanel::EnhancePanel()
 	enhanceRateText->SetState(UI::UI_STATE::IDLE);
 	enhanceRateText->SetTextInfo(Vector2(0.3f, 0.3f), Vector2(10.0f, 20.0f));
 	enhanceRateText->SetActive(false);
-	child_list.push_back(enhanceRateText);
+	childList.push_back(enhanceRateText);
 
-	popUp=new ImageArea(new Frame(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png"
-		, 4.0f, 790.0f, 208.0f, 240.0f));
+	popUp=new ImageArea(make_shared<const Frame>(L"Textures/UI/PC Computer - HoloCure - Save the Fans - Game Menus and HUDs_rm_bg.png", 4.0f, 790.0f, 208.0f, 240.0f));
 	popUp->SetSize(Vector2(208.0f, 240.0f));
 	popUp->SetScale(Vector2(1.7f, 1.7f));
 	popUp->SetTarget(this);
 	popUp->SetOffset(Vector2(0.0f, -WIN_CENTER_Y * 0.2f));
 	popUp->SetState(UI_STATE::IDLE);
-	child_list.push_back(popUp);
+	childList.push_back(popUp);
 
 	icon = new SkillIcon();
 	icon->SetScale(Vector2(1.5f, 1.5f));
 	icon->SetID(UI_ID::SKILL_ICON);
 	icon->SetActive(false);
-	child_list.push_back(icon);
+	childList.push_back(icon);
 
 	btn = new Button();
 	btn->SetTarget(this);
@@ -69,21 +69,21 @@ EnhancePanel::EnhancePanel()
 	btn->SetState(UI::UI_STATE::IDLE);
 	btn->GetBtnText()->SetText("UPGRADE");
 	btn->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
-	child_list.push_back(btn);
+	childList.push_back(btn);
 	
-	coinImg = new ImageArea(new Frame(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
+	coinImg = new ImageArea(make_shared<const Frame>(L"Textures/Skill/PC Computer - HoloCure - Save the Fans - Item Icons_rm_bg.png"
 		, 200.0f, 322.0f, 15.0f, 15.0f));
 	coinImg->SetTarget(btn);
 	coinImg->SetOffset(Vector2(-40.0f, -2.0f));
 	coinImg->SetScale(Vector2(0.7f, 0.7f));
 	coinImg->SetState(UI::UI_STATE::IDLE);
-	child_list.push_back(coinImg);
+	childList.push_back(coinImg);
 
 	enhanceResultText = new TextPrinter();
 	enhanceResultText->SetActive(false);
 	enhanceResultText->SetTarget(popUp);
 	enhanceResultText->SetOffset(Vector2(-80.0f, -150.0f));
-	child_list.push_back(enhanceResultText);
+	childList.push_back(enhanceResultText);
 	
 	iconOffset = Vector2(0.0f, 0.0f);
 
@@ -93,7 +93,7 @@ EnhancePanel::EnhancePanel()
 	cEffect->SetActive(false);
 	cEffect->SetScale(Vector2(2.0f, 2.0f));
 	cEffect->SetState(UI_STATE::IDLE);
-	child_list.push_back(cEffect);
+	childList.push_back(cEffect);
 
 	sEffect = new LightEffect();
 	sEffect->SetTarget(icon);
@@ -102,14 +102,11 @@ EnhancePanel::EnhancePanel()
 	sEffect->SetScale(Vector2(2.0f, 2.0f));
 	sEffect->SetState(UI_STATE::IDLE);
 	sEffect->SetDist(70.0f);
-	child_list.push_back(sEffect);
+	childList.push_back(sEffect);
 
 	id = UI::UI_ID::ENHANCE_PANEL;
 	type = UI::UI_TYPE::PANEL;
 	state = UI::UI_STATE::IDLE;
-	ui_size = Vector2(WIN_WIDTH, WIN_HEIGHT);
-	ui_scale = Vector2(1, 1);
-	offset = WIN_CENTER;
 	is_active = false;
 }
 
@@ -140,7 +137,7 @@ void EnhancePanel::Update()
 	pos = target->pos + offset;
 	WorldUpdate();
 
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Update();
 }
 
@@ -148,7 +145,7 @@ void EnhancePanel::Render()
 {
 	if (!is_active)return;
 
-	for (auto c : child_list)
+	for (auto c : childList)
 		c->Render();
 }
 
@@ -169,7 +166,7 @@ void EnhancePanel::SetActive(bool active)
 		{
 			if (i < SkillManager::Get()->weaponCnt)
 			{
-				int nowSkillId = (int)(SkillManager::Get()->nowWeapon_list[i]->GetSkillID());
+				int nowSkillId = (int)(SkillManager::Get()->nowWeaponList[i]->GetSkillID());
 				skillIconList[0][i]->SetSkillID(nowSkillId);
 				if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkillId)->GetEnhanceAble())
 				{
@@ -190,7 +187,7 @@ void EnhancePanel::SetActive(bool active)
 		{
 			if (i < SkillManager::Get()->buffCnt)
 			{
-				int nowSkill_id = (int)(SkillManager::Get()->nowBuff_list[i]->GetSkillID());
+				int nowSkill_id = (int)(SkillManager::Get()->nowBuffList[i]->GetSkillID());
 				skillIconList[1][i]->SetSkillID(nowSkill_id);
 				if (SkillManager::Get()->GetSkillByID((Skill::SKILL_ID)nowSkill_id)->GetEnhanceAble())
 				{
@@ -218,7 +215,7 @@ void EnhancePanel::SetActive(bool active)
 		btn->GetBtnText()->SetText("UPGRADE");
 		btn->GetBtnText()->SetOffset(Vector2(-35.0f, 0.0f));
 
-		for (auto c : child_list)
+		for (auto c : childList)
 			c->SetActive(active);
 
 		// popUp 관련
@@ -295,11 +292,7 @@ void EnhancePanel::ChoseSkill()
 		else if (KEY_CON->Down(VK_ESCAPE) || KEY_CON->Down(VK_BACK))
 		{
 			usedAnvil->SetState(Item::ITEM_STATE::IDLE);
-			isPause = false;
-			usedAnvil = nullptr;
-			UIManager::Get()->nowPanel = nullptr;
-			UIManager::Get()->isEnhance = false;
-			SetActive(false);
+			EnhanceEnd();
 		}
 	}
 	// 선택 확정 or 취소 입력
@@ -317,11 +310,7 @@ void EnhancePanel::ChoseSkill()
 					nowSkill->Enhance();
 					selected = false;
 					usedAnvil->SetState(Item::ITEM_STATE::USED);
-					usedAnvil = nullptr;
-					isPause = false;
-					UIManager::Get()->nowPanel = nullptr;
-					UIManager::Get()->isEnhance = false;
-					SetActive(false);
+					EnhanceEnd();
 				}
 				else
 				{
@@ -470,9 +459,10 @@ void EnhancePanel::EnhanceEnd()
 	{
 		sEffect->SetState(UI_STATE::IDLE);
 		sEffect->SetActive(false);
+		usedAnvil = nullptr;
 		isPause = false;
-		UIManager::Get()->nowPanel = nullptr;
-		UIManager::Get()->isEnhance = false;
+		UIManager::Get()->ResetPanel();
+		UIManager::Get()->DeactivateEnhancePanel();
 		SetActive(false);
 	}
 }

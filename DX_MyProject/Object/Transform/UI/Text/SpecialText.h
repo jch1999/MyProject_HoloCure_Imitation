@@ -2,7 +2,7 @@
 class SpecialText :public UI
 {
 protected:
-	static shared_ptr<Frame>& GetLevelUpFrame();
+	static shared_ptr<const Frame>& GetLevelUpFrame();
 	static vector<vector<shared_ptr<const Frame>>>& GetNumberFrames();
 	static int& GetTextUseCnt();
 

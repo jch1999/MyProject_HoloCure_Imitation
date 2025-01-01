@@ -55,7 +55,7 @@ void UI::SetAddtionalScale(Vector2 inScale)
 
 void UI::SetOffset(Vector2 inOffset)
 {
-	this->offset = offset;
+	this->offset = inOffset;
 }
 
 void UI::AddOffset(Vector2 inOffset)
@@ -68,9 +68,14 @@ void UI::SetActive(bool inActive)
 	is_active = inActive;
 }
 
-void UI::SetClipIdx(int inIdx) 
+void UI::SetClipIdx(int inIdx)
+{
+	clipIdx = inIdx;
+}
+
+void UI::SetIndex(int inIdx) 
 { 
-	clipIdx = inIdx; 
+	frameIdx = inIdx; 
 }
 
 void UI::SetColor(Float4 inColor) 
